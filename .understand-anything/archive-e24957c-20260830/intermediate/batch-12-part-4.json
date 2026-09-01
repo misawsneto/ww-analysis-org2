@@ -1,0 +1,953 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "type": "file",
+   "name": "opencode.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "summary": "ACP adapter and helper functions for the OpenCode CLI agent -- extracts subagent task prompts/results embedded in tool-call text and maps OpenCode-specific tool kinds.",
+   "tags": [
+    "acp-protocol",
+    "adapter",
+    "opencode"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "type": "file",
+   "name": "types.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "summary": "Defines shared CLI-agent-related types: the CliAgentType enum enumerating every supported CLI agent, and the TokenUsage struct for tracking token consumption.",
+   "tags": [
+    "type-definition",
+    "domain-model",
+    "cli-agent"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "type": "file",
+   "name": "chunk_ops.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "summary": "CRUD and side-effect operations for CLI agent session transcript chunks -- inserting, loading, truncating, and cascading persistence of subagent child sessions.",
+   "tags": [
+    "persistence",
+    "database",
+    "transcript"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/persistence/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/mod.rs",
+   "summary": "Module root for CLI agent session persistence; re-exports chunk_ops, session_crud, types, and worktree_state submodules.",
+   "tags": [
+    "module-root",
+    "persistence",
+    "entry-point"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:extract_task_result",
+   "type": "function",
+   "name": "extract_task_result",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    13,
+    23
+   ],
+   "summary": "Extracts the <task_result> payload embedded in an OpenCode subagent tool-call's text content.",
+   "tags": [
+    "acp-protocol",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:quoted_attr",
+   "type": "function",
+   "name": "quoted_attr",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    25,
+    36
+   ],
+   "summary": "Extracts a quoted attribute value (e.g. prompt=\"...\") from an XML-like tag header string.",
+   "tags": [
+    "parsing",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_generic_task_label",
+   "type": "function",
+   "name": "is_generic_task_label",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    38,
+    40
+   ],
+   "summary": "Checks whether a string is a generic, non-informative task label to be filtered from display.",
+   "tags": [
+    "heuristic",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_paste_placeholder",
+   "type": "function",
+   "name": "is_paste_placeholder",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    42,
+    45
+   ],
+   "summary": "Checks whether a string is a paste/attachment placeholder rather than real content.",
+   "tags": [
+    "heuristic",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_result_like_report",
+   "type": "function",
+   "name": "is_result_like_report",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    47,
+    53
+   ],
+   "summary": "Checks whether a string looks like a completion report rather than a task prompt.",
+   "tags": [
+    "heuristic",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:strip_known_prompt_prelude",
+   "type": "function",
+   "name": "strip_known_prompt_prelude",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    55,
+    72
+   ],
+   "summary": "Strips known boilerplate prelude text from a subagent task prompt string.",
+   "tags": [
+    "heuristic",
+    "normalization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:non_generic_string",
+   "type": "function",
+   "name": "non_generic_string",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    74,
+    81
+   ],
+   "summary": "Returns the value only if it passes all the generic/placeholder/report filters, otherwise None.",
+   "tags": [
+    "heuristic",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:first_raw_input_string",
+   "type": "function",
+   "name": "first_raw_input_string",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    83,
+    93
+   ],
+   "summary": "Returns the first non-generic string value found among a set of candidate keys in a raw tool-call input payload.",
+   "tags": [
+    "parsing",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:extract_task_prompt",
+   "type": "function",
+   "name": "extract_task_prompt",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    95,
+    146
+   ],
+   "summary": "Extracts the best-guess subagent task prompt from multiple candidate sources in an OpenCode tool call.",
+   "tags": [
+    "acp-protocol",
+    "parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:opencode_app_session_id",
+   "type": "function",
+   "name": "opencode_app_session_id",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    148,
+    154
+   ],
+   "summary": "Validates and extracts an OpenCode application session id from a raw string.",
+   "tags": [
+    "parsing",
+    "session"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:extract_task_session_id",
+   "type": "function",
+   "name": "extract_task_session_id",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    156,
+    167
+   ],
+   "summary": "Extracts the OpenCode subagent session id embedded in a task-result payload.",
+   "tags": [
+    "acp-protocol",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_completed_task_result",
+   "type": "function",
+   "name": "is_completed_task_result",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    169,
+    174
+   ],
+   "summary": "Checks whether tool-call content represents a completed subagent task result.",
+   "tags": [
+    "heuristic",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:map_tool_kind",
+   "type": "function",
+   "name": "map_tool_kind",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    180,
+    209
+   ],
+   "summary": "Maps a raw OpenCode ACP tool-call kind/name into the app's canonical tool kind.",
+   "tags": [
+    "acp-protocol",
+    "mapping"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:map_tool_result_chunk",
+   "type": "function",
+   "name": "map_tool_result_chunk",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    210,
+    254
+   ],
+   "summary": "Builds a normalized tool-result chunk for OpenCode tool calls, special-casing subagent task delegation results.",
+   "tags": [
+    "acp-protocol",
+    "normalization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:should_emit_tool_start",
+   "type": "function",
+   "name": "should_emit_tool_start",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    256,
+    258
+   ],
+   "summary": "Decides whether a tool-start event should be emitted for a given OpenCode tool name.",
+   "tags": [
+    "acp-protocol",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:should_emit_tool_result",
+   "type": "function",
+   "name": "should_emit_tool_result",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    260,
+    267
+   ],
+   "summary": "Decides whether a tool-result event should be emitted for a given OpenCode tool call outcome.",
+   "tags": [
+    "acp-protocol",
+    "filtering"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:run_acp_protocol",
+   "type": "function",
+   "name": "run_acp_protocol",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    272,
+    294
+   ],
+   "summary": "Runs the ACP session loop for the OpenCode CLI agent by delegating to the shared acp_common::run_acp_protocol implementation.",
+   "tags": [
+    "acp-protocol",
+    "entry-point"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/types.rs:as_str",
+   "type": "function",
+   "name": "as_str",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "lineRange": [
+    50,
+    83
+   ],
+   "summary": "Converts a CliAgentType variant to its canonical string identifier.",
+   "tags": [
+    "serialization",
+    "enum"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/parsers/types.rs:parse",
+   "type": "function",
+   "name": "parse",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "lineRange": [
+    85,
+    119
+   ],
+   "summary": "Parses a string into a CliAgentType variant.",
+   "tags": [
+    "parsing",
+    "enum"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:max_chunk_sequence",
+   "type": "function",
+   "name": "max_chunk_sequence",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    11,
+    19
+   ],
+   "summary": "Returns the highest chunk sequence number currently stored for a session.",
+   "tags": [
+    "persistence",
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:insert_chunk",
+   "type": "function",
+   "name": "insert_chunk",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    22,
+    58
+   ],
+   "summary": "Inserts a new transcript chunk row for a session at the given sequence number.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:run_chunk_side_effects",
+   "type": "function",
+   "name": "run_chunk_side_effects",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    64,
+    68
+   ],
+   "summary": "Runs any side effects triggered by a newly inserted chunk (e.g. persisting subagent child sessions).",
+   "tags": [
+    "persistence",
+    "side-effects"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:run_chunk_side_effects_with_args",
+   "type": "function",
+   "name": "run_chunk_side_effects_with_args",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    70,
+    86
+   ],
+   "summary": "Runs chunk side effects using a pre-serialized arguments string, avoiding redundant serialization.",
+   "tags": [
+    "persistence",
+    "side-effects"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:is_subagent_chunk",
+   "type": "function",
+   "name": "is_subagent_chunk",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    92,
+    94
+   ],
+   "summary": "Checks whether a chunk represents a subagent task-delegation tool call.",
+   "tags": [
+    "persistence",
+    "subagent"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:subagent_session_id",
+   "type": "function",
+   "name": "subagent_session_id",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    98,
+    134
+   ],
+   "summary": "Extracts the subagent session id from a subagent-delegation chunk, if present.",
+   "tags": [
+    "persistence",
+    "subagent"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:persist_subagent_child_session",
+   "type": "function",
+   "name": "persist_subagent_child_session",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    139,
+    183
+   ],
+   "summary": "Creates/links a persisted child session record for a subagent task spawned from a chunk.",
+   "tags": [
+    "persistence",
+    "subagent",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_label",
+   "type": "function",
+   "name": "truncate_label",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    185,
+    192
+   ],
+   "summary": "Truncates a label string to a display-safe length.",
+   "tags": [
+    "utility",
+    "string"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:load_chunks",
+   "type": "function",
+   "name": "load_chunks",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    195,
+    250
+   ],
+   "summary": "Loads all transcript chunks for a session in sequence order.",
+   "tags": [
+    "persistence",
+    "query"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_chunks_after",
+   "type": "function",
+   "name": "truncate_chunks_after",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    256,
+    262
+   ],
+   "summary": "Deletes transcript chunks created after a given timestamp for a session.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_chunks_after_with_reason",
+   "type": "function",
+   "name": "truncate_chunks_after_with_reason",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "lineRange": [
+    264,
+    287
+   ],
+   "summary": "Deletes transcript chunks after a given timestamp and records a history-mutation reason.",
+   "tags": [
+    "persistence",
+    "mutation",
+    "audit"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:OpenCodeAdapter",
+   "type": "class",
+   "name": "OpenCodeAdapter",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "lineRange": [
+    177,
+    177
+   ],
+   "summary": "ACP adapter implementing OpenCode-specific tool-kind mapping and subagent task-result normalization.",
+   "tags": [
+    "acp-protocol",
+    "adapter"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/cli/parsers/types.rs:CliAgentType",
+   "type": "class",
+   "name": "CliAgentType",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "lineRange": [
+    16,
+    47
+   ],
+   "summary": "Enum of every CLI agent integration supported by the app (Claude Code, Codex, Cursor, Kiro, Copilot, OpenCode, and many more), used throughout parsing, launch profiles, and persistence.",
+   "tags": [
+    "enum",
+    "domain-model",
+    "cli-agent"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/cli/parsers/types.rs:TokenUsage",
+   "type": "class",
+   "name": "TokenUsage",
+   "filePath": "src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "lineRange": [
+    128,
+    138
+   ],
+   "summary": "Struct tracking input/output/cache token counts and model name for a CLI agent turn, used across all parser implementations.",
+   "tags": [
+    "domain-model",
+    "token-usage"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:extract_task_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:quoted_attr",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_generic_task_label",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_paste_placeholder",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_result_like_report",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:strip_known_prompt_prelude",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:non_generic_string",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:first_raw_input_string",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:extract_task_prompt",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:opencode_app_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:extract_task_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:is_completed_task_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:map_tool_kind",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:map_tool_result_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:should_emit_tool_start",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:should_emit_tool_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:run_acp_protocol",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/types.rs:as_str",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/types.rs:parse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:max_chunk_sequence",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:insert_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:run_chunk_side_effects",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:run_chunk_side_effects_with_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:is_subagent_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:subagent_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:persist_subagent_child_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_label",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:load_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_chunks_after",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_chunks_after_with_reason",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:OpenCodeAdapter",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/parsers/types.rs:CliAgentType",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/parsers/types.rs:TokenUsage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:run_acp_protocol",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/opencode.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:OpenCodeAdapter",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/types.rs:as_str",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/types.rs:parse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/parsers/types.rs:CliAgentType",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/parsers/types.rs:TokenUsage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:max_chunk_sequence",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:insert_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:run_chunk_side_effects",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:subagent_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:persist_subagent_child_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:load_chunks",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_chunks_after",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs:truncate_chunks_after_with_reason",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/persistence/chunk_ops.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/src/agent_sessions/cli/parsers/opencode.rs:run_acp_protocol",
+   "target": "function:src-tauri/src/agent_sessions/cli/parsers/acp_common.rs:run_acp_protocol",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

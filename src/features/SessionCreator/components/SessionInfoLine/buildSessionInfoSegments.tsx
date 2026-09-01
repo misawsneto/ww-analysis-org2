@@ -1,0 +1,216 @@
+import type { TFunction } from "i18next";
+import React from "react";
+
+import AnyIcon from "@src/components/AnyIcon";
+import { KeyboardShortcutTooltipContent } from "@src/components/KeyboardShortcut";
+import type { PillGroupSegment } from "@src/components/PillGroup";
+import { getShortcutKeys } from "@src/config/keyboard/shortcutDisplay";
+import {
+  RUNNING_LOCATIONS,
+  type RunningLocation,
+} from "@src/config/sessionCreatorConfig";
+import {
+  CodeIcon,
+  FolderClosedIcon,
+  FolderLibraryIcon,
+  Home01Icon,
+  HugeiconsIcon,
+  WorkflowCircle05Icon,
+} from "@src/icons";
+import { REPO_KIND, type RepoKind } from "@src/store/repo/types";
+
+import { LOCATION_ICONS } from "./locationConfig";
+
+/** Max pill label width for repo/branch segments in the session info row. */
+const SESSION_INFO_LABEL_MAX_WIDTH = 180;
+const SESSION_INFO_SHORTCUT_TOOLTIP_DELAY_MS = 2000;
+
+interface SessionInfoDisplayParams {
+  isMultiRoot: boolean;
+  workspaceName?: string;
+  repoName?: string;
+  repoKind?: RepoKind;
+  isSystemPathSource?: boolean;
+  isSystemHomeSource?: boolean;
+  hideBranch: boolean;
+  t: TFunction;
+}
+
+export interface SessionInfoDisplayState {
+  sourceDisplayName: string;
+  SourceIcon:
+    | typeof FolderLibraryIcon
+    | typeof CodeIcon
+    | typeof Home01Icon
+    | typeof FolderClosedIcon;
+  hasSource: boolean;
+  showBranchRow: boolean;
+}
+
+export function getSessionInfoDisplayState({
+  isMultiRoot,
+  workspaceName,
+  repoName,
+  repoKind,
+  isSystemPathSource = false,
+  isSystemHomeSource = false,
+  hideBranch,
+  t,
+}: SessionInfoDisplayParams): SessionInfoDisplayState {
+  return {
+    sourceDisplayName:
+      (isMultiRoot ? workspaceName : repoName) ||
+      t("selectors.sessionInfo.sourcePlaceholder"),
+    SourceIcon: isSystemHomeSource
+      ? Home01Icon
+      : isMultiRoot
+        ? FolderLibraryIcon
+        : isSystemPathSource || repoKind === REPO_KIND.FOLDER
+          ? FolderClosedIcon
+          : CodeIcon,
+    hasSource: !!repoName || isMultiRoot,
+    showBranchRow:
+      !hideBranch &&
+      !isSystemPathSource &&
+      !!repoName &&
+      repoKind !== REPO_KIND.FOLDER &&
+      !isMultiRoot,
+  };
+}
+
+interface BuildSessionInfoSegmentsParams extends SessionInfoDisplayState {
+  isRepoSelectorOpen: boolean;
+  isBranchSelectorOpen: boolean;
+  branchLoading?: boolean;
+  branchName?: string;
+  worktreeLocation?: RunningLocation;
+  worktreeLocationLabel?: string;
+  worktreeSourceLabel?: string;
+  isLocationDropdownOpen: boolean;
+  locationTriggerRef: React.Ref<HTMLButtonElement>;
+  disabled: boolean;
+  t: TFunction;
+  handleRepoTriggerClick: () => void;
+  handleBranchTriggerClick: () => void;
+  handleLocationTriggerClick: () => void;
+}
+
+export function buildSessionInfoSegments({
+  SourceIcon,
+  hasSource,
+  sourceDisplayName,
+  isRepoSelectorOpen,
+  handleRepoTriggerClick,
+  worktreeLocation,
+  worktreeLocationLabel,
+  isLocationDropdownOpen,
+  handleLocationTriggerClick,
+  locationTriggerRef,
+  showBranchRow,
+  branchLoading,
+  branchName,
+  isBranchSelectorOpen,
+  handleBranchTriggerClick,
+  worktreeSourceLabel,
+  disabled,
+  t,
+}: BuildSessionInfoSegmentsParams): PillGroupSegment[] {
+  const segments: PillGroupSegment[] = [
+    {
+      id: "repo",
+      icon: (
+        <AnyIcon
+          icon={SourceIcon}
+          size={14}
+          strokeWidth={1.75}
+          className={hasSource ? "text-text-1" : "text-primary-6"}
+        />
+      ),
+      label: sourceDisplayName,
+      maxLabelWidth: SESSION_INFO_LABEL_MAX_WIDTH,
+      active: isRepoSelectorOpen,
+      danger: !hasSource,
+      tooltip: disabled ? undefined : (
+        <KeyboardShortcutTooltipContent
+          label={t("selectors.sessionInfo.switchWorkspace")}
+          shortcut={getShortcutKeys("open_workspace_selector")}
+        />
+      ),
+      tooltipFramed: true,
+      tooltipPosition: "bottom",
+      tooltipMouseEnterDelay: SESSION_INFO_SHORTCUT_TOOLTIP_DELAY_MS,
+      ariaLabel: t("selectors.sessionInfo.sourceAria"),
+      disabled,
+      onClick: handleRepoTriggerClick,
+    },
+  ];
+
+  if (worktreeLocation !== undefined) {
+    const locationEntry = RUNNING_LOCATIONS.find(
+      (location) => location.id === worktreeLocation
+    )!;
+    segments.push({
+      id: "location",
+      icon: LOCATION_ICONS[worktreeLocation],
+      label:
+        worktreeLocation === "worktree" && worktreeLocationLabel
+          ? worktreeLocationLabel
+          : t(locationEntry.i18nKey),
+      maxLabelWidth: SESSION_INFO_LABEL_MAX_WIDTH,
+      active: isLocationDropdownOpen,
+      tooltip: disabled ? undefined : (
+        <KeyboardShortcutTooltipContent
+          label={t("selectors.sessionInfo.switchLocation")}
+          shortcut={getShortcutKeys("open_location_selector")}
+        />
+      ),
+      tooltipFramed: true,
+      tooltipPosition: "bottom",
+      tooltipMouseEnterDelay: SESSION_INFO_SHORTCUT_TOOLTIP_DELAY_MS,
+      ariaLabel: t("selectors.sessionInfo.locationAria"),
+      disabled,
+      buttonRef: locationTriggerRef,
+      onClick: handleLocationTriggerClick,
+    });
+  }
+
+  if (showBranchRow) {
+    segments.push({
+      id: "branch",
+      icon: (
+        <HugeiconsIcon
+          icon={WorkflowCircle05Icon}
+          data-icon="git-branch"
+          size={14}
+          strokeWidth={1.75}
+          className="text-text-1"
+        />
+      ),
+      label: branchLoading
+        ? t("status.loading")
+        : worktreeLocation === "worktree" && worktreeSourceLabel
+          ? worktreeSourceLabel
+          : branchName || "",
+      maxLabelWidth: SESSION_INFO_LABEL_MAX_WIDTH,
+      active: isBranchSelectorOpen,
+      tooltip: disabled ? undefined : (
+        <KeyboardShortcutTooltipContent
+          label={
+            worktreeLocation === "worktree"
+              ? t("selectors.sessionInfo.selectWorktreeSource")
+              : t("selectors.sessionInfo.switchBranch")
+          }
+          shortcut={getShortcutKeys("open_branch_selector")}
+        />
+      ),
+      tooltipFramed: true,
+      tooltipPosition: "bottom",
+      tooltipMouseEnterDelay: SESSION_INFO_SHORTCUT_TOOLTIP_DELAY_MS,
+      ariaLabel: t("selectors.sessionInfo.branchAria"),
+      disabled: disabled || branchLoading,
+      onClick: handleBranchTriggerClick,
+    });
+  }
+
+  return segments;
+}

@@ -1,0 +1,76 @@
+/**
+ * React adapter for the pure chat-group projection.
+ *
+ * Grouping, collapse survivor selection, metadata, and index mapping live in
+ * `useChatGroupsProjection.ts` so the same algorithm can later run outside
+ * React (for example, in a Web Worker).
+ */
+import { useMemo } from "react";
+
+import {
+  type UseChatGroupsOptions,
+  type UseChatGroupsReturn,
+  projectChatGroups,
+} from "./useChatGroupsProjection";
+
+export {
+  getUnloadedTurnMeta,
+  isTurnCollapseEligible,
+  isTurnPreviewItem,
+} from "./useChatGroupsProjection";
+export type {
+  ChatGroupMeta,
+  UnloadedTurnMeta,
+  UseChatGroupsOptions,
+  UseChatGroupsReturn,
+} from "./useChatGroupsProjection";
+
+export function useChatGroups(
+  optimizedChatHistory: Parameters<typeof projectChatGroups>[0],
+  options: UseChatGroupsOptions = {}
+): UseChatGroupsReturn {
+  const {
+    collapseOverrides,
+    isAgentWorking,
+    collapseTailWhenIdle,
+    forceCollapseAllTurns,
+    disableTurnCollapse,
+    allTurnsCollapsed,
+    defaultTurnCollapsed,
+    turnGrouping,
+    isTurnHeaderItem,
+    isTurnBoundaryItem,
+  } = options;
+
+  const projectionOptions = useMemo<UseChatGroupsOptions>(
+    () => ({
+      collapseOverrides,
+      isAgentWorking,
+      collapseTailWhenIdle,
+      forceCollapseAllTurns,
+      disableTurnCollapse,
+      allTurnsCollapsed,
+      defaultTurnCollapsed,
+      turnGrouping,
+      isTurnHeaderItem,
+      isTurnBoundaryItem,
+    }),
+    [
+      collapseOverrides,
+      isAgentWorking,
+      collapseTailWhenIdle,
+      forceCollapseAllTurns,
+      disableTurnCollapse,
+      allTurnsCollapsed,
+      defaultTurnCollapsed,
+      turnGrouping,
+      isTurnHeaderItem,
+      isTurnBoundaryItem,
+    ]
+  );
+
+  return useMemo(
+    () => projectChatGroups(optimizedChatHistory, projectionOptions),
+    [optimizedChatHistory, projectionOptions]
+  );
+}

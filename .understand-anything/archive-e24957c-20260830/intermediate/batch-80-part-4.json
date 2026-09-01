@@ -1,0 +1,1832 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "type": "file",
+   "name": "summaries.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "summary": "Builds and caches per-turn summaries (span, timing) for Cursor IDE sessions, backed by a SQLite cache keyed on a source fingerprint to avoid recomputation.",
+   "tags": [
+    "source-adapter",
+    "caching",
+    "database"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:build_cursor_ide_turn_summaries",
+   "type": "function",
+   "name": "build_cursor_ide_turn_summaries",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "lineRange": [
+    14,
+    76
+   ],
+   "summary": "Computes per-turn summaries from a composer's bubble order and raw bubble data.",
+   "tags": [
+    "parser",
+    "utility",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:cursor_ide_summary_source_fingerprint",
+   "type": "function",
+   "name": "cursor_ide_summary_source_fingerprint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "lineRange": [
+    78,
+    105
+   ],
+   "summary": "Computes a fingerprint over a composer's timestamps and bubble order to detect when cached summaries are stale.",
+   "tags": [
+    "utility",
+    "hashing",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:load_cached_cursor_ide_turn_summaries",
+   "type": "function",
+   "name": "load_cached_cursor_ide_turn_summaries",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "lineRange": [
+    107,
+    162
+   ],
+   "summary": "Loads previously cached turn summaries for a session if their fingerprint still matches the source.",
+   "tags": [
+    "database",
+    "caching",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:upsert_cursor_ide_turn_summaries",
+   "type": "function",
+   "name": "upsert_cursor_ide_turn_summaries",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "lineRange": [
+    164,
+    221
+   ],
+   "summary": "Persists computed turn summaries for a session into the SQLite cache.",
+   "tags": [
+    "database",
+    "caching",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "type": "file",
+   "name": "cache.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "summary": "SQLite-backed cache layer shared by all 'imported history' sources: upserts, prunes, and queries cached session rows, tracks per-record signatures for change detection, and demotes superseded continuation sessions.",
+   "tags": [
+    "source-adapter",
+    "database",
+    "caching"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:ImportedHistoryCachedSession",
+   "type": "class",
+   "name": "ImportedHistoryCachedSession",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    22,
+    43
+   ],
+   "summary": "Row shape of a cached imported-history session as stored in and read from the SQLite cache table.",
+   "tags": [
+    "data-model",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:to_row",
+   "type": "function",
+   "name": "to_row",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    46,
+    64
+   ],
+   "summary": "Converts an ImportedHistoryCachedSession into its SQL row parameter tuple.",
+   "tags": [
+    "database",
+    "conversion",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:cached_record_signatures_from_conn",
+   "type": "function",
+   "name": "cached_record_signatures_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    67,
+    99
+   ],
+   "summary": "Reads the cached record signatures for a source from the SQLite connection, used to detect changed records.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:record_matches_cached_signature",
+   "type": "function",
+   "name": "record_matches_cached_signature",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    101,
+    110
+   ],
+   "summary": "Compares a discovered record's signature against its cached signature to determine if it changed.",
+   "tags": [
+    "utility",
+    "validation",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:upsert_imported_session_cache_from_conn",
+   "type": "function",
+   "name": "upsert_imported_session_cache_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    112,
+    213
+   ],
+   "summary": "Upserts a batch of imported-history session cache inputs into the SQLite cache.",
+   "tags": [
+    "database",
+    "caching",
+    "imported-history"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:core_session_record_from_imported_input",
+   "type": "function",
+   "name": "core_session_record_from_imported_input",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    215,
+    238
+   ],
+   "summary": "Builds a canonical SessionRecord from an imported-history cache input.",
+   "tags": [
+    "conversion",
+    "data-model",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:prune_missing_records_from_conn",
+   "type": "function",
+   "name": "prune_missing_records_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    240,
+    268
+   ],
+   "summary": "Removes cached session rows for a source whose live session ids no longer exist on disk.",
+   "tags": [
+    "database",
+    "caching",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_session_page_from_conn",
+   "type": "function",
+   "name": "query_imported_session_page_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    270,
+    285
+   ],
+   "summary": "Queries a paginated page of cached sessions for a source.",
+   "tags": [
+    "database",
+    "pagination",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_sidebar_page_from_conn",
+   "type": "function",
+   "name": "query_imported_sidebar_page_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    289,
+    367
+   ],
+   "summary": "Queries a paginated, date-bounded page of cached sessions with sidebar impact metadata.",
+   "tags": [
+    "database",
+    "pagination",
+    "query"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_recent_paths_from_conn",
+   "type": "function",
+   "name": "query_imported_recent_paths_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    369,
+    384
+   ],
+   "summary": "Queries the most recently updated source paths for a source from the cache.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:get_cached_source_path_from_conn",
+   "type": "function",
+   "name": "get_cached_source_path_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    386,
+    399
+   ],
+   "summary": "Looks up the source file path cached for a given session id.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:get_cached_source_path_by_suffix_from_conn",
+   "type": "function",
+   "name": "get_cached_source_path_by_suffix_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    406,
+    421
+   ],
+   "summary": "Looks up a cached source path by matching a session id suffix, used for fuzzy resolution.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:stat_imported_transcript_by_session_id_from_conn",
+   "type": "function",
+   "name": "stat_imported_transcript_by_session_id_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    432,
+    460
+   ],
+   "summary": "Returns lightweight stat metadata for a cached session's source transcript.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:metadata_mtime_epoch_ms",
+   "type": "function",
+   "name": "metadata_mtime_epoch_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    462,
+    469
+   ],
+   "summary": "Converts filesystem metadata's modification time into epoch milliseconds.",
+   "tags": [
+    "utility",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:source_session_counts_from_conn",
+   "type": "function",
+   "name": "source_session_counts_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    479,
+    500
+   ],
+   "summary": "Counts cached sessions grouped by source for reporting/telemetry.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_from_conn",
+   "type": "function",
+   "name": "query_cached_sessions_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    502,
+    516
+   ],
+   "summary": "Queries a simple paginated list of cached sessions for a source.",
+   "tags": [
+    "database",
+    "pagination",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_by_filter_from_conn",
+   "type": "function",
+   "name": "query_cached_sessions_by_filter_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    518,
+    596
+   ],
+   "summary": "Queries cached sessions for a source using an arbitrary SQL filter and parameters.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:sync_source_cache_from_conn",
+   "type": "function",
+   "name": "sync_source_cache_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    598,
+    606
+   ],
+   "summary": "Performs a full cache sync for a source: upserts discovered records and prunes missing ones.",
+   "tags": [
+    "database",
+    "sync",
+    "caching"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_session_from_conn",
+   "type": "function",
+   "name": "query_cached_session_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    608,
+    622
+   ],
+   "summary": "Looks up a single cached session row by source session id.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_session_by_session_id_from_conn",
+   "type": "function",
+   "name": "query_cached_session_by_session_id_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    630,
+    656
+   ],
+   "summary": "Looks up a single cached session row by canonical session id.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_for_source_from_conn",
+   "type": "function",
+   "name": "query_cached_sessions_for_source_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    658,
+    670
+   ],
+   "summary": "Queries all cached sessions for a given source.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_for_repo_from_conn",
+   "type": "function",
+   "name": "query_cached_sessions_for_repo_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    676,
+    695
+   ],
+   "summary": "Queries cached sessions for a source scoped to a specific repository path.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_in_range_from_conn",
+   "type": "function",
+   "name": "query_cached_sessions_in_range_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    697,
+    715
+   ],
+   "summary": "Queries cached sessions for a source within a timestamp range.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:current_epoch_ms",
+   "type": "function",
+   "name": "current_epoch_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    717,
+    722
+   ],
+   "summary": "Returns the current time as epoch milliseconds.",
+   "tags": [
+    "utility",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:changed_records_from_conn",
+   "type": "function",
+   "name": "changed_records_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    724,
+    745
+   ],
+   "summary": "Filters discovered records down to those whose signature differs from the cached value.",
+   "tags": [
+    "database",
+    "utility",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:live_ids_from_signatures",
+   "type": "function",
+   "name": "live_ids_from_signatures",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    747,
+    759
+   ],
+   "summary": "Extracts the set of live source session ids from a signatures map.",
+   "tags": [
+    "utility",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:continuation_group_metadata_json",
+   "type": "function",
+   "name": "continuation_group_metadata_json",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    778,
+    781
+   ],
+   "summary": "Serializes a continuation group key into the JSON metadata stored on cached rows.",
+   "tags": [
+    "utility",
+    "serialization",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:demote_superseded_continuations_from_conn",
+   "type": "function",
+   "name": "demote_superseded_continuations_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "lineRange": [
+    792,
+    869
+   ],
+   "summary": "Demotes older sessions in a continuation chain so only the newest sibling is listed, keeping the rest as hidden children.",
+   "tags": [
+    "database",
+    "caching",
+    "imported-history"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "type": "file",
+   "name": "cache_tests.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "summary": "Unit tests for the imported-history SQLite cache: pagination, date-bounded sidebar queries, pruning, signature-based change detection, and continuation-chain election/demotion logic.",
+   "tags": [
+    "test",
+    "database",
+    "imported-history"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:fixture_conn",
+   "type": "function",
+   "name": "fixture_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    9,
+    15
+   ],
+   "summary": "Creates an in-memory SQLite connection with the imported-history cache schema for tests.",
+   "tags": [
+    "test",
+    "fixture",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:input",
+   "type": "function",
+   "name": "input",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    17,
+    45
+   ],
+   "summary": "Builds a sample ImportedHistoryCacheInput fixture for use in cache tests.",
+   "tags": [
+    "test",
+    "fixture",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_query_paginates_newest_first",
+   "type": "function",
+   "name": "cache_query_paginates_newest_first",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    48,
+    66
+   ],
+   "summary": "Verifies cached session queries return pages ordered newest-first.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:sidebar_query_is_date_bounded_and_carries_impact_metadata",
+   "type": "function",
+   "name": "sidebar_query_is_date_bounded_and_carries_impact_metadata",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    69,
+    99
+   ],
+   "summary": "Verifies the sidebar query respects date bounds and includes impact metadata.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:sidebar_query_paginates_within_one_date_bucket",
+   "type": "function",
+   "name": "sidebar_query_paginates_within_one_date_bucket",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    102,
+    126
+   ],
+   "summary": "Verifies sidebar pagination behaves correctly within a single date bucket.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_pruning_is_source_scoped",
+   "type": "function",
+   "name": "cache_pruning_is_source_scoped",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    129,
+    152
+   ],
+   "summary": "Verifies pruning missing records only affects rows belonging to the target source.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_signature_comparison_detects_changed_records",
+   "type": "function",
+   "name": "cache_signature_comparison_detects_changed_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    155,
+    169
+   ],
+   "summary": "Verifies signature comparison correctly flags records whose content changed.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_recent_paths_are_deduped_and_limited",
+   "type": "function",
+   "name": "cache_recent_paths_are_deduped_and_limited",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    172,
+    185
+   ],
+   "summary": "Verifies recent-paths queries deduplicate and respect the requested limit.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_single_session_lookup_returns_source_metadata",
+   "type": "function",
+   "name": "cache_single_session_lookup_returns_source_metadata",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    188,
+    203
+   ],
+   "summary": "Verifies single-session lookup returns the expected source metadata fields.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_canonical_session_lookup_returns_source_and_hidden_rows",
+   "type": "function",
+   "name": "cache_canonical_session_lookup_returns_source_and_hidden_rows",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    206,
+    221
+   ],
+   "summary": "Verifies canonical session id lookup finds both source and demoted/hidden rows.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_source_list_filters_unlistable_sessions",
+   "type": "function",
+   "name": "cache_source_list_filters_unlistable_sessions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    224,
+    236
+   ],
+   "summary": "Verifies source-scoped listing filters out unlistable (hidden) sessions.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_repo_query_includes_hidden_child_with_inherited_parent_repo",
+   "type": "function",
+   "name": "cache_repo_query_includes_hidden_child_with_inherited_parent_repo",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    239,
+    259
+   ],
+   "summary": "Verifies repo-scoped queries include hidden child sessions that inherit their parent's repo.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_session_page_filters_child_sessions",
+   "type": "function",
+   "name": "cache_session_page_filters_child_sessions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    262,
+    281
+   ],
+   "summary": "Verifies paginated session queries exclude hidden child/continuation sessions.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_range_query_is_source_scoped_and_filters_unlistable_sessions",
+   "type": "function",
+   "name": "cache_range_query_is_source_scoped_and_filters_unlistable_sessions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    284,
+    299
+   ],
+   "summary": "Verifies range-bounded queries are source-scoped and filter unlistable sessions.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:listable_of",
+   "type": "function",
+   "name": "listable_of",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    301,
+    310
+   ],
+   "summary": "Test helper that marks a fixture session row as listable/unlistable.",
+   "tags": [
+    "test",
+    "fixture",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:continuation_election_demotes_all_but_newest_sibling",
+   "type": "function",
+   "name": "continuation_election_demotes_all_but_newest_sibling",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    313,
+    339
+   ],
+   "summary": "Verifies continuation election keeps only the newest sibling session listed, demoting the rest.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:continuation_election_never_promotes_and_skips_subagents",
+   "type": "function",
+   "name": "continuation_election_never_promotes_and_skips_subagents",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "lineRange": [
+    342,
+    365
+   ],
+   "summary": "Verifies continuation election never promotes a hidden session and skips subagent sessions.",
+   "tags": [
+    "test",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "type": "file",
+   "name": "managed_mirror.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "summary": "Tracks which imported-history sessions originate from orgii's own managed mirror directories, so they can be fingerprinted and excluded from double-counting against the original external source.",
+   "tags": [
+    "source-adapter",
+    "database",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:table_exists",
+   "type": "function",
+   "name": "table_exists",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "lineRange": [
+    20,
+    27
+   ],
+   "summary": "Checks whether a given table exists in a SQLite connection's schema.",
+   "tags": [
+    "database",
+    "utility",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:managed_source_session_ids_from_conn",
+   "type": "function",
+   "name": "managed_source_session_ids_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "lineRange": [
+    32,
+    83
+   ],
+   "summary": "Loads the set of source session ids that originate from orgii's managed mirror for a given source.",
+   "tags": [
+    "database",
+    "query",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:is_managed_source_session_id",
+   "type": "function",
+   "name": "is_managed_source_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "lineRange": [
+    92,
+    104
+   ],
+   "summary": "Checks whether a source session id is present in the managed-mirror id set.",
+   "tags": [
+    "utility",
+    "validation",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:append_managed_fingerprint",
+   "type": "function",
+   "name": "append_managed_fingerprint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "lineRange": [
+    109,
+    115
+   ],
+   "summary": "Appends a managed-mirror marker to a signature fingerprint so managed and external copies hash differently.",
+   "tags": [
+    "utility",
+    "hashing",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs",
+   "type": "file",
+   "name": "managed_roots.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs",
+   "summary": "Helper for enumerating per-profile child directories under orgii's managed mirror root, used when discovering managed session copies.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs:profile_root_children",
+   "type": "function",
+   "name": "profile_root_children",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs",
+   "lineRange": [
+    14,
+    33
+   ],
+   "summary": "Lists immediate child directories of a managed-mirror profile root whose names match a given suffix.",
+   "tags": [
+    "filesystem",
+    "discovery",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "type": "file",
+   "name": "metadata.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "summary": "Shared metadata types for the imported-history cache layer: cache input records, record signatures used for change detection, and the impact-stats struct summarizing a session's file edits.",
+   "tags": [
+    "data-model",
+    "type-definition",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryImpactStats",
+   "type": "class",
+   "name": "ImportedHistoryImpactStats",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "lineRange": [
+    4,
+    9
+   ],
+   "summary": "Aggregate stats (files touched, lines added/removed) summarizing a session's edit impact.",
+   "tags": [
+    "data-model",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryCacheInput",
+   "type": "class",
+   "name": "ImportedHistoryCacheInput",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "lineRange": [
+    57,
+    82
+   ],
+   "summary": "Normalized input record written into the imported-history SQLite cache for a discovered session.",
+   "tags": [
+    "data-model",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryRecordSignature",
+   "type": "class",
+   "name": "ImportedHistoryRecordSignature",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "lineRange": [
+    85,
+    93
+   ],
+   "summary": "Signature fields used to detect whether a discovered record has changed since it was last cached.",
+   "tags": [
+    "data-model",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryDiscoveredRecord",
+   "type": "class",
+   "name": "ImportedHistoryDiscoveredRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "lineRange": [
+    96,
+    104
+   ],
+   "summary": "A freshly discovered session record paired with its computed signature, prior to cache comparison.",
+   "tags": [
+    "data-model",
+    "imported-history",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:is_imported_history_source",
+   "type": "function",
+   "name": "is_imported_history_source",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "lineRange": [
+    35,
+    54
+   ],
+   "summary": "Checks whether a given source identifier belongs to the generic imported-history family of sources.",
+   "tags": [
+    "utility",
+    "validation",
+    "imported-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:signature",
+   "type": "function",
+   "name": "signature",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "lineRange": [
+    107,
+    116
+   ],
+   "summary": "Computes the ImportedHistoryRecordSignature for a discovered record.",
+   "tags": [
+    "utility",
+    "hashing",
+    "imported-history"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:build_cursor_ide_turn_summaries",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:build_cursor_ide_turn_summaries",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:cursor_ide_summary_source_fingerprint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:cursor_ide_summary_source_fingerprint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:load_cached_cursor_ide_turn_summaries",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:load_cached_cursor_ide_turn_summaries",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:upsert_cursor_ide_turn_summaries",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs:upsert_cursor_ide_turn_summaries",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:ImportedHistoryCachedSession",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:ImportedHistoryCachedSession",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:to_row",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:to_row",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:cached_record_signatures_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:cached_record_signatures_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:record_matches_cached_signature",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:record_matches_cached_signature",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:upsert_imported_session_cache_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:upsert_imported_session_cache_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:core_session_record_from_imported_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:prune_missing_records_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:prune_missing_records_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_session_page_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_session_page_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_sidebar_page_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_sidebar_page_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_recent_paths_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_imported_recent_paths_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:get_cached_source_path_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:get_cached_source_path_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:get_cached_source_path_by_suffix_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:get_cached_source_path_by_suffix_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:stat_imported_transcript_by_session_id_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:stat_imported_transcript_by_session_id_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:metadata_mtime_epoch_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:source_session_counts_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:source_session_counts_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_by_filter_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:sync_source_cache_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:sync_source_cache_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_session_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_session_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_session_by_session_id_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_session_by_session_id_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_for_source_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_for_source_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_for_repo_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_for_repo_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_in_range_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:query_cached_sessions_in_range_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:current_epoch_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:current_epoch_ms",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:changed_records_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:changed_records_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:live_ids_from_signatures",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:live_ids_from_signatures",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:continuation_group_metadata_json",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:continuation_group_metadata_json",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:demote_superseded_continuations_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:demote_superseded_continuations_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:fixture_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_query_paginates_newest_first",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:sidebar_query_is_date_bounded_and_carries_impact_metadata",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:sidebar_query_paginates_within_one_date_bucket",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_pruning_is_source_scoped",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_signature_comparison_detects_changed_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_recent_paths_are_deduped_and_limited",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_single_session_lookup_returns_source_metadata",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_canonical_session_lookup_returns_source_and_hidden_rows",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_source_list_filters_unlistable_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_repo_query_includes_hidden_child_with_inherited_parent_repo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_session_page_filters_child_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:cache_range_query_is_source_scoped_and_filters_unlistable_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:listable_of",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:continuation_election_demotes_all_but_newest_sibling",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache_tests.rs:continuation_election_never_promotes_and_skips_subagents",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:table_exists",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:managed_source_session_ids_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:managed_source_session_ids_from_conn",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:is_managed_source_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:is_managed_source_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:append_managed_fingerprint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_mirror.rs:append_managed_fingerprint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs:profile_root_children",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/managed_roots.rs:profile_root_children",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryImpactStats",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryImpactStats",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryCacheInput",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryCacheInput",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryRecordSignature",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryRecordSignature",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryDiscoveredRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:ImportedHistoryDiscoveredRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:is_imported_history_source",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:is_imported_history_source",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:signature",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:signature",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:core_session_record_from_imported_input",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionRecord",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs:is_imported_history_source",
+   "target": "function:src-tauri/crates/orgtrack-core/src/policy.rs:source_tier_policy",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  }
+ ]
+}

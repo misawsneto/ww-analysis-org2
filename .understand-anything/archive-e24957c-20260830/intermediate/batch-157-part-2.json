@@ -1,0 +1,289 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/modules/shared/launchpad/hooks/useRepoSetup.ts",
+      "type": "file",
+      "name": "useRepoSetup.ts",
+      "filePath": "src/modules/shared/launchpad/hooks/useRepoSetup.ts",
+      "summary": "Hook that orchestrates the repo setup flow: builds a setup prompt from repo detection context, creates a new agent session, and dispatches a synthetic event to auto-launch it.",
+      "tags": ["hook", "repo-setup", "session", "orchestration"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Jotai's useSetAtom to write session-runtime and pending-event global state as part of the setup flow."
+    },
+    {
+      "id": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts",
+      "type": "file",
+      "name": "useScriptCrud.ts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptCrud.ts",
+      "summary": "Hook providing CRUD operations for custom user-defined scripts (add/update/remove), persisted as JSON and merged with scripts discovered by useScriptDiscovery.",
+      "tags": ["hook", "crud", "scripts", "launchpad"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "type": "file",
+      "name": "useScriptDiscovery.ts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "summary": "Hook and multi-language parsers that discover build/run/test scripts across a repo by inspecting package.json, Makefile, Cargo.toml, pyproject.toml, go.mod, pom.xml, build.gradle, Gemfile, composer.json, pubspec.yaml, mix.exs, and .NET project files.",
+      "tags": ["hook", "script-discovery", "multi-language", "parser"],
+      "complexity": "complex",
+      "languageNotes": "Implements one parser per ecosystem (Node, Rust, Python, Go, Java, Gradle, Ruby, PHP, Dart, Elixir, .NET), unified into a single discoverScripts pipeline that dedupes and sorts by category."
+    },
+    {
+      "id": "file:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts",
+      "type": "file",
+      "name": "useSetupRepoAutoLaunch.ts",
+      "filePath": "src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts",
+      "summary": "Hook that listens for repo-setup-update window events tied to a session and automatically requests a new browser session once a dev server URL becomes available.",
+      "tags": ["hook", "event-handler", "auto-launch", "launchpad"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/shared/launchpad/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/modules/shared/launchpad/types.ts",
+      "summary": "Shared TypeScript type and constant definitions for the launchpad module, covering repo detection, env var scanning, and script discovery domains.",
+      "tags": ["type-definition", "shared-types", "launchpad"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useRepoSetup.ts:useRepoSetup",
+      "type": "function",
+      "name": "useRepoSetup",
+      "filePath": "src/modules/shared/launchpad/hooks/useRepoSetup.ts",
+      "lineRange": [70, 168],
+      "summary": "Hook that builds the setup prompt for a detected repo, creates a session via SessionService, and dispatches a synthetic user event to auto-launch it, tracking launching state and errors.",
+      "tags": ["hook", "session-creation", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:loadCustomScripts",
+      "type": "function",
+      "name": "loadCustomScripts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptCrud.ts",
+      "lineRange": [22, 37],
+      "summary": "Reads and parses the repo's custom-scripts JSON file, returning an empty array if the file is missing or malformed.",
+      "tags": ["file-system", "json", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:saveCustomScripts",
+      "type": "function",
+      "name": "saveCustomScripts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptCrud.ts",
+      "lineRange": [39, 53],
+      "summary": "Persists the custom scripts array to the repo's JSON storage file, creating the containing directory if it does not exist.",
+      "tags": ["file-system", "json", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:useScriptCrud",
+      "type": "function",
+      "name": "useScriptCrud",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptCrud.ts",
+      "lineRange": [60, 176],
+      "summary": "Hook combining discovered scripts with custom user scripts, exposing add/update/remove operations that persist to disk and refresh combined state.",
+      "tags": ["hook", "crud", "scripts", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:inferCategory",
+      "type": "function",
+      "name": "inferCategory",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [28, 37],
+      "summary": "Infers a script's category (dev/build/test/lint/start/other) from its name using pattern and substring matching.",
+      "tags": ["utility", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseNodeScripts",
+      "type": "function",
+      "name": "parseNodeScripts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [43, 65],
+      "summary": "Parses the scripts section of package.json and tags each entry with the detected Node package manager.",
+      "tags": ["parser", "nodejs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseMakefileTargets",
+      "type": "function",
+      "name": "parseMakefileTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [75, 100],
+      "summary": "Parses public (non-underscore-prefixed) targets from a Makefile into runnable script entries.",
+      "tags": ["parser", "makefile"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseCargoTargets",
+      "type": "function",
+      "name": "parseCargoTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [102, 139],
+      "summary": "Detects a Cargo.toml file and derives standard Rust build/test/run script targets.",
+      "tags": ["parser", "rust", "cargo"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parsePythonScripts",
+      "type": "function",
+      "name": "parsePythonScripts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [141, 181],
+      "summary": "Detects Python project tooling (pyproject.toml, requirements.txt, manage.py) and produces corresponding run/test/install scripts.",
+      "tags": ["parser", "python"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseGoTargets",
+      "type": "function",
+      "name": "parseGoTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [183, 198],
+      "summary": "Derives standard Go build/test/run script targets when a go.mod file is present.",
+      "tags": ["parser", "go"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseJavaTargets",
+      "type": "function",
+      "name": "parseJavaTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [200, 234],
+      "summary": "Parses a Maven pom.xml to produce Java build/test/run script targets.",
+      "tags": ["parser", "java", "maven"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseGradleTargets",
+      "type": "function",
+      "name": "parseGradleTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [236, 252],
+      "summary": "Detects Gradle build files (Groovy or Kotlin DSL) and produces corresponding build/test script targets.",
+      "tags": ["parser", "gradle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseRubyTargets",
+      "type": "function",
+      "name": "parseRubyTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [254, 289],
+      "summary": "Parses Gemfile and Rakefile presence to derive Ruby bundle/test/rake script targets.",
+      "tags": ["parser", "ruby"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parsePhpTargets",
+      "type": "function",
+      "name": "parsePhpTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [291, 322],
+      "summary": "Parses the scripts section of composer.json to derive PHP script targets.",
+      "tags": ["parser", "php", "composer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseDartTargets",
+      "type": "function",
+      "name": "parseDartTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [324, 360],
+      "summary": "Detects a Flutter/Dart pubspec.yaml and produces corresponding run/build/test script targets.",
+      "tags": ["parser", "dart", "flutter"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseElixirTargets",
+      "type": "function",
+      "name": "parseElixirTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [362, 388],
+      "summary": "Detects a mix.exs file and produces corresponding Elixir mix script targets.",
+      "tags": ["parser", "elixir"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseDotNetTargets",
+      "type": "function",
+      "name": "parseDotNetTargets",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [390, 435],
+      "summary": "Detects .NET project/solution files in the repo directory and produces corresponding dotnet build/run/test script targets.",
+      "tags": ["parser", "dotnet", "csharp"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:discoverScripts",
+      "type": "function",
+      "name": "discoverScripts",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [450, 514],
+      "summary": "Aggregates all per-ecosystem script parsers appropriate to the detected repo type, deduplicates results by name, and sorts them by category order.",
+      "tags": ["orchestration", "script-discovery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:useScriptDiscovery",
+      "type": "function",
+      "name": "useScriptDiscovery",
+      "filePath": "src/modules/shared/launchpad/hooks/useScriptDiscovery.ts",
+      "lineRange": [525, 572],
+      "summary": "Hook exposing discovered repo scripts with loading state, refresh-on-focus behavior, and a manual refresh function.",
+      "tags": ["hook", "script-discovery", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts:useSetupRepoAutoLaunch",
+      "type": "function",
+      "name": "useSetupRepoAutoLaunch",
+      "filePath": "src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts",
+      "lineRange": [26, 76],
+      "summary": "Hook that subscribes to repo-setup-update window events scoped to a session id and triggers a new browser session request once a dev URL is detected.",
+      "tags": ["hook", "event-handler", "auto-launch"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/modules/shared/launchpad/hooks/useRepoSetup.ts", "target": "function:src/modules/shared/launchpad/hooks/useRepoSetup.ts:useRepoSetup", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:loadCustomScripts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:saveCustomScripts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:useScriptCrud", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:inferCategory", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseNodeScripts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseMakefileTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseCargoTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parsePythonScripts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseGoTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseJavaTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseGradleTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseRubyTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parsePhpTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseDartTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseElixirTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:parseDotNetTargets", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:discoverScripts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:useScriptDiscovery", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts", "target": "function:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts:useSetupRepoAutoLaunch", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/modules/shared/launchpad/hooks/useRepoSetup.ts", "target": "function:src/modules/shared/launchpad/hooks/useRepoSetup.ts:useRepoSetup", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:useScriptCrud", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:useScriptDiscovery", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts", "target": "function:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts:useSetupRepoAutoLaunch", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/modules/shared/launchpad/hooks/useRepoSetup.ts", "target": "file:src/modules/shared/launchpad/config.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useRepoSetup.ts", "target": "file:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useRepoSetup.ts", "target": "file:src/modules/shared/launchpad/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts", "target": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptCrud.ts", "target": "file:src/modules/shared/launchpad/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts", "target": "file:src/modules/shared/launchpad/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:src/modules/shared/launchpad/hooks/useRepoSetup.ts:useRepoSetup", "target": "function:src/modules/shared/launchpad/hooks/useSetupRepoAutoLaunch.ts:useSetupRepoAutoLaunch", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/shared/launchpad/hooks/useRepoSetup.ts:useRepoSetup", "target": "function:src/modules/shared/launchpad/config.ts:buildSetupPrompt", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/shared/launchpad/hooks/useScriptCrud.ts:useScriptCrud", "target": "function:src/modules/shared/launchpad/hooks/useScriptDiscovery.ts:useScriptDiscovery", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

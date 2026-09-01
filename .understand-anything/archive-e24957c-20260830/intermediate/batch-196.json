@@ -1,0 +1,756 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "type": "file",
+      "name": "code_routes.rs",
+      "filePath": "src-tauri/crates/api-search/src/code_routes.rs",
+      "summary": "Axum HTTP handlers for the code-symbol search API — exposes symbol search across a repo and per-file symbol extraction via tree-sitter, with their request query-param types.",
+      "tags": ["api-handler", "code-search", "rust", "axum"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/code_routes.rs:search_symbols",
+      "type": "function",
+      "name": "search_symbols",
+      "filePath": "src-tauri/crates/api-search/src/code_routes.rs",
+      "lineRange": [24, 60],
+      "summary": "Axum GET handler that searches code symbols across a repository by name/kind and returns a capped, ranked list of matches as JSON.",
+      "tags": ["api-handler", "code-search", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/code_routes.rs:get_file_symbols",
+      "type": "function",
+      "name": "get_file_symbols",
+      "filePath": "src-tauri/crates/api-search/src/code_routes.rs",
+      "lineRange": [77, 151],
+      "summary": "Axum GET handler that reads a single file, parses it with tree-sitter, builds its scope graph, and returns the extracted symbol outline with parse timing.",
+      "tags": ["api-handler", "code-search", "tree-sitter", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/code_routes.rs:SymbolSearchParams",
+      "type": "class",
+      "name": "SymbolSearchParams",
+      "filePath": "src-tauri/crates/api-search/src/code_routes.rs",
+      "lineRange": [154, 159],
+      "summary": "Query-parameter struct for the symbol search endpoint, carrying repo path, search query, optional kind filter, and result limit.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/code_routes.rs:FileSymbolsParams",
+      "type": "class",
+      "name": "FileSymbolsParams",
+      "filePath": "src-tauri/crates/api-search/src/code_routes.rs",
+      "lineRange": [162, 164],
+      "summary": "Query-parameter struct for the file-symbols endpoint, carrying the target file path.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/api-search/src/error.rs",
+      "type": "file",
+      "name": "error.rs",
+      "filePath": "src-tauri/crates/api-search/src/error.rs",
+      "summary": "Defines the shared ApiError JSON response type used by the search API's route handlers, rendering as HTTP 500 with an error message and optional error type.",
+      "tags": ["error-handling", "api-response", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "class",
+      "name": "ApiError",
+      "filePath": "src-tauri/crates/api-search/src/error.rs",
+      "lineRange": [17, 23],
+      "summary": "Standard error response type for the search API implementing IntoResponse and From<String>/From<&str> conversions, always rendering as HTTP 500 with a JSON body.",
+      "tags": ["error-handling", "api-response", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "type": "file",
+      "name": "file_routes.rs",
+      "filePath": "src-tauri/crates/api-search/src/file_routes.rs",
+      "summary": "Axum HTTP handlers for fuzzy file/folder name search, workspace file indexing, and cache invalidation, with .gitignore-aware filtering.",
+      "tags": ["api-handler", "file-search", "rust", "axum"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/file_routes.rs:search_files",
+      "type": "function",
+      "name": "search_files",
+      "filePath": "src-tauri/crates/api-search/src/file_routes.rs",
+      "lineRange": [34, 75],
+      "summary": "Axum GET handler performing fuzzy file/folder search against the indexed workspace and returning combined ranked results as JSON.",
+      "tags": ["api-handler", "file-search", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/file_routes.rs:index_files",
+      "type": "function",
+      "name": "index_files",
+      "filePath": "src-tauri/crates/api-search/src/file_routes.rs",
+      "lineRange": [91, 101],
+      "summary": "Axum POST handler that (re)builds the project file index for a given root path and returns the indexed file count.",
+      "tags": ["api-handler", "file-search", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/file_routes.rs:clear_cache",
+      "type": "function",
+      "name": "clear_cache",
+      "filePath": "src-tauri/crates/api-search/src/file_routes.rs",
+      "lineRange": [114, 117],
+      "summary": "Axum DELETE handler that clears the cached file-search index.",
+      "tags": ["api-handler", "file-search", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/file_routes.rs:FileSearchParams",
+      "type": "class",
+      "name": "FileSearchParams",
+      "filePath": "src-tauri/crates/api-search/src/file_routes.rs",
+      "lineRange": [124, 132],
+      "summary": "Query-parameter struct for the file search endpoint, carrying query text, root path, result cap, extension filter, and excluded directories.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/api-search/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/api-search/src/lib.rs",
+      "summary": "Crate root for the api-search Axum sub-API, declaring the code_routes/error/file_routes/routes/types submodules and re-exporting ApiError and the response types for consumption by the unified app server.",
+      "tags": ["entry-point", "barrel", "rust", "module-declaration"],
+      "complexity": "simple",
+      "languageNotes": "Documented as a 'pure leaf' crate with no back-edges into `app`; the unified server mounts api_search::routes::create_routes() directly onto its router."
+    },
+    {
+      "id": "file:src-tauri/crates/api-search/src/routes.rs",
+      "type": "file",
+      "name": "routes.rs",
+      "filePath": "src-tauri/crates/api-search/src/routes.rs",
+      "summary": "Central route table for the search HTTP API, wiring file-search and code-symbol-search handlers onto an Axum Router mounted under /search.",
+      "tags": ["routing", "api-handler", "rust", "axum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/routes.rs:api_info",
+      "type": "function",
+      "name": "api_info",
+      "filePath": "src-tauri/crates/api-search/src/routes.rs",
+      "lineRange": [10, 22],
+      "summary": "Returns a JSON summary of the search API (name, version, status, endpoint list) for the API root route.",
+      "tags": ["api-handler", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "type": "function",
+      "name": "create_routes",
+      "filePath": "src-tauri/crates/api-search/src/routes.rs",
+      "lineRange": [24, 35],
+      "summary": "Builds the Axum Router for the search API, registering file search/index/cache and code symbol search endpoints against their handler functions.",
+      "tags": ["routing", "api-handler", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/api-search/src/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "summary": "Request/response DTOs with OpenAPI (utoipa) schema annotations for the search API, covering file search, file indexing, and code symbol search endpoints.",
+      "tags": ["type-definition", "api-schema", "data-model", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:ApiInfo",
+      "type": "class",
+      "name": "ApiInfo",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [6, 11],
+      "summary": "Response struct describing the search API's name, version, status, and endpoint listing.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:EndpointsList",
+      "type": "class",
+      "name": "EndpointsList",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [14, 17],
+      "summary": "Struct listing the OpenAPI spec and file-search endpoint URLs surfaced by the API root.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileSearchQuery",
+      "type": "class",
+      "name": "FileSearchQuery",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [20, 26],
+      "summary": "Query parameters for the file search endpoint: search text, root path, result cap, extension filter, and excluded directories.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileSearchResult",
+      "type": "class",
+      "name": "FileSearchResult",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [29, 35],
+      "summary": "Single file/folder match returned by the fuzzy file search endpoint, with path, type, score, and filename.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileSearchResponse",
+      "type": "class",
+      "name": "FileSearchResponse",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [38, 43],
+      "summary": "Aggregate response for file search combining matched files and folders with total index size and search timing.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileIndexRequest",
+      "type": "class",
+      "name": "FileIndexRequest",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [46, 49],
+      "summary": "Request body for triggering a file index rebuild, specifying root path and directories to exclude.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileIndexResponse",
+      "type": "class",
+      "name": "FileIndexResponse",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [52, 55],
+      "summary": "Response confirming a file index rebuild, with the indexed file count and a status message.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:SymbolSearchQuery",
+      "type": "class",
+      "name": "SymbolSearchQuery",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [58, 63],
+      "summary": "Query parameters for the code symbol search endpoint: repo path, query text, optional symbol kind filter, and result limit.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:ApiSymbolInfo",
+      "type": "class",
+      "name": "ApiSymbolInfo",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [66, 74],
+      "summary": "A single matched code symbol with name, kind, file location, and line/column span.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:SymbolSearchResponse",
+      "type": "class",
+      "name": "SymbolSearchResponse",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [77, 80],
+      "summary": "Response wrapping the list of matched symbols with a total count.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileSymbolsQuery",
+      "type": "class",
+      "name": "FileSymbolsQuery",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [83, 85],
+      "summary": "Query-parameter struct for the file-symbols endpoint, carrying the target file path.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileSymbol",
+      "type": "class",
+      "name": "FileSymbol",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [88, 98],
+      "summary": "Recursive symbol node for a file's outline, with name, kind, source location, and nested child symbols.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/api-search/src/types.rs:FileSymbolsResponse",
+      "type": "class",
+      "name": "FileSymbolsResponse",
+      "filePath": "src-tauri/crates/api-search/src/types.rs",
+      "lineRange": [101, 106],
+      "summary": "Response containing a file's parsed symbol outline, detected language, and parse timing.",
+      "tags": ["type-definition", "api-schema", "rust"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "file:src-tauri/crates/api-search/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "file:src-tauri/crates/api-search/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "file:src-tauri/crates/api-search/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "file:src-tauri/crates/api-search/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/lib.rs",
+      "target": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/lib.rs",
+      "target": "file:src-tauri/crates/api-search/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/lib.rs",
+      "target": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/lib.rs",
+      "target": "file:src-tauri/crates/api-search/src/routes.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/lib.rs",
+      "target": "file:src-tauri/crates/api-search/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/code_routes.rs:search_symbols",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/code_routes.rs:get_file_symbols",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "class:src-tauri/crates/api-search/src/code_routes.rs:SymbolSearchParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "class:src-tauri/crates/api-search/src/code_routes.rs:FileSymbolsParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/error.rs",
+      "target": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:search_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:index_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:clear_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "class:src-tauri/crates/api-search/src/file_routes.rs:FileSearchParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/routes.rs:api_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:ApiInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:EndpointsList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSearchQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSearchResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSearchResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileIndexRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileIndexResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:SymbolSearchQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:ApiSymbolInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:SymbolSearchResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSymbolsQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSymbol",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSymbolsResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/code_routes.rs:search_symbols",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/code_routes.rs:get_file_symbols",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "class:src-tauri/crates/api-search/src/code_routes.rs:SymbolSearchParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/code_routes.rs",
+      "target": "class:src-tauri/crates/api-search/src/code_routes.rs:FileSymbolsParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/error.rs",
+      "target": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:search_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:index_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:clear_cache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/file_routes.rs",
+      "target": "class:src-tauri/crates/api-search/src/file_routes.rs:FileSearchParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/routes.rs",
+      "target": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:ApiInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:EndpointsList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSearchQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSearchResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSearchResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileIndexRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileIndexResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:SymbolSearchQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:ApiSymbolInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:SymbolSearchResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSymbolsQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSymbol",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/api-search/src/types.rs",
+      "target": "class:src-tauri/crates/api-search/src/types.rs:FileSymbolsResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/code_routes.rs:search_symbols",
+      "target": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/code_routes.rs:get_file_symbols",
+      "target": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/file_routes.rs:search_files",
+      "target": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/file_routes.rs:index_files",
+      "target": "class:src-tauri/crates/api-search/src/error.rs:ApiError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:search_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:index_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "target": "function:src-tauri/crates/api-search/src/file_routes.rs:clear_cache",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "target": "function:src-tauri/crates/api-search/src/code_routes.rs:search_symbols",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/api-search/src/routes.rs:create_routes",
+      "target": "function:src-tauri/crates/api-search/src/code_routes.rs:get_file_symbols",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

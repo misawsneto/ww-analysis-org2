@@ -1,0 +1,866 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 9,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docs/audit-2026-06-10/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 146,
+      "nonEmptyLines": 109,
+      "sections": [
+        {
+          "heading": "ORGII 全局架构审计报告 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "一、最终验收标准 (Acceptance Criteria) — 顶层 30 条",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "A. FSM / 队列 / 控制流（反模式 #47–#54）",
+          "level": 3,
+          "line": 15
+        },
+        {
+          "heading": "B. 模块边界 / 死代码（反模式 #2、#29、#43）",
+          "level": 3,
+          "line": 24
+        },
+        {
+          "heading": "C. 命名 / 语义（反模式 #4、#23、#30）",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "D. Wire 协议 / 跨层契约（反模式 #7、#8）",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "E. Init parity / Resolver 对称（反模式 #9、#10）",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "F. Panic / 错误处理 / Sync I/O",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "G. UI / 调试残留 / 安全",
+          "level": 3,
+          "line": 59
+        },
+        {
+          "heading": "二、Critical / High Findings 总览表",
+          "level": 2,
+          "line": 68
+        },
+        {
+          "heading": "三、子报告索引",
+          "level": 2,
+          "line": 97
+        },
+        {
+          "heading": "四、Top-5 立即整改优先级",
+          "level": 2,
+          "line": 111
+        },
+        {
+          "heading": "五、审计自检 — 验收的\"最高标准\"",
+          "level": 2,
+          "line": 125
+        },
+        {
+          "heading": "六、给 review 看的一句话总结",
+          "level": 2,
+          "line": 143
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/be-audit.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 218,
+      "nonEmptyLines": 152,
+      "sections": [
+        {
+          "heading": "后端架构审计 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive summary",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "层 1 — 编译正确性",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "层 2 — 死代码 / 重复",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "F-CRIT-2 `src/coding_agent/` 整棵 orphaned",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "F-HIGH-4 `benchmark.rs` 未注册命令",
+          "level": 3,
+          "line": 41
+        },
+        {
+          "heading": "F-HIGH-5 `advanced-search` crate 同 crate 5 struct 双定义",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "F-HIGH-6 `ApiError` 3 处定义",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "F-HIGH-7 `ProviderConfig` 跨 crate 同名不同义",
+          "level": 3,
+          "line": 59
+        },
+        {
+          "heading": "Info：cargo-machete allow-list 仅覆盖 3 个 macro-only crate",
+          "level": 3,
+          "line": 65
+        },
+        {
+          "heading": "层 3 — 命名一致性",
+          "level": 2,
+          "line": 72
+        },
+        {
+          "heading": "层 4 — 语义重载（BE）",
+          "level": 2,
+          "line": 80
+        },
+        {
+          "heading": "层 5 — 默认分支（生产）",
+          "level": 2,
+          "line": 97
+        },
+        {
+          "heading": "F-HIGH-10 `extractors.rs:341` 吞新 `EventDisplayVariant`",
+          "level": 3,
+          "line": 101
+        },
+        {
+          "heading": "Medium：`websocket_handler.rs:252 _ => /* Ignore */`",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "层 6 — 跨域泄漏",
+          "level": 2,
+          "line": 115
+        },
+        {
+          "heading": "Medium：`agent-core` 内引用变体专属字面量",
+          "level": 3,
+          "line": 117
+        },
+        {
+          "heading": "层 7 — 新开发者困惑",
+          "level": 2,
+          "line": 130
+        },
+        {
+          "heading": "层 8 — Wire 协议",
+          "level": 2,
+          "line": 138
+        },
+        {
+          "heading": "层 9 — Init parity",
+          "level": 2,
+          "line": 145
+        },
+        {
+          "heading": "F-HIGH-1 `launch_cli_agent` 静默丢字段",
+          "level": 3,
+          "line": 155
+        },
+        {
+          "heading": "层 10 — Resolver 对称",
+          "level": 2,
+          "line": 163
+        },
+        {
+          "heading": "F-CRIT-7 `lib.rs:892` startup unwrap_or_default",
+          "level": 3,
+          "line": 167
+        },
+        {
+          "heading": "F-HIGH-9 `aggregation.rs` 4 处 `.expect(\"resolver initialized\")`",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "Sweep 表",
+          "level": 2,
+          "line": 179
+        },
+        {
+          "heading": "Memory file 校验（BE 视角）",
+          "level": 2,
+          "line": 200
+        },
+        {
+          "heading": "重大遗留",
+          "level": 2,
+          "line": 214
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/cross-layer-audit-part2.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 96,
+      "nonEmptyLines": 69,
+      "sections": [
+        {
+          "heading": "跨层架构审计 — Part 2（Sweep / Memory / 验收）",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "跨层 Sweep",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "同时出现在 FE / BE 的 magic string（候选单源生成）",
+          "level": 3,
+          "line": 9
+        },
+        {
+          "heading": "kebab-case / snake_case IPC 参数",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "localStorage / sessionStorage vs SQLite",
+          "level": 3,
+          "line": 27
+        },
+        {
+          "heading": "DEFAULT_PINNED 列表（memory 校验）",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "Skill IDs",
+          "level": 3,
+          "line": 50
+        },
+        {
+          "heading": "Memory file 校验（cross-layer 视角）",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "跨层 Acceptance Criteria 自检",
+          "level": 2,
+          "line": 76
+        },
+        {
+          "heading": "待深查（\"needs deeper investigation\"）",
+          "level": 2,
+          "line": 91
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/cross-layer-audit.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 171,
+      "nonEmptyLines": 134,
+      "sections": [
+        {
+          "heading": "跨层架构审计 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive summary",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Tauri Command Matrix（前 20 高频）",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Event / Status enum 对齐",
+          "level": 2,
+          "line": 50
+        },
+        {
+          "heading": "`SessionStatus` — F-CRIT-4",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "`AgentExecMode`",
+          "level": 3,
+          "line": 75
+        },
+        {
+          "heading": "事件名（`agent:*`、`code_session.*`）",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "Init Parity Matrix",
+          "level": 2,
+          "line": 104
+        },
+        {
+          "heading": "F-HIGH-1 `launch_cli_agent` 字段丢",
+          "level": 3,
+          "line": 116
+        },
+        {
+          "heading": "Resolver Fallback Matrix",
+          "level": 2,
+          "line": 124
+        },
+        {
+          "heading": "SQLite schema vs FE assumption",
+          "level": 2,
+          "line": 144
+        },
+        {
+          "heading": "Anti-pattern #43 — `ALTER TABLE` 工业级残留（F-HIGH-12）",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "FE 列名假设（采样）",
+          "level": 3,
+          "line": 157
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/fe-audit.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 185,
+      "nonEmptyLines": 135,
+      "sections": [
+        {
+          "heading": "前端架构审计 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive summary",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "层 1 — 编译正确性",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "层 2 — 死代码 / 重复",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Finding F-MED-2：`engines/ChatPanel/` 根目录 6 个 misplaced PanelView",
+          "level": 3,
+          "line": 34
+        },
+        {
+          "heading": "Finding：`engines/ChatPanel/index.tsx:18` 从 `modules/MainApp/AgentOrgs/store` import",
+          "level": 3,
+          "line": 41
+        },
+        {
+          "heading": "Finding：`MessageReferenceCards.tsx:62` 跨 engine import Simulator types",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "死代码候选（与 `workspace_dead_code_scan_landscape.md` 一致）",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "层 3 — 命名一致性",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "层 4 — 语义重载（FE 视角）",
+          "level": 2,
+          "line": 69
+        },
+        {
+          "heading": "层 5 — 默认分支",
+          "level": 2,
+          "line": 84
+        },
+        {
+          "heading": "层 6 — 跨域泄漏",
+          "level": 2,
+          "line": 92
+        },
+        {
+          "heading": "层 7 — 新开发者困惑",
+          "level": 2,
+          "line": 103
+        },
+        {
+          "heading": "层 8 — Wire 协议（FE 侧）",
+          "level": 2,
+          "line": 111
+        },
+        {
+          "heading": "层 9 — Init parity（FE 入口）",
+          "level": 2,
+          "line": 121
+        },
+        {
+          "heading": "层 10 — Resolver 对称",
+          "level": 2,
+          "line": 134
+        },
+        {
+          "heading": "Sweep 表（全 FE 代码库）",
+          "level": 2,
+          "line": 146
+        },
+        {
+          "heading": "Memory file 校验（FE 视角）",
+          "level": 2,
+          "line": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/findings-detail.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 235,
+      "nonEmptyLines": 167,
+      "sections": [
+        {
+          "heading": "Findings 详细 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "CRITICAL",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "F-CRIT-1 — UI 直接调 transport，绕过 FSM",
+          "level": 3,
+          "line": 10
+        },
+        {
+          "heading": "F-CRIT-2 — `src/coding_agent/` 整棵 orphaned module tree",
+          "level": 3,
+          "line": 20
+        },
+        {
+          "heading": "F-CRIT-3 — `holdSessionQueueForStopAtom` 是 FSM `stopping` phase 的 shadow boolean",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "F-CRIT-4 — `SessionStatus` 4 套并存",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "F-CRIT-5 — 子 agent UI 嵌套 regex 与 Rust 前缀完全不匹配",
+          "level": 3,
+          "line": 58
+        },
+        {
+          "heading": "F-CRIT-6 — `resolveFilePayload.ts` 异步 fallback 不对称（OPEN bug）",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "F-CRIT-7 — `src-tauri/src/lib.rs:892` 一行 `unwrap_or_default` → 全用户 file-history 被删",
+          "level": 3,
+          "line": 75
+        },
+        {
+          "heading": "F-CRIT-8 — TEMP DIAG 残留 5 文件 25 行",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "HIGH",
+          "level": 2,
+          "line": 107
+        },
+        {
+          "heading": "F-HIGH-1 — `launch_cli_agent` 静默丢 7 字段",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "F-HIGH-2 — `userInitiatedCancelAtom` 多 concern atom",
+          "level": 3,
+          "line": 113
+        },
+        {
+          "heading": "F-HIGH-3 — BE `CancelReason` 软校验",
+          "level": 3,
+          "line": 124
+        },
+        {
+          "heading": "F-HIGH-4 — `benchmark.rs` 10+ unregistered Tauri command",
+          "level": 3,
+          "line": 131
+        },
+        {
+          "heading": "F-HIGH-5 — `advanced-search` crate 同 crate 5 struct 双定义",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "F-HIGH-6 — `ApiError` 3 处定义",
+          "level": 3,
+          "line": 139
+        },
+        {
+          "heading": "F-HIGH-7 — `ProviderConfig` 跨 crate 同名不同语义",
+          "level": 3,
+          "line": 143
+        },
+        {
+          "heading": "F-HIGH-8 — 177 处生产 `unwrap()`",
+          "level": 3,
+          "line": 147
+        },
+        {
+          "heading": "F-HIGH-9 — 7 处 poisoned-mutex / resolver-init `.expect()` 可达",
+          "level": 3,
+          "line": 153
+        },
+        {
+          "heading": "F-HIGH-10 — `extractors.rs:341` `_ => None` 吞新枚举变体",
+          "level": 3,
+          "line": 161
+        },
+        {
+          "heading": "F-HIGH-11 — `useWorkspaceChat.ts` 8 dispatch site 集中",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "F-HIGH-12 — Anti-pattern #43 工业级 schema 残留",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "MEDIUM",
+          "level": 2,
+          "line": 178
+        },
+        {
+          "heading": "F-MED-1 — `setSessionRuntimeStatusAtom` 多 source 写入",
+          "level": 3,
+          "line": 180
+        },
+        {
+          "heading": "F-MED-2 — `engines/ChatPanel/` 根目录 6 misplaced",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "F-MED-3 — 重载词缺 glossary",
+          "level": 3,
+          "line": 190
+        },
+        {
+          "heading": "F-MED-4 — FE 5 处重复定义 status / mode",
+          "level": 3,
+          "line": 194
+        },
+        {
+          "heading": "F-MED-5 — `cli_agent_resume` 缺 `ensure_cli_account_key_fresh`",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "F-MED-6 — `dangerouslySetInnerHTML` 13 处需 sanitizer 审计",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "F-MED-7 — 文件大小超限",
+          "level": 3,
+          "line": 208
+        },
+        {
+          "heading": "F-MED-8 — `agent-core` 11 处变体字面量泄漏",
+          "level": 3,
+          "line": 214
+        },
+        {
+          "heading": "LOW / INFO",
+          "level": 2,
+          "line": 220
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 33
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/memory-verification.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 130,
+      "nonEmptyLines": 110,
+      "sections": [
+        {
+          "heading": "Memory file 校验 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "跨层 / 共享",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "前端 / UI",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "OPEN bug（diag 日志仍活）",
+          "level": 2,
+          "line": 68
+        },
+        {
+          "heading": "后端",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "流程 / feedback memory",
+          "level": 2,
+          "line": 93
+        },
+        {
+          "heading": "建议 memory 更新清单",
+          "level": 2,
+          "line": 118
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/naming-collisions.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 141,
+      "nonEmptyLines": 105,
+      "sections": [
+        {
+          "heading": "命名碰撞 / 重载词 glossary — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "跨模块同名 `pub struct`（Rust BE）",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "FE 跨文件同名 type（TypeScript）",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "跨层重复定义（FE + BE 都有）",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "语义重载词 glossary",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "`session`（FE 3 含义 / BE 8 含义 = 11 含义）",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "`agent`（FE 3 / BE 8 含义）",
+          "level": 3,
+          "line": 89
+        },
+        {
+          "heading": "`tab`（FE 8 套并行 tab 系统）",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "`mode`（3 套状态机）",
+          "level": 3,
+          "line": 114
+        },
+        {
+          "heading": "`pill`（3 个 UI primitive）",
+          "level": 3,
+          "line": 120
+        },
+        {
+          "heading": "`panel`、`event`、`block`、`creator`、`bridge`、`manager`、`handler`、`broadcast`、`gateway`、`provider`、`runtime`、`config`",
+          "level": 3,
+          "line": 126
+        },
+        {
+          "heading": "鬼影命名（已被部分清理但残留）",
+          "level": 2,
+          "line": 132
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "docs/audit-2026-06-10/remediation-roadmap.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 118,
+      "nonEmptyLines": 90,
+      "sections": [
+        {
+          "heading": "整改路线图 — 2026-06-10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Phase 1 — Critical 清零（8 个独立 PR，全部可并行）",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Phase 2 — High（10 个独立 PR）",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Phase 3 — Medium / Low（10+ 个独立 PR）",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Phase 4 — Info / 长尾",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "不在本路线图内（显式 out-of-scope）",
+          "level": 2,
+          "line": 71
+        },
+        {
+          "heading": "Phase 1 PR 互不重叠确认",
+          "level": 2,
+          "line": 83
+        },
+        {
+          "heading": "验收门槛（每个 PR）",
+          "level": 2,
+          "line": 100
+        },
+        {
+          "heading": "\"最高验收标准\" 总结（给 review）",
+          "level": 2,
+          "line": 110
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    }
+  ]
+}

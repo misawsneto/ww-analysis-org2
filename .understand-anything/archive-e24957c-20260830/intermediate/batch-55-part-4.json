@@ -1,0 +1,696 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "type": "file",
+      "name": "conflict.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict.rs",
+      "summary": "Field-level conflict resolver: pure functions consumed by the merge cycle that decide per writable field whether to adopt the remote value, keep the local value, or delegate to the adapter's handle_conflict policy, given an ExternalChange, the local SyncMetadata revisions, and the adapter's declarative FieldMap.",
+      "tags": [
+        "sync",
+        "conflict-resolution",
+        "rust"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "No I/O happens here -- the merge cycle reads ResolverDecision::adopted_fields into a WorkItemPartialUpdate and ResolverDecision::new_revisions into apply_remote_merge, keeping this module pure and easily unit-testable."
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve",
+      "type": "function",
+      "name": "resolve",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict.rs",
+      "lineRange": [
+        78,
+        91
+      ],
+      "summary": "Resolves conflicts for an ExternalChange using the adapter's default field-mtime tie-break policy.",
+      "tags": [
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_with_policy",
+      "type": "function",
+      "name": "resolve_with_policy",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict.rs",
+      "lineRange": [
+        100,
+        193
+      ],
+      "summary": "Resolves conflicts for an ExternalChange field-by-field: adopts remote when its mtime is newer, keeps local when local is newer, and delegates equal-mtime ties to the given tie-break closure.",
+      "tags": [
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_named_fields",
+      "type": "function",
+      "name": "resolve_named_fields",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict.rs",
+      "lineRange": [
+        211,
+        257
+      ],
+      "summary": "Resolves a specific named subset of fields (rather than the full field map) against remote mtimes and existing revisions.",
+      "tags": [
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict.rs:decide_one",
+      "type": "function",
+      "name": "decide_one",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict.rs",
+      "lineRange": [
+        266,
+        301
+      ],
+      "summary": "Decides the per-field verdict (AdoptRemote or KeepLocal) for a single field given its remote mtime, existing revision, and the tie-break policy.",
+      "tags": [
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "type": "file",
+      "name": "conflict_log.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "summary": "Persistent conflict audit and resolution log: when the merge-cycle resolver keeps a locally-written field instead of adopting a conflicting remote value, this module captures a ConflictRow in outbox_conflicts so the user can later choose to use local, use remote, or dismiss the conflict.",
+      "tags": [
+        "sync",
+        "conflict-resolution",
+        "database",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:record_detected",
+      "type": "function",
+      "name": "record_detected",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        156,
+        187
+      ],
+      "summary": "Inserts a ConflictRow into outbox_conflicts capturing the detected field-level conflict (local vs. remote values and mtimes).",
+      "tags": [
+        "sync",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:read_one",
+      "type": "function",
+      "name": "read_one",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        192,
+        205
+      ],
+      "summary": "Reads a single ConflictRow by id.",
+      "tags": [
+        "sync",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:list_for_project",
+      "type": "function",
+      "name": "list_for_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        215,
+        264
+      ],
+      "summary": "Lists conflicts for a project, including up to a limit of already-resolved ones for history display.",
+      "tags": [
+        "sync",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:mark_resolved",
+      "type": "function",
+      "name": "mark_resolved",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        275,
+        310
+      ],
+      "summary": "Marks a conflict resolved (use-local, use-remote, or dismissed) and stamps the resolution timestamp.",
+      "tags": [
+        "sync",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:count_open",
+      "type": "function",
+      "name": "count_open",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        315,
+        325
+      ],
+      "summary": "Counts unresolved conflicts for a project.",
+      "tags": [
+        "sync",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:detect_conflicts",
+      "type": "function",
+      "name": "detect_conflicts",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        351,
+        409
+      ],
+      "summary": "Scans a resolver decision's kept-local fields for ones whose existing revision source is 'local' (i.e. user-written since the last merge) and builds ConflictFieldDelta rows for each.",
+      "tags": [
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:use_remote_revisions",
+      "type": "function",
+      "name": "use_remote_revisions",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        442,
+        457
+      ],
+      "summary": "Builds the new revision stamps to apply when the user chooses 'use remote' for a conflict.",
+      "tags": [
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:row_to_conflict",
+      "type": "function",
+      "name": "row_to_conflict",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        459,
+        495
+      ],
+      "summary": "Converts a SQLite conflict row into a typed ConflictRow, deserializing its fields JSON payload.",
+      "tags": [
+        "sync",
+        "database",
+        "mapping"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictRow",
+      "type": "class",
+      "name": "ConflictRow",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        45,
+        65
+      ],
+      "summary": "Persisted conflict record: project/adapter/entity identity, the per-field local-vs-remote deltas, detection/resolution timestamps, and the resolution verdict.",
+      "tags": [
+        "sync",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictFieldDelta",
+      "type": "class",
+      "name": "ConflictFieldDelta",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        86,
+        110
+      ],
+      "summary": "Local vs. remote value/mtime/source for one conflicting field, plus whether it was ultimately applied.",
+      "tags": [
+        "sync",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictResolution",
+      "type": "class",
+      "name": "ConflictResolution",
+      "filePath": "src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "lineRange": [
+        125,
+        129
+      ],
+      "summary": "User's resolution verdict for a conflict: UseLocal, UseRemote, or Dismissed.",
+      "tags": [
+        "sync",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "type": "file",
+      "name": "connection_store.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "summary": "CRUD store for SyncConnection records (labeled adapter accounts: id, adapter_id, label, auth method, account email), persisted as a JSON file separate from the per-connection auth tokens in connection_token_store.rs.",
+      "tags": [
+        "sync",
+        "data-access",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:save_store_to",
+      "type": "function",
+      "name": "save_store_to",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "lineRange": [
+        78,
+        91
+      ],
+      "summary": "Serializes the connection store to a JSON file at the given path, creating parent directories as needed.",
+      "tags": [
+        "persistence",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:list",
+      "type": "function",
+      "name": "list",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "lineRange": [
+        101,
+        110
+      ],
+      "summary": "Lists all sync connections, sorted by label.",
+      "tags": [
+        "sync",
+        "crud"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "lineRange": [
+        112,
+        132
+      ],
+      "summary": "Creates a new SyncConnection with a generated id, validating the adapter id and auth method before persisting.",
+      "tags": [
+        "sync",
+        "crud",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:rename",
+      "type": "function",
+      "name": "rename",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "lineRange": [
+        134,
+        144
+      ],
+      "summary": "Renames an existing sync connection's label.",
+      "tags": [
+        "sync",
+        "crud"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/connection_store.rs:SyncConnection",
+      "type": "class",
+      "name": "SyncConnection",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "lineRange": [
+        20,
+        28
+      ],
+      "summary": "A labeled sync adapter account: id, adapter_id, display label, auth method, and optional account email.",
+      "tags": [
+        "sync",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "type": "file",
+      "name": "connection_token_store.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "summary": "Secret-bearing store for sync connection auth tokens (PAT, OAuth, host-detected credentials, SSH keypair references), persisted separately from the non-secret SyncConnection metadata in connection_store.rs.",
+      "tags": [
+        "sync",
+        "security",
+        "data-access",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/connection_token_store.rs:save_store_to",
+      "type": "function",
+      "name": "save_store_to",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "lineRange": [
+        52,
+        68
+      ],
+      "summary": "Serializes the token store to a JSON file at the given path with restrictive permissions, creating parent directories as needed.",
+      "tags": [
+        "persistence",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/connection_token_store.rs:ConnectionTokenRecord",
+      "type": "class",
+      "name": "ConnectionTokenRecord",
+      "filePath": "src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "lineRange": [
+        22,
+        29
+      ],
+      "summary": "A stored auth credential for a sync connection: access/refresh token, expiry, and provenance source (e.g. manually entered, detected from gh CLI, SSH key path).",
+      "tags": [
+        "sync",
+        "security",
+        "data-model"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_with_policy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_named_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:decide_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_with_policy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_named_fields",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/io/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:record_detected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:record_detected",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:read_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:read_one",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:list_for_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:list_for_project",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:mark_resolved",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:mark_resolved",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:count_open",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:count_open",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:detect_conflicts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:detect_conflicts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:use_remote_revisions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:use_remote_revisions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:row_to_conflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictRow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictFieldDelta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictFieldDelta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictResolution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/conflict_log.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/conflict_log.rs:ConflictResolution",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/project-management/src/sync/conflict_log.rs:detect_conflicts",
+      "target": "function:src-tauri/crates/project-management/src/sync/conflict.rs:resolve_with_policy",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:save_store_to",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:rename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:rename",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_token_store.rs:save_store_to",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/connection_token_store.rs:ConnectionTokenRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/connection_token_store.rs:ConnectionTokenRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,1231 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "type": "file",
+      "name": "mcp.rs",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "summary": "MCP notification E2E scenarios (`--group mcp`). Verifies that the per-manager `NotificationCounters` debug endpoints - `GET  /agent/test/mcp/notification-counters` - `POST /agent/test/mcp/notification-counters-reset` - `POST /agent/test/mcp/inject-notification` are wired correctly to `McpManager` and follow positive + negative assertions). Why no live-server scenario here: spinning a real MCP s...",
+      "tags": [
+        "test",
+        "e2e-scenario",
+        "mcp",
+        "notifications"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:fetch_counters",
+      "type": "function",
+      "name": "fetch_counters",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        26,
+        42
+      ],
+      "summary": "Internal helper function that fetches counters, used by the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_counters",
+      "type": "function",
+      "name": "reset_counters",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        44,
+        60
+      ],
+      "summary": "Internal helper function that resets counters, used by the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject",
+      "type": "function",
+      "name": "inject",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        62,
+        88
+      ],
+      "summary": "Internal helper function providing `inject` support for the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:counters_snapshot_shape",
+      "type": "function",
+      "name": "counters_snapshot_shape",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        93,
+        133
+      ],
+      "summary": "`GET /test/mcp/notification-counters` returns the full snapshot shape (all five fields). After a fresh `reset`, every counter is zero \u2014 this is the baseline used by the other scenarios.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_unknown_server_rejected",
+      "type": "function",
+      "name": "inject_unknown_server_rejected",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        139,
+        182
+      ],
+      "summary": "`POST /test/mcp/inject-notification` for a server that is NOT connected returns `{ ok: false, error: ... }` and does NOT touch any counter. Negative half of the assertion pair \u2014 we want to be sure that \"no live MCP server\" is observable as a clean error rather than a silent counter bump.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_is_idempotent",
+      "type": "function",
+      "name": "reset_is_idempotent",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        188,
+        215
+      ],
+      "summary": "`POST /test/mcp/notification-counters-reset` is idempotent and returns `{ ok: true }` on every call. Belt-and-braces sanity for the reset endpoint itself, since every other scenario in this group depends on it for baseline isolation.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:post_json",
+      "type": "function",
+      "name": "post_json",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        232,
+        248
+      ],
+      "summary": "Internal helper function that posts json, used by the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:invalid_config_preserved",
+      "type": "function",
+      "name": "invalid_config_preserved",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        253,
+        276
+      ],
+      "summary": "Registry install writes must not turn an invalid existing MCP config into an empty valid file. This scenario uses a temp file through a debug endpoint, so it does not touch the user's real `~/.orgii/mcp-servers.json`.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_prompts_unknown_server_rejected",
+      "type": "function",
+      "name": "list_prompts_unknown_server_rejected",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        282,
+        309
+      ],
+      "summary": "`list-prompts` against a server that isn't connected returns `{ ok: false, error: \u2026 }` with the server name \u2014 symmetry with `inject_unknown_server_rejected`. Proves the error surfaces up instead of being silently swallowed into an empty array.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_all_prompts_returns_array_shape",
+      "type": "function",
+      "name": "list_all_prompts_returns_array_shape",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        324,
+        366
+      ],
+      "summary": "`list-all-prompts` is a total function: it returns `ok:true` with a `prompts` array regardless of whether zero or many servers are connected. This is the aggregator behavior that feeds `agent_list_slash_items` \u2014 if it threw on zero servers the global slash menu would be broken in the most common \"first launch\" state. Positive+negative assertion fidelity: the earlier version of this scenario ass...",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:get_prompt_unknown_server_rejected",
+      "type": "function",
+      "name": "get_prompt_unknown_server_rejected",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        374,
+        404
+      ],
+      "summary": "`get-prompt` on a disconnected server returns a clean error. This is the error path the slash-command dispatcher must surface to the user when the server behind a cached slash command has since disconnected: the prompt name may still be in the cache but the underlying client is gone, and the caller must see a structured failure instead of a hang or panic.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:prompts_cache_has_false_when_empty",
+      "type": "function",
+      "name": "prompts_cache_has_false_when_empty",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        409,
+        432
+      ],
+      "summary": "`prompts-cache-has` for a server with nothing cached yet returns `cached: false`. Baseline for any future scenario that populates the cache via a real `list-prompts` round-trip.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_events",
+      "type": "function",
+      "name": "reset_events",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        464,
+        480
+      ],
+      "summary": "Internal helper function that resets events, used by the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:fetch_events",
+      "type": "function",
+      "name": "fetch_events",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        482,
+        506
+      ],
+      "summary": "Internal helper function that fetches events, used by the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:emit_progress",
+      "type": "function",
+      "name": "emit_progress",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        508,
+        520
+      ],
+      "summary": "Internal helper function providing `emit progress` support for the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_broadcast",
+      "type": "function",
+      "name": "mcp_progress_event_broadcast",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        528,
+        614
+      ],
+      "summary": "Positive half (positive+negative assertion): a `progress` tick emitted with a concrete `total` + `message` lands on the recent-events ring buffer with the exact schema the frontend expects (`sessionId`, `toolCallId`, `toolName`, `progress`, `total`, `message`), AND bumps `toolProgressTotal`. Both checks are required \u2014 a counter bump without a broadcast would make the chat bubble progress bar si...",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_null_preserved",
+      "type": "function",
+      "name": "mcp_progress_event_null_preserved",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        621,
+        681
+      ],
+      "summary": "patch semantics (null vs missing): when `total` and `message` are omitted from the body, the emitted payload MUST contain explicit `null`s (not absent keys). The frontend uses the presence + null vs numeric distinction to decide spinner-vs-bar and no-label-vs-label. A silent drop of the key would break both UI states.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:events_reset_clears_buffer",
+      "type": "function",
+      "name": "events_reset_clears_buffer",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        686,
+        723
+      ],
+      "summary": "Negative half (positive+negative assertion + caller-path): `/test/events/reset` actually empties the ring buffer \u2014 without this, the positive scenario could be accidentally passing on stale entries from an earlier scenario.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:tool_progress_counter_increments",
+      "type": "function",
+      "name": "tool_progress_counter_increments",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        725,
+        782
+      ],
+      "summary": "E2E scenario probe verifying tool progress counter increments against the running Tauri app's debug test endpoints.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_server",
+      "type": "function",
+      "name": "inject_server",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        806,
+        828
+      ],
+      "summary": "Internal helper function providing `inject server` support for the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:disconnect_server",
+      "type": "function",
+      "name": "disconnect_server",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        830,
+        841
+      ],
+      "summary": "Internal helper function providing `disconnect server` support for the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:write_project_mcp_memory",
+      "type": "function",
+      "name": "write_project_mcp_memory",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        851,
+        868
+      ],
+      "summary": "Write a workspace-scoped `.orgii/mcp-servers.json` containing one `memory` stdio entry. Mirrors the production path used by users who drop a per-project MCP config into their repo: when the SDE session boots in `project`, `McpManager::ensure_connected(workspace)` \u2192 `connect_all(Some(project))` reads the merged (global + this file) config, spawns the child process, and `register_mcp_tools` injec...",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_tools",
+      "type": "function",
+      "name": "list_tools",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        870,
+        883
+      ],
+      "summary": "Internal helper function that lists tools, used by the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:call_tool",
+      "type": "function",
+      "name": "call_tool",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        885,
+        907
+      ],
+      "summary": "Internal helper function providing `call tool` support for the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:filesystem_end_to_end",
+      "type": "function",
+      "name": "filesystem_end_to_end",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        928,
+        1086
+      ],
+      "summary": "Live end-to-end against `@modelcontextprotocol/server-filesystem`: 1. Seed `<tmp>/<scenario>/marker.txt` with a known token. 2. Inject a stdio MCP server pointing at that tmp dir. 3. `list_tools` \u2014 must include `read_text_file` (positive name match, NOT just non-empty list). 4. `call_tool(\"read_text_file\", { path })` \u2014 text result must contain the seeded token. 5. Negative: a guaranteed-bad pat...",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_calls_memory_read_graph",
+      "type": "function",
+      "name": "llm_calls_memory_read_graph",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        1118,
+        1270
+      ],
+      "summary": "End-to-end: LLM chat turn actually invokes an MCP tool. This is the \"does it all actually work\" scenario \u2014 wires together: - MCP server boot (real npx stdio process for `server-memory`) - bridge registration into the agent's ToolRegistry as `mcp__memory__read_graph` - LLM tool-call decision (provider must see the MCP tool in its schema and choose to call it) - MCP roundtrip (`tools/call` over s...",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_multi_step_memory_chain",
+      "type": "function",
+      "name": "llm_multi_step_memory_chain",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        1287,
+        1434
+      ],
+      "summary": "End-to-end: LLM performs a multi-step MCP tool chain. Extends `llm_calls_memory_read_graph` in two ways: 1. The model must call *two* MCP tools in the same turn: first `create_entities` to write into the graph, then `read_graph` to read back what it just wrote. 2. The second call has to observe the write made by the first \u2014 proving the MCP client keeps a stable stdio session across tool calls w...",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/mcp.rs:multi_server_parallel_connect",
+      "type": "function",
+      "name": "multi_server_parallel_connect",
+      "filePath": "src-tauri/crates/e2e-test/src/mcp.rs",
+      "lineRange": [
+        1460,
+        1621
+      ],
+      "summary": "Multi-server parallel connect stress test. Boots three *real* MCP stdio servers concurrently: - `@modelcontextprotocol/server-filesystem` (fs tools) - `@modelcontextprotocol/server-memory` (knowledge-graph memory) - `@modelcontextprotocol/server-sequential-thinking` (reasoning scratchpad) Each server is injected on its own unique debug name, so the scenario is isolated from any user-configured ...",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/e2e-test/src/os/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/e2e-test/src/os/mod.rs",
+      "summary": "OS Agent runtime contract scenarios.",
+      "tags": [
+        "barrel",
+        "re-export",
+        "os-agent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "type": "file",
+      "name": "personal_rules.rs",
+      "filePath": "src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "summary": "OS Agent Personal Workspace \u2014 rules isolation E2E pins. Covers two behavioral invariants: - `os_personal_rules_inject`: place a rule with a unique marker in `~/.orgii/personal/rules/`, send an OS Agent message, and verify the marker shows up in the response.  Proves that personal rules are injected into the OS Agent system prompt. - `sde_personal_rules_isolation`: verify that the same marker do...",
+      "tags": [
+        "test",
+        "e2e-scenario",
+        "personal-workspace",
+        "rules-isolation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:os_personal_rules_inject",
+      "type": "function",
+      "name": "os_personal_rules_inject",
+      "filePath": "src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "lineRange": [
+        40,
+        89
+      ],
+      "summary": "Behavioral pin: personal rules are injected into OS Agent prompt. Setup: 1. Create `~/.orgii/personal/rules/e2e-test-rule.md` with a unique marker string `E2E_PERSONAL_RULE_MARKER_52`. 2. Send a short, open-ended OS Agent message. 3. Assert the marker appears in the response (proves injection happened). Teardown: Remove the marker rule file so subsequent runs start clean.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:sde_personal_rules_isolation",
+      "type": "function",
+      "name": "sde_personal_rules_isolation",
+      "filePath": "src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "lineRange": [
+        102,
+        160
+      ],
+      "summary": "Isolation pin: personal rules must NOT appear in SDE sessions. Setup: 1. Create `~/.orgii/personal/rules/e2e-isolation-rule.md` with marker `E2E_PERSONAL_ISOLATION_MARKER_52`. 2. Send the same instruction through the SDE endpoint. 3. Assert the marker does NOT appear (proves isolation). Positive+negative assertion compliance: this is the negative-match counterpart to `os_personal_rules_inject`....",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "type": "file",
+      "name": "work_items.rs",
+      "filePath": "src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "summary": "OS Agent work-item launch E2E scenarios validating request parsing and rejection of invalid launch payloads against the debug work-item-launch endpoints.",
+      "tags": [
+        "test",
+        "e2e-scenario",
+        "work-items",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/os/work_items.rs:work_item_launch_parse",
+      "type": "function",
+      "name": "work_item_launch_parse",
+      "filePath": "src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "lineRange": [
+        4,
+        22
+      ],
+      "summary": "Internal helper function providing `work item launch parse` support for the scenario probes in this file.",
+      "tags": [
+        "helper",
+        "http-client"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/e2e-test/src/os/work_items.rs:work_item_launch_invalid_json_rejected",
+      "type": "function",
+      "name": "work_item_launch_invalid_json_rejected",
+      "filePath": "src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "lineRange": [
+        24,
+        72
+      ],
+      "summary": "E2E scenario probe verifying work item launch invalid json rejected against the running Tauri app's debug test endpoints.",
+      "tags": [
+        "test",
+        "e2e-scenario"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:fetch_counters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_counters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:counters_snapshot_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:counters_snapshot_shape",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_unknown_server_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_unknown_server_rejected",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_is_idempotent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_is_idempotent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:post_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:invalid_config_preserved",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:invalid_config_preserved",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_prompts_unknown_server_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_prompts_unknown_server_rejected",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_all_prompts_returns_array_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_all_prompts_returns_array_shape",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:get_prompt_unknown_server_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:get_prompt_unknown_server_rejected",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:prompts_cache_has_false_when_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:prompts_cache_has_false_when_empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:fetch_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:emit_progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_broadcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_broadcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_null_preserved",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_null_preserved",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:events_reset_clears_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:events_reset_clears_buffer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:tool_progress_counter_increments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:tool_progress_counter_increments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:disconnect_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:write_project_mcp_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:call_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:filesystem_end_to_end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:filesystem_end_to_end",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_calls_memory_read_graph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_calls_memory_read_graph",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_multi_step_memory_chain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_multi_step_memory_chain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:multi_server_parallel_connect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/mcp.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/mcp.rs:multi_server_parallel_connect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:counters_snapshot_shape",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:counters_snapshot_shape",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_unknown_server_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:inject_unknown_server_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_is_idempotent",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:reset_is_idempotent",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:invalid_config_preserved",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:invalid_config_preserved",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_prompts_unknown_server_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_prompts_unknown_server_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_all_prompts_returns_array_shape",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:list_all_prompts_returns_array_shape",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:get_prompt_unknown_server_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:get_prompt_unknown_server_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:prompts_cache_has_false_when_empty",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:prompts_cache_has_false_when_empty",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_broadcast",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_broadcast",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_null_preserved",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:mcp_progress_event_null_preserved",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:events_reset_clears_buffer",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:events_reset_clears_buffer",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:tool_progress_counter_increments",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:tool_progress_counter_increments",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:filesystem_end_to_end",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:filesystem_end_to_end",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_calls_memory_read_graph",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_calls_memory_read_graph",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_multi_step_memory_chain",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:llm_multi_step_memory_chain",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:multi_server_parallel_connect",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/mcp.rs:multi_server_parallel_connect",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/mod.rs",
+      "target": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/mod.rs",
+      "target": "file:src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "target": "file:src-tauri/crates/e2e-test/src/config.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:os_personal_rules_inject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:os_personal_rules_inject",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:sde_personal_rules_isolation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/personal_rules.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:sde_personal_rules_isolation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:os_personal_rules_inject",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:os_personal_rules_inject",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:send_os_message",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:os_personal_rules_inject",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:sde_personal_rules_isolation",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:sde_personal_rules_isolation",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:send_sde_message",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/personal_rules.rs:sde_personal_rules_isolation",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "target": "file:src-tauri/crates/e2e-test/src/config.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/work_items.rs:work_item_launch_parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/work_items.rs:work_item_launch_invalid_json_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/e2e-test/src/os/work_items.rs",
+      "target": "function:src-tauri/crates/e2e-test/src/os/work_items.rs:work_item_launch_invalid_json_rejected",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/e2e-test/src/os/work_items.rs:work_item_launch_invalid_json_rejected",
+      "target": "function:src-tauri/crates/e2e-test/src/harness.rs:print_result",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

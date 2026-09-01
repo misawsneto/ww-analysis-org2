@@ -1,0 +1,1507 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "type": "file",
+      "name": "lifecycle.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "summary": "Starts and stops a Wingman session (autonomous screen-observing agent loop), wiring up its message bus and shared session state, and tears down its native overlay windows on stop.",
+      "tags": [
+        "lifecycle",
+        "orchestration",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "type": "file",
+      "name": "loop_runner.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "summary": "Implements the core Wingman observation loop that periodically captures screen state, builds observation prompts, and feeds them into the agent via the message bus until cancelled.",
+      "tags": [
+        "event-loop",
+        "orchestration",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:WingmanLoop",
+      "type": "class",
+      "name": "WingmanLoop",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "lineRange": [
+        31,
+        36
+      ],
+      "summary": "Holds the runtime state (cancellation token, bus, ticker) driving a single Wingman observation loop instance.",
+      "tags": [
+        "event-loop",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "summary": "Barrel module that assembles the Wingman feature (native status bar, lifecycle, loop runner, monitor enumeration, observation building, and Windows-specific bar) into a single public surface.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "wingman"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "type": "file",
+      "name": "monitors.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "summary": "Enumerates connected displays/monitors via the Tauri app handle so the Wingman bar can be positioned on the correct screen.",
+      "tags": [
+        "desktop-integration",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs:WingmanMonitorInfo",
+      "type": "class",
+      "name": "WingmanMonitorInfo",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "lineRange": [
+        12,
+        30
+      ],
+      "summary": "Serializable description of a single monitor (position, size, scale factor) exposed to the frontend.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs",
+      "type": "file",
+      "name": "observation.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/observation.rs",
+      "summary": "Builds the LLM-facing observation prompt text from mission/flow context and captures screenshots for the Wingman loop.",
+      "tags": [
+        "prompt-engineering",
+        "screen-capture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/wingman/windows_bar.rs",
+      "type": "file",
+      "name": "windows_bar.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/windows_bar.rs",
+      "summary": "Windows-specific thin wrapper exposing show/hide/visibility controls for the native Wingman status bar window.",
+      "tags": [
+        "desktop-integration",
+        "platform-specific",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "type": "file",
+      "name": "workspace.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "summary": "Defines SessionWorkspace, the sandbox model tracking a session's working directory, optional git worktree, and additional allow-listed directories, and enforces which filesystem paths a session may access.",
+      "tags": [
+        "data-model",
+        "security",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:DirectorySource",
+      "type": "class",
+      "name": "DirectorySource",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        62,
+        89
+      ],
+      "summary": "Enum tagging why an additional directory was added to a workspace (user-added, tool-added, inherited, etc).",
+      "tags": [
+        "data-model",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:AdditionalDirectory",
+      "type": "class",
+      "name": "AdditionalDirectory",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        100,
+        104
+      ],
+      "summary": "Pairs an extra allowed directory path with its DirectorySource.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:SessionWorkspace",
+      "type": "class",
+      "name": "SessionWorkspace",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        113,
+        120
+      ],
+      "summary": "Core workspace sandbox for a session: working directory, optional worktree root, and additional allowed directories, with path-allowlist enforcement.",
+      "tags": [
+        "data-model",
+        "security",
+        "sandbox"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "type": "file",
+      "name": "side_query.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "summary": "Utility for firing isolated, non-conversational \"side\" LLM queries (with optional structured/JSON output) used by summarization, title generation, memory extraction, and skill selection throughout the agent core.",
+      "tags": [
+        "llm-integration",
+        "utility",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryConfig",
+      "type": "class",
+      "name": "SideQueryConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        27,
+        47
+      ],
+      "summary": "Configuration for a side query: model, system prompt, temperature, and optional structured-output schema.",
+      "tags": [
+        "config",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/side_query.rs:StructuredOutput",
+      "type": "class",
+      "name": "StructuredOutput",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        50,
+        55
+      ],
+      "summary": "Describes an expected structured (tool-call-shaped) JSON output schema for a side query.",
+      "tags": [
+        "data-model",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryResult",
+      "type": "class",
+      "name": "SideQueryResult",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        73,
+        89
+      ],
+      "summary": "Result of a side query: raw text and/or parsed structured JSON plus token usage.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryError",
+      "type": "class",
+      "name": "SideQueryError",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        92,
+        100
+      ],
+      "summary": "Error type covering provider failures, empty responses, and structured-output parse failures for side queries.",
+      "tags": [
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "type": "file",
+      "name": "read_file.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "summary": "Implements the agent's read_file tool: reads workspace files with offset/limit windows, truncation guidance, a small read-result cache, and special handling for embedded builtin skill files.",
+      "tags": [
+        "api-handler",
+        "tool-implementation",
+        "filesystem"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses a builder-style API (with_router/with_scratchpad/with_readonly_extra_dir/with_workspace_state) to progressively configure the tool before use."
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadCacheKey",
+      "type": "class",
+      "name": "ReadCacheKey",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        22,
+        26
+      ],
+      "summary": "Cache key combining file path, offset, and limit for a prior read result.",
+      "tags": [
+        "data-model",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadCacheEntry",
+      "type": "class",
+      "name": "ReadCacheEntry",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        29,
+        36
+      ],
+      "summary": "Cached read result: content hash, truncation state, and metadata used to detect unchanged re-reads.",
+      "tags": [
+        "data-model",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadFileCache",
+      "type": "class",
+      "name": "ReadFileCache",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        39,
+        43
+      ],
+      "summary": "Bounded in-memory cache mapping ReadCacheKey to ReadCacheEntry to avoid redundant large file reads.",
+      "tags": [
+        "caching",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadFileTool",
+      "type": "class",
+      "name": "ReadFileTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        81,
+        96
+      ],
+      "summary": "The read_file tool implementation: resolves allowed roots, applies the cache, and formats file contents/truncation output for the LLM.",
+      "tags": [
+        "tool-implementation",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/desktop/peekaboo_cli_tool_tests.rs",
+      "type": "file",
+      "name": "peekaboo_cli_tool_tests.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/desktop/peekaboo_cli_tool_tests.rs",
+      "summary": "Unit tests for the Peekaboo desktop-automation CLI tool covering command allow-listing, managed-argument injection driven by DesktopConfig, and output formatting.",
+      "tags": [
+        "test",
+        "desktop-integration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "lineRange": [
+        26,
+        96
+      ],
+      "summary": "Initializes a Wingman session for a monitor/mission, registering it with shared state and spawning its background loop.",
+      "tags": [
+        "lifecycle",
+        "initialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:stop",
+      "type": "function",
+      "name": "stop",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "lineRange": [
+        103,
+        135
+      ],
+      "summary": "Stops a running Wingman session, cancelling its loop and cleaning up associated session state.",
+      "tags": [
+        "lifecycle",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:close_wingman_windows",
+      "type": "function",
+      "name": "close_wingman_windows",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "lineRange": [
+        147,
+        154
+      ],
+      "summary": "Closes any open Wingman overlay windows associated with a session.",
+      "tags": [
+        "ui",
+        "cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "lineRange": [
+        39,
+        50
+      ],
+      "summary": "Entry point that drives the Wingman loop until the cancellation token fires.",
+      "tags": [
+        "event-loop",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:run_select_loop",
+      "type": "function",
+      "name": "run_select_loop",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "lineRange": [
+        56,
+        101
+      ],
+      "summary": "Repeatedly ticks the observation timer and reacts to bus/cancellation events; implemented in platform-specific variants selected via cfg.",
+      "tags": [
+        "event-loop",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:observe",
+      "type": "function",
+      "name": "observe",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "lineRange": [
+        103,
+        128
+      ],
+      "summary": "Captures a screen observation and flow-awareness context for the current tick.",
+      "tags": [
+        "observation",
+        "screen-capture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:enqueue_observation",
+      "type": "function",
+      "name": "enqueue_observation",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "lineRange": [
+        131,
+        260
+      ],
+      "summary": "Builds an observation prompt from captured content/screenshot and publishes it onto the outbound message bus for the agent to consume.",
+      "tags": [
+        "observation",
+        "messaging"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs:list_monitors",
+      "type": "function",
+      "name": "list_monitors",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "lineRange": [
+        33,
+        76
+      ],
+      "summary": "Lists all available monitors with their geometry for Wingman bar placement.",
+      "tags": [
+        "desktop-integration",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs:build_observation_prompt",
+      "type": "function",
+      "name": "build_observation_prompt",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/wingman/observation.rs",
+      "lineRange": [
+        8,
+        40
+      ],
+      "summary": "Formats mission, flow-awareness context, and screenshot presence into an observation prompt string for the agent.",
+      "tags": [
+        "prompt-engineering",
+        "formatting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:canonicalize_candidate",
+      "type": "function",
+      "name": "canonicalize_candidate",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        47,
+        57
+      ],
+      "summary": "Canonicalizes a candidate path, falling back to lexical normalization when the path does not yet exist on disk.",
+      "tags": [
+        "filesystem",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:new_worktree_inheriting",
+      "type": "function",
+      "name": "new_worktree_inheriting",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        149,
+        159
+      ],
+      "summary": "Creates a worktree-backed workspace that inherits the additional directories of a parent workspace.",
+      "tags": [
+        "factory",
+        "git-worktree"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:effective_roots",
+      "type": "function",
+      "name": "effective_roots",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        185,
+        201
+      ],
+      "summary": "Computes the full set of root directories (working dir plus additional directories) a session is allowed to touch.",
+      "tags": [
+        "security",
+        "sandbox"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:is_path_allowed",
+      "type": "function",
+      "name": "is_path_allowed",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        222,
+        244
+      ],
+      "summary": "Checks whether a candidate path falls within the workspace's effective roots or an explicit extra-allowed set.",
+      "tags": [
+        "security",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:add_directory",
+      "type": "function",
+      "name": "add_directory",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        266,
+        279
+      ],
+      "summary": "Adds a new additional directory to the workspace's allow-list, tagged with its source.",
+      "tags": [
+        "security",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:remove_directory",
+      "type": "function",
+      "name": "remove_directory",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "lineRange": [
+        285,
+        288
+      ],
+      "summary": "Removes a previously added additional directory from the workspace's allow-list.",
+      "tags": [
+        "security",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:default",
+      "type": "function",
+      "name": "default",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        58,
+        68
+      ],
+      "summary": "Provides default values for SideQueryConfig fields.",
+      "tags": [
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:extract_tool_choice_override",
+      "type": "function",
+      "name": "extract_tool_choice_override",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        157,
+        168
+      ],
+      "summary": "Derives a forced tool-choice override from the configured tool list when structured output is requested.",
+      "tags": [
+        "llm-integration",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query",
+      "type": "function",
+      "name": "side_query",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        184,
+        193
+      ],
+      "summary": "Primary public entry point that runs a plain-text side query against a provider and returns the response.",
+      "tags": [
+        "llm-integration",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query_typed",
+      "type": "function",
+      "name": "side_query_typed",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        195,
+        335
+      ],
+      "summary": "Runs a side query against a provider with structured-output extraction, handling thinking-model quirks and empty-response fallbacks.",
+      "tags": [
+        "llm-integration",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:try_extract_result",
+      "type": "function",
+      "name": "try_extract_result",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        343,
+        367
+      ],
+      "summary": "Attempts to extract a SideQueryResult from a provider response, validating structured output when expected.",
+      "tags": [
+        "parsing",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:extract_structured_from_response",
+      "type": "function",
+      "name": "extract_structured_from_response",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        369,
+        393
+      ],
+      "summary": "Pulls the structured JSON arguments out of a tool-call-shaped provider response.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:structured_arguments_are_empty",
+      "type": "function",
+      "name": "structured_arguments_are_empty",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        398,
+        408
+      ],
+      "summary": "Checks whether extracted structured-output arguments are effectively empty.",
+      "tags": [
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:build_structured_result",
+      "type": "function",
+      "name": "build_structured_result",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        410,
+        423
+      ],
+      "summary": "Assembles a SideQueryResult from a response plus its parsed structured payload.",
+      "tags": [
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:build_text_result",
+      "type": "function",
+      "name": "build_text_result",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        425,
+        440
+      ],
+      "summary": "Assembles a SideQueryResult from a plain-text response.",
+      "tags": [
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:observe_thinking_model",
+      "type": "function",
+      "name": "observe_thinking_model",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        454,
+        478
+      ],
+      "summary": "Applies special-cased handling for models that always emit thinking/reasoning content before their answer.",
+      "tags": [
+        "llm-integration",
+        "edge-case"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/side_query.rs:observe_always_on_thinking",
+      "type": "function",
+      "name": "observe_always_on_thinking",
+      "filePath": "src-tauri/crates/agent-core/src/core/side_query.rs",
+      "lineRange": [
+        482,
+        495
+      ],
+      "summary": "Detects whether a model is configured to always emit reasoning traces.",
+      "tags": [
+        "llm-integration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:insert",
+      "type": "function",
+      "name": "insert",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        52,
+        62
+      ],
+      "summary": "Inserts a new entry into the read-file cache, evicting as needed.",
+      "tags": [
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:llm_description",
+      "type": "function",
+      "name": "llm_description",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        176,
+        208
+      ],
+      "summary": "Produces the LLM-facing description text for the read_file tool.",
+      "tags": [
+        "tool-implementation",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:parameters",
+      "type": "function",
+      "name": "parameters",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        210,
+        229
+      ],
+      "summary": "Defines the JSON schema of parameters accepted by the read_file tool.",
+      "tags": [
+        "tool-implementation",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        231,
+        344
+      ],
+      "summary": "Main execution path for the read_file tool: validates the path, applies offset/limit, checks the cache, and returns formatted content.",
+      "tags": [
+        "tool-implementation",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:head_truncate_with_guidance",
+      "type": "function",
+      "name": "head_truncate_with_guidance",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        350,
+        371
+      ],
+      "summary": "Truncates output to a line/byte budget from the head, appending guidance on how to read more.",
+      "tags": [
+        "formatting",
+        "truncation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:format_file_unchanged_stub",
+      "type": "function",
+      "name": "format_file_unchanged_stub",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        373,
+        383
+      ],
+      "summary": "Formats a short stub response when a cached read shows the file is unchanged since the last read.",
+      "tags": [
+        "formatting",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:read_embedded_builtin_skill",
+      "type": "function",
+      "name": "read_embedded_builtin_skill",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        385,
+        418
+      ],
+      "summary": "Reads a builtin skill file that is embedded in the binary rather than on disk, applying offset/limit.",
+      "tags": [
+        "filesystem",
+        "edge-case"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:embedded_builtin_skill_name",
+      "type": "function",
+      "name": "embedded_builtin_skill_name",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        420,
+        442
+      ],
+      "summary": "Resolves the embedded skill name matching a given virtual path.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:classify_read_action",
+      "type": "function",
+      "name": "classify_read_action",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "lineRange": [
+        449,
+        466
+      ],
+      "summary": "Classifies a read as full-read, truncated, or unchanged for telemetry/formatting purposes.",
+      "tags": [
+        "classification"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:stop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:stop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:close_wingman_windows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs:close_wingman_windows",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:WingmanLoop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:WingmanLoop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:run",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:run_select_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:observe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs:enqueue_observation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/flow_awareness/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/bar_native.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/bar.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/handle.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/lifecycle.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/loop_runner.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/wingman/windows_bar.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs:WingmanMonitorInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs:WingmanMonitorInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs:list_monitors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/monitors.rs:list_monitors",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs:build_observation_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/wingman/observation.rs:build_observation_prompt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:DirectorySource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:DirectorySource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:AdditionalDirectory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:AdditionalDirectory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:SessionWorkspace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/workspace.rs:SessionWorkspace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:canonicalize_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:new_worktree_inheriting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:new_worktree_inheriting",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:effective_roots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:effective_roots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:is_path_allowed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:is_path_allowed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:add_directory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:add_directory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:remove_directory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/workspace.rs:remove_directory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:StructuredOutput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:StructuredOutput",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/side_query.rs:SideQueryError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:default",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:extract_tool_choice_override",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:extract_tool_choice_override",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query_typed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query_typed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:try_extract_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:extract_structured_from_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:structured_arguments_are_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:build_structured_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:build_text_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:observe_thinking_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:observe_always_on_thinking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadCacheKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadCacheEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadFileCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadFileTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:ReadFileTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:insert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:llm_description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:parameters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:head_truncate_with_guidance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:format_file_unchanged_stub",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:read_embedded_builtin_skill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:embedded_builtin_skill_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs:classify_read_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/read_file.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/skills/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/desktop/peekaboo_cli_tool_tests.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/desktop/peekaboo_cli_tool_tests.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

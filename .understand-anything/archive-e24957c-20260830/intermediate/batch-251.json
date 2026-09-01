@@ -1,0 +1,257 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/workspace/atoms/sessionAtoms.ts",
+      "type": "file",
+      "name": "sessionAtoms.ts",
+      "filePath": "src/engines/SessionCore/workspace/atoms/sessionAtoms.ts",
+      "summary": "Defines Jotai atoms holding workspace session state (session visibility/running flags, repository name/id/path, task and check status, session config, and mock/planner-lite feature flags), migrated from the legacy SessionContext.",
+      "tags": ["state-management", "jotai", "atoms", "session"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Jotai primitive atoms with debugLabel assignments for devtools; no derived/computed atoms."
+    },
+    {
+      "id": "file:src/engines/SessionCore/workspace/atoms/uiAtoms.ts",
+      "type": "file",
+      "name": "uiAtoms.ts",
+      "filePath": "src/engines/SessionCore/workspace/atoms/uiAtoms.ts",
+      "summary": "Defines Jotai atoms holding workspace UI state (tab selection, active menu view, diff/overview panel visibility, page loading flags, context-add modal state, approval type, and exploration/countdown state), migrated from the legacy UIContext.",
+      "tags": ["state-management", "jotai", "atoms", "ui-state"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Jotai primitive atoms with debugLabel assignments; notes that isPlannerLiteAtom intentionally lives in sessionAtoms.ts as the single source of truth."
+    },
+    {
+      "id": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "type": "file",
+      "name": "useWorkspaceSession.ts",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "summary": "Provides the useWorkspaceSession hook (a drop-in replacement for the former React Context-based useSessionContext) plus fine-grained selector hooks for session visibility, task status, and repository info, all backed by Jotai atoms.",
+      "tags": ["hook", "state-management", "jotai", "session"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "type": "file",
+      "name": "useWorkspaceUI.ts",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "summary": "Provides the useWorkspaceUI hook (a drop-in replacement for the former React Context-based useUIContext) plus fine-grained selector hooks for the center tab, page loading flags, and active view, all backed by Jotai atoms.",
+      "tags": ["hook", "state-management", "jotai", "ui-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useWorkspaceSession",
+      "type": "function",
+      "name": "useWorkspaceSession",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "lineRange": [35, 104],
+      "summary": "Reads and exposes the full workspace session state (session show/doing, repository info, task/check status, session config, feature flags) by subscribing to all session atoms via useAtom, returning a large object with aliased field names for backward compatibility.",
+      "tags": ["hook", "state-management", "session"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useSessionShow",
+      "type": "function",
+      "name": "useSessionShow",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "lineRange": [111, 114],
+      "summary": "Fine-grained selector hook that subscribes only to the session panel visibility atom, avoiding re-renders from unrelated session state changes.",
+      "tags": ["hook", "selector", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useTaskStatus",
+      "type": "function",
+      "name": "useTaskStatus",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "lineRange": [117, 130],
+      "summary": "Fine-grained selector hook exposing task status and check status atoms with aliased getters/setters for backward compatibility.",
+      "tags": ["hook", "selector", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useRepositoryInfo",
+      "type": "function",
+      "name": "useRepositoryInfo",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "lineRange": [133, 153],
+      "summary": "Fine-grained selector hook exposing repository name, id, path, and loading state, using separate useAtomValue/useSetAtom calls to minimize unnecessary re-renders.",
+      "tags": ["hook", "selector", "repository"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useWorkspaceUI",
+      "type": "function",
+      "name": "useWorkspaceUI",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "lineRange": [38, 103],
+      "summary": "Reads and exposes the full workspace UI state (tabs, active view, panel visibility, loading flags, context-add modal, mode flags) by subscribing to all UI atoms plus the shared isPlannerLiteAtom via useAtom.",
+      "tags": ["hook", "state-management", "ui-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useCenterTab",
+      "type": "function",
+      "name": "useCenterTab",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "lineRange": [110, 113],
+      "summary": "Fine-grained selector hook that subscribes only to the selected center tab atom.",
+      "tags": ["hook", "selector", "ui-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:usePageLoading",
+      "type": "function",
+      "name": "usePageLoading",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "lineRange": [116, 129],
+      "summary": "Fine-grained selector hook exposing focus-file, plan-page, and diff-page loading flags for components that only need loading indicators.",
+      "tags": ["hook", "selector", "loading-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useActiveView",
+      "type": "function",
+      "name": "useActiveView",
+      "filePath": "src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "lineRange": [132, 136],
+      "summary": "Fine-grained selector hook that reads and updates the active left-menu view atom.",
+      "tags": ["hook", "selector", "navigation"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "file:src/engines/SessionCore/workspace/atoms/sessionAtoms.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "file:src/engines/SessionCore/workspace/atoms/sessionAtoms.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "file:src/engines/SessionCore/workspace/atoms/uiAtoms.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useWorkspaceSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useSessionShow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useTaskStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useRepositoryInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useWorkspaceUI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useCenterTab",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:usePageLoading",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useActiveView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useWorkspaceSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useSessionShow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useTaskStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts:useRepositoryInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useWorkspaceUI",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useCenterTab",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:usePageLoading",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts",
+      "target": "function:src/engines/SessionCore/workspace/hooks/useWorkspaceUI.ts:useActiveView",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

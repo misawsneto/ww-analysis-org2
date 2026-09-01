@@ -1,0 +1,1364 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/agent_sessions/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/src/agent_sessions/mod.rs",
+   "summary": "Root module for the Agent Sessions domain; declares the cli, event_pipeline, external_cli_adapter, and session_directory submodules that together manage CLI, SDE, and OS agent session lifecycles.",
+   "tags": [
+    "barrel",
+    "domain-module",
+    "session-management"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "type": "file",
+   "name": "aggregation.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "summary": "Core merge/filter/sort/paginate engine for the cross-backend session directory: loads paginated rows from 15 external CLI history sources (Claude Code, Codex, Cursor IDE/CLI, Windsurf, Cline, Warp, etc.), merges them with native CLI/SDE/OS session rows, and applies filtering, sorting, and pagination to produce the unified session list.",
+   "tags": [
+    "aggregation",
+    "session-management",
+    "pagination",
+    "external-integration"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:resync_external_history_source",
+   "type": "function",
+   "name": "resync_external_history_source",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    267,
+    277
+   ],
+   "summary": "Force a source's on-disk store to be re-read and its metadata cache re-synced, discarding the returned page. This runs the exact sync the sidebar/list path performs (re-parsing every record whose signature changed, e.g. after a parser-version bump), so the manual \"Rescan\" action...",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:append_external_history_page",
+   "type": "function",
+   "name": "append_external_history_page",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    279,
+    304
+   ],
+   "summary": "Implements `append_external_history_page(records, source, page)` in aggregation.rs.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:decorate_imported_live_status",
+   "type": "function",
+   "name": "decorate_imported_live_status",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    315,
+    337
+   ],
+   "summary": "Live-status decoration for imported rows: a fresh lifecycle-hook state wins; otherwise a transcript updated moments ago flips the row to running \u2014 the only liveness signal CLIs without any hook surface (aider, goose, cline, warp, ...) can give us.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:load_imported_history_sessions",
+   "type": "function",
+   "name": "load_imported_history_sessions",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    339,
+    401
+   ],
+   "summary": "Implements `load_imported_history_sessions(filter)` in aggregation.rs.",
+   "tags": [
+    "query"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:plain_native_page",
+   "type": "function",
+   "name": "plain_native_page",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    420,
+    526
+   ],
+   "summary": "Load sessions from the requested sources and compute statistics. SQL-paginated fast path for the sidebar's per-category page shape.  The hot sidebar refresh asks for exactly one native category ordered by updated_at DESC with a limit/offset and external history excluded...",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:plain_directory_page",
+   "type": "function",
+   "name": "plain_directory_page",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    542,
+    668
+   ],
+   "summary": "Directory page over orgtrack_core_sessions for the plain flat-list shape (no category restriction): one indexed SQL page across every source instead of loading each store in full and merging.  Rows are hydrated from their owning store; rows the merge path would never surface...",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:list_all_sessions",
+   "type": "function",
+   "name": "list_all_sessions",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    670,
+    777
+   ],
+   "summary": "Implements `list_all_sessions(filter)` in aggregation.rs.",
+   "tags": [
+    "query"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:apply_filters",
+   "type": "function",
+   "name": "apply_filters",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    789,
+    885
+   ],
+   "summary": "Implements `apply_filters(sessions, filter)` in aggregation.rs.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:apply_sorting",
+   "type": "function",
+   "name": "apply_sorting",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    891,
+    926
+   ],
+   "summary": "Implements `apply_sorting(sessions, filter)` in aggregation.rs.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:apply_pagination",
+   "type": "function",
+   "name": "apply_pagination",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    932,
+    943
+   ],
+   "summary": "Implements `apply_pagination(sessions, filter)` in aggregation.rs.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:annotate_agent_org_root_rows",
+   "type": "function",
+   "name": "annotate_agent_org_root_rows",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "lineRange": [
+    953,
+    976
+   ],
+   "summary": "Implements `annotate_agent_org_root_rows(sessions)` in aggregation.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "type": "file",
+   "name": "commands.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "summary": "Tauri command handlers exposing the session directory's aggregated list and external-history sidebar bucket queries to the frontend.",
+   "tags": [
+    "tauri-command",
+    "api-handler",
+    "session-management"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/commands.rs:session_aggregate_list",
+   "type": "function",
+   "name": "session_aggregate_list",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "lineRange": [
+    33,
+    39
+   ],
+   "summary": "Get all sessions with statistics.  This replaces the frontend's parallel loading from 3 Tauri commands (osagent_list_sessions, sde_session_get_sessions, cli_agent_list) with a single session_aggregate_list command.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/commands.rs:session_external_history_sidebar_list",
+   "type": "function",
+   "name": "session_external_history_sidebar_list",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "lineRange": [
+    46,
+    128
+   ],
+   "summary": "List lightweight external-history rows from ORGII's SQLite cache only. The command never scans or opens an external provider's storage.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "type": "file",
+   "name": "conversion.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "summary": "Converts backend-specific session records (CLI agent, imported external history, Cursor IDE history, SDE agent, OS agent) into the unified SessionAggregateRecord shape used by the session directory, including agent-metadata resolution and impact-stats enrichment.",
+   "tags": [
+    "data-transformation",
+    "adapter",
+    "session-management"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:native_impact_fields",
+   "type": "function",
+   "name": "native_impact_fields",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    45,
+    61
+   ],
+   "summary": "Implements `native_impact_fields(session_id)` in conversion.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    70,
+    74
+   ],
+   "summary": "Implements `new()` in conversion.rs.",
+   "tags": [
+    "conversion"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:resolve",
+   "type": "function",
+   "name": "resolve",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    76,
+    102
+   ],
+   "summary": "Implements `resolve(session_id, persisted_definition_id)` in conversion.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cli_session_to_aggregate_record",
+   "type": "function",
+   "name": "cli_session_to_aggregate_record",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    110,
+    173
+   ],
+   "summary": "Convert a CLI agent session to the unified aggregate record format.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:imported_history_cli_agent_type",
+   "type": "function",
+   "name": "imported_history_cli_agent_type",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    175,
+    186
+   ],
+   "summary": "Implements `imported_history_cli_agent_type(source_label)` in conversion.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:imported_history_to_aggregate_record",
+   "type": "function",
+   "name": "imported_history_to_aggregate_record",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    188,
+    243
+   ],
+   "summary": "Implements `imported_history_to_aggregate_record(row, source_label)` in conversion.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cursor_ide_history_to_aggregate_record",
+   "type": "function",
+   "name": "cursor_ide_history_to_aggregate_record",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    245,
+    299
+   ],
+   "summary": "Implements `cursor_ide_history_to_aggregate_record(row, source_label)` in conversion.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:sde_session_to_aggregate_record",
+   "type": "function",
+   "name": "sde_session_to_aggregate_record",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    306,
+    372
+   ],
+   "summary": "Convert a SDE Agent session (unified record) to the unified aggregate record format.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:os_session_to_aggregate_record",
+   "type": "function",
+   "name": "os_session_to_aggregate_record",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    379,
+    438
+   ],
+   "summary": "Convert a OS Agent session (unified record) to the unified aggregate record format.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/session_directory/conversion.rs:AgentMetadataResolver",
+   "type": "class",
+   "name": "AgentMetadataResolver",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "lineRange": [
+    24,
+    26
+   ],
+   "summary": "Defines `AgentMetadataResolver` with methods default, new, resolve in conversion.rs.",
+   "tags": [
+    "data-model",
+    "has-behavior"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "type": "file",
+   "name": "display.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/display.rs",
+   "summary": "Generates human-readable session display labels, truncates UTF-8 text safely, strips pill/mention references, and implements the session directory's free-text search matcher.",
+   "tags": [
+    "utility",
+    "text-processing",
+    "session-management"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/display.rs:generate_display_label",
+   "type": "function",
+   "name": "generate_display_label",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/display.rs",
+   "lineRange": [
+    20,
+    42
+   ],
+   "summary": "Generate a display label for a session. Returns None if no meaningful label can be generated.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/display.rs:strip_pill_references",
+   "type": "function",
+   "name": "strip_pill_references",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/display.rs",
+   "lineRange": [
+    50,
+    70
+   ],
+   "summary": "Strip @-pill references from text (e.g., \"@file.ts\" -> \"\")",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/display.rs:matches_text_query",
+   "type": "function",
+   "name": "matches_text_query",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/display.rs",
+   "lineRange": [
+    77,
+    107
+   ],
+   "summary": "Check if session matches a text query (case-insensitive)",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "summary": "Barrel module for the cross-backend session directory, declaring the aggregation, commands, conversion, display, orgtrack_adapter, patch, status, and types submodules.",
+   "tags": [
+    "barrel",
+    "session-management"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "type": "file",
+   "name": "orgtrack_adapter.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "summary": "Write-path adapter that mirrors aggregated session rows (CLI and Rust-agent) into the OrgTrack core-session store, reconciling native session mirrors and mapping session categories to OrgTrack dispatch/session types.",
+   "tags": [
+    "adapter",
+    "data-sync",
+    "session-management"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_aggregate_sessions",
+   "type": "function",
+   "name": "upsert_aggregate_sessions",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    10,
+    20
+   ],
+   "summary": "Implements `upsert_aggregate_sessions(records)` in orgtrack_adapter.rs.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:reconcile_native_session_mirror",
+   "type": "function",
+   "name": "reconcile_native_session_mirror",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    32,
+    65
+   ],
+   "summary": "One-time startup reconcile of the orgtrack session mirror.  The write-path hooks keep the mirror fresh going forward; this pass repairs history from before they existed: - drops ORGII-source rows whose native session is gone \u2014 including imported-history ids the old per-list...",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:remove_mirrored_session",
+   "type": "function",
+   "name": "remove_mirrored_session",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    77,
+    100
+   ],
+   "summary": "Drop a deleted ORGII session's mirror row and its usage projection. Scoped to ORGII sources so an id collision can never remove an imported-history row. Fired from the delete paths in both persistence layers (the upsert hook cannot serve deletes: re-reading a deleted session...",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_cli_session",
+   "type": "function",
+   "name": "upsert_cli_session",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    106,
+    115
+   ],
+   "summary": "Mirror one ORGII-launched CLI session into orgtrack's canonical session store. Called from the CLI persistence write path (create / status / name / model / exec-mode changes) so the mirror follows writes instead of piggybacking on every list query. Missing sessions are a no-op.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_rust_agent_session",
+   "type": "function",
+   "name": "upsert_rust_agent_session",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    121,
+    128
+   ],
+   "summary": "Mirror one Rust-agent session into orgtrack's canonical session store. Reuses the event pipeline's record mapping so patch-driven metadata changes (rename, model swap) land without waiting for the next artifact-persistence pass.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:aggregate_to_core_session",
+   "type": "function",
+   "name": "aggregate_to_core_session",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    130,
+    173
+   ],
+   "summary": "Implements `aggregate_to_core_session(record)` in orgtrack_adapter.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:rust_agent_type_for",
+   "type": "function",
+   "name": "rust_agent_type_for",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "lineRange": [
+    182,
+    196
+   ],
+   "summary": "Implements `rust_agent_type_for(record)` in orgtrack_adapter.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "type": "file",
+   "name": "patch.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "summary": "Implements per-session field patch application (SessionPatch): validates account/model compatibility and mutates name, model, draft text, pinned state, and related fields across both the CLI and Rust-agent session storage backends.",
+   "tags": [
+    "mutation",
+    "validation",
+    "tauri-command",
+    "session-management"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:locate_session",
+   "type": "function",
+   "name": "locate_session",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "lineRange": [
+    131,
+    156
+   ],
+   "summary": "Implements `locate_session(session_id)` in patch.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:validate_account_model_compat",
+   "type": "function",
+   "name": "validate_account_model_compat",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "lineRange": [
+    169,
+    192
+   ],
+   "summary": "Reject account/model pairs that can never serve a turn (G10 of the account-switch audit): a vanished/disabled vault account, or a model outside the account's enabled set (e.g. keeping claude-sonnet-* while switching to an OpenAI API key) used to surface only as an HTTP-layer...",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:apply_session_patch",
+   "type": "function",
+   "name": "apply_session_patch",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "lineRange": [
+    197,
+    325
+   ],
+   "summary": "Apply a patch synchronously. Public for #tauri::command adapter; tests can also call this directly with an in-memory DB once the connection abstraction allows it.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:read_current_account",
+   "type": "function",
+   "name": "read_current_account",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "lineRange": [
+    329,
+    350
+   ],
+   "summary": "Read the session's current account_id from whichever table owns it. Used to populate fromAccountId on the account-switched event.",
+   "tags": [
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:session_patch",
+   "type": "function",
+   "name": "session_patch",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "lineRange": [
+    356,
+    403
+   ],
+   "summary": "Tauri command: partial update of an existing session row.  See module docs for the supported field set and routing rules.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/session_directory/patch.rs:SessionPatch",
+   "type": "class",
+   "name": "SessionPatch",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "lineRange": [
+    89,
+    122
+   ],
+   "summary": "Wire payload for session_patch.  All fields are Option \u2014 None means \"leave this column alone\".",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "type": "file",
+   "name": "status.rs",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/status.rs",
+   "summary": "Classifies session status strings into active/failed/completed buckets used by the session directory's filtering and UI status badges.",
+   "tags": [
+    "utility",
+    "status-classification",
+    "session-management"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_active_status",
+   "type": "function",
+   "name": "is_active_status",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/status.rs",
+   "lineRange": [
+    37,
+    39
+   ],
+   "summary": "Check if a status is considered active (session in progress).",
+   "tags": [
+    "predicate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_failed_status",
+   "type": "function",
+   "name": "is_failed_status",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/status.rs",
+   "lineRange": [
+    42,
+    44
+   ],
+   "summary": "Check if a status is considered failed.",
+   "tags": [
+    "predicate"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_completed_status",
+   "type": "function",
+   "name": "is_completed_status",
+   "filePath": "src-tauri/src/agent_sessions/session_directory/status.rs",
+   "lineRange": [
+    47,
+    49
+   ],
+   "summary": "Check if a status is considered completed.",
+   "tags": [
+    "predicate"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/agent_sessions/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/event_pipeline/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/external_cli_adapter/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:resync_external_history_source",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:resync_external_history_source",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:append_external_history_page",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:decorate_imported_live_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:load_imported_history_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:plain_native_page",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:plain_directory_page",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:list_all_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:list_all_sessions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:apply_filters",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:apply_sorting",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:apply_pagination",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:annotate_agent_org_root_rows",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:decorate_imported_live_status",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_active_status",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/commands.rs:session_aggregate_list",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/commands.rs:session_aggregate_list",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/commands.rs:session_external_history_sidebar_list",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/commands.rs:session_external_history_sidebar_list",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:native_impact_fields",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:resolve",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cli_session_to_aggregate_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cli_session_to_aggregate_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:imported_history_cli_agent_type",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:imported_history_to_aggregate_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:imported_history_to_aggregate_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cursor_ide_history_to_aggregate_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cursor_ide_history_to_aggregate_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:sde_session_to_aggregate_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:sde_session_to_aggregate_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:os_session_to_aggregate_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:os_session_to_aggregate_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "class:src-tauri/src/agent_sessions/session_directory/conversion.rs:AgentMetadataResolver",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "class:src-tauri/src/agent_sessions/session_directory/conversion.rs:AgentMetadataResolver",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/parsers/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "target": "file:src-tauri/src/orgtrack/impact_indexer.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/display.rs:generate_display_label",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/display.rs:generate_display_label",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/display.rs:strip_pill_references",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/display.rs:strip_pill_references",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/display.rs:matches_text_query",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/display.rs:matches_text_query",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/aggregation.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/commands.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/conversion.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/display.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/session_directory/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_aggregate_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_aggregate_sessions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:reconcile_native_session_mirror",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:reconcile_native_session_mirror",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:remove_mirrored_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:remove_mirrored_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_cli_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_cli_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_rust_agent_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_rust_agent_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:aggregate_to_core_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:rust_agent_type_for",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:reconcile_native_session_mirror",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/aggregation.rs:list_all_sessions",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/src/agent_sessions/session_directory/orgtrack_adapter.rs:upsert_cli_session",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/conversion.rs:cli_session_to_aggregate_record",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:locate_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:validate_account_model_compat",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:apply_session_patch",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:apply_session_patch",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:read_current_account",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:session_patch",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/patch.rs:session_patch",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "class:src-tauri/src/agent_sessions/session_directory/patch.rs:SessionPatch",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "class:src-tauri/src/agent_sessions/session_directory/patch.rs:SessionPatch",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/patch.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_active_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_active_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_failed_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_failed_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_completed_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/session_directory/status.rs",
+   "target": "function:src-tauri/src/agent_sessions/session_directory/status.rs:is_completed_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

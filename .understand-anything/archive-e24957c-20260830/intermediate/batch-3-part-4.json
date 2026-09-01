@@ -1,0 +1,1465 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "type": "file",
+      "name": "cache.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "summary": "Defines the caching infrastructure for system prompt assembly: bounded caches for rendered sections, skill listings, learnings, and git branch lookups, plus cache-break tracking for diagnosing prompt-cache invalidations.",
+      "tags": [
+        "cache",
+        "prompt-engineering",
+        "performance"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        225,
+        250
+      ],
+      "summary": "Constructs a SkillListingCacheKey capturing the workspace root, disabled skills, include filter, agent id, and resource-loading flag that determine skill-listing cache identity.",
+      "tags": [
+        "cache",
+        "constructor",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:new_entries_for_agent",
+      "type": "function",
+      "name": "new_entries_for_agent",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        307,
+        330
+      ],
+      "summary": "Computes which skill-listing entries are new for a given agent since the last time listings were sent, supporting incremental catalog updates.",
+      "tags": [
+        "cache",
+        "skill-listing",
+        "diffing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:volatile_context_reminder_message",
+      "type": "function",
+      "name": "volatile_context_reminder_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        486,
+        498
+      ],
+      "summary": "Builds the reminder message text appended to volatile (non-cacheable) system prompt context.",
+      "tags": [
+        "prompt-engineering",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:attach_volatile_context_reminder",
+      "type": "function",
+      "name": "attach_volatile_context_reminder",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        513,
+        539
+      ],
+      "summary": "Attaches a volatile-context reminder message to the message list when volatile system blocks are present, preventing prompt-cache staleness.",
+      "tags": [
+        "prompt-engineering",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:rendered_system_blocks_from_messages",
+      "type": "function",
+      "name": "rendered_system_blocks_from_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        541,
+        567
+      ],
+      "summary": "Extracts previously rendered system blocks (with their cache scope) from a message history.",
+      "tags": [
+        "prompt-engineering",
+        "caching",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:record",
+      "type": "function",
+      "name": "record",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        580,
+        623
+      ],
+      "summary": "Records a sample of a turn's cache-hit/break behavior (system/tools/model hashes and token counts) for cache-break diagnostics.",
+      "tags": [
+        "cache",
+        "diagnostics",
+        "telemetry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:get_or_fetch",
+      "type": "function",
+      "name": "get_or_fetch",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        661,
+        690
+      ],
+      "summary": "Returns the cached current git branch for a repo path, fetching and caching it if not already known.",
+      "tags": [
+        "cache",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCacheInvalidationReason",
+      "type": "class",
+      "name": "PromptCacheInvalidationReason",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        29,
+        37
+      ],
+      "summary": "Enum enumerating the reasons a prompt cache may need to be invalidated (session reset, agent definition change, workspace change, etc.).",
+      "tags": [
+        "enum",
+        "cache",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCachePolicy",
+      "type": "class",
+      "name": "PromptCachePolicy",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "Enum defining how a prompt section's cache lifetime is governed: stable, revision-keyed, or volatile.",
+      "tags": [
+        "enum",
+        "cache",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheStats",
+      "type": "class",
+      "name": "CacheStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        84,
+        88
+      ],
+      "summary": "Tracks hit/miss/entry counters for a cache.",
+      "tags": [
+        "data-model",
+        "cache",
+        "metrics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SessionPromptCache",
+      "type": "class",
+      "name": "SessionPromptCache",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        161,
+        164
+      ],
+      "summary": "Bounded cache of rendered prompt sections keyed by section id, used to avoid re-rendering unchanged sections.",
+      "tags": [
+        "cache",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingCacheKey",
+      "type": "class",
+      "name": "SkillListingCacheKey",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        216,
+        222
+      ],
+      "summary": "Composite key identifying a cached skill listing by the parameters that affect its contents.",
+      "tags": [
+        "data-model",
+        "cache"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingDeltaStats",
+      "type": "class",
+      "name": "SkillListingDeltaStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        255,
+        260
+      ],
+      "summary": "Tracks how many skill entries were scanned, are new, were sent, or were suppressed in a listing delta.",
+      "tags": [
+        "data-model",
+        "metrics",
+        "cache"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingCache",
+      "type": "class",
+      "name": "SkillListingCache",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        263,
+        268
+      ],
+      "summary": "Cache of skill listings per agent that tracks which entries have already been sent, enabling incremental delta updates.",
+      "tags": [
+        "cache",
+        "skill-listing",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:LearningsPromptCacheKey",
+      "type": "class",
+      "name": "LearningsPromptCacheKey",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        380,
+        384
+      ],
+      "summary": "Composite key identifying a cached learnings-section render by agent scope, row count, and revision.",
+      "tags": [
+        "data-model",
+        "cache"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:LearningsPromptCache",
+      "type": "class",
+      "name": "LearningsPromptCache",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        397,
+        400
+      ],
+      "summary": "Bounded cache of rendered learnings prompt sections keyed by scope and revision.",
+      "tags": [
+        "cache",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:RenderedSystemBlockScope",
+      "type": "class",
+      "name": "RenderedSystemBlockScope",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        413,
+        418
+      ],
+      "summary": "Enum describing the cache scope of a rendered system prompt block.",
+      "tags": [
+        "enum",
+        "cache",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:RenderedSystemBlock",
+      "type": "class",
+      "name": "RenderedSystemBlock",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        437,
+        440
+      ],
+      "summary": "A rendered system prompt block paired with its cache scope, used to reconstruct prior prompt state.",
+      "tags": [
+        "data-model",
+        "cache",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheBreakSample",
+      "type": "class",
+      "name": "CacheBreakSample",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        453,
+        461
+      ],
+      "summary": "A single sample recording whether a turn's prompt caused a provider cache break, along with contributing hashes and token counts.",
+      "tags": [
+        "data-model",
+        "cache",
+        "diagnostics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheBreakStats",
+      "type": "class",
+      "name": "CacheBreakStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        465,
+        469
+      ],
+      "summary": "Aggregated cache-break statistics (sample count, break count, last sample) for diagnosing prompt cache instability.",
+      "tags": [
+        "data-model",
+        "cache",
+        "diagnostics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCacheBreakTracker",
+      "type": "class",
+      "name": "PromptCacheBreakTracker",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        472,
+        475
+      ],
+      "summary": "Tracks recent cache-break samples to help diagnose why a provider's prompt cache is breaking between turns.",
+      "tags": [
+        "cache",
+        "diagnostics",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:GitBranchCache",
+      "type": "class",
+      "name": "GitBranchCache",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "lineRange": [
+        656,
+        658
+      ],
+      "summary": "Caches the current git branch per repository path to avoid repeated git invocations during prompt building.",
+      "tags": [
+        "cache",
+        "git",
+        "performance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "type": "file",
+      "name": "gui_control_retrieval.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "summary": "Scores and retrieves GUI control cards relevant to a user's message, used to surface applicable GUI-control documentation/snippets in the system prompt.",
+      "tags": [
+        "prompt-engineering",
+        "search",
+        "relevance-scoring"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs:score_card",
+      "type": "function",
+      "name": "score_card",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "lineRange": [
+        105,
+        136
+      ],
+      "summary": "Scores a GUI control card's relevance to a user query using normalized term matching.",
+      "tags": [
+        "relevance-scoring",
+        "search"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs:build_gui_control_relevant_controls_section",
+      "type": "function",
+      "name": "build_gui_control_relevant_controls_section",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "lineRange": [
+        138,
+        182
+      ],
+      "summary": "Builds the system prompt section listing GUI controls most relevant to the user's latest message.",
+      "tags": [
+        "prompt-engineering",
+        "gui-control"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "type": "file",
+      "name": "helpers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "summary": "General-purpose helpers used across system prompt building: loading project conventions/memory files, truncating and formatting text for prompt budgets, and rendering workspace path and additional-directory context.",
+      "tags": [
+        "prompt-engineering",
+        "utility",
+        "text-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:load_conventions",
+      "type": "function",
+      "name": "load_conventions",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        40,
+        93
+      ],
+      "summary": "Loads project convention/memory files (e.g. AGENTS.md) from the workspace, expanding any nested memory imports.",
+      "tags": [
+        "prompt-engineering",
+        "filesystem"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:expand_memory_imports",
+      "type": "function",
+      "name": "expand_memory_imports",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        99,
+        126
+      ],
+      "summary": "Expands import-style references within a memory/convention file into their referenced content.",
+      "tags": [
+        "prompt-engineering",
+        "filesystem",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:cap_text",
+      "type": "function",
+      "name": "cap_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        132,
+        142
+      ],
+      "summary": "Truncates text to a maximum byte length, appending a label when truncation occurs.",
+      "tags": [
+        "text-processing",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:format_tool_summaries",
+      "type": "function",
+      "name": "format_tool_summaries",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        144,
+        156
+      ],
+      "summary": "Formats a list of tool summaries into prompt-ready text.",
+      "tags": [
+        "prompt-engineering",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:truncate_at_boundary",
+      "type": "function",
+      "name": "truncate_at_boundary",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        165,
+        179
+      ],
+      "summary": "Truncates a string at the nearest character boundary not exceeding a maximum length.",
+      "tags": [
+        "text-processing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:list_project_slugs",
+      "type": "function",
+      "name": "list_project_slugs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        189,
+        200
+      ],
+      "summary": "Lists known project slugs available on disk.",
+      "tags": [
+        "filesystem",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:resolve_workspace_path_string",
+      "type": "function",
+      "name": "resolve_workspace_path_string",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        212,
+        222
+      ],
+      "summary": "Resolves the effective workspace path string from session config.",
+      "tags": [
+        "workspace",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:render_channel_additional_dirs_block",
+      "type": "function",
+      "name": "render_channel_additional_dirs_block",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        227,
+        244
+      ],
+      "summary": "Renders the prompt block listing additional directories available in a channel session.",
+      "tags": [
+        "prompt-engineering",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:append_personal_workspace_context",
+      "type": "function",
+      "name": "append_personal_workspace_context",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "lineRange": [
+        246,
+        258
+      ],
+      "summary": "Appends personal workspace path context lines to the prompt.",
+      "tags": [
+        "prompt-engineering",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs",
+      "type": "file",
+      "name": "ide_context.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs",
+      "summary": "Formats IDE context (open files, selection, diagnostics) into a system prompt section.",
+      "tags": [
+        "prompt-engineering",
+        "ide-integration",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs:format_ide_context",
+      "type": "function",
+      "name": "format_ide_context",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs",
+      "lineRange": [
+        9,
+        57
+      ],
+      "summary": "Formats the current IDE context (open file, selection, diagnostics) into prompt-ready text.",
+      "tags": [
+        "prompt-engineering",
+        "ide-integration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "summary": "Module barrel for the prompt subsystem, re-exporting builder, cache, gui_control_retrieval, helpers, ide_context, registry, section_builders, section_tests, and sections submodules.",
+      "tags": [
+        "barrel",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "type": "file",
+      "name": "registry.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "summary": "Defines the PromptSection trait and the prompt assembly registry that orders, evaluates, caches, and renders all system prompt sections into the final unified system prompt (with and without prompt caching).",
+      "tags": [
+        "prompt-engineering",
+        "core-logic",
+        "registry-pattern"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        90,
+        107
+      ],
+      "summary": "Constructs a PromptCtx for a session, capturing config, tool summaries, and session-type flags used by section applicability checks.",
+      "tags": [
+        "prompt-engineering",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:render_revision_keyed_section",
+      "type": "function",
+      "name": "render_revision_keyed_section",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        290,
+        318
+      ],
+      "summary": "Renders a revision-keyed prompt section, using the learnings cache when the section's content revision hasn't changed.",
+      "tags": [
+        "prompt-engineering",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:assemble_with_cache",
+      "type": "function",
+      "name": "assemble_with_cache",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        320,
+        392
+      ],
+      "summary": "Assembles the full system prompt from all applicable sections, using the session prompt cache to skip re-rendering unchanged sections.",
+      "tags": [
+        "prompt-engineering",
+        "core-logic",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:assemble_split_with_cache",
+      "type": "function",
+      "name": "assemble_split_with_cache",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        401,
+        477
+      ],
+      "summary": "Assembles the system prompt split into cacheable and volatile parts, applying section-level cache policies.",
+      "tags": [
+        "prompt-engineering",
+        "core-logic",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:registry",
+      "type": "function",
+      "name": "registry",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        526,
+        557
+      ],
+      "summary": "Returns the ordered registry of all PromptSection implementations that make up the system prompt.",
+      "tags": [
+        "prompt-engineering",
+        "registry-pattern"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptCtx",
+      "type": "class",
+      "name": "PromptCtx",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        72,
+        87
+      ],
+      "summary": "Context passed to every prompt section's applicability and render logic, bundling session config, tool info, and session-type flags.",
+      "tags": [
+        "data-model",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:AppliesDecision",
+      "type": "class",
+      "name": "AppliesDecision",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        123,
+        131
+      ],
+      "summary": "Enum result of a prompt section's applicability check, with an optional skip reason for tracing.",
+      "tags": [
+        "enum",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptSource",
+      "type": "class",
+      "name": "PromptSource",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        156,
+        168
+      ],
+      "summary": "Enum indicating whether a prompt section's content is builtin, loaded from an override file, or computed.",
+      "tags": [
+        "enum",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptSection",
+      "type": "class",
+      "name": "PromptSection",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        180,
+        246
+      ],
+      "summary": "Trait implemented by every system prompt section, defining its id, ordering, applicability, rendering, and cache policy.",
+      "tags": [
+        "trait",
+        "prompt-engineering",
+        "core-logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:SectionTrace",
+      "type": "class",
+      "name": "SectionTrace",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "lineRange": [
+        257,
+        270
+      ],
+      "summary": "Diagnostic record capturing how a single prompt section was evaluated and rendered, used for prompt debugging/dumping.",
+      "tags": [
+        "data-model",
+        "prompt-engineering",
+        "diagnostics"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:new_entries_for_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:new_entries_for_agent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:volatile_context_reminder_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:volatile_context_reminder_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:attach_volatile_context_reminder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:attach_volatile_context_reminder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:rendered_system_blocks_from_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:rendered_system_blocks_from_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:record",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:get_or_fetch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:get_or_fetch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCacheInvalidationReason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCacheInvalidationReason",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCachePolicy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCachePolicy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SessionPromptCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SessionPromptCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingCacheKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingCacheKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingDeltaStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingDeltaStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:SkillListingCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:LearningsPromptCacheKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:LearningsPromptCacheKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:LearningsPromptCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:LearningsPromptCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:RenderedSystemBlockScope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:RenderedSystemBlockScope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:RenderedSystemBlock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:RenderedSystemBlock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheBreakSample",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheBreakSample",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheBreakStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:CacheBreakStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCacheBreakTracker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:PromptCacheBreakTracker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:GitBranchCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs:GitBranchCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs:score_card",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs:build_gui_control_relevant_controls_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs:build_gui_control_relevant_controls_section",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:load_conventions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:load_conventions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:expand_memory_imports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:cap_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:cap_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:format_tool_summaries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:format_tool_summaries",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:truncate_at_boundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:truncate_at_boundary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:list_project_slugs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:list_project_slugs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:resolve_workspace_path_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:resolve_workspace_path_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:render_channel_additional_dirs_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:render_channel_additional_dirs_block",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:append_personal_workspace_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs:append_personal_workspace_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs:format_ide_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs:format_ide_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/builder.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/gui_control_retrieval.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/helpers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/ide_context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/section_builders.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/section_tests.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/sections.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:render_revision_keyed_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:assemble_with_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:assemble_with_cache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:assemble_split_with_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:assemble_split_with_cache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:registry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:registry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptCtx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptCtx",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:AppliesDecision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:AppliesDecision",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptSection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:PromptSection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:SectionTrace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/prompt/registry.rs:SectionTrace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

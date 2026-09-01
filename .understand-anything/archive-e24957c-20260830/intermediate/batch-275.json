@@ -1,0 +1,347 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/inbox/src/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/inbox/src/commands.rs",
+      "summary": "Defines four Tauri IPC commands (inbox_list, inbox_upsert, inbox_update_status, inbox_delete) that expose inbox message CRUD operations to the frontend, delegating SQLite work to the persistence module via spawn_blocking.",
+      "tags": ["tauri-command", "api-handler", "async", "inbox", "ipc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/inbox/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/inbox/src/lib.rs",
+      "summary": "Crate root for the inbox module; declares the commands and persistence submodules and initializes the SQLite inbox_messages table with status/category/created_at indexes in the shared database.",
+      "tags": ["entry-point", "database", "sqlite", "schema-init", "inbox"],
+      "complexity": "simple",
+      "languageNotes": "Rust crate root (lib.rs) that wires together sibling submodules via pub mod declarations."
+    },
+    {
+      "id": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "type": "file",
+      "name": "persistence.rs",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "summary": "SQLite CRUD layer for inbox messages: defines the InboxMessage record type and functions to upsert, list (capped at 200, newest first), update status, and delete messages using the shared database connection.",
+      "tags": ["data-model", "database", "sqlite", "crud", "inbox"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/commands.rs:inbox_list",
+      "type": "function",
+      "name": "inbox_list",
+      "filePath": "src-tauri/crates/inbox/src/commands.rs",
+      "lineRange": [7, 13],
+      "summary": "Tauri command that lists inbox messages by delegating to persistence::list_messages on a blocking task and mapping errors to strings for the frontend.",
+      "tags": ["tauri-command", "async", "read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/commands.rs:inbox_upsert",
+      "type": "function",
+      "name": "inbox_upsert",
+      "filePath": "src-tauri/crates/inbox/src/commands.rs",
+      "lineRange": [17, 24],
+      "summary": "Tauri command that inserts or updates an inbox message by calling persistence::upsert_message on a blocking task.",
+      "tags": ["tauri-command", "async", "write"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/commands.rs:inbox_update_status",
+      "type": "function",
+      "name": "inbox_update_status",
+      "filePath": "src-tauri/crates/inbox/src/commands.rs",
+      "lineRange": [28, 35],
+      "summary": "Tauri command that updates an inbox message's status field via persistence::update_status.",
+      "tags": ["tauri-command", "async", "update"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/commands.rs:inbox_delete",
+      "type": "function",
+      "name": "inbox_delete",
+      "filePath": "src-tauri/crates/inbox/src/commands.rs",
+      "lineRange": [39, 46],
+      "summary": "Tauri command that deletes an inbox message by ID via persistence::delete_message.",
+      "tags": ["tauri-command", "async", "delete"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/lib.rs:init_inbox_tables",
+      "type": "function",
+      "name": "init_inbox_tables",
+      "filePath": "src-tauri/crates/inbox/src/lib.rs",
+      "lineRange": [19, 41],
+      "summary": "Creates the inbox_messages SQLite table and its status/category/created_at indexes if they do not already exist.",
+      "tags": ["database", "schema-init", "sqlite"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/persistence.rs:upsert_message",
+      "type": "function",
+      "name": "upsert_message",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "lineRange": [41, 74],
+      "summary": "Inserts a new inbox message or updates an existing one on conflict, preserving fields while refreshing updated_at with the current timestamp.",
+      "tags": ["database", "sqlite", "write", "upsert"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/persistence.rs:list_messages",
+      "type": "function",
+      "name": "list_messages",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "lineRange": [77, 105],
+      "summary": "Queries all inbox messages ordered by created_at descending, capped at 200 rows, and maps each row into an InboxMessage.",
+      "tags": ["database", "sqlite", "read", "query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/persistence.rs:update_status",
+      "type": "function",
+      "name": "update_status",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "lineRange": [108, 115],
+      "summary": "Updates the status and updated_at timestamp of an inbox message by ID.",
+      "tags": ["database", "sqlite", "update"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/persistence.rs:delete_message",
+      "type": "function",
+      "name": "delete_message",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "lineRange": [118, 122],
+      "summary": "Deletes an inbox message by ID from the inbox_messages table.",
+      "tags": ["database", "sqlite", "delete"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/inbox/src/persistence.rs:delete_by_status",
+      "type": "function",
+      "name": "delete_by_status",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "lineRange": [125, 132],
+      "summary": "Deletes all inbox messages matching a given status (e.g., to purge archived messages) and returns the number of rows removed.",
+      "tags": ["database", "sqlite", "delete", "bulk"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/inbox/src/persistence.rs:InboxMessage",
+      "type": "class",
+      "name": "InboxMessage",
+      "filePath": "src-tauri/crates/inbox/src/persistence.rs",
+      "lineRange": [15, 30],
+      "summary": "Serializable record representing an inbox message with id, title, preview, content, category, priority, status, sender, JSON-encoded metadata/labels, and timestamps; serialized to camelCase for the frontend.",
+      "tags": ["data-model", "serialization", "inbox"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_upsert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_update_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_delete",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/lib.rs",
+      "target": "function:src-tauri/crates/inbox/src/lib.rs:init_inbox_tables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:upsert_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:list_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:update_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:delete_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:delete_by_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "class:src-tauri/crates/inbox/src/persistence.rs:InboxMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_upsert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_update_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "function:src-tauri/crates/inbox/src/commands.rs:inbox_delete",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/lib.rs",
+      "target": "function:src-tauri/crates/inbox/src/lib.rs:init_inbox_tables",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:upsert_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:list_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:update_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:delete_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:delete_by_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "target": "class:src-tauri/crates/inbox/src/persistence.rs:InboxMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/lib.rs",
+      "target": "file:src-tauri/crates/inbox/src/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/lib.rs",
+      "target": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/inbox/src/commands.rs:inbox_list",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:list_messages",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/inbox/src/commands.rs:inbox_upsert",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:upsert_message",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/inbox/src/commands.rs:inbox_update_status",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:update_status",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/inbox/src/commands.rs:inbox_delete",
+      "target": "function:src-tauri/crates/inbox/src/persistence.rs:delete_message",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/inbox/src/commands.rs",
+      "target": "file:src-tauri/crates/inbox/src/persistence.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

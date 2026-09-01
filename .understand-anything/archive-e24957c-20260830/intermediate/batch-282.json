@@ -1,0 +1,153 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/config/appearance/backgroundColors.ts",
+      "type": "file",
+      "name": "backgroundColors.ts",
+      "filePath": "src/config/appearance/backgroundColors.ts",
+      "summary": "Defines the stable set of app background color presets (id, label, description, CSS variable slot) and helpers to look up a preset by id and resolve it to a CSS var() expression.",
+      "tags": ["config", "theming", "data-model", "utility"],
+      "complexity": "moderate",
+      "languageNotes": "Uses `as const satisfies BackgroundColorPreset[]` to keep preset ids narrowed to a literal union while still validating shape against the interface."
+    },
+    {
+      "id": "function:src/config/appearance/backgroundColors.ts:getBackgroundColorPresetById",
+      "type": "function",
+      "name": "getBackgroundColorPresetById",
+      "filePath": "src/config/appearance/backgroundColors.ts",
+      "lineRange": [136, 141],
+      "summary": "Looks up a background color preset by its string id, returning null when the id is missing or unmatched.",
+      "tags": ["utility", "lookup", "theming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/config/appearance/backgroundColors.ts:resolveBackgroundColorPreset",
+      "type": "function",
+      "name": "resolveBackgroundColorPreset",
+      "filePath": "src/config/appearance/backgroundColors.ts",
+      "lineRange": [143, 147],
+      "summary": "Resolves a background color preset to its CSS `var(--app-bg-N)` expression.",
+      "tags": ["utility", "theming", "css"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/config/appearance/primaryColorSchemas.ts",
+      "type": "file",
+      "name": "primaryColorSchemas.ts",
+      "filePath": "src/config/appearance/primaryColorSchemas.ts",
+      "summary": "Maps each background color preset id to a curated primary color schema, pregenerating an 'accent follows background' lookup table from the primary color palettes.",
+      "tags": ["config", "theming", "data-model", "utility"],
+      "complexity": "moderate",
+      "languageNotes": "Builds the exported lookup table eagerly at module load via an IIFE-style function call so the shared palette objects are reused (shared memory) rather than deep-copied."
+    },
+    {
+      "id": "function:src/config/appearance/primaryColorSchemas.ts:buildBackgroundColorSchemas",
+      "type": "function",
+      "name": "buildBackgroundColorSchemas",
+      "filePath": "src/config/appearance/primaryColorSchemas.ts",
+      "lineRange": [44, 56],
+      "summary": "Builds the full background-color-id to primary-color-schema record by resolving each curated preset name against the primary color palettes.",
+      "tags": ["utility", "theming", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/config/appearance/primaryColorSchemas.ts:getPrimarySchemaForBackgroundColorId",
+      "type": "function",
+      "name": "getPrimarySchemaForBackgroundColorId",
+      "filePath": "src/config/appearance/primaryColorSchemas.ts",
+      "lineRange": [64, 73],
+      "summary": "Safely retrieves the primary color schema for a given background color id, returning null when the id is missing or unrecognized.",
+      "tags": ["utility", "lookup", "theming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/config/appearance/primaryColors.ts",
+      "type": "file",
+      "name": "primaryColors.ts",
+      "filePath": "src/config/appearance/primaryColors.ts",
+      "summary": "Defines the primary color preset names, CSS variable keys, and light/dark hex palette data (PRIMARY_COLOR_PALETTES) used to build the app's primary color ramps, plus the default preset.",
+      "tags": ["config", "theming", "data-model"],
+      "complexity": "complex",
+      "languageNotes": "Large file of literal hex palette constants (light/dark ramps) exported as typed `PrimaryColorSchema` objects consumed by primaryColorSchemas.ts."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/config/appearance/backgroundColors.ts",
+      "target": "function:src/config/appearance/backgroundColors.ts:getBackgroundColorPresetById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/config/appearance/backgroundColors.ts",
+      "target": "function:src/config/appearance/backgroundColors.ts:resolveBackgroundColorPreset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/config/appearance/backgroundColors.ts",
+      "target": "function:src/config/appearance/backgroundColors.ts:getBackgroundColorPresetById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/config/appearance/backgroundColors.ts",
+      "target": "function:src/config/appearance/backgroundColors.ts:resolveBackgroundColorPreset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/config/appearance/primaryColorSchemas.ts",
+      "target": "function:src/config/appearance/primaryColorSchemas.ts:buildBackgroundColorSchemas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/config/appearance/primaryColorSchemas.ts",
+      "target": "function:src/config/appearance/primaryColorSchemas.ts:getPrimarySchemaForBackgroundColorId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/config/appearance/primaryColorSchemas.ts",
+      "target": "function:src/config/appearance/primaryColorSchemas.ts:getPrimarySchemaForBackgroundColorId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/config/appearance/primaryColorSchemas.ts",
+      "target": "file:src/config/appearance/backgroundColors.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/config/appearance/primaryColorSchemas.ts",
+      "target": "file:src/config/appearance/primaryColors.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/config/appearance/primaryColorSchemas.ts:buildBackgroundColorSchemas",
+      "target": "file:src/config/appearance/backgroundColors.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src/config/appearance/primaryColorSchemas.ts:buildBackgroundColorSchemas",
+      "target": "file:src/config/appearance/primaryColors.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

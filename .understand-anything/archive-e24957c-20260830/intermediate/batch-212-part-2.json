@@ -1,0 +1,122 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/db-browser/src/pool.rs",
+      "type": "file",
+      "name": "pool.rs",
+      "filePath": "src-tauri/crates/db-browser/src/pool.rs",
+      "summary": "Process-wide, mutex-guarded connection pool keyed by connection_id, capping open SQLite connections and providing open/close/with accessors for the command layer.",
+      "tags": ["database", "connection-pool", "singleton", "concurrency"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a `std::sync::LazyLock<Mutex<HashMap<...>>>` static as a process-wide singleton connection pool with simple FIFO eviction at MAX_CONNECTIONS."
+    },
+    {
+      "id": "function:src-tauri/crates/db-browser/src/pool.rs:open",
+      "type": "function",
+      "name": "open",
+      "filePath": "src-tauri/crates/db-browser/src/pool.rs",
+      "lineRange": [22, 52],
+      "summary": "Opens (or reuses) a pooled SQLite connection for a file path, evicting the oldest connection at MAX_CONNECTIONS and tuning PRAGMAs for interactive browsing.",
+      "tags": ["database", "connection-pool", "sql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/db-browser/src/pool.rs:close",
+      "type": "function",
+      "name": "close",
+      "filePath": "src-tauri/crates/db-browser/src/pool.rs",
+      "lineRange": [55, 58],
+      "summary": "Removes and drops a pooled connection by connection_id.",
+      "tags": ["database", "connection-pool"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/db-browser/src/pool.rs:with",
+      "type": "function",
+      "name": "with",
+      "filePath": "src-tauri/crates/db-browser/src/pool.rs",
+      "lineRange": [62, 71],
+      "summary": "Looks up a pooled connection by id and invokes the given closure with a reference to it, mapping lookup and closure errors to strings.",
+      "tags": ["database", "connection-pool", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/db-browser/src/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/db-browser/src/types.rs",
+      "summary": "Serde data structs (TableInfo, ColumnInfo, QueryResult, ExecuteResult, QueryOptions) and the ColumnValueMap alias, mirrored 1:1 with the frontend DatabaseCore types for camelCase JSON round-tripping.",
+      "tags": ["type-definition", "data-model", "serialization", "database"],
+      "complexity": "moderate",
+      "languageNotes": "Structs use `#[serde(rename_all = \"camelCase\")]` and per-field renames so the Rust backend types serialize to match the frontend TypeScript shapes exactly."
+    },
+    {
+      "id": "class:src-tauri/crates/db-browser/src/types.rs:TableInfo",
+      "type": "class",
+      "name": "TableInfo",
+      "filePath": "src-tauri/crates/db-browser/src/types.rs",
+      "lineRange": [9, 15],
+      "summary": "Serde struct describing a table or view: name, kind, optional row count, and optional CREATE TABLE SQL.",
+      "tags": ["data-model", "serialization", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/db-browser/src/types.rs:ColumnInfo",
+      "type": "class",
+      "name": "ColumnInfo",
+      "filePath": "src-tauri/crates/db-browser/src/types.rs",
+      "lineRange": [19, 27],
+      "summary": "Serde struct describing a table column: name, type, nullability, primary-key flag, default value, and auto-increment flag.",
+      "tags": ["data-model", "serialization", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/db-browser/src/types.rs:QueryResult",
+      "type": "class",
+      "name": "QueryResult",
+      "filePath": "src-tauri/crates/db-browser/src/types.rs",
+      "lineRange": [31, 38],
+      "summary": "Serde struct wrapping query output: column names, row values as JSON arrays, row count, optional total count, and query duration.",
+      "tags": ["data-model", "serialization", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/db-browser/src/types.rs:ExecuteResult",
+      "type": "class",
+      "name": "ExecuteResult",
+      "filePath": "src-tauri/crates/db-browser/src/types.rs",
+      "lineRange": [42, 48],
+      "summary": "Serde struct wrapping the outcome of a write statement: success flag, rows affected, duration, optional last insert id, and optional error message.",
+      "tags": ["data-model", "serialization", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/db-browser/src/types.rs:QueryOptions",
+      "type": "class",
+      "name": "QueryOptions",
+      "filePath": "src-tauri/crates/db-browser/src/types.rs",
+      "lineRange": [52, 57],
+      "summary": "Serde struct carrying optional pagination and ordering parameters (page, page_size, order_by, order_direction) for table data requests.",
+      "tags": ["data-model", "serialization", "database"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/db-browser/src/pool.rs", "target": "function:src-tauri/crates/db-browser/src/pool.rs:open", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/pool.rs", "target": "function:src-tauri/crates/db-browser/src/pool.rs:close", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/pool.rs", "target": "function:src-tauri/crates/db-browser/src/pool.rs:with", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/pool.rs", "target": "function:src-tauri/crates/db-browser/src/pool.rs:open", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/pool.rs", "target": "function:src-tauri/crates/db-browser/src/pool.rs:close", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/pool.rs", "target": "function:src-tauri/crates/db-browser/src/pool.rs:with", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:TableInfo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:ColumnInfo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:QueryResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:ExecuteResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:QueryOptions", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:TableInfo", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:ColumnInfo", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:QueryResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:ExecuteResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/db-browser/src/types.rs", "target": "class:src-tauri/crates/db-browser/src/types.rs:QueryOptions", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

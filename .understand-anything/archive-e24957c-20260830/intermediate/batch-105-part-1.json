@@ -1,0 +1,891 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx",
+      "type": "file",
+      "name": "LocalModelSetup.tsx",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx",
+      "summary": "React wizard-step component for configuring a local model runtime preset (e.g. Ollama/LM Studio), letting the user set a base URL and manage the list of enabled models.",
+      "tags": [
+        "component",
+        "wizard-step",
+        "local-runtime",
+        "provider-setup"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx",
+      "type": "file",
+      "name": "OAuthSetup.tsx",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx",
+      "summary": "React wizard-step component that renders OAuth-based key detection UI, showing login/detection status and errors for agents using browser OAuth flows.",
+      "tags": [
+        "component",
+        "wizard-step",
+        "oauth",
+        "key-detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "type": "file",
+      "name": "ProviderEndpointSectionRow.tsx",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "summary": "React wizard-step component row that lets the user pick between a provider's official and custom API endpoints for the active protocol.",
+      "tags": [
+        "component",
+        "wizard-step",
+        "endpoint-selection",
+        "provider-setup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/types.ts",
+      "summary": "Shared TypeScript prop and callback type definitions used by the KeyVault wizard's setup-step components (OAuth, local model, endpoint selection).",
+      "tags": [
+        "type-definition",
+        "shared-types",
+        "wizard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "type": "file",
+      "name": "genericSetupMethods.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "summary": "Defines the generic setup method constants (API key vs OAuth) and helpers to resolve and filter the allowed setup methods for a given agent.",
+      "tags": [
+        "config",
+        "utility",
+        "setup-method",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/config/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/index.ts",
+      "summary": "Barrel file re-exporting the KeyVault wizard's provider config, provider registry, generic setup method, and endpoint-resolution utilities plus the default wizard form data.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "config",
+        "re-exports"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "type": "file",
+      "name": "providerEndpoints.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "summary": "Utility functions to look up and resolve an API provider's endpoints, distinguishing official vs custom base URLs by id or URL string.",
+      "tags": [
+        "utility",
+        "config",
+        "endpoint-resolution",
+        "provider-setup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "type": "file",
+      "name": "apiSetupCategories.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "summary": "Classifies an agent type string into API-setup category flags (isCursor, isCodex, isOAuthAgent, etc.) that drive which wizard UI variant renders.",
+      "tags": [
+        "utility",
+        "classification",
+        "agent-type",
+        "wizard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "type": "file",
+      "name": "apiSetupDerived.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "summary": "Derives read-only wizard state - resolved Cursor session token, whether the user can proceed, and the effective validation model list - from the current API-setup form data.",
+      "tags": [
+        "utility",
+        "derived-state",
+        "validation",
+        "wizard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "type": "file",
+      "name": "keyHelpers.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "summary": "Helper functions that apply a detected or entered credential to the wizard form state and extract API keys/tokens from raw pasted input via a Tauri backend call.",
+      "tags": [
+        "utility",
+        "credential-handling",
+        "tauri-invoke",
+        "key-extraction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "type": "file",
+      "name": "useApiSetup.ts",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "summary": "Top-level hook that composes the Cursor-token, validation, token-detection, extraction, and health-check sub-hooks into the unified state and handlers used by the API setup wizard step.",
+      "tags": [
+        "hook",
+        "orchestration",
+        "wizard-step",
+        "entry-point"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Classic hook-composition pattern: a single public hook aggregates several focused internal hooks, each owning one concern of the API setup flow."
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx:LocalModelSetup",
+      "type": "function",
+      "name": "LocalModelSetup",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx",
+      "lineRange": [
+        96,
+        269
+      ],
+      "summary": "Renders the local-runtime setup step UI: name/base-url inputs and a model list with add/remove controls, merging preset and custom models and syncing changes back via onChange.",
+      "tags": [
+        "component",
+        "ui",
+        "local-runtime"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx:OAuthSetup",
+      "type": "function",
+      "name": "OAuthSetup",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx",
+      "lineRange": [
+        20,
+        82
+      ],
+      "summary": "Renders the OAuth setup step UI, showing detection status, error messages, and instructions for the agent's browser login flow.",
+      "tags": [
+        "component",
+        "ui",
+        "oauth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx:ProviderEndpointSectionRow",
+      "type": "function",
+      "name": "ProviderEndpointSectionRow",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "lineRange": [
+        38,
+        87
+      ],
+      "summary": "Renders endpoint choice controls for a provider and updates the wizard data when the user selects a different endpoint or protocol.",
+      "tags": [
+        "component",
+        "ui",
+        "endpoint-selection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts:resolveGenericSetupMethods",
+      "type": "function",
+      "name": "resolveGenericSetupMethods",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "lineRange": [
+        24,
+        33
+      ],
+      "summary": "Filters an agent's supported setup methods down to the generic (non agent-specific) ones.",
+      "tags": [
+        "utility",
+        "filtering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts:resolveActiveSetupMethod",
+      "type": "function",
+      "name": "resolveActiveSetupMethod",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "lineRange": [
+        35,
+        44
+      ],
+      "summary": "Resolves which single setup method is currently active, falling back to a sensible default when the requested method is not in the allowed set.",
+      "tags": [
+        "utility",
+        "resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:hasEndpointChoice",
+      "type": "function",
+      "name": "hasEndpointChoice",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "lineRange": [
+        14,
+        18
+      ],
+      "summary": "Returns whether a provider exposes more than one selectable endpoint.",
+      "tags": [
+        "utility",
+        "predicate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:findEndpointByBaseUrl",
+      "type": "function",
+      "name": "findEndpointByBaseUrl",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "lineRange": [
+        24,
+        33
+      ],
+      "summary": "Looks up a provider endpoint definition by matching its base URL.",
+      "tags": [
+        "utility",
+        "lookup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:resolveSelectedEndpoint",
+      "type": "function",
+      "name": "resolveSelectedEndpoint",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "lineRange": [
+        42,
+        48
+      ],
+      "summary": "Resolves the currently selected endpoint object from a base URL, falling back to a default endpoint.",
+      "tags": [
+        "utility",
+        "resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:getOfficialBaseUrl",
+      "type": "function",
+      "name": "getOfficialBaseUrl",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "lineRange": [
+        57,
+        67
+      ],
+      "summary": "Computes the official base URL for a given endpoint/protocol pairing, with a default fallback.",
+      "tags": [
+        "utility",
+        "url-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getAgentCategory",
+      "type": "function",
+      "name": "getAgentCategory",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "lineRange": [
+        23,
+        31
+      ],
+      "summary": "Maps an agent type string to a coarse category derived from its naming suffix.",
+      "tags": [
+        "utility",
+        "classification"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getApiSetupAgentFlags",
+      "type": "function",
+      "name": "getApiSetupAgentFlags",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "lineRange": [
+        33,
+        53
+      ],
+      "summary": "Computes boolean flags (isCursor, isCodex, isOAuthAgent, etc.) for an agent type, used to branch wizard UI and hook behavior.",
+      "tags": [
+        "utility",
+        "classification",
+        "wizard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getResolvedCursorSessionToken",
+      "type": "function",
+      "name": "getResolvedCursorSessionToken",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "lineRange": [
+        27,
+        32
+      ],
+      "summary": "Resolves the effective Cursor session token from live component state or the persisted wizard data.",
+      "tags": [
+        "utility",
+        "token-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getApiSetupProceedState",
+      "type": "function",
+      "name": "getApiSetupProceedState",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "lineRange": [
+        34,
+        85
+      ],
+      "summary": "Computes whether the wizard's proceed button should be enabled, based on key/token/model validation state across all supported agent types.",
+      "tags": [
+        "utility",
+        "validation",
+        "wizard-state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getEffectiveValidationModels",
+      "type": "function",
+      "name": "getEffectiveValidationModels",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "lineRange": [
+        87,
+        99
+      ],
+      "summary": "Determines the model list to validate a key against, merging in custom models for local-runtime providers.",
+      "tags": [
+        "utility",
+        "model-selection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:normalizeDetectedQuotaInfo",
+      "type": "function",
+      "name": "normalizeDetectedQuotaInfo",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "lineRange": [
+        36,
+        54
+      ],
+      "summary": "Normalizes a raw detected-quota payload into the wizard's QuotaInfo shape.",
+      "tags": [
+        "utility",
+        "normalization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:applyKey",
+      "type": "function",
+      "name": "applyKey",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "lineRange": [
+        56,
+        153
+      ],
+      "summary": "Applies a detected/validated credential to the wizard's form data, updating env vars, session tokens, and enabled models, and clearing key-selection state.",
+      "tags": [
+        "utility",
+        "credential-handling",
+        "state-update"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:extractKeysFromInput",
+      "type": "function",
+      "name": "extractKeysFromInput",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "lineRange": [
+        164,
+        210
+      ],
+      "summary": "Invokes the backend to extract API keys from raw pasted input, updating wizard state and error/loading flags with the result.",
+      "tags": [
+        "utility",
+        "tauri-invoke",
+        "key-extraction",
+        "async"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "type": "function",
+      "name": "useApiSetup",
+      "filePath": "src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "lineRange": [
+        31,
+        213
+      ],
+      "summary": "Composes the Cursor-token, validation, token-detection, extraction, and health-check sub-hooks into the unified state/handlers for the API setup wizard step.",
+      "tags": [
+        "hook",
+        "orchestration",
+        "wizard-step"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx:LocalModelSetup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx:OAuthSetup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx:ProviderEndpointSectionRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts:resolveGenericSetupMethods",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts:resolveActiveSetupMethod",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:hasEndpointChoice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:findEndpointByBaseUrl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:resolveSelectedEndpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:getOfficialBaseUrl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getAgentCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getApiSetupAgentFlags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getResolvedCursorSessionToken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getApiSetupProceedState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getEffectiveValidationModels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:normalizeDetectedQuotaInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:applyKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:extractKeysFromInput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx:LocalModelSetup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx:OAuthSetup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx:ProviderEndpointSectionRow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts:resolveGenericSetupMethods",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/genericSetupMethods.ts:resolveActiveSetupMethod",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:hasEndpointChoice",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:findEndpointByBaseUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:resolveSelectedEndpoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:getOfficialBaseUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getAgentCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getApiSetupAgentFlags",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getResolvedCursorSessionToken",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getApiSetupProceedState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getEffectiveValidationModels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:normalizeDetectedQuotaInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:applyKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts:extractKeysFromInput",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/LocalModelSetup.tsx",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/OAuthSetup.tsx",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/components/setup/types.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/config/index.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/keyHelpers.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupCursorToken.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupExtraction.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupHealthCheck.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupTokenDetection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupValidation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts",
+      "target": "file:src/scaffold/WizardSystem/variants/KeyVault/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx:ProviderEndpointSectionRow",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:getOfficialBaseUrl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/components/setup/ProviderEndpointSectionRow.tsx:ProviderEndpointSectionRow",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/config/providerEndpoints.ts:hasEndpointChoice",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupCategories.ts:getApiSetupAgentFlags",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getResolvedCursorSessionToken",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupCursorToken.ts:useApiSetupCursorToken",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupValidation.ts:useApiSetupValidation",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupTokenDetection.ts:useApiSetupTokenDetection",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupExtraction.ts:useApiSetupExtraction",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetupHealthCheck.ts:useApiSetupHealthCheck",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/useApiSetup.ts:useApiSetup",
+      "target": "function:src/scaffold/WizardSystem/variants/KeyVault/hooks/apiSetupDerived.ts:getApiSetupProceedState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

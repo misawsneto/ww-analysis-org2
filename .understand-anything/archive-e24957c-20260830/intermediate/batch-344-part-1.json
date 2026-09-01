@@ -1,0 +1,1270 @@
+{
+  "nodes": [
+    {
+      "id": "config:src-tauri/capabilities/default.json",
+      "type": "config",
+      "name": "default.json",
+      "summary": "Tauri capabilities manifest scoping which windows (main, browser-*, workspace-*, shell-*, etc.) get which default permissions, including shell open/spawn access.",
+      "tags": [
+        "configuration",
+        "tauri",
+        "security",
+        "permissions"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/capabilities/default.json"
+    },
+    {
+      "id": "config:src-tauri/crates/advanced-search/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the advanced_search crate, declaring the library plus the standalone `embedder` GPU-embedding binary target and its llama.cpp dependencies.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "cargo"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/advanced-search/Cargo.toml"
+    },
+    {
+      "id": "file:src-tauri/crates/advanced-search/src/bin/embedder.rs",
+      "type": "file",
+      "name": "embedder.rs",
+      "summary": "Standalone GPU embedder subprocess that runs llama.cpp-based embeddings over a JSON-lines stdin/stdout protocol, isolating Metal GPU crashes from the main Tauri process.",
+      "tags": [
+        "entry-point",
+        "subprocess",
+        "gpu",
+        "embeddings",
+        "ipc"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/advanced-search/src/bin/embedder.rs",
+      "languageNotes": "macOS/aarch64-gated `gpu_embedder` module wraps llama_cpp_2 with periodic context resets to work around a Metal memory-corruption bug."
+    },
+    {
+      "id": "function:src-tauri/crates/advanced-search/src/bin/embedder.rs:run_embedder_loop",
+      "type": "function",
+      "name": "run_embedder_loop",
+      "summary": "Reads newline-delimited JSON requests from stdin, lazily initializes the GPU embedder on first Init request, and dispatches Init/Embed/Shutdown to the appropriate handler.",
+      "tags": [
+        "event-loop",
+        "ipc",
+        "gpu"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        283,
+        357
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/advanced-search/src/bin/embedder.rs:main",
+      "type": "function",
+      "name": "main",
+      "summary": "Binary entry point that runs the embedder request loop and exits the process with its resulting status code.",
+      "tags": [
+        "entry-point"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        369,
+        374
+      ]
+    },
+    {
+      "id": "config:src-tauri/crates/agent-cli/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the agent_cli crate, which generates managed configuration files for third-party AI coding CLIs.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "cargo"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/agent-cli/Cargo.toml"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "type": "file",
+      "name": "adapters.rs",
+      "summary": "Generates and merges ORGII provider/model entries into the native config files of a dozen third-party AI coding CLIs (Kimi, Goose, Cline, Continue, Droid, Mistral Vibe, OpenClaw, Qwen Code, Autohand, OMP, Pi), handling JSON, JSONC, YAML, and TOML formats.",
+      "tags": [
+        "adapter",
+        "config-generation",
+        "integration",
+        "serialization"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-cli/src/managed_config/adapters.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_open_code_family_managed_config",
+      "type": "function",
+      "name": "generate_open_code_family_managed_config",
+      "summary": "Generates the managed ORGII provider/model block injected into OpenCode-family CLI config files (JSON or JSONC).",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        146,
+        194
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_kimi_managed_config",
+      "type": "function",
+      "name": "generate_kimi_managed_config",
+      "summary": "Generates the managed ORGII provider/model TOML block for the Kimi CLI's config file.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "toml"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        196,
+        245
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_goose_config",
+      "type": "function",
+      "name": "generate_goose_config",
+      "summary": "Generates the managed ORGII provider entry for Goose's YAML config file.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "yaml"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        247,
+        283
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_goose_secrets",
+      "type": "function",
+      "name": "generate_goose_secrets",
+      "summary": "Writes the ORGII proxy token into Goose's YAML secrets file.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "secrets"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        285,
+        295
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_cline_managed_config",
+      "type": "function",
+      "name": "generate_cline_managed_config",
+      "summary": "Generates the managed ORGII provider entry for Cline's JSON settings file.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        297,
+        334
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_hermes_managed_config",
+      "type": "function",
+      "name": "generate_hermes_managed_config",
+      "summary": "Generates the managed ORGII model entry for the Hermes CLI's YAML config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        336,
+        360
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_openclaw_managed_config",
+      "type": "function",
+      "name": "generate_openclaw_managed_config",
+      "summary": "Generates the managed ORGII defaults/providers block for OpenClaw's JSONC config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        362,
+        407
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_qwen_code_managed_config",
+      "type": "function",
+      "name": "generate_qwen_code_managed_config",
+      "summary": "Generates the managed ORGII provider/model/security block for Qwen Code's JSON config, wiring the API key via env-backed auth.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        409,
+        449
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_continue_managed_config",
+      "type": "function",
+      "name": "generate_continue_managed_config",
+      "summary": "Generates the managed ORGII model entry list for Continue's YAML config, replacing any prior ORGII entry by name.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "yaml"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        451,
+        503
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_droid_managed_config",
+      "type": "function",
+      "name": "generate_droid_managed_config",
+      "summary": "Generates the managed ORGII custom-model entry for Droid's JSON config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        505,
+        545
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_mistral_vibe_config",
+      "type": "function",
+      "name": "generate_mistral_vibe_config",
+      "summary": "Generates the managed ORGII provider and model entries for Mistral Vibe's TOML config, deduplicating existing entries by name/alias.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "toml"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        547,
+        620
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_mistral_vibe_env",
+      "type": "function",
+      "name": "generate_mistral_vibe_env",
+      "summary": "Upserts the ORGII API key into Mistral Vibe's `.env` file.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "secrets"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        622,
+        627
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_autohand_managed_config",
+      "type": "function",
+      "name": "generate_autohand_managed_config",
+      "summary": "Generates the managed ORGII OpenAI-compatible provider entry for Autohand's JSON config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        629,
+        666
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:openai_provider_yaml",
+      "type": "function",
+      "name": "openai_provider_yaml",
+      "summary": "Builds a YAML mapping describing an OpenAI-compatible provider entry (base URL, key, model list) shared by the OMP-family config adapters.",
+      "tags": [
+        "config-generation",
+        "utility",
+        "yaml"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        668,
+        700
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_omp_models_config",
+      "type": "function",
+      "name": "generate_omp_models_config",
+      "summary": "Generates the managed ORGII provider entry for OMP's YAML models config using the shared OpenAI-compatible provider template.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        702,
+        718
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_omp_settings_config",
+      "type": "function",
+      "name": "generate_omp_settings_config",
+      "summary": "Generates the managed ORGII role/model default entries for OMP's YAML settings config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "yaml"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        720,
+        741
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_pi_models_config",
+      "type": "function",
+      "name": "generate_pi_models_config",
+      "summary": "Generates the managed ORGII provider entry for the Pi CLI's JSON models config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        743,
+        773
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_pi_settings_config",
+      "type": "function",
+      "name": "generate_pi_settings_config",
+      "summary": "Generates the managed ORGII default provider/model/enabled-models entries for the Pi CLI's JSON settings config.",
+      "tags": [
+        "config-generation",
+        "adapter",
+        "json"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        775,
+        797
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/agent-cli/src/session_provenance_opencode_plugin.js",
+      "type": "file",
+      "name": "session_provenance_opencode_plugin.js",
+      "summary": "Managed OpenCode plugin, installed into the user's OpenCode config directory, that pipes file-touching tool-execution provenance records to the ORGII binary's stdin.",
+      "tags": [
+        "plugin",
+        "ipc",
+        "integration",
+        "event-handler"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-cli/src/session_provenance_opencode_plugin.js",
+      "languageNotes": "Template file with an installer-rewritten `__ORGII_BINARY__` placeholder; it runs inside OpenCode's plugin host, not this repo's own process."
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/session_provenance_opencode_plugin.js:OrgiiSessionProvenance",
+      "type": "function",
+      "name": "OrgiiSessionProvenance",
+      "summary": "OpenCode v1 plugin factory that registers a tool-execution hook piping file-touching tool calls to the ORGII provenance binary over stdin.",
+      "tags": [
+        "plugin",
+        "event-handler",
+        "ipc"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        32,
+        141
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/build.rs",
+      "type": "file",
+      "name": "build.rs",
+      "summary": "Build script that compiles the Cursor agent protobuf descriptor set and patches generated MCP tool-definition fields so prost emits `bytes` types where required.",
+      "tags": [
+        "build-script",
+        "codegen",
+        "protobuf"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/build.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/build.rs:main",
+      "type": "function",
+      "name": "main",
+      "summary": "Compiles the Cursor agent protobuf descriptor set and drives the byte-field patching pass over generated MCP tool-definition types.",
+      "tags": [
+        "build-script",
+        "codegen"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        15,
+        54
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/build.rs:patch_cursor_mcp_bytes_fields",
+      "type": "function",
+      "name": "patch_cursor_mcp_bytes_fields",
+      "summary": "Rewrites specific fields in the generated FileDescriptorSet so prost emits `bytes` instead of the default type for MCP tool-definition input-schema/value fields.",
+      "tags": [
+        "build-script",
+        "codegen",
+        "protobuf"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        56,
+        108
+      ]
+    },
+    {
+      "id": "config:src-tauri/crates/agent-core/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the agent_core crate, the headless AI-agent engine (sessions, turn execution, tool dispatch, providers), with an extensive dependency list.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "cargo"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/Cargo.toml"
+    },
+    {
+      "id": "document:src-tauri/crates/agent-core/src/ARCHITECTURE.md",
+      "type": "document",
+      "name": "ARCHITECTURE.md",
+      "summary": "Onboarding architecture map for the agent_core crate, tracing the message-send flow from the Tauri command entry through session runtime, turn executor, LLM providers, and tool dispatch layers.",
+      "tags": [
+        "documentation",
+        "architecture",
+        "onboarding",
+        "overview"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/ARCHITECTURE.md"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "type": "file",
+      "name": "actions.rs",
+      "summary": "Implements the concrete browser-automation actions (start, stop, navigate, snapshot, screenshot, act, tabs, console) executed against the agent's browser controller.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation",
+        "api-handler"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_start",
+      "type": "function",
+      "name": "execute_start",
+      "summary": "Launches the agent's controlled browser session via the shared browser controller.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        13,
+        23
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_stop",
+      "type": "function",
+      "name": "execute_stop",
+      "summary": "Stops the currently running agent browser session.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        25,
+        37
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_navigate",
+      "type": "function",
+      "name": "execute_navigate",
+      "summary": "Navigates the agent browser to a target URL and returns the resulting page state.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        39,
+        62
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_snapshot",
+      "type": "function",
+      "name": "execute_snapshot",
+      "summary": "Captures a role-based accessibility snapshot of the current browser page for the agent to reason over.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        64,
+        117
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_screenshot_with_data",
+      "type": "function",
+      "name": "execute_screenshot_with_data",
+      "summary": "Captures a browser screenshot, stores it, and returns both the stored reference and inline image data.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        120,
+        157
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_act",
+      "type": "function",
+      "name": "execute_act",
+      "summary": "Executes a UI action (click, type, etc.) against a browser element resolved by role-based reference.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        159,
+        240
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_tabs",
+      "type": "function",
+      "name": "execute_tabs",
+      "summary": "Lists, opens, switches, or closes browser tabs on behalf of the agent.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        242,
+        272
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_console",
+      "type": "function",
+      "name": "execute_console",
+      "summary": "Retrieves recent browser console log entries for the agent.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        274,
+        307
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:format_json_result",
+      "type": "function",
+      "name": "format_json_result",
+      "summary": "Serializes a tool result value to a pretty-printed JSON string for the agent transcript.",
+      "tags": [
+        "utility",
+        "serialization"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        310,
+        317
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "summary": "Defines the ExternalBrowserTool agent tool that proxies browser actions to the selected agent browser engine and emits `browser:frame` Tauri events so the frontend can display live browser state.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation",
+        "event-handler",
+        "component"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:ExternalBrowserTool",
+      "type": "class",
+      "name": "ExternalBrowserTool",
+      "summary": "Agent `Tool` implementation that dispatches browser actions to the shared AgentBrowserController and emits live frame events to the frontend.",
+      "tags": [
+        "tool-implementation",
+        "component",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        48,
+        52
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "summary": "Constructs an ExternalBrowserTool bound to the app's browser controller and screenshot store.",
+      "tags": [
+        "constructor",
+        "tool-implementation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        55,
+        65
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:store_and_emit",
+      "type": "function",
+      "name": "store_and_emit",
+      "summary": "Stores a captured screenshot and emits a `browser:frame` event carrying the frame payload to the frontend.",
+      "tags": [
+        "event-handler",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        86,
+        116
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:ensure_agent_browser",
+      "type": "function",
+      "name": "ensure_agent_browser",
+      "summary": "Lazily launches the agent browser session if one isn't already running before an action executes.",
+      "tags": [
+        "tool-implementation",
+        "browser-automation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        120,
+        145
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:description",
+      "type": "function",
+      "name": "description",
+      "summary": "Returns the tool's human-readable description and usage guidance shown to the LLM.",
+      "tags": [
+        "tool-implementation",
+        "metadata"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        158,
+        178
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:parameters",
+      "type": "function",
+      "name": "parameters",
+      "summary": "Declares the JSON-schema parameters accepted by the browser tool's action dispatch.",
+      "tags": [
+        "tool-implementation",
+        "validation",
+        "schema"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        180,
+        304
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "summary": "Dispatches an incoming tool call to the matching execute_* action handler and returns its formatted result.",
+      "tags": [
+        "tool-implementation",
+        "event-handler"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        306,
+        384
+      ]
+    },
+    {
+      "id": "document:src-tauri/crates/agent-core/src/specialization/skills/builtin_data/create-orgii-agent/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "summary": "Built-in agent skill teaching the AI agent how to create or modify ORGII agent definitions and orgs via the `manage_agent_def` tool, with a hand-editing fallback for `agent-definitions.json`.",
+      "tags": [
+        "documentation",
+        "skill-definition",
+        "agent-instructions"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/builtin_data/create-orgii-agent/SKILL.md"
+    },
+    {
+      "id": "document:src-tauri/crates/agent-core/src/specialization/skills/builtin_data/create-rule/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "summary": "Built-in agent skill describing how to create persistent `.orgii/rules/` markdown guidance files that get injected into the agent's system prompt on every turn.",
+      "tags": [
+        "documentation",
+        "skill-definition",
+        "agent-instructions"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/builtin_data/create-rule/SKILL.md"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_open_code_family_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_open_code_family_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_kimi_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_kimi_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_goose_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_goose_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_goose_secrets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_goose_secrets",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_cline_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_cline_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_hermes_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_hermes_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_openclaw_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_openclaw_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_qwen_code_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_qwen_code_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_continue_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_continue_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_droid_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_droid_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_mistral_vibe_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_mistral_vibe_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_mistral_vibe_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_mistral_vibe_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_autohand_managed_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_autohand_managed_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:openai_provider_yaml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_omp_models_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_omp_models_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_omp_settings_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_omp_settings_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_pi_models_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_pi_models_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_pi_settings_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/managed_config/adapters.rs:generate_pi_settings_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_stop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_stop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_navigate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_navigate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_screenshot_with_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_screenshot_with_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_act",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_act",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_tabs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_tabs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_console",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:execute_console",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:format_json_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs:format_json_result",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:ExternalBrowserTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:ExternalBrowserTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:store_and_emit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:ensure_agent_browser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:parameters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "config:src-tauri/crates/advanced-search/Cargo.toml",
+      "target": "file:src-tauri/crates/advanced-search/src/bin/embedder.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/agent-cli/Cargo.toml",
+      "target": "file:src-tauri/crates/agent-cli/src/managed_config/adapters.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/agent-cli/Cargo.toml",
+      "target": "file:src-tauri/crates/agent-cli/src/session_provenance_opencode_plugin.js",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/agent-core/Cargo.toml",
+      "target": "file:src-tauri/crates/agent-core/build.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src-tauri/crates/agent-core/src/ARCHITECTURE.md",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/web/control_external_browser/actions.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

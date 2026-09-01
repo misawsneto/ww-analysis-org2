@@ -1,0 +1,571 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/services/context/workspaceSnapshot.ts",
+      "type": "file",
+      "name": "workspaceSnapshot.ts",
+      "filePath": "src/services/context/workspaceSnapshot.ts",
+      "summary": "Defines the WorkspaceSnapshot type family (editor, git, PR, user presence, profile, and app UI state) shipped to agent APIs on every turn; kept dependency-free so RPC schemas avoid importing Jotai-backed collectors.",
+      "tags": ["type-definition", "data-model", "agent-context", "ipc"],
+      "complexity": "moderate",
+      "languageNotes": "Pure type/interface module intentionally decoupled from store-backed collectors to keep RPC schema imports lightweight."
+    },
+    {
+      "id": "file:src/services/file/FileOperationsService.ts",
+      "type": "file",
+      "name": "FileOperationsService.ts",
+      "filePath": "src/services/file/FileOperationsService.ts",
+      "summary": "Singleton service providing file operations with full UI parity (open/save/create/delete/rename/copy/paste/duplicate), unifying dispatch, file-tree, and AI command paths on top of FileService and EditorTabService.",
+      "tags": ["service", "singleton", "file-system", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/services/file/FileService.ts",
+      "type": "file",
+      "name": "FileService.ts",
+      "filePath": "src/services/file/FileService.ts",
+      "summary": "Singleton file management service shared by AI and UI, handling directory-tree loading, file open/save/create/delete/rename, gitignore-aware tree filtering, and Jotai store synchronization.",
+      "tags": ["service", "singleton", "file-system", "data-model"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/services/file/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/services/file/index.ts",
+      "summary": "Barrel re-exporting FileService, FileOperationsService, and the FileOperationResult type from the file service module.",
+      "tags": ["barrel", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/services/git/GitService.ts",
+      "type": "file",
+      "name": "GitService.ts",
+      "filePath": "src/services/git/GitService.ts",
+      "summary": "Singleton git operations service supporting both terminal-command execution (for AI/natural language, visible output) and direct API calls (staging, commit, push, pull, stash, branches) for programmatic use.",
+      "tags": ["service", "singleton", "git", "terminal-integration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/services/git/githubListCache.ts",
+      "type": "file",
+      "name": "githubListCache.ts",
+      "filePath": "src/services/git/githubListCache.ts",
+      "summary": "Module-scope, repo-keyed LRU cache for GitHub issues, PR lists, and PR detail snapshots with TTL-based staleness checks, localStorage hydration/persistence, and in-flight request coalescing.",
+      "tags": ["utility", "caching", "github", "lru-cache"],
+      "complexity": "complex",
+      "languageNotes": "Implements a stale-while-revalidate pattern with bounded LRU maps (per-repo, per-list, per-detail) persisted to localStorage between sessions."
+    },
+    {
+      "id": "file:src/services/git/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/services/git/index.ts",
+      "summary": "Barrel re-exporting GitService, GitOperationsService, and the GitOperationResult type from the git service module.",
+      "tags": ["barrel", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/services/git/operations/createPullRequest.ts",
+      "type": "file",
+      "name": "createPullRequest.ts",
+      "filePath": "src/services/git/operations/createPullRequest.ts",
+      "summary": "Orchestrates pull-request creation: resolves the GitHub remote and repo full name, pushes the branch when requested, then calls the Rust backend to open the PR and returns its URL.",
+      "tags": ["git", "github", "orchestration", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/services/git/operations/githubIssues.ts",
+      "type": "file",
+      "name": "githubIssues.ts",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "summary": "Agent-callable orchestration functions for GitHub Issues (fetch, create, close, reopen, comment, update, labels, collaborators) that wrap low-level Tauri IPC calls with repo-context resolution and error normalization.",
+      "tags": ["github", "orchestration", "ipc", "service"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/services/git/operations/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/services/git/operations/index.ts",
+      "summary": "Barrel re-exporting git repo-context helpers, pull-request creation, and GitHub issue operations along with their associated types.",
+      "tags": ["barrel", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/services/guiAgent/GUIAgentService.ts",
+      "type": "file",
+      "name": "GUIAgentService.ts",
+      "filePath": "src/services/guiAgent/GUIAgentService.ts",
+      "summary": "Singleton service managing GUI Agent output-panel logging (actions, results, errors, messages) with ANSI-colored formatting; callable from middleware outside React and connects to the Output panel via a hook.",
+      "tags": ["service", "singleton", "logging", "agent"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/services/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/services/index.ts",
+      "summary": "Root barrel for the services layer, re-exporting AppViewService, EditorService, FileService, GitService, GUIAgentService, NavigationService, PanelService, SessionService, SearchService, TerminalService, and TestService.",
+      "tags": ["barrel", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/services/lsp/eslint.ts",
+      "type": "file",
+      "name": "eslint.ts",
+      "filePath": "src/services/lsp/eslint.ts",
+      "summary": "ESLint integration service exposing diagnostics via Tauri commands, supplementing the TypeScript LSP which does not report ESLint/Prettier errors; includes availability checks and diagnostic-format conversion.",
+      "tags": ["service", "lsp", "eslint", "diagnostics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/services/file/FileService.ts:loadDirectoryContents",
+      "type": "function",
+      "name": "loadDirectoryContents",
+      "filePath": "src/services/file/FileService.ts",
+      "lineRange": [79, 115],
+      "summary": "Loads and sorts the contents of a directory via Tauri readDir, applying gitignore filtering and recursing to build the file-tree node structure.",
+      "tags": ["file-system", "utility", "tree-building"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/services/file/FileService.ts:updateTreeExpansion",
+      "type": "function",
+      "name": "updateTreeExpansion",
+      "filePath": "src/services/file/FileService.ts",
+      "lineRange": [117, 140],
+      "summary": "Immutably updates a file tree's expansion state and children for a target path, recursing into nested directories.",
+      "tags": ["utility", "tree-manipulation", "immutable-update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/services/file/FileService.ts:findNodeInTree",
+      "type": "function",
+      "name": "findNodeInTree",
+      "filePath": "src/services/file/FileService.ts",
+      "lineRange": [142, 151],
+      "summary": "Recursively searches the file tree for a node matching the given path.",
+      "tags": ["utility", "tree-lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:lruSet",
+      "type": "function",
+      "name": "lruSet",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [71, 84],
+      "summary": "Inserts a key/value pair into a bounded Map, evicting the least-recently-used entry when the cache exceeds maxSize.",
+      "tags": ["utility", "lru-cache"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:coalesceGitHubListRequest",
+      "type": "function",
+      "name": "coalesceGitHubListRequest",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [95, 109],
+      "summary": "Deduplicates concurrent in-flight GitHub list requests for the same cache key, returning the shared in-progress promise instead of issuing duplicate calls.",
+      "tags": ["utility", "request-coalescing", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:hydrate",
+      "type": "function",
+      "name": "hydrate",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [130, 148],
+      "summary": "Restores a cache Map from localStorage on module load, guarding against parse errors and malformed storage.",
+      "tags": ["utility", "persistence", "caching"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:getCachedIssues",
+      "type": "function",
+      "name": "getCachedIssues",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [165, 167],
+      "summary": "Retrieves cached open/closed GitHub issues for a repo key from the LRU issue cache.",
+      "tags": ["caching", "github", "accessor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:isIssueCacheStale",
+      "type": "function",
+      "name": "isIssueCacheStale",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [171, 182],
+      "summary": "Determines whether a repo's cached issue list (open or closed) has exceeded the TTL and needs a background refresh.",
+      "tags": ["caching", "github", "staleness-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:updateCachedOpenIssues",
+      "type": "function",
+      "name": "updateCachedOpenIssues",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [184, 196],
+      "summary": "Writes a fresh open-issues list into the LRU cache for a repo and persists the cache to localStorage.",
+      "tags": ["caching", "github", "mutator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:updateCachedClosedIssues",
+      "type": "function",
+      "name": "updateCachedClosedIssues",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [198, 210],
+      "summary": "Writes a fresh closed-issues list into the LRU cache for a repo and persists the cache to localStorage.",
+      "tags": ["caching", "github", "mutator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:getCachedPrs",
+      "type": "function",
+      "name": "getCachedPrs",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [220, 225],
+      "summary": "Retrieves a cached pull-request list for a repo and state (open/closed/merged) from the LRU PR cache.",
+      "tags": ["caching", "github", "accessor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:isPrCacheStale",
+      "type": "function",
+      "name": "isPrCacheStale",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [227, 234],
+      "summary": "Determines whether a repo's cached PR list for a given state has exceeded the TTL and needs a background refresh.",
+      "tags": ["caching", "github", "staleness-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:setCachedPrs",
+      "type": "function",
+      "name": "setCachedPrs",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [236, 251],
+      "summary": "Writes a fresh pull-request list into the LRU cache for a repo/state combination and persists the cache to localStorage.",
+      "tags": ["caching", "github", "mutator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:prDetailKey",
+      "type": "function",
+      "name": "prDetailKey",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [258, 260],
+      "summary": "Builds the composite cache key for a PR detail snapshot from repo full name and PR number.",
+      "tags": ["utility", "caching", "key-builder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:getCachedPrDetail",
+      "type": "function",
+      "name": "getCachedPrDetail",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [262, 264],
+      "summary": "Retrieves a cached PR detail snapshot by key from the LRU PR-detail cache.",
+      "tags": ["caching", "github", "accessor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:isPrDetailStale",
+      "type": "function",
+      "name": "isPrDetailStale",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [266, 270],
+      "summary": "Determines whether a cached PR detail snapshot has exceeded the TTL and needs a background refresh.",
+      "tags": ["caching", "github", "staleness-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/githubListCache.ts:setCachedPrDetail",
+      "type": "function",
+      "name": "setCachedPrDetail",
+      "filePath": "src/services/git/githubListCache.ts",
+      "lineRange": [272, 282],
+      "summary": "Writes a fresh PR detail snapshot into the LRU cache and persists the cache to localStorage.",
+      "tags": ["caching", "github", "mutator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/createPullRequest.ts:parseGithubRepoFullName",
+      "type": "function",
+      "name": "parseGithubRepoFullName",
+      "filePath": "src/services/git/operations/createPullRequest.ts",
+      "lineRange": [9, 15],
+      "summary": "Extracts the `owner/repo` full name from an SSH or HTTPS GitHub remote URL.",
+      "tags": ["utility", "github", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/createPullRequest.ts:createPullRequest",
+      "type": "function",
+      "name": "createPullRequest",
+      "filePath": "src/services/git/operations/createPullRequest.ts",
+      "lineRange": [30, 97],
+      "summary": "Resolves the git remote and repo full name, optionally pushes the branch, then calls the Rust backend to create a GitHub pull request and returns its URL or an error.",
+      "tags": ["github", "orchestration", "git"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:fetchIssues",
+      "type": "function",
+      "name": "fetchIssues",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [44, 61],
+      "summary": "Resolves the repo name from a git remote URL and lists GitHub issues via the local Tauri IPC command.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:fetchIssue",
+      "type": "function",
+      "name": "fetchIssue",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [63, 75],
+      "summary": "Fetches a single GitHub issue by number for the resolved repo via Tauri IPC.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:createIssue",
+      "type": "function",
+      "name": "createIssue",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [77, 98],
+      "summary": "Creates a new GitHub issue for the resolved repo via Tauri IPC with error normalization.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:closeIssue",
+      "type": "function",
+      "name": "closeIssue",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [100, 116],
+      "summary": "Closes a GitHub issue for the resolved repo via the Tauri update-issue IPC command.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:reopenIssue",
+      "type": "function",
+      "name": "reopenIssue",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [118, 132],
+      "summary": "Reopens a closed GitHub issue for the resolved repo via the Tauri update-issue IPC command.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:addIssueComment",
+      "type": "function",
+      "name": "addIssueComment",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [134, 151],
+      "summary": "Adds a comment to a GitHub issue for the resolved repo via Tauri IPC.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:fetchIssueComments",
+      "type": "function",
+      "name": "fetchIssueComments",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [153, 165],
+      "summary": "Lists comments on a GitHub issue for the resolved repo via Tauri IPC.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:updateIssue",
+      "type": "function",
+      "name": "updateIssue",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [167, 191],
+      "summary": "Updates a GitHub issue's title, body, state, labels, or assignees for the resolved repo via Tauri IPC.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:fetchRepoLabels",
+      "type": "function",
+      "name": "fetchRepoLabels",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [193, 204],
+      "summary": "Lists the labels available on the resolved GitHub repo via Tauri IPC.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/git/operations/githubIssues.ts:fetchRepoCollaborators",
+      "type": "function",
+      "name": "fetchRepoCollaborators",
+      "filePath": "src/services/git/operations/githubIssues.ts",
+      "lineRange": [206, 217],
+      "summary": "Lists collaborators on the resolved GitHub repo via Tauri IPC.",
+      "tags": ["github", "ipc", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/services/guiAgent/GUIAgentService.ts:GUIAgentServiceClass",
+      "type": "class",
+      "name": "GUIAgentServiceClass",
+      "filePath": "src/services/guiAgent/GUIAgentService.ts",
+      "lineRange": [59, 329],
+      "summary": "Singleton class managing GUI Agent output-panel logging: connects/disconnects the output channel, buffers pending logs before connection, and formats/writes action, result, error, and message log entries with ANSI colors and timestamps.",
+      "tags": ["service", "singleton", "logging", "state-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:tauriInvoke",
+      "type": "function",
+      "name": "tauriInvoke",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [39, 53],
+      "summary": "Dynamically invokes a Tauri command, returning null and logging a one-time warning if Tauri is unavailable (e.g. running under plain `npm run dev`).",
+      "tags": ["ipc", "utility", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:runEslint",
+      "type": "function",
+      "name": "runEslint",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [58, 63],
+      "summary": "Runs ESLint on a file path via the Tauri backend and returns its diagnostics.",
+      "tags": ["lsp", "eslint", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:runEslintOnContent",
+      "type": "function",
+      "name": "runEslintOnContent",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [68, 81],
+      "summary": "Runs ESLint on in-memory file content (unsaved editor buffer) via the Tauri backend and returns its diagnostics.",
+      "tags": ["lsp", "eslint", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:isEslintAvailable",
+      "type": "function",
+      "name": "isEslintAvailable",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [86, 93],
+      "summary": "Checks whether ESLint is installed and configured for the given workspace path.",
+      "tags": ["lsp", "eslint", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:getEslintVersion",
+      "type": "function",
+      "name": "getEslintVersion",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [98, 104],
+      "summary": "Retrieves the installed ESLint version for the given workspace path via the Tauri backend.",
+      "tags": ["lsp", "eslint", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:eslintDiagnosticToAppDiagnostic",
+      "type": "function",
+      "name": "eslintDiagnosticToAppDiagnostic",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [109, 126],
+      "summary": "Converts a raw ESLint diagnostic from the Rust backend into the app's shared Diagnostic shape.",
+      "tags": ["lsp", "eslint", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/services/lsp/eslint.ts:supportsEslint",
+      "type": "function",
+      "name": "supportsEslint",
+      "filePath": "src/services/lsp/eslint.ts",
+      "lineRange": [131, 136],
+      "summary": "Checks whether a file's extension is one ESLint can lint (js/jsx/ts/tsx/mjs/cjs/vue/svelte).",
+      "tags": ["lsp", "eslint", "utility"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/services/file/FileOperationsService.ts", "target": "file:src/services/file/FileService.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "file:src/services/git/operations/createPullRequest.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/services/context/workspaceSnapshot.ts", "target": "file:src/services/context/appUiSnapshot.ts", "type": "related", "direction": "forward", "weight": 0.5 },
+
+    { "source": "file:src/services/file/FileService.ts", "target": "function:src/services/file/FileService.ts:loadDirectoryContents", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/file/FileService.ts", "target": "function:src/services/file/FileService.ts:updateTreeExpansion", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/file/FileService.ts", "target": "function:src/services/file/FileService.ts:findNodeInTree", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:lruSet", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:coalesceGitHubListRequest", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:coalesceGitHubListRequest", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:hydrate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:getCachedIssues", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:getCachedIssues", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:isIssueCacheStale", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:isIssueCacheStale", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:updateCachedOpenIssues", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:updateCachedOpenIssues", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:updateCachedClosedIssues", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:updateCachedClosedIssues", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:getCachedPrs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:getCachedPrs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:isPrCacheStale", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:isPrCacheStale", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:setCachedPrs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:setCachedPrs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:prDetailKey", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:prDetailKey", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:getCachedPrDetail", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:getCachedPrDetail", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:isPrDetailStale", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:isPrDetailStale", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:setCachedPrDetail", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/githubListCache.ts", "target": "function:src/services/git/githubListCache.ts:setCachedPrDetail", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/services/git/operations/createPullRequest.ts", "target": "function:src/services/git/operations/createPullRequest.ts:parseGithubRepoFullName", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/createPullRequest.ts", "target": "function:src/services/git/operations/createPullRequest.ts:parseGithubRepoFullName", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/createPullRequest.ts", "target": "function:src/services/git/operations/createPullRequest.ts:createPullRequest", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/createPullRequest.ts", "target": "function:src/services/git/operations/createPullRequest.ts:createPullRequest", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchIssues", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchIssues", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchIssue", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchIssue", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:createIssue", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:createIssue", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:closeIssue", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:closeIssue", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:reopenIssue", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:reopenIssue", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:addIssueComment", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:addIssueComment", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchIssueComments", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchIssueComments", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:updateIssue", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:updateIssue", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchRepoLabels", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchRepoLabels", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchRepoCollaborators", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/git/operations/githubIssues.ts", "target": "function:src/services/git/operations/githubIssues.ts:fetchRepoCollaborators", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/services/guiAgent/GUIAgentService.ts", "target": "class:src/services/guiAgent/GUIAgentService.ts:GUIAgentServiceClass", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:tauriInvoke", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:runEslint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:runEslint", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:runEslintOnContent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:runEslintOnContent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:isEslintAvailable", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:isEslintAvailable", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:getEslintVersion", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:getEslintVersion", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:eslintDiagnosticToAppDiagnostic", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:eslintDiagnosticToAppDiagnostic", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:supportsEslint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/services/lsp/eslint.ts", "target": "function:src/services/lsp/eslint.ts:supportsEslint", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

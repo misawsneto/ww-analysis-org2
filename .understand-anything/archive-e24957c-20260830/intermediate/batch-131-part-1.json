@@ -1,0 +1,455 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "type": "file",
+      "name": "editExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "summary": "Extracts and normalizes edit/patch tool-call data (diffs, apply_patch results) into UniversalEventProps-compatible edit data, including converting patch text to unified diff format.",
+      "tags": ["utility", "parsing", "diff", "tool-rendering"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractEditData",
+      "type": "function",
+      "name": "extractEditData",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "lineRange": [70, 180],
+      "summary": "Central dispatcher that extracts edit-tool-call data (Edit, MultiEdit, apply_patch, write) from raw tool props into ExtractedEditData, handling diff generation and unified-diff parsing per edit variant.",
+      "tags": ["parsing", "diff", "dispatcher"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractApplyPatchData",
+      "type": "function",
+      "name": "extractApplyPatchData",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "lineRange": [192, 236],
+      "summary": "Converts an apply_patch patch string and tool result into segmented ExtractedEditData entries, extracting per-file diff hunks and metadata.",
+      "tags": ["parsing", "diff", "patch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:splitCombinedDiffIntoSegments",
+      "type": "function",
+      "name": "splitCombinedDiffIntoSegments",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "lineRange": [238, 309],
+      "summary": "Splits a combined multi-file unified diff string into per-file diff segments with associated file path metadata.",
+      "tags": ["parsing", "diff"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractApplyPatchDataFromRust",
+      "type": "function",
+      "name": "extractApplyPatchDataFromRust",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "lineRange": [317, 361],
+      "summary": "Converts a Rust-backend apply_patch conversion result directly into an array of ExtractedEditData without re-parsing diff text.",
+      "tags": ["parsing", "diff", "tauri-bridge"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:patchSegmentToExtractedEdit",
+      "type": "function",
+      "name": "patchSegmentToExtractedEdit",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "lineRange": [363, 416],
+      "summary": "Maps a single RustPatchSegment into an ExtractedEditData entry, detecting language and computing added/removed line counts.",
+      "tags": ["parsing", "diff"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:convertPatchToUnifiedDiffSync",
+      "type": "function",
+      "name": "convertPatchToUnifiedDiffSync",
+      "filePath": "src/engines/SessionCore/rendering/props/editExtractors.ts",
+      "lineRange": [438, 558],
+      "summary": "Synchronously converts apply_patch-format patch text into unified diff format, with an LRU-style cache keyed by content hash to avoid redundant conversion.",
+      "tags": ["parsing", "diff", "caching"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "type": "file",
+      "name": "extractorShared.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "summary": "Shared low-level helpers used by all tool-output extractors: safe text coercion, success/failure payload parsing, language detection, LRU-style caching, line-number-prefix stripping, and unified-diff merge/parse utilities.",
+      "tags": ["utility", "shared", "diff", "caching"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:safeText",
+      "type": "function",
+      "name": "safeText",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [17, 33],
+      "summary": "Recursively coerces an unknown tool-result value (string, array, or object) into a display-safe string, joining or JSON-stringifying as needed.",
+      "tags": ["utility", "formatting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractSuccessData",
+      "type": "function",
+      "name": "extractSuccessData",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [43, 51],
+      "summary": "Extracts a normalized success/error/timestamp summary object from a tool result, when the result indicates success.",
+      "tags": ["utility", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractFailureData",
+      "type": "function",
+      "name": "extractFailureData",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [57, 65],
+      "summary": "Extracts a normalized error summary object from a tool result, when the result indicates failure.",
+      "tags": ["utility", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:detectLanguage",
+      "type": "function",
+      "name": "detectLanguage",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [93, 96],
+      "summary": "Infers a syntax-highlighting language identifier from a file name's extension.",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:cacheKey",
+      "type": "function",
+      "name": "cacheKey",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [102, 106],
+      "summary": "Builds a lightweight cache key from a content string's length and head/tail slices.",
+      "tags": ["utility", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:evictAndSet",
+      "type": "function",
+      "name": "evictAndSet",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [108, 119],
+      "summary": "Sets a value in a Map-based cache, evicting the oldest (first-inserted) entry when the cache exceeds a max size.",
+      "tags": ["utility", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:stripLineNumberPrefixes",
+      "type": "function",
+      "name": "stripLineNumberPrefixes",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [152, 193],
+      "summary": "Strips line-number prefixes and read-tool footers from file-content strings, using a cache to avoid repeated work.",
+      "tags": ["utility", "parsing", "caching"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:mergeUnifiedDiffStrings",
+      "type": "function",
+      "name": "mergeUnifiedDiffStrings",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [217, 282],
+      "summary": "Merges multiple unified-diff strings for the same file into a single deduplicated, sorted diff by combining and re-splitting hunks.",
+      "tags": ["utility", "diff"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:parseUnifiedDiffToOldNew",
+      "type": "function",
+      "name": "parseUnifiedDiffToOldNew",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [284, 347],
+      "summary": "Parses a unified diff string into separate old-content and new-content strings by replaying additions/removals/context lines.",
+      "tags": ["utility", "diff", "parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:parseUnifiedDiffToHunks",
+      "type": "function",
+      "name": "parseUnifiedDiffToHunks",
+      "filePath": "src/engines/SessionCore/rendering/props/extractorShared.ts",
+      "lineRange": [366, 413],
+      "summary": "Parses a unified diff string into an array of structured hunk objects with header metadata and old/new line buffers.",
+      "tags": ["utility", "diff", "parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts",
+      "type": "file",
+      "name": "fileExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/fileExtractors.ts",
+      "summary": "Extracts file read/write tool-call data (line ranges, content, file path) into normalized UniversalEventProps for rendering file operations in the UI.",
+      "tags": ["utility", "parsing", "file-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:payloadNumber",
+      "type": "function",
+      "name": "payloadNumber",
+      "filePath": "src/engines/SessionCore/rendering/props/fileExtractors.ts",
+      "lineRange": [22, 31],
+      "summary": "Reads a numeric field from a tool payload object, returning undefined if absent or non-finite.",
+      "tags": ["utility", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:readLineMetadata",
+      "type": "function",
+      "name": "readLineMetadata",
+      "filePath": "src/engines/SessionCore/rendering/props/fileExtractors.ts",
+      "lineRange": [33, 44],
+      "summary": "Extracts offset/limit line-range metadata from tool call arguments for file-read operations.",
+      "tags": ["utility", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData",
+      "type": "function",
+      "name": "extractFileData",
+      "filePath": "src/engines/SessionCore/rendering/props/fileExtractors.ts",
+      "lineRange": [46, 107],
+      "summary": "Extracts file-read tool-call data (path, content, line range, language) from raw props into ExtractedFileData for rendering.",
+      "tags": ["parsing", "file-tooling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/searchExtractors.ts",
+      "type": "file",
+      "name": "searchExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/searchExtractors.ts",
+      "summary": "Parses grep/search tool results (plain text or structured arrays) into a normalized search-results shape for rendering.",
+      "tags": ["utility", "parsing", "search-tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/searchExtractors.ts:parseTextSearchResults",
+      "type": "function",
+      "name": "parseTextSearchResults",
+      "filePath": "src/engines/SessionCore/rendering/props/searchExtractors.ts",
+      "lineRange": [9, 23],
+      "summary": "Parses plain-text grep-style output lines (path:line:content) into structured search result entries.",
+      "tags": ["utility", "parsing", "search-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/searchExtractors.ts:extractSearchData",
+      "type": "function",
+      "name": "extractSearchData",
+      "filePath": "src/engines/SessionCore/rendering/props/searchExtractors.ts",
+      "lineRange": [25, 80],
+      "summary": "Extracts search/grep tool-call data from raw props, normalizing structured or plain-text results into ExtractedSearchData.",
+      "tags": ["parsing", "search-tooling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts",
+      "type": "file",
+      "name": "shellExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/shellExtractors.ts",
+      "summary": "Extracts shell/bash tool-call data including command-display summarization and success/failure output, normalizing it into UniversalEventProps.",
+      "tags": ["utility", "parsing", "shell-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:resolveAction",
+      "type": "function",
+      "name": "resolveAction",
+      "filePath": "src/engines/SessionCore/rendering/props/shellExtractors.ts",
+      "lineRange": [19, 29],
+      "summary": "Determines the display action label (e.g. run/kill) for a shell tool call from its UI-canonical name and arguments.",
+      "tags": ["utility", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:getShellCommandDisplay",
+      "type": "function",
+      "name": "getShellCommandDisplay",
+      "filePath": "src/engines/SessionCore/rendering/props/shellExtractors.ts",
+      "lineRange": [31, 44],
+      "summary": "Builds a deduplicated, human-readable summary of the base commands present in a (possibly multi-line/piped) shell command string.",
+      "tags": ["utility", "formatting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:extractShellData",
+      "type": "function",
+      "name": "extractShellData",
+      "filePath": "src/engines/SessionCore/rendering/props/shellExtractors.ts",
+      "lineRange": [46, 157],
+      "summary": "Extracts shell/bash tool-call data (command, output, exit status) from raw props into ExtractedShellData for rendering.",
+      "tags": ["parsing", "shell-tooling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/thinkingExtractors.ts",
+      "type": "file",
+      "name": "thinkingExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/thinkingExtractors.ts",
+      "summary": "Extracts \"thinking\" tool events (reasoning duration/content) and normalizes duration units into ExtractedThinkingData.",
+      "tags": ["utility", "parsing", "thinking-tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/thinkingExtractors.ts:extractThinkingData",
+      "type": "function",
+      "name": "extractThinkingData",
+      "filePath": "src/engines/SessionCore/rendering/props/thinkingExtractors.ts",
+      "lineRange": [18, 48],
+      "summary": "Extracts reasoning/thinking tool-call data (content, duration) from raw props, normalizing duration into seconds.",
+      "tags": ["parsing", "thinking-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/todoExtractors.ts",
+      "type": "file",
+      "name": "todoExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/todoExtractors.ts",
+      "summary": "Parses todo-list tool-call payloads (JSON, embedded arrays, or Python-dict-style strings) into a normalized todo list for rendering task progress.",
+      "tags": ["utility", "parsing", "todo-tooling", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:parsePythonDict",
+      "type": "function",
+      "name": "parsePythonDict",
+      "filePath": "src/engines/SessionCore/rendering/props/todoExtractors.ts",
+      "lineRange": [18, 30],
+      "summary": "Best-effort converts a Python-dict-style string (single quotes, True/False) into parsed JSON via a validated schema.",
+      "tags": ["utility", "parsing", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:parseEmbeddedTodoArray",
+      "type": "function",
+      "name": "parseEmbeddedTodoArray",
+      "filePath": "src/engines/SessionCore/rendering/props/todoExtractors.ts",
+      "lineRange": [38, 47],
+      "summary": "Extracts and parses a JSON todo array embedded within a larger text blob by locating its bracket boundaries.",
+      "tags": ["utility", "parsing", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:extractTodoData",
+      "type": "function",
+      "name": "extractTodoData",
+      "filePath": "src/engines/SessionCore/rendering/props/todoExtractors.ts",
+      "lineRange": [59, 180],
+      "summary": "Extracts todo-list tool-call data from raw props across multiple payload shapes (arrays, JSON strings, embedded arrays, Python dicts) into a normalized todo list.",
+      "tags": ["parsing", "todo-tooling", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/registry/constants.ts",
+      "type": "file",
+      "name": "constants.ts",
+      "filePath": "src/engines/SessionCore/rendering/registry/constants.ts",
+      "summary": "Thin simulator-facing alias exposing getAppTypeForEvent, delegating to the unified tool registry's getAppTypeForTool.",
+      "tags": ["utility", "routing", "simulator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/constants.ts:getAppTypeForEvent",
+      "type": "function",
+      "name": "getAppTypeForEvent",
+      "filePath": "src/engines/SessionCore/rendering/registry/constants.ts",
+      "lineRange": [21, 23],
+      "summary": "Simulator-facing alias for getAppTypeForTool, returning the AppType for a given event/function name.",
+      "tags": ["utility", "routing"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "file:src/engines/SessionCore/rendering/types/universalProps.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "target": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "target": "file:src/engines/SessionCore/rendering/types/universalProps.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/searchExtractors.ts", "target": "file:src/engines/SessionCore/rendering/types/universalProps.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts", "target": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts", "target": "file:src/engines/SessionCore/rendering/types/universalProps.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/thinkingExtractors.ts", "target": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/thinkingExtractors.ts", "target": "file:src/engines/SessionCore/rendering/types/universalProps.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/props/todoExtractors.ts", "target": "file:src/engines/SessionCore/rendering/types/universalProps.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/SessionCore/rendering/registry/constants.ts", "target": "file:src/engines/SessionCore/rendering/registry/initToolRegistry.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractEditData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractApplyPatchData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:splitCombinedDiffIntoSegments", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractApplyPatchDataFromRust", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:patchSegmentToExtractedEdit", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:convertPatchToUnifiedDiffSync", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractEditData", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:splitCombinedDiffIntoSegments", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/editExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractApplyPatchDataFromRust", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:safeText", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractSuccessData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractFailureData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:detectLanguage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:cacheKey", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:evictAndSet", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:stripLineNumberPrefixes", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:mergeUnifiedDiffStrings", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:parseUnifiedDiffToOldNew", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:parseUnifiedDiffToHunks", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:safeText", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractSuccessData", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractFailureData", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:detectLanguage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:cacheKey", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:evictAndSet", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:stripLineNumberPrefixes", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:mergeUnifiedDiffStrings", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:parseUnifiedDiffToOldNew", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/rendering/props/extractorShared.ts", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:parseUnifiedDiffToHunks", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:payloadNumber", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:readLineMetadata", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/fileExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/searchExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/searchExtractors.ts:parseTextSearchResults", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/searchExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/searchExtractors.ts:extractSearchData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/searchExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/searchExtractors.ts:extractSearchData", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:resolveAction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:getShellCommandDisplay", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:extractShellData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/shellExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:extractShellData", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/thinkingExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/thinkingExtractors.ts:extractThinkingData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/thinkingExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/thinkingExtractors.ts:extractThinkingData", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/props/todoExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:parsePythonDict", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/todoExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:parseEmbeddedTodoArray", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/todoExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:extractTodoData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/props/todoExtractors.ts", "target": "function:src/engines/SessionCore/rendering/props/todoExtractors.ts:extractTodoData", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/SessionCore/rendering/registry/constants.ts", "target": "function:src/engines/SessionCore/rendering/registry/constants.ts:getAppTypeForEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/rendering/registry/constants.ts", "target": "function:src/engines/SessionCore/rendering/registry/constants.ts:getAppTypeForEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractEditData", "target": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:extractEditData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractSuccessData", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:patchSegmentToExtractedEdit", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:detectLanguage", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:convertPatchToUnifiedDiffSync", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:cacheKey", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/editExtractors.ts:convertPatchToUnifiedDiffSync", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:evictAndSet", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:stripLineNumberPrefixes", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractSuccessData", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:safeText", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/fileExtractors.ts:extractFileData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:detectLanguage", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:extractShellData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractSuccessData", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:extractShellData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:extractFailureData", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/rendering/props/shellExtractors.ts:extractShellData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:safeText", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/engines/SessionCore/rendering/props/thinkingExtractors.ts:extractThinkingData", "target": "function:src/engines/SessionCore/rendering/props/extractorShared.ts:safeText", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/engines/SessionCore/rendering/registry/constants.ts:getAppTypeForEvent", "target": "function:src/engines/SessionCore/rendering/registry/initToolRegistry.ts:getAppTypeForTool", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

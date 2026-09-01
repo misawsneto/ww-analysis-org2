@@ -1,0 +1,23 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Append a tamper-evidence trailer to commit messages so reviewers can tell
+# at a glance whether the pre-commit hook ran. Commits with no trailer were
+# created with `--no-verify` or with hooks otherwise bypassed.
+MSG_FILE="$1"
+STATS_FILE=".git/COMMIT_STATS.json"
+
+if [ -f "$STATS_FILE" ] && [ -f "$MSG_FILE" ]; then
+  if ! grep -q "Pre-commit hook ran\." "$MSG_FILE" 2>/dev/null; then
+    COUNTS=$(node -e '
+      const fs = require("fs");
+      try {
+        const s = JSON.parse(fs.readFileSync(".git/COMMIT_STATS.json", "utf8"));
+        process.stdout.write("Total eslint: " + (s.eslint ?? 0) + ", total circular: " + (s.circular ?? 0));
+      } catch (_) {}
+    ')
+    if [ -n "$COUNTS" ]; then
+      printf '\nPre-commit hook ran. %s\n' "$COUNTS" >> "$MSG_FILE"
+    fi
+  fi
+fi

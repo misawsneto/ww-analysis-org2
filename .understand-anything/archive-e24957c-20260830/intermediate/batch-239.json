@@ -1,0 +1,129 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/session/sessionAtom/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/session/sessionAtom/index.ts",
+      "summary": "Barrel file that re-exports the session store's types, atoms, loaders, mutations, helpers, and pagination atoms to preserve the original sessionAtom public API.",
+      "tags": ["barrel", "entry-point", "re-exports", "session"],
+      "complexity": "simple",
+      "languageNotes": "TypeScript barrel using `export * from` re-exports of sibling modules."
+    },
+    {
+      "id": "file:src/store/session/sessionTabPlacementAtom.ts",
+      "type": "file",
+      "name": "sessionTabPlacementAtom.ts",
+      "filePath": "src/store/session/sessionTabPlacementAtom.ts",
+      "summary": "Jotai action atoms that move or retarget a session's chat tab between the Chat Panel and the Workstation, ensuring only one visible owner shows a given session at a time.",
+      "tags": ["state-management", "jotai-atom", "session", "ui-tabs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/session/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/store/session/types.ts",
+      "summary": "Defines the SessionViewState interface describing the persisted single-session view state (active session ID, display name, repo path).",
+      "tags": ["type-definition", "session", "state-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/viewAtom.ts",
+      "type": "file",
+      "name": "viewAtom.ts",
+      "filePath": "src/store/session/viewAtom.ts",
+      "summary": "Implements the two-atom session selection model, a persisted WorkStation memory atom and a transient pipeline atom, plus the canonical open/close/jump actions used across the app to switch the active session.",
+      "tags": ["state-management", "jotai-atom", "session", "singleton"],
+      "complexity": "complex",
+      "languageNotes": "Uses atomWithStorage with a Zod schema transform to persist session view state while forcing activeSessionId to null on reload (startup-must-be-inert rule)."
+    },
+    {
+      "id": "file:src/store/session/visitedSessionsAtom.ts",
+      "type": "file",
+      "name": "visitedSessionsAtom.ts",
+      "filePath": "src/store/session/visitedSessionsAtom.ts",
+      "summary": "Tracks which session IDs the user has opened, backing the sidebar's unread-dot badge and the Kanban 'Completed: Unread' column, with an LRU-capped localStorage-backed list.",
+      "tags": ["state-management", "jotai-atom", "session", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/visitedSessionsAtom.ts:markSessionVisited",
+      "type": "function",
+      "name": "markSessionVisited",
+      "filePath": "src/store/session/visitedSessionsAtom.ts",
+      "lineRange": [43, 54],
+      "summary": "Marks a session as visited, promoting it to the front of the visited-IDs list (idempotent no-op if already at the head) and enforcing the MAX_VISITED_IDS cap.",
+      "tags": ["utility", "state-management", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/visitedSessionsAtom.ts:markAllSessionsVisited",
+      "type": "function",
+      "name": "markAllSessionsVisited",
+      "filePath": "src/store/session/visitedSessionsAtom.ts",
+      "lineRange": [61, 74],
+      "summary": "Marks a batch of session IDs as visited in a single store write, used by the sidebar's 'Mark All Read' action to clear multiple unread badges in one render pass.",
+      "tags": ["utility", "state-management", "session"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/session/sessionTabPlacementAtom.ts",
+      "target": "file:src/store/session/sessionAtom/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/sessionTabPlacementAtom.ts",
+      "target": "file:src/store/session/viewAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/viewAtom.ts",
+      "target": "file:src/store/session/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/viewAtom.ts",
+      "target": "file:src/store/session/visitedSessionsAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/visitedSessionsAtom.ts",
+      "target": "function:src/store/session/visitedSessionsAtom.ts:markSessionVisited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/visitedSessionsAtom.ts",
+      "target": "function:src/store/session/visitedSessionsAtom.ts:markAllSessionsVisited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/visitedSessionsAtom.ts",
+      "target": "function:src/store/session/visitedSessionsAtom.ts:markSessionVisited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/visitedSessionsAtom.ts",
+      "target": "function:src/store/session/visitedSessionsAtom.ts:markAllSessionsVisited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,893 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "summary": "Unit tests for importing Windsurf composer/bubble history from a cursorDiskKV-backed SQLite fixture, covering candidate DB path discovery, composer metadata mapping, chunked replay parsing, and parent/child subagent impact linkage.",
+      "tags": [
+        "test",
+        "database",
+        "history-import",
+        "windsurf",
+        "sqlite"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:fixture_conn",
+      "type": "function",
+      "name": "fixture_conn",
+      "summary": "Test helper that builds an in-memory SQLite connection seeded with a synthetic cursorDiskKV table matching Windsurf's on-disk composer/bubble schema.",
+      "tags": [
+        "test-helper",
+        "fixture",
+        "sqlite",
+        "windsurf"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        5,
+        77
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:includes_windsurf_candidate_db_paths",
+      "type": "function",
+      "name": "includes_windsurf_candidate_db_paths",
+      "summary": "Asserts the Windsurf candidate database path list includes the expected state.vscdb locations across supported OS layouts.",
+      "tags": [
+        "test",
+        "windsurf",
+        "file-discovery"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        80,
+        91
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:maps_windsurf_composer_metadata_to_cache_input",
+      "type": "function",
+      "name": "maps_windsurf_composer_metadata_to_cache_input",
+      "summary": "Asserts list_windsurf_composer_meta_from_conn maps a seeded composer row into the cache-input fields (session id, timestamps, model, tokens, repo/branch, impact) expected by the shared history cache.",
+      "tags": [
+        "test",
+        "windsurf",
+        "data-mapping"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        94,
+        142
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:parses_windsurf_bubbles_into_replay_chunks",
+      "type": "function",
+      "name": "parses_windsurf_bubbles_into_replay_chunks",
+      "summary": "Asserts load_windsurf_history_from_conn parses a composer's user/tool/assistant bubbles into ordered replay chunks for a single Windsurf session.",
+      "tags": [
+        "test",
+        "windsurf",
+        "history-import"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        145,
+        175
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:maps_windsurf_subagent_parent_and_child_impact",
+      "type": "function",
+      "name": "maps_windsurf_subagent_parent_and_child_impact",
+      "summary": "Asserts a Windsurf subagent's parent/child composer rows are correctly linked and their combined edit impact is surfaced in the mapped cache inputs.",
+      "tags": [
+        "test",
+        "windsurf",
+        "subagent"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        178,
+        235
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "summary": "Unit tests for importing ZCode CLI session/message/part history from a SQLite fixture, covering DB path discovery, session metadata mapping, chunked replay parsing, subagent-child hiding/linking, and rejection of malformed prefixed IDs.",
+      "tags": [
+        "test",
+        "database",
+        "history-import",
+        "zcode",
+        "sqlite"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:fixture_conn",
+      "type": "function",
+      "name": "fixture_conn",
+      "summary": "Test helper that builds an in-memory SQLite connection seeded with ZCode CLI's session/message/part/turn_usage/model_usage schema and a sample interactive session with tool, reasoning, and text parts.",
+      "tags": [
+        "test-helper",
+        "fixture",
+        "sqlite",
+        "zcode"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        9,
+        121
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:to_row",
+      "type": "function",
+      "name": "to_row",
+      "summary": "Test helper converting an ImportedHistoryCachedSession input struct into its cache-row representation for assertions.",
+      "tags": [
+        "test-helper",
+        "zcode",
+        "data-mapping"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        123,
+        147
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:includes_zcode_cli_db_path",
+      "type": "function",
+      "name": "includes_zcode_cli_db_path",
+      "summary": "Asserts the ZCode CLI candidate history path list includes the expected sqlite database location for a given home directory.",
+      "tags": [
+        "test",
+        "zcode",
+        "file-discovery"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        150,
+        160
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:maps_zcode_session_metadata_to_cache_input",
+      "type": "function",
+      "name": "maps_zcode_session_metadata_to_cache_input",
+      "summary": "Asserts list_all_zcode_session_meta_from_conn maps a seeded session row into the cache-input fields expected by the shared history cache.",
+      "tags": [
+        "test",
+        "zcode",
+        "data-mapping"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        163,
+        183
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:parses_zcode_parts_into_replay_chunks",
+      "type": "function",
+      "name": "parses_zcode_parts_into_replay_chunks",
+      "summary": "Asserts load_zcode_history_from_conn parses a session's message parts (text/tool/reasoning) into ordered replay chunks.",
+      "tags": [
+        "test",
+        "zcode",
+        "history-import"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        186,
+        207
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:subagent_child_is_hidden_and_linked_to_parent",
+      "type": "function",
+      "name": "subagent_child_is_hidden_and_linked_to_parent",
+      "summary": "Asserts a ZCode subagent child session is excluded from the top-level listable set while still being linked to its parent session id.",
+      "tags": [
+        "test",
+        "zcode",
+        "subagent"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        210,
+        243
+      ]
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-graph/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the orgtrack_graph crate, declaring its dependency on orgtrack_sync plus rusqlite/serde/chrono for building relationship graphs over synced orgtrack data.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-graph/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-protocol/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the orgtrack_protocol crate, a dependency-light library crate defining shared wire contracts with serde-only production dependencies.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-protocol/Cargo.toml"
+    },
+    {
+      "id": "document:src-tauri/crates/orgtrack-protocol/README.md",
+      "type": "document",
+      "name": "README.md",
+      "summary": "Documents the orgtrack-protocol crate's role as the extraction boundary for resource-interaction and session-actor-lifecycle envelopes, explaining the contract boundary, compatibility rules, and how checked-in fixtures/schemas are verified against the Rust types.",
+      "tags": [
+        "documentation",
+        "protocol",
+        "contract",
+        "schema-definition"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/orgtrack-protocol/README.md"
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-protocol/fixtures/resource-interaction-envelope-v1.json",
+      "type": "config",
+      "name": "resource-interaction-envelope-v1.json",
+      "summary": "Checked-in example payload for the v1 resource-interaction envelope, used by orgtrack-protocol's round-trip test to pin the exact wire shape of file-resource interaction events.",
+      "tags": [
+        "fixture",
+        "test-data",
+        "protocol",
+        "json"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-protocol/fixtures/resource-interaction-envelope-v1.json"
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-protocol/fixtures/session-actor-lifecycle-envelope-v1.json",
+      "type": "config",
+      "name": "session-actor-lifecycle-envelope-v1.json",
+      "summary": "Checked-in example payload for the v1 session-actor-lifecycle envelope, used by orgtrack-protocol's round-trip test to pin the exact wire shape of actor start/stop events.",
+      "tags": [
+        "fixture",
+        "test-data",
+        "protocol",
+        "json"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-protocol/fixtures/session-actor-lifecycle-envelope-v1.json"
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-protocol/schemas/resource-interaction-envelope-v1.schema.json",
+      "type": "config",
+      "name": "resource-interaction-envelope-v1.schema.json",
+      "summary": "JSON Schema defining the required fields and property set for the v1 resource-interaction envelope, cross-checked in tests against the serialized ResourceInteractionEnvelopeV1 Rust struct.",
+      "tags": [
+        "schema-definition",
+        "json-schema",
+        "protocol",
+        "validation"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-protocol/schemas/resource-interaction-envelope-v1.schema.json"
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-protocol/schemas/session-actor-lifecycle-envelope-v1.schema.json",
+      "type": "config",
+      "name": "session-actor-lifecycle-envelope-v1.schema.json",
+      "summary": "JSON Schema defining the required fields and property set for the v1 session-actor-lifecycle envelope, cross-checked in tests against the serialized SessionActorLifecycleEnvelopeV1 Rust struct.",
+      "tags": [
+        "schema-definition",
+        "json-schema",
+        "protocol",
+        "validation"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-protocol/schemas/session-actor-lifecycle-envelope-v1.schema.json"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "summary": "Defines the versioned, dependency-free wire contracts (resource-interaction and session-actor-lifecycle envelopes plus their storage records) shared by orgtrack producers, hook adapters, collectors, and stores, with validate() methods enforcing non-empty identifiers and supported schema versions.",
+      "tags": [
+        "entry-point",
+        "type-definition",
+        "protocol",
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "languageNotes": "Uses include_str! to embed the checked-in JSON fixtures and JSON Schema files directly into the test binary, enforcing schema/fixture/struct consistency at compile+test time without a runtime file read."
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:FileResourceRecord",
+      "type": "class",
+      "name": "FileResourceRecord",
+      "summary": "Identifies a concrete file resource referenced by interactions, preferring a cross-worktree repository_id with workspace_path/repo_relative_path as fallbacks for local queries.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "protocol"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        30,
+        38
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceAction",
+      "type": "class",
+      "name": "ResourceAction",
+      "summary": "Enum of the six interaction verbs (Read/Write/Create/Delete/Rename/Search) an actor can perform on a file resource, serialized via as_str().",
+      "tags": [
+        "data-model",
+        "enum",
+        "protocol"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        42,
+        49
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionOutcome",
+      "type": "class",
+      "name": "ResourceInteractionOutcome",
+      "summary": "Enum capturing whether a resource interaction Succeeded, Failed, or has Unknown outcome.",
+      "tags": [
+        "data-model",
+        "enum",
+        "protocol"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        66,
+        70
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionCaptureMethod",
+      "type": "class",
+      "name": "ResourceInteractionCaptureMethod",
+      "summary": "Enum distinguishing how a resource interaction was captured: Native instrumentation, a vendor Hook, or post-hoc Reconciled.",
+      "tags": [
+        "data-model",
+        "enum",
+        "protocol"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        84,
+        88
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:AttributionPrecision",
+      "type": "class",
+      "name": "AttributionPrecision",
+      "summary": "Enum ranking how precisely a resource interaction is attributed to an actor/turn, from Unknown through SessionOnly, Correlated, to Exact.",
+      "tags": [
+        "data-model",
+        "enum",
+        "protocol"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        102,
+        107
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionRecord",
+      "type": "class",
+      "name": "ResourceInteractionRecord",
+      "summary": "Storage-side record of a single resource interaction, combining schema version, source/session/turn/actor identity, resource id, action/outcome, timing, capture method, and attribution precision.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "protocol",
+        "database"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        127,
+        142
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionEnvelopeV1",
+      "type": "class",
+      "name": "ResourceInteractionEnvelopeV1",
+      "summary": "Wire envelope for reporting a single resource interaction, with a validate() method rejecting unsupported schema versions and blank required identifier/path fields.",
+      "tags": [
+        "data-model",
+        "validation",
+        "protocol",
+        "serialization"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        152,
+        166
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorLifecyclePhase",
+      "type": "class",
+      "name": "SessionActorLifecyclePhase",
+      "summary": "Enum marking whether a session-actor lifecycle event is the Started or Stopped edge of an actor's activity window.",
+      "tags": [
+        "data-model",
+        "enum",
+        "protocol"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        195,
+        198
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorLifecycleEnvelopeV1",
+      "type": "class",
+      "name": "SessionActorLifecycleEnvelopeV1",
+      "summary": "Wire envelope reporting an actor's start/stop lifecycle event, with an optional child-transcript locator and a validate() method enforcing required identifiers and non-blank transcript paths.",
+      "tags": [
+        "data-model",
+        "validation",
+        "protocol",
+        "serialization"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        217,
+        232
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorRecord",
+      "type": "class",
+      "name": "SessionActorRecord",
+      "summary": "Storage-side record of an actor lifecycle window, tracking started/stopped timestamps and the transcript session id/path used to open the exact subagent transcript.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "protocol",
+        "database"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        269,
+        287
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ProtocolValidationError",
+      "type": "class",
+      "name": "ProtocolValidationError",
+      "summary": "Error enum for envelope validation, distinguishing an unsupported schema version from an empty required field, with a Display impl for human-readable messages.",
+      "tags": [
+        "error-handling",
+        "protocol",
+        "validation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        290,
+        293
+      ]
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-sync/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the orgtrack_sync crate, a minimal library depending only on serde, serde_json, chrono, and sha2 for sync-related data shaping.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/orgtrack-sync/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/perf-utils/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the perf_utils crate, pulling in hashing (sha2/blake3), binary/image detection, SIMD JSON, and process-metrics (sysinfo) dependencies for performance and file-inspection utilities.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/perf-utils/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/project-management/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the project_management crate, wiring in Tauri commands, Linear OAuth (tauri-plugin-opener, reqwest, axum for the OAuth callback listener), and workspace crates (core_types, database, git, orgtrack_sync, search).",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/project-management/Cargo.toml"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:fixture_conn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:includes_windsurf_candidate_db_paths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:maps_windsurf_composer_metadata_to_cache_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:parses_windsurf_bubbles_into_replay_chunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/windsurf/history_tests.rs:maps_windsurf_subagent_parent_and_child_impact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:fixture_conn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:to_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:includes_zcode_cli_db_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:maps_zcode_session_metadata_to_cache_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:parses_zcode_parts_into_replay_chunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs",
+      "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history_tests.rs:subagent_child_is_hidden_and_linked_to_parent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:FileResourceRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:FileResourceRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceAction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionOutcome",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionCaptureMethod",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionCaptureMethod",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:AttributionPrecision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:AttributionPrecision",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionEnvelopeV1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ResourceInteractionEnvelopeV1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorLifecyclePhase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorLifecyclePhase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorLifecycleEnvelopeV1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorLifecycleEnvelopeV1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:SessionActorRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ProtocolValidationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "class:src-tauri/crates/orgtrack-protocol/src/lib.rs:ProtocolValidationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:src-tauri/crates/orgtrack-graph/Cargo.toml",
+      "target": "config:src-tauri/crates/orgtrack-sync/Cargo.toml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/orgtrack-protocol/Cargo.toml",
+      "target": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src-tauri/crates/orgtrack-protocol/README.md",
+      "target": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "config:src-tauri/crates/orgtrack-protocol/fixtures/resource-interaction-envelope-v1.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "config:src-tauri/crates/orgtrack-protocol/fixtures/session-actor-lifecycle-envelope-v1.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "config:src-tauri/crates/orgtrack-protocol/schemas/resource-interaction-envelope-v1.schema.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "target": "config:src-tauri/crates/orgtrack-protocol/schemas/session-actor-lifecycle-envelope-v1.schema.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/orgtrack-protocol/schemas/resource-interaction-envelope-v1.schema.json",
+      "target": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:src-tauri/crates/orgtrack-protocol/schemas/session-actor-lifecycle-envelope-v1.schema.json",
+      "target": "file:src-tauri/crates/orgtrack-protocol/src/lib.rs",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:src-tauri/crates/orgtrack-protocol/fixtures/resource-interaction-envelope-v1.json",
+      "target": "config:src-tauri/crates/orgtrack-protocol/schemas/resource-interaction-envelope-v1.schema.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/crates/orgtrack-protocol/fixtures/session-actor-lifecycle-envelope-v1.json",
+      "target": "config:src-tauri/crates/orgtrack-protocol/schemas/session-actor-lifecycle-envelope-v1.schema.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/crates/project-management/Cargo.toml",
+      "target": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/project-management/Cargo.toml",
+      "target": "file:src-tauri/crates/project-management/src/sync/linear_native/queries.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/project-management/Cargo.toml",
+      "target": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/project-management/Cargo.toml",
+      "target": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/project-management/Cargo.toml",
+      "target": "file:src-tauri/crates/project-management/src/sync/worker/debug.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

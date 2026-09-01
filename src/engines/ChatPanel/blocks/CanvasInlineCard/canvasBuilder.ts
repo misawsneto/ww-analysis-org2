@@ -1,0 +1,185 @@
+/**
+ * HTML document builders for CanvasInlineCard iframe content.
+ *
+ * All documents are injected via `srcDoc` into sandboxed iframes
+ * (sandbox="allow-scripts") — no allow-same-origin. React mode is fully inline
+ * and does not import external runtime scripts.
+ *
+ * CSP note: tauri.conf.json's `style-src` carries a nonce token, which per
+ * CSP3 invalidates the `'unsafe-inline'` keyword sitting next to it. Every
+ * inline `<style>` we emit MUST stamp the canonical iframe nonce
+ * (see `src/util/iframeCspNonce.ts`) or WKWebView silently drops it.
+ */
+import { IFRAME_STYLE_NONCE, stampStyleNonces } from "@src/util/iframeCspNonce";
+
+const CANVAS_THEME_VARIABLES = [
+  "--app-font-family",
+  "--code-font-family",
+  "--color-bg-1",
+  "--color-bg-2",
+  "--color-fill-2",
+  "--color-fill-3",
+  "--scrollbar-thumb-color",
+  "--scrollbar-thumb-hover-color",
+  "--color-border-1",
+  "--color-text-1",
+  "--color-text-2",
+  "--color-primary-6",
+  "--interactive-cursor",
+] as const;
+
+function buildThemeVariables(): string {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return "";
+  }
+
+  const rootStyles = window.getComputedStyle(document.documentElement);
+  const bodyStyles = window.getComputedStyle(document.body);
+  return CANVAS_THEME_VARIABLES.map((name) => {
+    const value =
+      rootStyles.getPropertyValue(name).trim() ||
+      bodyStyles.getPropertyValue(name).trim();
+    return value ? `${name}:${value};` : "";
+  }).join("");
+}
+
+function buildThemeStyleTag(): string {
+  const themeVariables = buildThemeVariables();
+  if (!themeVariables) return "";
+  return `<style nonce="${IFRAME_STYLE_NONCE}">:root{${themeVariables}}</style>`;
+}
+
+function injectThemeVariables(html: string): string {
+  const themeStyleTag = buildThemeStyleTag();
+  if (!themeStyleTag) return html;
+
+  if (/<head\b[^>]*>/i.test(html)) {
+    return html.replace(/<head\b([^>]*)>/i, `<head$1>${themeStyleTag}`);
+  }
+
+  return html.replace(
+    /<html\b([^>]*)>/i,
+    `<html$1><head>${themeStyleTag}</head>`
+  );
+}
+
+const BASE_STYLES = `
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--color-bg-2,#141420);color:var(--color-text-1,#e2e2e8);
+    font-family:var(--app-font-family,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif);
+    font-size:14px;line-height:1.6;min-height:100%;overflow-x:auto;}
+  a{color:var(--color-primary-6,#7c9ef7);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  pre,code{font-family:var(--code-font-family,monospace);
+    background:var(--color-fill-2,rgba(255,255,255,.06));padding:2px 5px;border-radius:4px;font-size:0.875em;}
+  pre{padding:12px 16px;overflow-x:auto;border-radius:6px;
+    border:1px solid var(--color-border-1,rgba(255,255,255,.08));}
+  pre code{background:none;padding:0;}
+  img{max-width:100%;height:auto;border-radius:4px;}
+  button{cursor:var(--interactive-cursor,default);}
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--scrollbar-thumb-color,rgba(255,255,255,.09));border-radius:3px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--scrollbar-thumb-hover-color,rgba(255,255,255,.15));}
+`;
+
+/**
+ * Detect a payload that is already a full HTML document. Nesting another
+ * `<html>` / `<head>` inside our wrapper `<body>` produces malformed markup
+ * that WebKit recovers from by dropping the nested `<head>` (and its
+ * `<style>`) — every custom class then renders unstyled. When the agent
+ * ships a complete document, we stamp nonces onto its inline styles and
+ * return it as-is rather than re-wrapping.
+ */
+function isFullHtmlDocument(html: string): boolean {
+  const head = html.trimStart().slice(0, 200).toLowerCase();
+  return head.startsWith("<!doctype html") || head.startsWith("<html");
+}
+
+function escapeScriptContent(value: string): string {
+  return value.replace(/<\/script/gi, "<\\/script");
+}
+
+/** Wrap arbitrary HTML in the sandbox template. */
+export function buildHtmlDocument(html: string): string {
+  if (isFullHtmlDocument(html)) {
+    // Agent supplied a full document. Stamp nonces onto its inline <style>
+    // blocks and ship it directly — wrapping it in another <html>/<body>
+    // would invalidate the markup and strip the agent's styles.
+    return injectThemeVariables(stampStyleNonces(html));
+  }
+  const themeStyleTag = buildThemeStyleTag();
+  return `<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+${themeStyleTag}<style nonce="${IFRAME_STYLE_NONCE}">${BASE_STYLES}</style>
+</head><body style="padding:16px">${html}</body></html>`;
+}
+
+export function buildReactDocument(source: string): string {
+  const escapedSource = escapeScriptContent(source);
+  const themeStyleTag = buildThemeStyleTag();
+  return `<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+${themeStyleTag}<style nonce="${IFRAME_STYLE_NONCE}">${BASE_STYLES}
+body{padding:16px;background:var(--color-bg-2,#0f1018);color:var(--color-text-1,#f3f4f8);}
+#root{min-height:100vh;}
+#error{display:none;margin:12px 0;padding:12px;border:1px solid #ef4444;border-radius:8px;background:rgba(239,68,68,.1);color:#fecaca;white-space:pre-wrap;font-family:var(--code-font-family,ui-monospace,SFMono-Regular,Menlo,monospace);font-size:12px;}
+</style>
+</head><body><div id="root"></div><pre id="error"></pre>
+<script nonce="${IFRAME_STYLE_NONCE}">
+const source = ${JSON.stringify(escapedSource)};
+const errorEl = document.getElementById('error');
+function showError(error){
+  errorEl.style.display='block';
+  errorEl.textContent = error && error.stack ? error.stack : String(error);
+}
+function createElement(type, props, ...children){
+  return { type, props: props || {}, children: children.flat() };
+}
+function appendValue(parent, value){
+  if (value === null || value === undefined || value === false || value === true) return;
+  if (Array.isArray(value)) {
+    value.forEach((child)=>appendValue(parent, child));
+    return;
+  }
+  if (typeof value === 'string' || typeof value === 'number') {
+    parent.appendChild(document.createTextNode(String(value)));
+    return;
+  }
+  if (typeof value.type === 'function') {
+    appendValue(parent, value.type({ ...value.props, children: value.children }));
+    return;
+  }
+  if (typeof value.type !== 'string') throw new Error('React canvas can only render DOM elements and function components.');
+  const node = document.createElement(value.type);
+  Object.entries(value.props || {}).forEach(([key, propValue])=>{
+    if (key === 'children' || propValue === null || propValue === undefined || propValue === false) return;
+    if (key === 'className') node.setAttribute('class', String(propValue));
+    else if (key === 'style' && typeof propValue === 'object') Object.assign(node.style, propValue);
+    else if (key.startsWith('on') && typeof propValue === 'function') node.addEventListener(key.slice(2).toLowerCase(), propValue);
+    else node.setAttribute(key, String(propValue));
+  });
+  value.children.forEach((child)=>appendValue(node, child));
+  parent.appendChild(node);
+}
+window.addEventListener('error',event=>showError(event.error||event.message));
+window.addEventListener('unhandledrejection',event=>showError(event.reason));
+try {
+  const normalized = source
+    .replace(/export\\s+default\\s+function\\s+App\\s*\\(/, 'function App(')
+    .replace(/export\\s+default\\s+App\\s*;?/, '')
+    .replace(/export\\s+default\\s+/, 'const App = ');
+  const React = { createElement };
+  const module = { exports: {} };
+  const exports = module.exports;
+  const factory = new Function('React','module','exports', normalized + '\\n;return module.exports.default || module.exports.App || exports.default || exports.App || (typeof App !== "undefined" ? App : undefined);');
+  const App = factory(React, module, exports);
+  if (typeof App !== 'function') throw new Error('React canvas expected content to define or export an App component. JSX is not transformed in this MVP; use React.createElement or precompiled JavaScript. Hooks and ReactDOM APIs are not available in the sandbox.');
+  appendValue(document.getElementById('root'), React.createElement(App));
+} catch (error) {
+  showError(error);
+}
+</script></body></html>`;
+}

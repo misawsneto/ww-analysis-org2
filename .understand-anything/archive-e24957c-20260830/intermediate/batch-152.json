@@ -1,0 +1,459 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/types.ts",
+      "summary": "Type definitions for the useInlineWebview hook, specifying the options it accepts (URL, container ref, lifecycle callbacks) and the return shape (webview state plus navigation/lifecycle methods) shared across the module.",
+      "tags": ["type-definition", "hooks", "webview", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "type": "file",
+      "name": "useInlineWebview.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "summary": "Top-level React hook that orchestrates inline Tauri webview creation, composing sub-hooks for layout tracking, URL polling, native visibility, new-window handling, and imperative commands into one public API.",
+      "tags": ["hook", "orchestration", "webview", "tauri", "state-management"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a composition pattern where one 'container' hook wires together many single-purpose hooks via shared refs and callbacks."
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts",
+      "type": "file",
+      "name": "useInlineWebviewNativeVisibility.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts",
+      "summary": "Hook that synchronizes an inline webview's native visibility and position with its logical isVisible/isWebviewCreated state via Tauri invoke calls.",
+      "tags": ["hook", "webview", "tauri", "visibility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts",
+      "type": "file",
+      "name": "useInlineWebviewUrlEffect.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts",
+      "summary": "Hook that reacts to URL and activation changes for an inline webview, either navigating an existing webview or retrying webview creation with backoff until the container is measurable.",
+      "tags": ["hook", "webview", "tauri", "navigation", "effect"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useWebviewCommands.ts",
+      "type": "file",
+      "name": "useWebviewCommands.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewCommands.ts",
+      "summary": "Hook exposing the imperative command surface (create, navigate, reload, evaluate, destroy, update position) for an inline Tauri webview, invoking native backend commands and tracking lifecycle state.",
+      "tags": ["hook", "webview", "tauri", "api-handler", "lifecycle"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "type": "file",
+      "name": "useWebviewLayout.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "summary": "Hook that computes and syncs the native webview's screen position/size with its HTML container, using resize/scroll observers, debounced updates, and forced re-layout after custom layout-change events.",
+      "tags": ["hook", "webview", "layout", "tauri", "observer"],
+      "complexity": "moderate",
+      "languageNotes": "Combines ResizeObserver, scroll listeners on ancestor scroll containers, and a custom window event to force re-layout across window/zoom changes."
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts",
+      "type": "file",
+      "name": "useWebviewNewWindowListener.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts",
+      "summary": "Hook that listens for Tauri 'new window requested' events on an inline webview and forwards them to a consumer-supplied onNewWindow callback, managing listener setup/teardown safely.",
+      "tags": ["hook", "webview", "tauri", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts",
+      "type": "file",
+      "name": "useWebviewSafeUnlisten.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts",
+      "summary": "Small utility hook providing a deferred, exception-safe wrapper for calling Tauri event unlisten functions so cleanup doesn't run mid-dispatch.",
+      "tags": ["hook", "utility", "tauri", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts",
+      "type": "file",
+      "name": "useWebviewUrlPolling.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts",
+      "summary": "Hook that periodically polls the native webview's current URL via Tauri invoke and reports navigation changes through onNavigate/setCurrentUrl when the webview is active and visible.",
+      "tags": ["hook", "webview", "tauri", "polling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/webviewEnv.ts",
+      "type": "file",
+      "name": "webviewEnv.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/webviewEnv.ts",
+      "summary": "Environment helpers for the inline webview module, detecting the host OS and providing a matching default user-agent string plus a default poll interval and Tauri-environment flag.",
+      "tags": ["utility", "environment", "webview", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts",
+      "type": "file",
+      "name": "webviewLayoutEvents.ts",
+      "filePath": "src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts",
+      "summary": "Defines a custom DOM event name and dispatcher used to notify inline webviews that their layout may have changed, so they can force a position recalculation.",
+      "tags": ["utility", "event", "webview", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "type": "function",
+      "name": "useInlineWebview",
+      "filePath": "src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "lineRange": [19, 176],
+      "summary": "Composes webview state, layout tracking, URL polling, imperative commands, native visibility, and new-window/URL effect hooks into a single hook returning the public inline-webview API.",
+      "tags": ["hook", "orchestration", "webview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts:useInlineWebviewNativeVisibility",
+      "type": "function",
+      "name": "useInlineWebviewNativeVisibility",
+      "filePath": "src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts",
+      "lineRange": [13, 70],
+      "summary": "Effect hook that shows/hides and repositions the native webview via Tauri invoke calls whenever visibility or creation state changes.",
+      "tags": ["hook", "webview", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts:useInlineWebviewUrlEffect",
+      "type": "function",
+      "name": "useInlineWebviewUrlEffect",
+      "filePath": "src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts",
+      "lineRange": [18, 119],
+      "summary": "Effect hook that navigates an existing webview on URL change or retries webview creation with a bounded retry loop when the container isn't yet measurable.",
+      "tags": ["hook", "webview", "navigation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useWebviewCommands.ts:useWebviewCommands",
+      "type": "function",
+      "name": "useWebviewCommands",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewCommands.ts",
+      "lineRange": [48, 343],
+      "summary": "Returns imperative command functions (createWebview, navigate, reload, evaluate, destroy, updatePosition) that invoke native Tauri webview commands and manage loading/error/created state.",
+      "tags": ["hook", "webview", "api-handler", "tauri"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useWebviewLayout.ts:useWebviewLayout",
+      "type": "function",
+      "name": "useWebviewLayout",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "lineRange": [34, 199],
+      "summary": "Tracks container position/size, debounces native position updates, and listens for scroll/resize/custom layout-change events to keep the native webview aligned with its HTML container.",
+      "tags": ["hook", "layout", "webview", "observer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts:useWebviewNewWindowListener",
+      "type": "function",
+      "name": "useWebviewNewWindowListener",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts",
+      "lineRange": [12, 88],
+      "summary": "Sets up a Tauri event listener for new-window requests from the webview and safely tears it down, invoking an onNewWindow callback ref when triggered.",
+      "tags": ["hook", "event-handler", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts:useWebviewSafeUnlisten",
+      "type": "function",
+      "name": "useWebviewSafeUnlisten",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts",
+      "lineRange": [4, 20],
+      "summary": "Returns a memoized safeUnlisten callback that defers and try/catches Tauri unlisten function calls to avoid errors during event dispatch.",
+      "tags": ["hook", "utility", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts:useWebviewUrlPolling",
+      "type": "function",
+      "name": "useWebviewUrlPolling",
+      "filePath": "src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts",
+      "lineRange": [18, 108],
+      "summary": "Sets up an interval that polls the native webview's current URL and reports changes, returning a pollUrl function usable for on-demand polling.",
+      "tags": ["hook", "polling", "webview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/webviewEnv.ts:detectOS",
+      "type": "function",
+      "name": "detectOS",
+      "filePath": "src/hooks/platform/useInlineWebview/webviewEnv.ts",
+      "lineRange": [12, 25],
+      "summary": "Detects the host operating system (macOS, Windows, or Linux) from navigator.platform/userAgent to select an appropriate default webview user-agent.",
+      "tags": ["utility", "environment", "detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts:dispatchWebviewLayoutChanged",
+      "type": "function",
+      "name": "dispatchWebviewLayoutChanged",
+      "filePath": "src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts",
+      "lineRange": [3, 7],
+      "summary": "Dispatches a custom WEBVIEW_LAYOUT_CHANGED_EVENT on the window, deferred to the next animation frame, to signal that webviews should recheck their layout.",
+      "tags": ["utility", "event", "layout"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts:useInlineWebviewNativeVisibility",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts:useInlineWebviewUrlEffect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewCommands.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewCommands.ts:useWebviewCommands",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewLayout.ts:useWebviewLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts:useWebviewNewWindowListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts:useWebviewSafeUnlisten",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts:useWebviewUrlPolling",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/webviewEnv.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/webviewEnv.ts:detectOS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts:dispatchWebviewLayoutChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts:useInlineWebviewNativeVisibility",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts:useInlineWebviewUrlEffect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewCommands.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewCommands.ts:useWebviewCommands",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewLayout.ts:useWebviewLayout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts:useWebviewNewWindowListener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts:useWebviewSafeUnlisten",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts:useWebviewUrlPolling",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts",
+      "target": "function:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts:dispatchWebviewLayoutChanged",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useWebviewCommands.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useInlineWebview.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/webviewEnv.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/platform/useInlineWebview/useWebviewLayout.ts",
+      "target": "file:src/hooks/platform/useInlineWebview/webviewLayoutEvents.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewSafeUnlisten.ts:useWebviewSafeUnlisten",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewNewWindowListener.ts:useWebviewNewWindowListener",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewLayout.ts:useWebviewLayout",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewUrlPolling.ts:useWebviewUrlPolling",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useWebviewCommands.ts:useWebviewCommands",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebviewNativeVisibility.ts:useInlineWebviewNativeVisibility",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/platform/useInlineWebview/useInlineWebview.ts:useInlineWebview",
+      "target": "function:src/hooks/platform/useInlineWebview/useInlineWebviewUrlEffect.ts:useInlineWebviewUrlEffect",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

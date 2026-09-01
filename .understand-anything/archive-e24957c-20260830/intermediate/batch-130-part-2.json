@@ -1,0 +1,805 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/lib.rs",
+      "summary": "Crate root for session_persistence: wires up SQLite-backed session/event/token-usage persistence on top of the shared database::db connection, re-exports the crud/editing/turn_index/turn_window public surface, and exposes ~23 Tauri commands re-registered by app::commands::handler_list.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "crate-root"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Pure host adapter with no back-edges into the app crate; provider-neutral provenance projection lives in orgtrack_core and is only materialized here into ORG2's local session cache."
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/schema.rs",
+      "type": "file",
+      "name": "schema.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/schema.rs",
+      "summary": "Owns DDL for session-domain SQLite tables (events, sessions, turn intents, token/tool usage) and legacy FTS5 index teardown, registered with the database crate's schema dispatcher at app startup.",
+      "tags": [
+        "database",
+        "schema",
+        "migration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/schema.rs:init_session_tables",
+      "type": "function",
+      "name": "init_session_tables",
+      "filePath": "src-tauri/crates/session-persistence/src/schema.rs",
+      "lineRange": [
+        20,
+        398
+      ],
+      "summary": "Creates all session-domain SQLite tables and indexes if they don't already exist, called once at app startup.",
+      "tags": [
+        "database",
+        "migration",
+        "schema"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/schema.rs:drop_events_fts",
+      "type": "function",
+      "name": "drop_events_fts",
+      "filePath": "src-tauri/crates/session-persistence/src/schema.rs",
+      "lineRange": [
+        414,
+        459
+      ],
+      "summary": "Drops the legacy FTS5 virtual table and triggers for the events table, now superseded by LIKE-based search.",
+      "tags": [
+        "database",
+        "migration",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "type": "file",
+      "name": "sequence.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/sequence.rs",
+      "summary": "In-memory, mutex-guarded per-session sequence counter cache that keeps event ordering deterministic across concurrent async writers, capped at 500 entries to bound growth in long-running processes.",
+      "tags": [
+        "concurrency",
+        "cache",
+        "sequence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/sequence.rs:get_next_sequence",
+      "type": "function",
+      "name": "get_next_sequence",
+      "filePath": "src-tauri/crates/session-persistence/src/sequence.rs",
+      "lineRange": [
+        18,
+        45
+      ],
+      "summary": "Returns the next sequence number for a session, initializing the counter from the database if not already cached.",
+      "tags": [
+        "sequence",
+        "cache"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/sequence.rs:increment_sequence",
+      "type": "function",
+      "name": "increment_sequence",
+      "filePath": "src-tauri/crates/session-persistence/src/sequence.rs",
+      "lineRange": [
+        48,
+        62
+      ],
+      "summary": "Atomically increments and returns the in-memory sequence counter for a session.",
+      "tags": [
+        "sequence",
+        "concurrency"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/sequence.rs:reset_sequence",
+      "type": "function",
+      "name": "reset_sequence",
+      "filePath": "src-tauri/crates/session-persistence/src/sequence.rs",
+      "lineRange": [
+        65,
+        68
+      ],
+      "summary": "Resets a session's in-memory sequence counter to a specific value, used after truncation or save.",
+      "tags": [
+        "sequence",
+        "reset"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "type": "file",
+      "name": "token_usage.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/token_usage.rs",
+      "summary": "Persists per-chat-round token usage records to session_token_usage, shared by code sessions and OS Agent sessions.",
+      "tags": [
+        "persistence",
+        "token-usage",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/token_usage.rs:insert_token_usage_record",
+      "type": "function",
+      "name": "insert_token_usage_record",
+      "filePath": "src-tauri/crates/session-persistence/src/token_usage.rs",
+      "lineRange": [
+        46,
+        90
+      ],
+      "summary": "Inserts a new token usage row for a chat round and triggers projection recomputation.",
+      "tags": [
+        "write",
+        "token-usage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/token_usage.rs:recompute_usage_projection",
+      "type": "function",
+      "name": "recompute_usage_projection",
+      "filePath": "src-tauri/crates/session-persistence/src/token_usage.rs",
+      "lineRange": [
+        96,
+        107
+      ],
+      "summary": "Recomputes derived token-usage projections for a session after a new usage record is inserted.",
+      "tags": [
+        "aggregation",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/token_usage.rs:get_token_usage_records",
+      "type": "function",
+      "name": "get_token_usage_records",
+      "filePath": "src-tauri/crates/session-persistence/src/token_usage.rs",
+      "lineRange": [
+        110,
+        140
+      ],
+      "summary": "Loads all token usage records for a session.",
+      "tags": [
+        "query",
+        "token-usage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/token_usage.rs:delete_token_usage_records",
+      "type": "function",
+      "name": "delete_token_usage_records",
+      "filePath": "src-tauri/crates/session-persistence/src/token_usage.rs",
+      "lineRange": [
+        145,
+        154
+      ],
+      "summary": "Deletes all token usage records for a session.",
+      "tags": [
+        "delete",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/token_usage.rs:TokenUsageRecord",
+      "type": "class",
+      "name": "TokenUsageRecord",
+      "filePath": "src-tauri/crates/session-persistence/src/token_usage.rs",
+      "lineRange": [
+        20,
+        36
+      ],
+      "summary": "Row struct mirroring a persisted per-round token usage record (input/output/cache/context token counts, model, account).",
+      "tags": [
+        "data-model",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "type": "file",
+      "name": "tool_usage.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "summary": "Persists per-LLM-call usage spans and per-tool-call usage attribution records used to break down token/byte cost by tool invocation.",
+      "tags": [
+        "persistence",
+        "telemetry",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch",
+      "type": "function",
+      "name": "insert_usage_telemetry_batch",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        120,
+        139
+      ],
+      "summary": "Opens a connection and persists a batch of LLM usage spans and tool attributions in one transaction, delegating to insert_usage_telemetry_batch_with_conn.",
+      "tags": [
+        "write",
+        "batch",
+        "telemetry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch_with_conn",
+      "type": "function",
+      "name": "insert_usage_telemetry_batch_with_conn",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        141,
+        206
+      ],
+      "summary": "Inserts a batch of LLM usage spans and tool attributions using a caller-supplied connection, then triggers projection recomputation.",
+      "tags": [
+        "write",
+        "batch",
+        "telemetry"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_llm_usage_spans",
+      "type": "function",
+      "name": "get_llm_usage_spans",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        208,
+        263
+      ],
+      "summary": "Loads LLM usage spans for a session, optionally filtered by turn.",
+      "tags": [
+        "query",
+        "telemetry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions",
+      "type": "function",
+      "name": "get_tool_usage_attributions",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        265,
+        320
+      ],
+      "summary": "Loads tool usage attribution records for a session, optionally filtered by turn.",
+      "tags": [
+        "query",
+        "telemetry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions_for_call",
+      "type": "function",
+      "name": "get_tool_usage_attributions_for_call",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        322,
+        358
+      ],
+      "summary": "Loads the usage attribution record for one specific tool call.",
+      "tags": [
+        "query",
+        "telemetry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:delete_usage_telemetry",
+      "type": "function",
+      "name": "delete_usage_telemetry",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        360,
+        373
+      ],
+      "summary": "Deletes all LLM usage spans and tool attributions for a session.",
+      "tags": [
+        "delete",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:AttributionMethod",
+      "type": "class",
+      "name": "AttributionMethod",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        12,
+        19
+      ],
+      "summary": "Enum of methods used to attribute token/byte cost to a tool call (provider-exact, split-evenly, estimated-tokenizer, etc.), with as_str/from_str conversions.",
+      "tags": [
+        "data-model",
+        "enum",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:LlmUsageSpanRecord",
+      "type": "class",
+      "name": "LlmUsageSpanRecord",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        48,
+        64
+      ],
+      "summary": "Row struct for a persisted per-LLM-call usage span (prompt/completion/cache token counts, related tool calls).",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:NewLlmUsageSpan",
+      "type": "class",
+      "name": "NewLlmUsageSpan",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        68,
+        82
+      ],
+      "summary": "Input struct for inserting a new LLM usage span record.",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:ToolUsageAttributionRecord",
+      "type": "class",
+      "name": "ToolUsageAttributionRecord",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        86,
+        101
+      ],
+      "summary": "Row struct for a persisted per-tool-call usage attribution (decision/result/followup token and byte costs).",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:NewToolUsageAttribution",
+      "type": "class",
+      "name": "NewToolUsageAttribution",
+      "filePath": "src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "lineRange": [
+        105,
+        118
+      ],
+      "summary": "Input struct for inserting a new tool usage attribution record.",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/connection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/schema.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/lib.rs",
+      "target": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/schema.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/schema.rs:init_session_tables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/schema.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/schema.rs:init_session_tables",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/schema.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/schema.rs:drop_events_fts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:get_next_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:get_next_sequence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:increment_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:increment_sequence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:reset_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/sequence.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:reset_sequence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:insert_token_usage_record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:insert_token_usage_record",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:recompute_usage_projection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:recompute_usage_projection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:get_token_usage_records",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:get_token_usage_records",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:delete_token_usage_records",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:delete_token_usage_records",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/token_usage.rs:TokenUsageRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/token_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/token_usage.rs:TokenUsageRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch_with_conn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch_with_conn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_llm_usage_spans",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_llm_usage_spans",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions_for_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions_for_call",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:delete_usage_telemetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:delete_usage_telemetry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:AttributionMethod",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:AttributionMethod",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:LlmUsageSpanRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:LlmUsageSpanRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:NewLlmUsageSpan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:NewLlmUsageSpan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:ToolUsageAttributionRecord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:ToolUsageAttributionRecord",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:NewToolUsageAttribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/tool_usage.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/tool_usage.rs:NewToolUsageAttribution",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:recompute_usage_projection",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

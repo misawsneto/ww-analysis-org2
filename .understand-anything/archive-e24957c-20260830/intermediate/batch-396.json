@@ -1,0 +1,408 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/session/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/session/index.ts",
+      "summary": "Barrel file that aggregates and re-exports Jotai atoms for session state: agent sessions, view navigation, creator drafts, runtime status, MCP progress, plan approvals, and worktree launch/source caches.",
+      "tags": ["entry-point", "barrel", "session", "state-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/mcpProgressAtom.ts",
+      "type": "file",
+      "name": "mcpProgressAtom.ts",
+      "filePath": "src/store/session/mcpProgressAtom.ts",
+      "summary": "Jotai atoms tracking MCP (Model Context Protocol) tool call progress per session, with update, per-call clear, and per-session clear actions plus a getter to read progress by session and tool call id.",
+      "tags": ["state-management", "mcp", "session", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/mcpProgressAtom.ts:getMcpProgress",
+      "type": "function",
+      "name": "getMcpProgress",
+      "filePath": "src/store/session/mcpProgressAtom.ts",
+      "lineRange": [147, 153],
+      "summary": "Looks up the progress entry for a given session and MCP tool call id from the nested progress map.",
+      "tags": ["utility", "lookup", "mcp"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/openCategoryPickerAtom.ts",
+      "type": "file",
+      "name": "openCategoryPickerAtom.ts",
+      "filePath": "src/store/session/openCategoryPickerAtom.ts",
+      "summary": "Single-atom signal used to trigger opening the category picker UI from anywhere in the session view.",
+      "tags": ["state-management", "ui-signal", "session", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/pinnedActionsAtom.ts",
+      "type": "file",
+      "name": "pinnedActionsAtom.ts",
+      "filePath": "src/store/session/pinnedActionsAtom.ts",
+      "summary": "Jotai atom persisting the user's pinned quick actions to localStorage, including a migration step that filters legacy/invalid entries on read.",
+      "tags": ["state-management", "persistence", "session", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/session/planApprovalAtom.ts",
+      "type": "file",
+      "name": "planApprovalAtom.ts",
+      "filePath": "src/store/session/planApprovalAtom.ts",
+      "summary": "Manages pending plan-approval state per session/tool-call, including atoms and pure helpers to upsert, rehydrate (only when newer), and clear pending plan approvals.",
+      "tags": ["state-management", "session", "plan-approval", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/planApprovalAtom.ts:normalizePlanCallId",
+      "type": "function",
+      "name": "normalizePlanCallId",
+      "filePath": "src/store/session/planApprovalAtom.ts",
+      "lineRange": [60, 65],
+      "summary": "Normalizes a plan-approval tool-call id by stripping known prefixes so it can be used as a consistent map key.",
+      "tags": ["utility", "normalization", "plan-approval"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/planApprovalAtom.ts:upsertPendingPlanApproval",
+      "type": "function",
+      "name": "upsertPendingPlanApproval",
+      "filePath": "src/store/session/planApprovalAtom.ts",
+      "lineRange": [67, 74],
+      "summary": "Inserts or updates a pending plan-approval entry in the per-session map, returning a new map instance for immutable state updates.",
+      "tags": ["state-management", "reducer", "plan-approval"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/planApprovalAtom.ts:rehydratePendingPlanApprovalIfNewer",
+      "type": "function",
+      "name": "rehydratePendingPlanApprovalIfNewer",
+      "filePath": "src/store/session/planApprovalAtom.ts",
+      "lineRange": [86, 106],
+      "summary": "Merges a rehydrated plan approval into current state only when it is newer than any existing entry, preventing stale data from overwriting fresher state.",
+      "tags": ["state-management", "reducer", "plan-approval"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/planApprovalAtom.ts:clearPendingPlanApproval",
+      "type": "function",
+      "name": "clearPendingPlanApproval",
+      "filePath": "src/store/session/planApprovalAtom.ts",
+      "lineRange": [108, 127],
+      "summary": "Removes a specific pending plan approval for a session/tool-call pair, resetting the session entry to an empty state once no approvals remain.",
+      "tags": ["state-management", "reducer", "plan-approval"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/session/runningLocationAtom.ts",
+      "type": "file",
+      "name": "runningLocationAtom.ts",
+      "filePath": "src/store/session/runningLocationAtom.ts",
+      "summary": "Simple Jotai atom tracking the currently running execution location (e.g., local vs remote) for the active session.",
+      "tags": ["state-management", "session", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/selectedWorktreePathAtom.ts",
+      "type": "file",
+      "name": "selectedWorktreePathAtom.ts",
+      "filePath": "src/store/session/selectedWorktreePathAtom.ts",
+      "summary": "Jotai atom holding the currently selected worktree path for the session UI.",
+      "tags": ["state-management", "worktree", "session", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/shellProcessAtom.ts",
+      "type": "file",
+      "name": "shellProcessAtom.ts",
+      "filePath": "src/store/session/shellProcessAtom.ts",
+      "summary": "Tracks running shell processes per session in a nested map, with atoms to update process state, prune exited processes past a retention window, query process status, and clear a session's processes.",
+      "tags": ["state-management", "session", "process-management", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/shellProcessAtom.ts:pruneExitedProcesses",
+      "type": "function",
+      "name": "pruneExitedProcesses",
+      "filePath": "src/store/session/shellProcessAtom.ts",
+      "lineRange": [40, 52],
+      "summary": "Removes exited shell-process entries from a session map that are older than a retention window, keeping the map bounded.",
+      "tags": ["utility", "cleanup", "process-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/shellProcessAtom.ts:getProcessStatus",
+      "type": "function",
+      "name": "getProcessStatus",
+      "filePath": "src/store/session/shellProcessAtom.ts",
+      "lineRange": [164, 170],
+      "summary": "Looks up the status of a specific shell process by session id and pid from the nested process map.",
+      "tags": ["utility", "lookup", "process-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/subagentJobAtom.ts",
+      "type": "file",
+      "name": "subagentJobAtom.ts",
+      "filePath": "src/store/session/subagentJobAtom.ts",
+      "summary": "Manages subagent job state per parent session, including atoms to update, prune, and remove jobs, and a helper to check whether a session still has live subagent jobs.",
+      "tags": ["state-management", "session", "subagent", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/subagentJobAtom.ts:hasLiveSubagentJobs",
+      "type": "function",
+      "name": "hasLiveSubagentJobs",
+      "filePath": "src/store/session/subagentJobAtom.ts",
+      "lineRange": [183, 189],
+      "summary": "Checks whether any subagent jobs for a given parent session are still in a live (non-terminal) state.",
+      "tags": ["utility", "predicate", "subagent"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/tuiModeAtom.ts",
+      "type": "file",
+      "name": "tuiModeAtom.ts",
+      "filePath": "src/store/session/tuiModeAtom.ts",
+      "summary": "Jotai atom toggling whether the session runs in TUI (terminal UI) mode.",
+      "tags": ["state-management", "session", "tui", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/worktreeLaunchSourceAtom.ts",
+      "type": "file",
+      "name": "worktreeLaunchSourceAtom.ts",
+      "filePath": "src/store/session/worktreeLaunchSourceAtom.ts",
+      "summary": "Jotai atom recording the source (e.g., branch, PR, template) used to launch a worktree for a session.",
+      "tags": ["state-management", "worktree", "session", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/worktreeSourceCacheAtom.ts",
+      "type": "file",
+      "name": "worktreeSourceCacheAtom.ts",
+      "filePath": "src/store/session/worktreeSourceCacheAtom.ts",
+      "summary": "Jotai atom caching GitHub-sourced worktree data to avoid redundant lookups when creating or launching worktrees.",
+      "tags": ["state-management", "worktree", "cache", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/settings/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/settings/index.ts",
+      "summary": "Barrel file re-exporting the settings atoms, actions (update/save/reset/init, external-change and file-deleted handlers), and React hooks used to read and mutate application settings.",
+      "tags": ["entry-point", "barrel", "settings", "state-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/skills/installedSkillsAtom.ts",
+      "type": "file",
+      "name": "installedSkillsAtom.ts",
+      "filePath": "src/store/skills/installedSkillsAtom.ts",
+      "summary": "Jotai atoms tracking the set of installed skills and their loading state.",
+      "tags": ["state-management", "skills", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/store/store-organization.md",
+      "type": "document",
+      "name": "store-organization.md",
+      "filePath": "src/store/store-organization.md",
+      "summary": "Architecture guide explaining the hybrid shared-vs-colocated strategy for the src/store directory, documenting directory structure, state categories (session, project/sync, repo, settings, ui), colocated workstation stores, and import guidelines.",
+      "tags": ["documentation", "architecture", "state-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/sync/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/sync/index.ts",
+      "summary": "Barrel file re-exporting project sync status atoms, the sync-status event handler, the sync status React bridge hook, and deep-link sync request types.",
+      "tags": ["entry-point", "barrel", "sync", "state-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/sync/projectSyncStatusAtom.ts",
+      "type": "file",
+      "name": "projectSyncStatusAtom.ts",
+      "filePath": "src/store/sync/projectSyncStatusAtom.ts",
+      "summary": "Tracks per-project sync status via Jotai atoms and exposes a React hook that subscribes to backend sync-status events and applies them to state.",
+      "tags": ["state-management", "sync", "hook", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/sync/projectSyncStatusAtom.ts:useSyncStatusBridge",
+      "type": "function",
+      "name": "useSyncStatusBridge",
+      "filePath": "src/store/sync/projectSyncStatusAtom.ts",
+      "lineRange": [64, 75],
+      "summary": "React hook that subscribes to backend sync-status events on mount, applies incoming events to the sync status atom, and unsubscribes on unmount.",
+      "tags": ["hook", "event-handler", "sync"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/sync/syncDeepLinkAtom.ts",
+      "type": "file",
+      "name": "syncDeepLinkAtom.ts",
+      "filePath": "src/store/sync/syncDeepLinkAtom.ts",
+      "summary": "Jotai atom holding a pending sync deep-link request to be processed by the app.",
+      "tags": ["state-management", "sync", "deep-link", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/tabs/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/tabs/index.ts",
+      "summary": "Retired stub for the former MainApp tab store; kept as an empty module (`export {}`) now that tab state lives under the workstation tabs store.",
+      "tags": ["deprecated", "stub", "tabs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/ui/addToAgentAtom.ts",
+      "type": "file",
+      "name": "addToAgentAtom.ts",
+      "filePath": "src/store/ui/addToAgentAtom.ts",
+      "summary": "Jotai atom holding state for the 'add to agent' UI flow, such as the pending item and target selection.",
+      "tags": ["state-management", "ui", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/ui/appGridAtom.ts",
+      "type": "file",
+      "name": "appGridAtom.ts",
+      "filePath": "src/store/ui/appGridAtom.ts",
+      "summary": "Jotai atoms for the customizable app grid/dashboard, including default configuration, current config, edit-mode toggle, and a reset action.",
+      "tags": ["state-management", "ui", "app-grid", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/ui/backgroundConfigAtom.ts",
+      "type": "file",
+      "name": "backgroundConfigAtom.ts",
+      "filePath": "src/store/ui/backgroundConfigAtom.ts",
+      "summary": "Manages persisted UI background/glass appearance settings (opacity, custom colors, glass level) with sanitizing helpers, localStorage hydration, and derived atoms for the resolved background config.",
+      "tags": ["state-management", "ui", "persistence", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/ui/backgroundConfigAtom.ts:clampOpacity",
+      "type": "function",
+      "name": "clampOpacity",
+      "filePath": "src/store/ui/backgroundConfigAtom.ts",
+      "lineRange": [78, 89],
+      "summary": "Clamps a numeric opacity value to a min/max range, rounding it and falling back to a default when the input is not finite.",
+      "tags": ["utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/backgroundConfigAtom.ts:sanitizePageOpacity",
+      "type": "function",
+      "name": "sanitizePageOpacity",
+      "filePath": "src/store/ui/backgroundConfigAtom.ts",
+      "lineRange": [91, 98],
+      "summary": "Sanitizes a stored page-opacity value by clamping it to the page opacity bounds.",
+      "tags": ["utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/backgroundConfigAtom.ts:sanitizeSidebarOpacity",
+      "type": "function",
+      "name": "sanitizeSidebarOpacity",
+      "filePath": "src/store/ui/backgroundConfigAtom.ts",
+      "lineRange": [100, 107],
+      "summary": "Sanitizes a stored sidebar-opacity value by clamping it to the sidebar opacity bounds.",
+      "tags": ["utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/backgroundConfigAtom.ts:getStoredBackgroundConfig",
+      "type": "function",
+      "name": "getStoredBackgroundConfig",
+      "filePath": "src/store/ui/backgroundConfigAtom.ts",
+      "lineRange": [120, 145],
+      "summary": "Reads and validates the persisted background configuration from localStorage, sanitizing custom colors and opacity values and falling back to defaults on parse errors.",
+      "tags": ["persistence", "validation", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/ui/chatImageAtom.ts",
+      "type": "file",
+      "name": "chatImageAtom.ts",
+      "filePath": "src/store/ui/chatImageAtom.ts",
+      "summary": "Jotai atom holding image attachments staged for the chat input, capped at a maximum count.",
+      "tags": ["state-management", "ui", "chat", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/ui/chatPanelAtom.ts",
+      "type": "file",
+      "name": "chatPanelAtom.ts",
+      "filePath": "src/store/ui/chatPanelAtom.ts",
+      "summary": "Large collection of Jotai atoms driving the chat panel UI: width/dragging/visibility state, pagination and display-mode preferences, create-target and start-page navigation, content mode, selected project/workspace/org context, explore panel state, and panel maximize/replay/dropdown controls.",
+      "tags": ["state-management", "ui", "chat", "jotai"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/ui/chatPanelAtom.ts:getInitialChatWidth",
+      "type": "function",
+      "name": "getInitialChatWidth",
+      "filePath": "src/store/ui/chatPanelAtom.ts",
+      "lineRange": [57, 72],
+      "summary": "Reads and validates the persisted chat panel width from localStorage against a Zod schema, resetting to a valid default and persisting it if validation fails.",
+      "tags": ["persistence", "validation", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/chatPanelAtom.ts:resetChatPanelSurfaceState",
+      "type": "function",
+      "name": "resetChatPanelSurfaceState",
+      "filePath": "src/store/ui/chatPanelAtom.ts",
+      "lineRange": [523, 533],
+      "summary": "Resets all chat panel surface-related atoms (create target, start page, content mode, selections, explore state) back to their default values.",
+      "tags": ["state-management", "reset"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/ui/collapseStateAtom.ts",
+      "type": "file",
+      "name": "collapseStateAtom.ts",
+      "filePath": "src/store/ui/collapseStateAtom.ts",
+      "summary": "Jotai atoms managing block/turn collapse state in the chat/session view, including collapse-all commands and per-turn collapse overrides.",
+      "tags": ["state-management", "ui", "collapse", "jotai"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/store/session/mcpProgressAtom.ts", "target": "function:src/store/session/mcpProgressAtom.ts:getMcpProgress", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/mcpProgressAtom.ts", "target": "function:src/store/session/mcpProgressAtom.ts:getMcpProgress", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:normalizePlanCallId", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:normalizePlanCallId", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:upsertPendingPlanApproval", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:upsertPendingPlanApproval", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:rehydratePendingPlanApprovalIfNewer", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:rehydratePendingPlanApprovalIfNewer", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:clearPendingPlanApproval", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/planApprovalAtom.ts", "target": "function:src/store/session/planApprovalAtom.ts:clearPendingPlanApproval", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/session/shellProcessAtom.ts", "target": "function:src/store/session/shellProcessAtom.ts:pruneExitedProcesses", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/shellProcessAtom.ts", "target": "function:src/store/session/shellProcessAtom.ts:getProcessStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/shellProcessAtom.ts", "target": "function:src/store/session/shellProcessAtom.ts:getProcessStatus", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/session/subagentJobAtom.ts", "target": "function:src/store/session/subagentJobAtom.ts:hasLiveSubagentJobs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/session/subagentJobAtom.ts", "target": "function:src/store/session/subagentJobAtom.ts:hasLiveSubagentJobs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/sync/projectSyncStatusAtom.ts", "target": "function:src/store/sync/projectSyncStatusAtom.ts:useSyncStatusBridge", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/sync/projectSyncStatusAtom.ts", "target": "function:src/store/sync/projectSyncStatusAtom.ts:useSyncStatusBridge", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/ui/backgroundConfigAtom.ts", "target": "function:src/store/ui/backgroundConfigAtom.ts:clampOpacity", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/ui/backgroundConfigAtom.ts", "target": "function:src/store/ui/backgroundConfigAtom.ts:sanitizePageOpacity", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/ui/backgroundConfigAtom.ts", "target": "function:src/store/ui/backgroundConfigAtom.ts:sanitizePageOpacity", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/ui/backgroundConfigAtom.ts", "target": "function:src/store/ui/backgroundConfigAtom.ts:sanitizeSidebarOpacity", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/ui/backgroundConfigAtom.ts", "target": "function:src/store/ui/backgroundConfigAtom.ts:sanitizeSidebarOpacity", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/ui/backgroundConfigAtom.ts", "target": "function:src/store/ui/backgroundConfigAtom.ts:getStoredBackgroundConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/ui/chatPanelAtom.ts", "target": "function:src/store/ui/chatPanelAtom.ts:getInitialChatWidth", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/ui/chatPanelAtom.ts", "target": "function:src/store/ui/chatPanelAtom.ts:resetChatPanelSurfaceState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "document:src/store/store-organization.md", "target": "file:src/store/session/index.ts", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:src/store/store-organization.md", "target": "file:src/store/settings/index.ts", "type": "documents", "direction": "forward", "weight": 0.5 }
+  ]
+}

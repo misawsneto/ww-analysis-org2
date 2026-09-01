@@ -1,0 +1,309 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/index.tsx",
+      "summary": "Root entry point of the React frontend: installs global chunk-load and resource-error recovery handlers, runs theme/Tauri/background/i18n initialization in parallel under a timeout guard, and mounts the App with an emergency fallback UI for startup failures.",
+      "tags": ["entry-point", "initialization", "error-handling", "react"],
+      "complexity": "complex",
+      "languageNotes": "Uses window.onerror/onunhandledrejection plus a bounded sessionStorage-tracked reload counter to recover from stale-chunk errors after deploys."
+    },
+    {
+      "id": "file:src/store/repo/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/repo/index.ts",
+      "summary": "Barrel module for the centralized repo Jotai store, re-exporting repo/branch types, core and derived atoms, branch-cache LRU helpers, and window-scoped repo storage utilities.",
+      "tags": ["barrel", "state-management", "entry-point", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/util/core/init/backgroundInit.ts",
+      "type": "file",
+      "name": "backgroundInit.ts",
+      "filePath": "src/util/core/init/backgroundInit.ts",
+      "summary": "Initializes the app's background image at startup, using an in-memory blob-URL cache with LRU eviction and racing image decode against a timeout before falling back to the default background.",
+      "tags": ["initialization", "caching", "image-loading", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/util/core/init/chunkReload.ts",
+      "type": "file",
+      "name": "chunkReload.ts",
+      "filePath": "src/util/core/init/chunkReload.ts",
+      "summary": "Implements a bounded automatic reload strategy for JS chunk-load failures, tracking attempt count in sessionStorage and invoking a give-up callback once the retry budget is exhausted.",
+      "tags": ["error-handling", "initialization", "retry-logic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/util/core/init/themeInit.ts",
+      "type": "file",
+      "name": "themeInit.ts",
+      "filePath": "src/util/core/init/themeInit.ts",
+      "summary": "Loads the active global theme's CSS via a dynamically injected <link> element at startup, races it against a timeout, and idly preloads the remaining theme stylesheets afterward.",
+      "tags": ["initialization", "theming", "css", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/util/core/storage/backgroundImage.ts",
+      "type": "file",
+      "name": "backgroundImage.ts",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "summary": "Persists user background images to the Tauri app-data directory with JSON metadata in localStorage, exposing save/load/delete/list/migrate operations and data-URL <-> Uint8Array conversion helpers.",
+      "tags": ["storage", "filesystem", "tauri", "image-handling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/index.tsx:showEmergencyError",
+      "type": "function",
+      "name": "showEmergencyError",
+      "filePath": "src/index.tsx",
+      "lineRange": [90, 112],
+      "summary": "Renders a full-screen emergency error overlay by hiding the splash screen and replacing the root element's HTML with a restart/clear-data prompt.",
+      "tags": ["error-handling", "ui", "fallback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/index.tsx:initializeApp",
+      "type": "function",
+      "name": "initializeApp",
+      "filePath": "src/index.tsx",
+      "lineRange": [136, 281],
+      "summary": "Async bootstrap sequence that clears stale opened-repo state, races parallel init of i18n/theme/Tauri/background against a timeout, mounts the React root with error-boundary callbacks, and schedules dev-only deferred initialization.",
+      "tags": ["initialization", "entry-point", "async", "react"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/init/backgroundInit.ts:addToBackgroundCache",
+      "type": "function",
+      "name": "addToBackgroundCache",
+      "filePath": "src/util/core/init/backgroundInit.ts",
+      "lineRange": [71, 85],
+      "summary": "Adds a blob URL to the background-image cache, evicting and revoking the oldest entry once the cache exceeds its size limit.",
+      "tags": ["caching", "lru", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/init/backgroundInit.ts:preloadImage",
+      "type": "function",
+      "name": "preloadImage",
+      "filePath": "src/util/core/init/backgroundInit.ts",
+      "lineRange": [91, 109],
+      "summary": "Preloads an image element and resolves once decoding completes or the image errors, wrapped as a Promise.",
+      "tags": ["image-loading", "utility", "promise"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/init/backgroundInit.ts:loadDefaultBackground",
+      "type": "function",
+      "name": "loadDefaultBackground",
+      "filePath": "src/util/core/init/backgroundInit.ts",
+      "lineRange": [114, 123],
+      "summary": "Loads and caches the app's built-in default background image, returning the cached blob URL if already loaded.",
+      "tags": ["image-loading", "fallback", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/init/backgroundInit.ts:initBackgroundImage",
+      "type": "function",
+      "name": "initBackgroundImage",
+      "filePath": "src/util/core/init/backgroundInit.ts",
+      "lineRange": [129, 199],
+      "summary": "Reads the persisted background-image selection from storage, loads it as a blob URL with a timeout race, and falls back to the default background on failure or absence.",
+      "tags": ["initialization", "storage", "image-loading", "tauri"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/init/chunkReload.ts:reloadForChunkError",
+      "type": "function",
+      "name": "reloadForChunkError",
+      "filePath": "src/util/core/init/chunkReload.ts",
+      "lineRange": [30, 56],
+      "summary": "Reloads the page after a chunk-load error, tracking the attempt count in sessionStorage and invoking the onGiveUp callback instead of reloading once the max retry count is reached.",
+      "tags": ["error-handling", "retry-logic", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/init/chunkReload.ts:resetChunkReloadCount",
+      "type": "function",
+      "name": "resetChunkReloadCount",
+      "filePath": "src/util/core/init/chunkReload.ts",
+      "lineRange": [62, 68],
+      "summary": "Clears the sessionStorage counter tracking chunk-reload attempts.",
+      "tags": ["utility", "retry-logic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/init/themeInit.ts:scheduleThemePreload",
+      "type": "function",
+      "name": "scheduleThemePreload",
+      "filePath": "src/util/core/init/themeInit.ts",
+      "lineRange": [28, 43],
+      "summary": "Schedules idle-time preloading of all non-active global theme CSS files via requestIdleCallback with a setTimeout fallback.",
+      "tags": ["theming", "performance", "css"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/init/themeInit.ts:initTheme",
+      "type": "function",
+      "name": "initTheme",
+      "filePath": "src/util/core/init/themeInit.ts",
+      "lineRange": [45, 114],
+      "summary": "Injects the active theme's CSS <link> element at startup, resolves once it loads (or times out), logs slow loads, and then schedules preloading of the remaining themes.",
+      "tags": ["initialization", "theming", "css", "performance"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:ensureBackgroundsDir",
+      "type": "function",
+      "name": "ensureBackgroundsDir",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [39, 50],
+      "summary": "Ensures the app-data backgrounds directory exists on disk, creating it recursively if missing.",
+      "tags": ["filesystem", "tauri", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:getExtensionFromMimeType",
+      "type": "function",
+      "name": "getExtensionFromMimeType",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [87, 96],
+      "summary": "Maps a data-URL MIME type to the corresponding file extension used when saving background images to disk.",
+      "tags": ["utility", "mime-type"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:saveBackgroundImage",
+      "type": "function",
+      "name": "saveBackgroundImage",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [122, 155],
+      "summary": "Writes a background image data URL to disk as a binary file in the app-data directory and records its metadata in localStorage.",
+      "tags": ["storage", "filesystem", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImage",
+      "type": "function",
+      "name": "loadBackgroundImage",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [162, 189],
+      "summary": "Loads a stored background image from disk by its ID and returns it re-encoded as a data URL.",
+      "tags": ["storage", "filesystem", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImageAsBlob",
+      "type": "function",
+      "name": "loadBackgroundImageAsBlob",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [203, 231],
+      "summary": "Loads a stored background image from disk and returns it as an object-URL blob, avoiding base64 re-encoding for better performance than loadBackgroundImage.",
+      "tags": ["storage", "filesystem", "tauri", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:deleteBackgroundImage",
+      "type": "function",
+      "name": "deleteBackgroundImage",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [238, 265],
+      "summary": "Deletes a stored background image file from disk and removes its entry from the localStorage metadata index.",
+      "tags": ["storage", "filesystem", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:listBackgroundImages",
+      "type": "function",
+      "name": "listBackgroundImages",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [271, 274],
+      "summary": "Returns the IDs of all background images currently recorded in storage metadata.",
+      "tags": ["storage", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:getStorageInfo",
+      "type": "function",
+      "name": "getStorageInfo",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [279, 297],
+      "summary": "Reports the backgrounds directory path and count of stored background images for diagnostics.",
+      "tags": ["storage", "diagnostics", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:migrateImagesToStorage",
+      "type": "function",
+      "name": "migrateImagesToStorage",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [304, 316],
+      "summary": "Migrates a batch of legacy data-URL background images into the file-based storage system, returning their new IDs.",
+      "tags": ["migration", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/backgroundImage.ts:debugBackgroundStorage",
+      "type": "function",
+      "name": "debugBackgroundStorage",
+      "filePath": "src/util/core/storage/backgroundImage.ts",
+      "lineRange": [321, 327],
+      "summary": "Logs current background-image storage stats for debugging purposes.",
+      "tags": ["diagnostics", "debugging", "storage"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/index.tsx", "target": "file:src/store/repo/index.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/index.tsx", "target": "file:src/util/core/init/backgroundInit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/index.tsx", "target": "file:src/util/core/init/chunkReload.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/index.tsx", "target": "file:src/util/core/init/themeInit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/index.tsx", "target": "file:src/util/platform/tauri/init.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "file:src/util/core/storage/backgroundImage.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/index.tsx", "target": "function:src/index.tsx:showEmergencyError", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/index.tsx", "target": "function:src/index.tsx:initializeApp", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "function:src/util/core/init/backgroundInit.ts:addToBackgroundCache", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "function:src/util/core/init/backgroundInit.ts:preloadImage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "function:src/util/core/init/backgroundInit.ts:loadDefaultBackground", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "function:src/util/core/init/backgroundInit.ts:initBackgroundImage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/chunkReload.ts", "target": "function:src/util/core/init/chunkReload.ts:reloadForChunkError", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/chunkReload.ts", "target": "function:src/util/core/init/chunkReload.ts:resetChunkReloadCount", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/themeInit.ts", "target": "function:src/util/core/init/themeInit.ts:scheduleThemePreload", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/init/themeInit.ts", "target": "function:src/util/core/init/themeInit.ts:initTheme", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:ensureBackgroundsDir", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:getExtensionFromMimeType", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:saveBackgroundImage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImageAsBlob", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:deleteBackgroundImage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:listBackgroundImages", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:getStorageInfo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:migrateImagesToStorage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:debugBackgroundStorage", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "function:src/util/core/init/backgroundInit.ts:addToBackgroundCache", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/init/backgroundInit.ts", "target": "function:src/util/core/init/backgroundInit.ts:initBackgroundImage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/init/chunkReload.ts", "target": "function:src/util/core/init/chunkReload.ts:reloadForChunkError", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/init/chunkReload.ts", "target": "function:src/util/core/init/chunkReload.ts:resetChunkReloadCount", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/init/themeInit.ts", "target": "function:src/util/core/init/themeInit.ts:initTheme", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:saveBackgroundImage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImageAsBlob", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:deleteBackgroundImage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:listBackgroundImages", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:getStorageInfo", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:migrateImagesToStorage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/util/core/storage/backgroundImage.ts", "target": "function:src/util/core/storage/backgroundImage.ts:debugBackgroundStorage", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "function:src/index.tsx:initializeApp", "target": "function:src/util/core/init/themeInit.ts:initTheme", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/index.tsx:initializeApp", "target": "function:src/util/platform/tauri/init.ts:initializeTauriAPIs", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/index.tsx:initializeApp", "target": "function:src/util/core/init/backgroundInit.ts:initBackgroundImage", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/util/core/init/backgroundInit.ts:initBackgroundImage", "target": "function:src/util/core/storage/backgroundImage.ts:loadBackgroundImageAsBlob", "type": "calls", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/index.tsx", "target": "file:src/util/core/storage/diagnosis.ts", "type": "depends_on", "direction": "forward", "weight": 0.6}
+  ]
+}

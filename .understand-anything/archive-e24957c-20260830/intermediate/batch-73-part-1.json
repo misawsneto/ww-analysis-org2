@@ -1,0 +1,1733 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "type": "file",
+   "name": "claude.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "summary": "Detects Claude Code / Anthropic credentials on the local machine by reading shell config, Claude Code's JSON config, OAuth credential files, and the macOS keychain, then validates and enriches them with account/model metadata.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "oauth",
+    "credentials",
+    "keychain"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Uses `#[cfg(target_os)]`-gated variants of keychain readers to support macOS-only Security framework access."
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:detect_claude_keys",
+   "type": "function",
+   "name": "detect_claude_keys",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    83,
+    141
+   ],
+   "summary": "Top-level entry point that tries shell config, Claude Code's JSON config, local OAuth credentials, and the macOS keychain (in order) to find a usable Claude API key or OAuth session.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_anthropic_from_shell_config",
+   "type": "function",
+   "name": "read_anthropic_from_shell_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    145,
+    191
+   ],
+   "summary": "Scans common shell RC files (.zshrc, .bashrc, etc.) for an exported ANTHROPIC_API_KEY value.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_claude_config",
+   "type": "function",
+   "name": "read_claude_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    193,
+    243
+   ],
+   "summary": "Reads and deserializes Claude Code's local JSON config file to extract a stored API key.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:detect_claude_code_oauth",
+   "type": "function",
+   "name": "detect_claude_code_oauth",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    245,
+    294
+   ],
+   "summary": "Locates and validates a Claude Code OAuth session, returning a DetectedKey enriched with account and organization metadata when the token is valid.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_local_claude_credentials",
+   "type": "function",
+   "name": "read_local_claude_credentials",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    296,
+    317
+   ],
+   "summary": "Reads Claude Code's local OAuth credentials JSON file from disk.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:get_claude_credentials_paths",
+   "type": "function",
+   "name": "get_claude_credentials_paths",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    319,
+    331
+   ],
+   "summary": "Builds the list of candidate filesystem paths where Claude Code's credentials file might live.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:parse_claude_oauth_credentials",
+   "type": "function",
+   "name": "parse_claude_oauth_credentials",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    333,
+    345
+   ],
+   "summary": "Parses the raw JSON contents of a Claude OAuth credentials file into a structured ClaudeAiOauthCredentials value.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:validate_claude_code_oauth_token",
+   "type": "function",
+   "name": "validate_claude_code_oauth_token",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    347,
+    374
+   ],
+   "summary": "Confirms a Claude Code OAuth token is still valid by making a lightweight authenticated request against Anthropic's API.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:token_is_expired",
+   "type": "function",
+   "name": "token_is_expired",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    376,
+    385
+   ],
+   "summary": "Checks whether an OAuth token's expiry timestamp has passed, allowing a small clock-skew buffer.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:fetch_claude_code_oauth_models",
+   "type": "function",
+   "name": "fetch_claude_code_oauth_models",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    387,
+    415
+   ],
+   "summary": "Calls Anthropic's model listing endpoint using an OAuth bearer token to discover models available to the account.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:parse_claude_code_oauth_models_response",
+   "type": "function",
+   "name": "parse_claude_code_oauth_models_response",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    417,
+    427
+   ],
+   "summary": "Parses the JSON body of the OAuth models-list response into a list of model ids.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:fetch_claude_code_oauth_identity",
+   "type": "function",
+   "name": "fetch_claude_code_oauth_identity",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    429,
+    440
+   ],
+   "summary": "Fetches the Claude Code account identity (email, org) associated with an OAuth token.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "http-client"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:fetch_claude_code_oauth_profile",
+   "type": "function",
+   "name": "fetch_claude_code_oauth_profile",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    442,
+    470
+   ],
+   "summary": "Calls Anthropic's profile endpoint with an OAuth bearer token to retrieve account and organization details.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:parse_claude_code_oauth_profile_response",
+   "type": "function",
+   "name": "parse_claude_code_oauth_profile_response",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    472,
+    493
+   ],
+   "summary": "Parses the JSON body of the OAuth profile response into structured account/organization data.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:claude_code_account_metadata",
+   "type": "function",
+   "name": "claude_code_account_metadata",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    505,
+    523
+   ],
+   "summary": "Builds the account_metadata map (email, org name, rate-limit tier) attached to a detected Claude Code OAuth key.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_claude_keychain_credentials",
+   "type": "function",
+   "name": "read_claude_keychain_credentials",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    526,
+    543
+   ],
+   "summary": "Reads Claude Code OAuth credentials from the macOS keychain using the Security framework via the `security` CLI.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:get_claude_keychain_config_dirs",
+   "type": "function",
+   "name": "get_claude_keychain_config_dirs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    551,
+    563
+   ],
+   "summary": "Resolves the candidate config directories used to scope the macOS keychain lookup for Claude Code.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_macos_keychain_password",
+   "type": "function",
+   "name": "read_macos_keychain_password",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "lineRange": [
+    577,
+    593
+   ],
+   "summary": "Shells out to the macOS `security find-generic-password` command to read a stored keychain password.",
+   "tags": [
+    "auto-detect",
+    "claude",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "type": "file",
+   "name": "codex.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "summary": "Detects OpenAI Codex CLI credentials by reading Codex's auth.json (API key and OAuth tokens) and the legacy OpenAI CLI config file.",
+   "tags": [
+    "auto-detect",
+    "codex",
+    "openai",
+    "credentials"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:detect_codex_keys",
+   "type": "function",
+   "name": "detect_codex_keys",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "lineRange": [
+    14,
+    66
+   ],
+   "summary": "Top-level entry point that tries Codex's auth.json (API key/OAuth) and the legacy OpenAI config file, in order, to find a usable Codex/OpenAI credential.",
+   "tags": [
+    "auto-detect",
+    "codex",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:read_codex_auth_config",
+   "type": "function",
+   "name": "read_codex_auth_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "lineRange": [
+    75,
+    148
+   ],
+   "summary": "Reads and parses Codex CLI's auth.json, extracting either an API key or OAuth access/refresh tokens.",
+   "tags": [
+    "auto-detect",
+    "codex",
+    "detection"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:validate_codex_access_token",
+   "type": "function",
+   "name": "validate_codex_access_token",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "lineRange": [
+    152,
+    185
+   ],
+   "summary": "Validates a Codex OAuth access token against OpenAI's API via the CodexValidator.",
+   "tags": [
+    "auto-detect",
+    "codex",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:read_openai_config",
+   "type": "function",
+   "name": "read_openai_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "lineRange": [
+    187,
+    236
+   ],
+   "summary": "Reads the legacy OpenAI CLI config file to extract a stored API key.",
+   "tags": [
+    "auto-detect",
+    "codex",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "type": "file",
+   "name": "copilot.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "summary": "Detects a GitHub Copilot token by inspecting the GitHub CLI's local hosts configuration file.",
+   "tags": [
+    "auto-detect",
+    "copilot",
+    "github",
+    "credentials"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:detect_copilot_keys",
+   "type": "function",
+   "name": "detect_copilot_keys",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "lineRange": [
+    8,
+    39
+   ],
+   "summary": "Top-level entry point that checks the GH_TOKEN environment variable, then the GitHub CLI hosts config, to find a usable Copilot/GitHub token.",
+   "tags": [
+    "auto-detect",
+    "copilot",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:read_github_cli_config",
+   "type": "function",
+   "name": "read_github_cli_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "lineRange": [
+    41,
+    60
+   ],
+   "summary": "Reads the GitHub CLI's hosts.yml configuration file from disk.",
+   "tags": [
+    "auto-detect",
+    "copilot",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:extract_github_token_from_config",
+   "type": "function",
+   "name": "extract_github_token_from_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "lineRange": [
+    62,
+    74
+   ],
+   "summary": "Extracts the oauth_token value for github.com from the GitHub CLI hosts config contents.",
+   "tags": [
+    "auto-detect",
+    "copilot",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "type": "file",
+   "name": "cursor.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "summary": "Detects Cursor IDE session tokens by reading Cursor's local SQLite state database and decoding the embedded JWT to derive the user id, then fetches usage quota.",
+   "tags": [
+    "auto-detect",
+    "cursor",
+    "sqlite",
+    "jwt",
+    "credentials"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:detect_cursor_keys",
+   "type": "function",
+   "name": "detect_cursor_keys",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "lineRange": [
+    9,
+    67
+   ],
+   "summary": "Top-level entry point that reads Cursor IDE's local state database for a session token, decodes the embedded user id, and fetches quota.",
+   "tags": [
+    "auto-detect",
+    "cursor",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:get_cursor_state_db_path",
+   "type": "function",
+   "name": "get_cursor_state_db_path",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "lineRange": [
+    80,
+    109
+   ],
+   "summary": "Resolves the platform-specific filesystem path to Cursor IDE's SQLite state database.",
+   "tags": [
+    "auto-detect",
+    "cursor",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:read_cursor_tokens_from_db",
+   "type": "function",
+   "name": "read_cursor_tokens_from_db",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "lineRange": [
+    115,
+    164
+   ],
+   "summary": "Opens Cursor's SQLite state database and reads the stored access/refresh tokens.",
+   "tags": [
+    "auto-detect",
+    "cursor",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:extract_user_id_from_jwt",
+   "type": "function",
+   "name": "extract_user_id_from_jwt",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "lineRange": [
+    170,
+    198
+   ],
+   "summary": "Decodes the payload segment of a JWT to extract the embedded Cursor user id without verifying the signature.",
+   "tags": [
+    "auto-detect",
+    "cursor",
+    "parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "type": "file",
+   "name": "helpers.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "summary": "Shared helpers for the auto-detect module: resolves config file paths per provider, extracts shell export values, builds DetectedKey records, and dispatches provider-specific key validation.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "validation",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_home_dir",
+   "type": "function",
+   "name": "get_home_dir",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    31,
+    33
+   ],
+   "summary": "Resolves the current user's home directory, returning an error string if it cannot be determined.",
+   "tags": [
+    "auto-detect",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_claude_config_paths",
+   "type": "function",
+   "name": "get_claude_config_paths",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    35,
+    44
+   ],
+   "summary": "Returns the list of candidate paths for Claude's shell/config files to scan during detection.",
+   "tags": [
+    "auto-detect",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_openai_config_paths",
+   "type": "function",
+   "name": "get_openai_config_paths",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    46,
+    53
+   ],
+   "summary": "Returns the list of candidate paths for OpenAI/Codex config files to scan during detection.",
+   "tags": [
+    "auto-detect",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:extract_export_value",
+   "type": "function",
+   "name": "extract_export_value",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    62,
+    104
+   ],
+   "summary": "Parses shell config file contents to find an `export VAR=value` assignment for a given variable name.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:create_detected_key",
+   "type": "function",
+   "name": "create_detected_key",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    110,
+    125
+   ],
+   "summary": "Builds a standard DetectedKey record from a raw key value, provider, and source description.",
+   "tags": [
+    "auto-detect",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_anthropic_key",
+   "type": "function",
+   "name": "validate_anthropic_key",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    131,
+    153
+   ],
+   "summary": "Validates a candidate Anthropic API key using the AnthropicValidator.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_openai_key",
+   "type": "function",
+   "name": "validate_openai_key",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    155,
+    177
+   ],
+   "summary": "Validates a candidate OpenAI API key using the OpenAIValidator.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_github_token",
+   "type": "function",
+   "name": "validate_github_token",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    179,
+    193
+   ],
+   "summary": "Validates a candidate GitHub/Copilot token using the CopilotValidator.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:ClaudeConfig",
+   "type": "class",
+   "name": "ClaudeConfig",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    12,
+    17
+   ],
+   "summary": "Deserialization shape for Claude Code's local JSON config file's api_key field.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "data-model",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:OpenAIConfig",
+   "type": "class",
+   "name": "OpenAIConfig",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "lineRange": [
+    21,
+    25
+   ],
+   "summary": "Deserialization shape for the legacy OpenAI CLI config file's api_key field.",
+   "tags": [
+    "auto-detect",
+    "utility",
+    "data-model",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "type": "file",
+   "name": "kiro.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "summary": "Detects a local Kiro CLI token by delegating to the kiro provider's model-listing endpoint to confirm the token works.",
+   "tags": [
+    "auto-detect",
+    "kiro",
+    "credentials"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/kiro.rs:detect_kiro_keys",
+   "type": "function",
+   "name": "detect_kiro_keys",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "lineRange": [
+    9,
+    78
+   ],
+   "summary": "Reads a local Kiro CLI token and confirms it works by calling the Kiro model-listing endpoint, returning a DetectedKey on success.",
+   "tags": [
+    "auto-detect",
+    "kiro",
+    "detection"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "summary": "Orchestrates auto-detection across all supported CLI agents (Claude, Codex, Copilot, Cursor, Kiro, OpenCode), aggregating results into a single AutoDetectResult for the frontend.",
+   "tags": [
+    "auto-detect",
+    "orchestration",
+    "barrel",
+    "credentials"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "type": "function",
+   "name": "auto_detect_key",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "lineRange": [
+    72,
+    111
+   ],
+   "summary": "Runs auto-detection across every supported CLI (Cursor, Claude, Codex, Copilot, Kiro, OpenCode) for the requested agent type and returns the first match plus diagnostic messages when nothing is found.",
+   "tags": [
+    "auto-detect",
+    "orchestration",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:DetectedKey",
+   "type": "class",
+   "name": "DetectedKey",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "lineRange": [
+    27,
+    40
+   ],
+   "summary": "Represents a single credential discovered by auto-detection, including its value, provider, source description, and optional account/quota metadata.",
+   "tags": [
+    "auto-detect",
+    "orchestration",
+    "data-model",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:QuotaInfo",
+   "type": "class",
+   "name": "QuotaInfo",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "lineRange": [
+    44,
+    56
+   ],
+   "summary": "Represents usage-quota information (limits, remaining) discovered alongside a detected key.",
+   "tags": [
+    "auto-detect",
+    "orchestration",
+    "data-model",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:AutoDetectResult",
+   "type": "class",
+   "name": "AutoDetectResult",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "lineRange": [
+    60,
+    65
+   ],
+   "summary": "Aggregate result returned to the frontend after auto-detection, containing all detected keys and diagnostic messages.",
+   "tags": [
+    "auto-detect",
+    "orchestration",
+    "data-model",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "type": "file",
+   "name": "opencode.rs",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "summary": "Detects OpenCode CLI credentials by parsing its auth.json, mapping known provider entries (including the OpenCode Go/Zhipu variant) to DetectedKey records.",
+   "tags": [
+    "auto-detect",
+    "opencode",
+    "credentials"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/opencode.rs:detect_opencode_keys",
+   "type": "function",
+   "name": "detect_opencode_keys",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "lineRange": [
+    20,
+    62
+   ],
+   "summary": "Top-level entry point that reads OpenCode's auth.json and maps recognized provider entries (including OpenCode Go) into DetectedKey records.",
+   "tags": [
+    "auto-detect",
+    "opencode",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/auto_detect/opencode.rs:read_opencode_auth_config",
+   "type": "function",
+   "name": "read_opencode_auth_config",
+   "filePath": "src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "lineRange": [
+    64,
+    105
+   ],
+   "summary": "Reads and parses OpenCode CLI's auth.json into a map of provider name to auth entry.",
+   "tags": [
+    "auto-detect",
+    "opencode",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/commands/batch.rs",
+   "type": "file",
+   "name": "batch.rs",
+   "filePath": "src-tauri/crates/key-vault/src/commands/batch.rs",
+   "summary": "Tauri command that bulk-validates every stored key against its provider, reading an optional keys export file and running validation concurrently in a blocking task.",
+   "tags": [
+    "api-handler",
+    "batch-processing",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/commands/batch.rs:validate_keys_from_file",
+   "type": "function",
+   "name": "validate_keys_from_file",
+   "filePath": "src-tauri/crates/key-vault/src/commands/batch.rs",
+   "lineRange": [
+    19,
+    120
+   ],
+   "summary": "Tauri command that loads every stored key (optionally supplemented by an imported keys export file), validates each one concurrently, and returns a per-key validation summary.",
+   "tags": [
+    "api-handler",
+    "batch-processing",
+    "validation"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/commands/batch.rs:KeyValidationSummary",
+   "type": "class",
+   "name": "KeyValidationSummary",
+   "filePath": "src-tauri/crates/key-vault/src/commands/batch.rs",
+   "lineRange": [
+    5,
+    14
+   ],
+   "summary": "Per-key result summary (valid/invalid, message) returned from a bulk key-validation run.",
+   "tags": [
+    "api-handler",
+    "batch-processing",
+    "data-model",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "type": "file",
+   "name": "cli_version.rs",
+   "filePath": "src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "summary": "Scans the locally installed version of a CLI agent and probes the latest available version from npm, GitHub releases, or a JSON manifest, caching results and computing outdated/current status.",
+   "tags": [
+    "api-handler",
+    "version-check",
+    "http-client",
+    "caching"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:source_for",
+   "type": "function",
+   "name": "source_for",
+   "filePath": "src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "lineRange": [
+    106,
+    143
+   ],
+   "summary": "Determines which upstream version source (npm, GitHub release, JSON manifest, etc.) should be probed for a given CLI agent.",
+   "tags": [
+    "api-handler",
+    "version-check",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:scan_cli_version",
+   "type": "function",
+   "name": "scan_cli_version",
+   "filePath": "src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "lineRange": [
+    160,
+    207
+   ],
+   "summary": "Tauri command that scans the installed version of a CLI agent, probes the latest published version, compares them, and returns/caches a CliVersionSnapshot.",
+   "tags": [
+    "api-handler",
+    "version-check",
+    "utility"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:detect_claude_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_anthropic_from_shell_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_claude_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:detect_claude_code_oauth",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_local_claude_credentials",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:get_claude_credentials_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:parse_claude_oauth_credentials",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:validate_claude_code_oauth_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:token_is_expired",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:fetch_claude_code_oauth_models",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:parse_claude_code_oauth_models_response",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:fetch_claude_code_oauth_identity",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:fetch_claude_code_oauth_profile",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:parse_claude_code_oauth_profile_response",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:claude_code_account_metadata",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_claude_keychain_credentials",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:get_claude_keychain_config_dirs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:read_macos_keychain_password",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:detect_claude_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:detect_codex_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:read_codex_auth_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:validate_codex_access_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:read_openai_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:detect_codex_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:detect_copilot_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:read_github_cli_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:extract_github_token_from_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:detect_copilot_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:extract_github_token_from_config",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:detect_cursor_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:get_cursor_state_db_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:read_cursor_tokens_from_db",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:extract_user_id_from_jwt",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:detect_cursor_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_home_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_claude_config_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_openai_config_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:extract_export_value",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:create_detected_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_anthropic_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_openai_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_github_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:ClaudeConfig",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:OpenAIConfig",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_home_dir",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_claude_config_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:get_openai_config_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:extract_export_value",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:create_detected_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_anthropic_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_openai_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:validate_github_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:ClaudeConfig",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/helpers.rs:OpenAIConfig",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/kiro.rs:detect_kiro_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/kiro.rs:detect_kiro_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/kiro.rs:detect_kiro_keys",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_models",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:DetectedKey",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:QuotaInfo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:AutoDetectResult",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:DetectedKey",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:QuotaInfo",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/auto_detect/mod.rs:AutoDetectResult",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/claude.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/codex.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/copilot.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/cursor.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/helpers.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/kiro.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/claude.rs:detect_claude_keys",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/codex.rs:detect_codex_keys",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/copilot.rs:detect_copilot_keys",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/cursor.rs:detect_cursor_keys",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/kiro.rs:detect_kiro_keys",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/key-vault/src/auto_detect/mod.rs:auto_detect_key",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/opencode.rs:detect_opencode_keys",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/opencode.rs:detect_opencode_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/opencode.rs:read_opencode_auth_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "target": "function:src-tauri/crates/key-vault/src/auto_detect/opencode.rs:detect_opencode_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/auto_detect/opencode.rs",
+   "target": "file:src-tauri/crates/key-vault/src/commands/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/batch.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/batch.rs:validate_keys_from_file",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/batch.rs",
+   "target": "class:src-tauri/crates/key-vault/src/commands/batch.rs:KeyValidationSummary",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/batch.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/batch.rs:validate_keys_from_file",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/batch.rs",
+   "target": "class:src-tauri/crates/key-vault/src/commands/batch.rs:KeyValidationSummary",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:source_for",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:scan_cli_version",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:probe_latest_cli_version",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:antigravity_manifest_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:fetch_json",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:fetch_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:version_after_prefix",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:normalize_version",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:numeric_components",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:compare_versions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:version_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "class:src-tauri/crates/key-vault/src/commands/cli_version.rs:CliVersionStatus",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "class:src-tauri/crates/key-vault/src/commands/cli_version.rs:CliVersionSnapshot",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "function:src-tauri/crates/key-vault/src/commands/cli_version.rs:scan_cli_version",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "class:src-tauri/crates/key-vault/src/commands/cli_version.rs:CliVersionStatus",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/commands/cli_version.rs",
+   "target": "class:src-tauri/crates/key-vault/src/commands/cli_version.rs:CliVersionSnapshot",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

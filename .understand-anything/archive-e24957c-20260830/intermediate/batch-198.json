@@ -1,0 +1,479 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/transport/src/adapters/mock.rs",
+      "type": "file",
+      "name": "mock.rs",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "summary": "Test-only mock implementation of the TransportAdapter trait that captures emitted events in memory for verification in transport layer unit tests.",
+      "tags": ["test", "mock", "adapter", "testing-utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/adapters/mock.rs:EmittedEvent",
+      "type": "class",
+      "name": "EmittedEvent",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [14, 18],
+      "summary": "Test-only struct capturing a single emitted event's name, JSON payload, and session id for assertions in unit tests.",
+      "tags": ["test", "data-model", "event"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/adapters/mock.rs:MockTransportAdapter",
+      "type": "class",
+      "name": "MockTransportAdapter",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [22, 24],
+      "summary": "In-memory TransportAdapter implementation used in tests; records every emitted event into a shared, mutex-guarded vector instead of dispatching it anywhere.",
+      "tags": ["test", "mock", "adapter"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [35, 39],
+      "summary": "Constructs a MockTransportAdapter with an empty, thread-safe captured-events buffer.",
+      "tags": ["constructor", "test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:get_captured_events",
+      "type": "function",
+      "name": "get_captured_events",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [41, 43],
+      "summary": "Returns a clone of all events captured so far for test assertions.",
+      "tags": ["test", "accessor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:clear_events",
+      "type": "function",
+      "name": "clear_events",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [45, 47],
+      "summary": "Clears the captured-events buffer between test cases.",
+      "tags": ["test", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_agent_event",
+      "type": "function",
+      "name": "emit_agent_event",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [62, 162],
+      "summary": "Implements TransportAdapter::emit_agent_event by matching on AgentEvent variants and recording each as a captured EmittedEvent instead of dispatching it.",
+      "tags": ["test", "event-handler", "adapter"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_text_chunk",
+      "type": "function",
+      "name": "emit_text_chunk",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [164, 178],
+      "summary": "Captures a streaming text chunk event for later test verification.",
+      "tags": ["test", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_tool_event",
+      "type": "function",
+      "name": "emit_tool_event",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [180, 198],
+      "summary": "Captures a tool execution event for later test verification.",
+      "tags": ["test", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_stream_start",
+      "type": "function",
+      "name": "emit_stream_start",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [200, 215],
+      "summary": "Captures a stream-start event keyed by turn and round id.",
+      "tags": ["test", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_stream_end",
+      "type": "function",
+      "name": "emit_stream_end",
+      "filePath": "src-tauri/crates/transport/src/adapters/mock.rs",
+      "lineRange": [217, 232],
+      "summary": "Captures a stream-end event keyed by turn and round id.",
+      "tags": ["test", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/transport/src/adapters/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/transport/src/adapters/mod.rs",
+      "summary": "Adapter module barrel that declares the tauri and (test-only) mock submodules and re-exports TauriTransportAdapter and MockTransportAdapter for the transport crate.",
+      "tags": ["barrel", "module", "re-export", "adapter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/transport/src/adapters/tauri.rs",
+      "type": "file",
+      "name": "tauri.rs",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "summary": "Tauri-backed implementation of the TransportAdapter trait that emits agent, streaming, and tool events to the frontend via Tauri's AppHandle.emit() API.",
+      "tags": ["adapter", "tauri", "event-emitter", "ipc"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/adapters/tauri.rs:TauriTransportAdapter",
+      "type": "class",
+      "name": "TauriTransportAdapter",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [15, 17],
+      "summary": "Production TransportAdapter implementation that wraps a Tauri AppHandle and forwards agent, streaming, and tool events to the frontend via app.emit().",
+      "tags": ["adapter", "tauri", "ipc"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/tauri.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [20, 23],
+      "summary": "Constructs a TauriTransportAdapter from a Tauri AppHandle.",
+      "tags": ["constructor", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_agent_event",
+      "type": "function",
+      "name": "emit_agent_event",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [36, 150],
+      "summary": "Implements TransportAdapter::emit_agent_event by matching on AgentEvent variants and emitting the corresponding named event through Tauri's AppHandle.",
+      "tags": ["event-handler", "tauri", "ipc"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_text_chunk",
+      "type": "function",
+      "name": "emit_text_chunk",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [152, 166],
+      "summary": "Emits a streaming text chunk event to the frontend via Tauri's app.emit().",
+      "tags": ["event-handler", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_tool_event",
+      "type": "function",
+      "name": "emit_tool_event",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [168, 186],
+      "summary": "Emits a tool execution event to the frontend via Tauri's app.emit().",
+      "tags": ["event-handler", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_stream_start",
+      "type": "function",
+      "name": "emit_stream_start",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [188, 203],
+      "summary": "Emits a stream-start event to the frontend, keyed by turn and round id.",
+      "tags": ["event-handler", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_stream_end",
+      "type": "function",
+      "name": "emit_stream_end",
+      "filePath": "src-tauri/crates/transport/src/adapters/tauri.rs",
+      "lineRange": [205, 220],
+      "summary": "Emits a stream-end event to the frontend, keyed by turn and round id.",
+      "tags": ["event-handler", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/transport/src/emitter.rs",
+      "type": "file",
+      "name": "emitter.rs",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "summary": "Global, injectable TransportEmitter service that wraps any TransportAdapter implementation and exposes a singleton accessor for platform-agnostic event emission throughout the backend.",
+      "tags": ["service", "singleton", "event-emitter", "dependency-injection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/emitter.rs:TransportEmitter",
+      "type": "class",
+      "name": "TransportEmitter",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [11, 13],
+      "summary": "Wraps a boxed TransportAdapter trait object and exposes the platform-agnostic emit API used throughout the backend, plus a global singleton accessor.",
+      "tags": ["service", "singleton", "event-emitter"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [16, 18],
+      "summary": "Constructs a TransportEmitter around a given Arc<dyn TransportAdapter>.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:emit_agent_event",
+      "type": "function",
+      "name": "emit_agent_event",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [21, 27],
+      "summary": "Delegates agent event emission to the wrapped adapter.",
+      "tags": ["delegation", "event-emitter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:emit_text_chunk",
+      "type": "function",
+      "name": "emit_text_chunk",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [30, 32],
+      "summary": "Delegates text chunk emission to the wrapped adapter.",
+      "tags": ["delegation", "event-emitter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:emit_tool_event",
+      "type": "function",
+      "name": "emit_tool_event",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [35, 37],
+      "summary": "Delegates tool event emission to the wrapped adapter.",
+      "tags": ["delegation", "event-emitter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:emit_stream_start",
+      "type": "function",
+      "name": "emit_stream_start",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [40, 49],
+      "summary": "Delegates stream-start emission to the wrapped adapter.",
+      "tags": ["delegation", "event-emitter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:emit_stream_end",
+      "type": "function",
+      "name": "emit_stream_end",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [52, 61],
+      "summary": "Delegates stream-end emission to the wrapped adapter.",
+      "tags": ["delegation", "event-emitter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:emit_generic",
+      "type": "function",
+      "name": "emit_generic",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [64, 70],
+      "summary": "Delegates generic named-event emission to the wrapped adapter.",
+      "tags": ["delegation", "event-emitter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:adapter_type",
+      "type": "function",
+      "name": "adapter_type",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [73, 75],
+      "summary": "Returns the underlying adapter's type name.",
+      "tags": ["accessor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:set_global_transport_emitter",
+      "type": "function",
+      "name": "set_global_transport_emitter",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [91, 95],
+      "summary": "Installs a TransportEmitter into a process-wide OnceCell so services can access it without explicit dependency injection.",
+      "tags": ["singleton", "global-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:get_global_transport_emitter",
+      "type": "function",
+      "name": "get_global_transport_emitter",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [98, 100],
+      "summary": "Returns a clone of the global TransportEmitter if one has been set.",
+      "tags": ["singleton", "global-state", "accessor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/transport/src/emitter.rs:get_global_transport_emitter_or_panic",
+      "type": "function",
+      "name": "get_global_transport_emitter_or_panic",
+      "filePath": "src-tauri/crates/transport/src/emitter.rs",
+      "lineRange": [103, 107],
+      "summary": "Returns the global TransportEmitter, panicking if it has not been initialized yet.",
+      "tags": ["singleton", "global-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/transport/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/transport/src/lib.rs",
+      "summary": "Crate root for the transport layer, declaring the adapters/emitter/traits modules and re-exporting the public TransportAdapter API for platform-agnostic event emission.",
+      "tags": ["entry-point", "crate-root", "barrel", "transport"],
+      "complexity": "simple",
+      "languageNotes": "Rust crate root using `pub mod` + `pub use` re-exports to define the crate's public surface."
+    },
+    {
+      "id": "file:src-tauri/crates/transport/src/traits.rs",
+      "type": "file",
+      "name": "traits.rs",
+      "filePath": "src-tauri/crates/transport/src/traits.rs",
+      "summary": "Defines the core TransportAdapter trait plus the AgentEvent, TextChunk, ToolEvent, and ToolEventType data types shared by all transport adapter implementations.",
+      "tags": ["trait-definition", "data-model", "type-definition", "transport"],
+      "complexity": "moderate",
+      "languageNotes": "Uses async-trait for an object-safe async trait (Send + Sync + Debug) so adapters can be stored as Arc<dyn TransportAdapter>."
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/traits.rs:TransportAdapter",
+      "type": "class",
+      "name": "TransportAdapter",
+      "filePath": "src-tauri/crates/transport/src/traits.rs",
+      "lineRange": [11, 46],
+      "summary": "Async trait defining the unified interface (emit_agent_event, emit_text_chunk, emit_tool_event, stream start/end, generic emit, adapter_type) that every platform-specific transport adapter must implement.",
+      "tags": ["trait-definition", "interface", "transport"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/traits.rs:AgentEvent",
+      "type": "class",
+      "name": "AgentEvent",
+      "filePath": "src-tauri/crates/transport/src/traits.rs",
+      "lineRange": [51, 92],
+      "summary": "Enum of agent session lifecycle events (session created/deleted, dialog turn started/completed/cancelled/failed, token usage updated, session state changed) serialized for cross-platform emission.",
+      "tags": ["data-model", "enum", "event"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/traits.rs:TextChunk",
+      "type": "class",
+      "name": "TextChunk",
+      "filePath": "src-tauri/crates/transport/src/traits.rs",
+      "lineRange": [96, 104],
+      "summary": "Struct representing a single streamed text chunk with session/turn/round ids, content, timestamp, and completion flag.",
+      "tags": ["data-model", "struct", "streaming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/traits.rs:ToolEvent",
+      "type": "class",
+      "name": "ToolEvent",
+      "filePath": "src-tauri/crates/transport/src/traits.rs",
+      "lineRange": [108, 118],
+      "summary": "Struct representing a tool execution event with parameters, result, error, and duration for a given session/turn/tool.",
+      "tags": ["data-model", "struct", "event"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/transport/src/traits.rs:ToolEventType",
+      "type": "class",
+      "name": "ToolEventType",
+      "filePath": "src-tauri/crates/transport/src/traits.rs",
+      "lineRange": [123, 132],
+      "summary": "Enum of tool execution lifecycle states (started, params detected/complete, completed, failed, progress, stream chunk, confirmation needed).",
+      "tags": ["data-model", "enum"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "file:src-tauri/crates/transport/src/traits.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mod.rs", "target": "file:src-tauri/crates/transport/src/adapters/mock.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mod.rs", "target": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "file:src-tauri/crates/transport/src/traits.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "file:src-tauri/crates/transport/src/traits.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/lib.rs", "target": "file:src-tauri/crates/transport/src/adapters/mod.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/lib.rs", "target": "file:src-tauri/crates/transport/src/emitter.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/transport/src/lib.rs", "target": "file:src-tauri/crates/transport/src/traits.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "class:src-tauri/crates/transport/src/adapters/mock.rs:EmittedEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "class:src-tauri/crates/transport/src/adapters/mock.rs:MockTransportAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:new", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:get_captured_events", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:clear_events", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_agent_event", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_text_chunk", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_tool_event", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_stream_start", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:emit_stream_end", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "class:src-tauri/crates/transport/src/adapters/tauri.rs:TauriTransportAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:new", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_agent_event", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_text_chunk", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_tool_event", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_stream_start", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:emit_stream_end", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "class:src-tauri/crates/transport/src/emitter.rs:TransportEmitter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:new", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_agent_event", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_text_chunk", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_tool_event", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_stream_start", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_stream_end", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_generic", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:adapter_type", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:set_global_transport_emitter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:get_global_transport_emitter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:get_global_transport_emitter_or_panic", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:TransportAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:AgentEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:TextChunk", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:ToolEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:ToolEventType", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "class:src-tauri/crates/transport/src/adapters/mock.rs:EmittedEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "class:src-tauri/crates/transport/src/adapters/mock.rs:MockTransportAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:new", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:get_captured_events", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/mock.rs", "target": "function:src-tauri/crates/transport/src/adapters/mock.rs:clear_events", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "class:src-tauri/crates/transport/src/adapters/tauri.rs:TauriTransportAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/adapters/tauri.rs", "target": "function:src-tauri/crates/transport/src/adapters/tauri.rs:new", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "class:src-tauri/crates/transport/src/emitter.rs:TransportEmitter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:new", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_agent_event", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_text_chunk", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_tool_event", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_stream_start", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_stream_end", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:emit_generic", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:adapter_type", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:set_global_transport_emitter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:get_global_transport_emitter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/emitter.rs", "target": "function:src-tauri/crates/transport/src/emitter.rs:get_global_transport_emitter_or_panic", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:TransportAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:AgentEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:TextChunk", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:ToolEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/transport/src/traits.rs", "target": "class:src-tauri/crates/transport/src/traits.rs:ToolEventType", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "class:src-tauri/crates/transport/src/adapters/mock.rs:MockTransportAdapter", "target": "class:src-tauri/crates/transport/src/traits.rs:TransportAdapter", "type": "implements", "direction": "forward", "weight": 0.9 },
+    { "source": "class:src-tauri/crates/transport/src/adapters/tauri.rs:TauriTransportAdapter", "target": "class:src-tauri/crates/transport/src/traits.rs:TransportAdapter", "type": "implements", "direction": "forward", "weight": 0.9 }
+  ]
+}

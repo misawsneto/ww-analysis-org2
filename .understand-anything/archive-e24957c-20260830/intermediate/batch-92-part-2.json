@@ -1,0 +1,1321 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "type": "file",
+      "name": "sessionSyncDerivedState.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "summary": "Small pure predicate helpers that derive session-sync invariants: detecting duplicate sync invocations and identifying Cursor IDE session ids.",
+      "tags": [
+        "utility",
+        "predicate",
+        "derived-state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "type": "file",
+      "name": "sessionSyncLifecycle.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "summary": "React lifecycle hooks that periodically persist session events to cache and clean up the active event handler and refs when a session unmounts or switches.",
+      "tags": [
+        "hook",
+        "lifecycle",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "type": "file",
+      "name": "sessionSyncNoAdapterLoader.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "summary": "Loads a session's initial events directly from the event store when no type-specific adapter is registered for it (fallback path).",
+      "tags": [
+        "fallback",
+        "history-loading"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncPlanApproval.ts",
+      "type": "file",
+      "name": "sessionSyncPlanApproval.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncPlanApproval.ts",
+      "summary": "Rehydrates a session's pending plan-approval state after a switch, so a plan-approval prompt that was awaiting a response reappears if still unresolved.",
+      "tags": [
+        "plan-approval",
+        "state-restore"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "type": "file",
+      "name": "sessionSyncReconcile.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "summary": "Polls an in-flight (still-running) session at increasing delays to reconcile freshly persisted history into the live event store and propagate updated run status.",
+      "tags": [
+        "reconciliation",
+        "polling",
+        "history-loading"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "type": "file",
+      "name": "sessionSyncStateHelpers.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "summary": "Helper functions that reset session-switch state, apply adapter post-load results to atoms, buffer streaming deltas, and build the event-handler callback set used by adapters.",
+      "tags": [
+        "state-management",
+        "event-handler",
+        "utility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncTypes.ts",
+      "type": "file",
+      "name": "sessionSyncTypes.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncTypes.ts",
+      "summary": "Defines the SessionSyncRefs interface bundling the mutable refs (adapter, handler, previous session id/epoch, live session id) shared across the session-sync hook's helper modules.",
+      "tags": [
+        "type-definition",
+        "shared-types"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "type": "file",
+      "name": "sessionSyncUtils.ts",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "summary": "Pure utility functions and constants for useSessionSync covering CLI status normalization, in-flight/terminal status checks, and persisted-history loading/hydration, extracted to keep the main hook under its line-count limit.",
+      "tags": [
+        "utility",
+        "history-loading",
+        "status"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/engines/SessionCore/sync/types.ts",
+      "summary": "Defines the SessionAdapter interface that every session type (SDE/OS agent, CLI, Cursor IDE) implements, plus a small adapter registry keyed by category for resolving the correct adapter per session id.",
+      "tags": [
+        "type-definition",
+        "adapter",
+        "registry"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "type": "file",
+      "name": "useSessionChannel.ts",
+      "filePath": "src/engines/SessionCore/sync/useSessionChannel.ts",
+      "summary": "React hook and supporting lifecycle class that subscribe to the Rust backend's per-session Tauri IPC Channel, guarding against races between cleanup and late message delivery across session switches.",
+      "tags": [
+        "hook",
+        "ipc",
+        "tauri",
+        "race-condition-hardening"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "type": "file",
+      "name": "useSessionSync.ts",
+      "filePath": "src/engines/SessionCore/sync/useSessionSync.ts",
+      "summary": "The unified session-sync hook mounted once in SessionSyncProvider that replaces three divergent per-agent hooks, wiring together the IPC channel, adapter resolution, switch orchestration, external-history refresh, and native-transcript reconciliation for the active session.",
+      "tags": [
+        "hook",
+        "orchestration",
+        "session-sync"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isDuplicateSessionSyncInvocation",
+      "type": "function",
+      "name": "isDuplicateSessionSyncInvocation",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "lineRange": [
+        3,
+        10
+      ],
+      "summary": "Determines whether a session-sync effect run is a duplicate of the immediately preceding invocation (same session and reload epoch).",
+      "tags": [
+        "predicate",
+        "deduplication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isCursorIdeSessionId",
+      "type": "function",
+      "name": "isCursorIdeSessionId",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "lineRange": [
+        12,
+        14
+      ],
+      "summary": "Checks whether a session id belongs to a Cursor IDE composer session.",
+      "tags": [
+        "predicate",
+        "cursor-ide"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useEventStoreCacheSync",
+      "type": "function",
+      "name": "useEventStoreCacheSync",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "lineRange": [
+        14,
+        22
+      ],
+      "summary": "Hook that periodically saves the active session's events to the local cache on an interval.",
+      "tags": [
+        "hook",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useSessionSyncCleanup",
+      "type": "function",
+      "name": "useSessionSyncCleanup",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "lineRange": [
+        24,
+        38
+      ],
+      "summary": "Hook that, on unmount, persists the previous session's events and disposes the current event handler.",
+      "tags": [
+        "hook",
+        "cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:disposeCurrentHandler",
+      "type": "function",
+      "name": "disposeCurrentHandler",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "lineRange": [
+        40,
+        47
+      ],
+      "summary": "Disposes and clears the currently active session event handler ref.",
+      "tags": [
+        "cleanup",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:resetReloadGuardForSession",
+      "type": "function",
+      "name": "resetReloadGuardForSession",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "lineRange": [
+        49,
+        57
+      ],
+      "summary": "Clears the reload-guard refs when they still point at the given session, allowing a subsequent reload to proceed.",
+      "tags": [
+        "utility",
+        "state-reset"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts:loadSessionWithoutAdapter",
+      "type": "function",
+      "name": "loadSessionWithoutAdapter",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "lineRange": [
+        11,
+        48
+      ],
+      "summary": "Loads and hydrates a session's own initial events when it has no adapter, dispatching the result or reporting a load failure.",
+      "tags": [
+        "fallback",
+        "history-loading"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncPlanApproval.ts:rehydratePendingPlanApproval",
+      "type": "function",
+      "name": "rehydratePendingPlanApproval",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncPlanApproval.ts",
+      "lineRange": [
+        7,
+        31
+      ],
+      "summary": "Restores any pending plan-approval prompt for a session that was awaiting approval before the switch.",
+      "tags": [
+        "plan-approval",
+        "state-restore"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "type": "function",
+      "name": "reconcileInFlightHistory",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "lineRange": [
+        34,
+        117
+      ],
+      "summary": "Repeatedly polls persisted history for an in-flight session at scheduled delays, merging newly available events and updating run-status/context atoms until the run terminates.",
+      "tags": [
+        "reconciliation",
+        "polling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:applySwitchPostLoadResult",
+      "type": "function",
+      "name": "applySwitchPostLoadResult",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "lineRange": [
+        119,
+        125
+      ],
+      "summary": "Applies a post-load result's context/status fields to the sync state actions after a session switch.",
+      "tags": [
+        "state-update",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:resetSessionSwitchState",
+      "type": "function",
+      "name": "resetSessionSwitchState",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "lineRange": [
+        104,
+        127
+      ],
+      "summary": "Clears context, error, and canvas-preview state for a session at the start of a switch.",
+      "tags": [
+        "state-reset",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:applyPostLoadResult",
+      "type": "function",
+      "name": "applyPostLoadResult",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "lineRange": [
+        129,
+        161
+      ],
+      "summary": "Applies an adapter's post-load metadata (context tokens/usage, runtime status/error) to the corresponding session state atoms.",
+      "tags": [
+        "state-update",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:updateStreamingDeltaContent",
+      "type": "function",
+      "name": "updateStreamingDeltaContent",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "lineRange": [
+        169,
+        186
+      ],
+      "summary": "Buffers or clears streaming delta text content for a session based on the incoming streaming info.",
+      "tags": [
+        "streaming",
+        "state-update"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:createSessionEventHandlerCallbacks",
+      "type": "function",
+      "name": "createSessionEventHandlerCallbacks",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "lineRange": [
+        188,
+        261
+      ],
+      "summary": "Builds the callback object an adapter's event handler uses to update turn lifecycle, streaming buffers, and session status as events arrive.",
+      "tags": [
+        "event-handler",
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:toCliSessionStatus",
+      "type": "function",
+      "name": "toCliSessionStatus",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        66,
+        70
+      ],
+      "summary": "Normalizes a raw backend status string to a known CliSessionStatus value, defaulting to 'idle' for unrecognized values.",
+      "tags": [
+        "normalization",
+        "status"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isInFlightRunStatus",
+      "type": "function",
+      "name": "isInFlightRunStatus",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        72,
+        78
+      ],
+      "summary": "Checks whether a run status represents a session that is still actively running.",
+      "tags": [
+        "predicate",
+        "status"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isTerminalRunStatus",
+      "type": "function",
+      "name": "isTerminalRunStatus",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        80,
+        95
+      ],
+      "summary": "Checks whether a run status represents a terminal (completed/failed/stopped) state.",
+      "tags": [
+        "predicate",
+        "status"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:waitForReconcileDelay",
+      "type": "function",
+      "name": "waitForReconcileDelay",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        99,
+        102
+      ],
+      "summary": "Returns a promise that resolves after the given reconcile delay in milliseconds.",
+      "tags": [
+        "utility",
+        "async"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadOwnSessionInitialEvents",
+      "type": "function",
+      "name": "loadOwnSessionInitialEvents",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        104,
+        112
+      ],
+      "summary": "Loads the initial event window for a session directly from the local event cache.",
+      "tags": [
+        "history-loading",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadPersistedHistory",
+      "type": "function",
+      "name": "loadPersistedHistory",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        114,
+        127
+      ],
+      "summary": "Loads a session's persisted history via its adapter, honoring an abort signal.",
+      "tags": [
+        "history-loading",
+        "adapter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:hydrateSessionStoreBeforeDisplay",
+      "type": "function",
+      "name": "hydrateSessionStoreBeforeDisplay",
+      "filePath": "src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "lineRange": [
+        129,
+        140
+      ],
+      "summary": "Hydrates the in-memory event store with a batch of events, either replacing or merging with existing content, before they are displayed.",
+      "tags": [
+        "history-loading",
+        "state-update"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/types.ts:registerAdapter",
+      "type": "function",
+      "name": "registerAdapter",
+      "filePath": "src/engines/SessionCore/sync/types.ts",
+      "lineRange": [
+        305,
+        307
+      ],
+      "summary": "Registers a SessionAdapter implementation under its category in the adapter registry.",
+      "tags": [
+        "registry",
+        "adapter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/types.ts:getAdapterForSession",
+      "type": "function",
+      "name": "getAdapterForSession",
+      "filePath": "src/engines/SessionCore/sync/types.ts",
+      "lineRange": [
+        310,
+        331
+      ],
+      "summary": "Resolves the correct SessionAdapter for a given session id by inspecting its id shape (agent, CLI, imported-history, Cursor IDE).",
+      "tags": [
+        "registry",
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/types.ts:getAdapter",
+      "type": "function",
+      "name": "getAdapter",
+      "filePath": "src/engines/SessionCore/sync/types.ts",
+      "lineRange": [
+        334,
+        336
+      ],
+      "summary": "Looks up a registered SessionAdapter by category.",
+      "tags": [
+        "registry",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/useSessionChannel.ts:waitForSessionChannelReady",
+      "type": "function",
+      "name": "waitForSessionChannelReady",
+      "filePath": "src/engines/SessionCore/sync/useSessionChannel.ts",
+      "lineRange": [
+        70,
+        91
+      ],
+      "summary": "Waits (with a timeout) until the session's IPC channel has been registered and marked ready by the sync provider.",
+      "tags": [
+        "ipc",
+        "synchronization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/useSessionChannel.ts:validateSessionChannelMessage",
+      "type": "function",
+      "name": "validateSessionChannelMessage",
+      "filePath": "src/engines/SessionCore/sync/useSessionChannel.ts",
+      "lineRange": [
+        93,
+        96
+      ],
+      "summary": "Validates the shape of an incoming raw channel message before it is routed to a handler.",
+      "tags": [
+        "validation",
+        "ipc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/engines/SessionCore/sync/useSessionChannel.ts:SessionChannelLifecycle",
+      "type": "class",
+      "name": "SessionChannelLifecycle",
+      "filePath": "src/engines/SessionCore/sync/useSessionChannel.ts",
+      "lineRange": [
+        126,
+        230
+      ],
+      "summary": "Encapsulates the subscribe/unsubscribe race-condition handling for a single session channel, chaining unsubscribe onto a pending subscribe promise and gating late message delivery via a destroyed flag, as a plain class so the logic is unit-testable outside React.",
+      "tags": [
+        "ipc",
+        "race-condition-hardening",
+        "lifecycle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/useSessionChannel.ts:useSessionChannel",
+      "type": "function",
+      "name": "useSessionChannel",
+      "filePath": "src/engines/SessionCore/sync/useSessionChannel.ts",
+      "lineRange": [
+        238,
+        292
+      ],
+      "summary": "Hook that subscribes to a session's Tauri IPC channel on mount and unsubscribes on unmount/session change, forwarding events to the caller.",
+      "tags": [
+        "hook",
+        "ipc",
+        "subscription"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "type": "function",
+      "name": "useSessionSync",
+      "filePath": "src/engines/SessionCore/sync/useSessionSync.ts",
+      "lineRange": [
+        70,
+        300
+      ],
+      "summary": "Top-level hook that subscribes to the active session's IPC channel, resolves its adapter, and coordinates switch effects, cache reconciliation, and external-history/native-transcript refresh across session and reload-epoch changes.",
+      "tags": [
+        "hook",
+        "orchestration",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isDuplicateSessionSyncInvocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isDuplicateSessionSyncInvocation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isCursorIdeSessionId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isCursorIdeSessionId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useEventStoreCacheSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useEventStoreCacheSync",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useSessionSyncCleanup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useSessionSyncCleanup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:disposeCurrentHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:disposeCurrentHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:resetReloadGuardForSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:resetReloadGuardForSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts:loadSessionWithoutAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts:loadSessionWithoutAdapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncPlanApproval.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncPlanApproval.ts:rehydratePendingPlanApproval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncPlanApproval.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncPlanApproval.ts:rehydratePendingPlanApproval",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:applySwitchPostLoadResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:applySwitchPostLoadResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:resetSessionSwitchState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:resetSessionSwitchState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:applyPostLoadResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:applyPostLoadResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:updateStreamingDeltaContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:updateStreamingDeltaContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:createSessionEventHandlerCallbacks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:createSessionEventHandlerCallbacks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:toCliSessionStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:toCliSessionStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isInFlightRunStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isInFlightRunStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isTerminalRunStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isTerminalRunStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:waitForReconcileDelay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:waitForReconcileDelay",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadOwnSessionInitialEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadOwnSessionInitialEvents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadPersistedHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadPersistedHistory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:hydrateSessionStoreBeforeDisplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:hydrateSessionStoreBeforeDisplay",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "function:src/engines/SessionCore/sync/types.ts:registerAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "function:src/engines/SessionCore/sync/types.ts:registerAdapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "function:src/engines/SessionCore/sync/types.ts:getAdapterForSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "function:src/engines/SessionCore/sync/types.ts:getAdapterForSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "function:src/engines/SessionCore/sync/types.ts:getAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "function:src/engines/SessionCore/sync/types.ts:getAdapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:waitForSessionChannelReady",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:waitForSessionChannelReady",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:validateSessionChannelMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:validateSessionChannelMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "class:src/engines/SessionCore/sync/useSessionChannel.ts:SessionChannelLifecycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "class:src/engines/SessionCore/sync/useSessionChannel.ts:SessionChannelLifecycle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:useSessionChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:useSessionChannel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "file:src/engines/SessionCore/sync/nativeTranscriptReconcile.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncReconcile.ts",
+      "target": "file:src/engines/SessionCore/sync/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts",
+      "target": "file:src/engines/SessionCore/sync/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncTypes.ts",
+      "target": "file:src/engines/SessionCore/sync/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/sessionSyncUtils.ts",
+      "target": "file:src/engines/SessionCore/sync/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/types.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/adapters/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/externalHistoryAutoRefresh.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/nativeTranscriptReconcile.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSwitchEffectRunner.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncChannel.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncDerivedState.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/sessionSyncTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/useSessionSync.ts",
+      "target": "file:src/engines/SessionCore/sync/useSessionChannel.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:waitForReconcileDelay",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadPersistedHistory",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "target": "function:src/engines/SessionCore/sync/nativeTranscriptReconcile.ts:isNativeTranscriptSession",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:hydrateSessionStoreBeforeDisplay",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:toCliSessionStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:reconcileInFlightHistory",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:isTerminalRunStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncReconcile.ts:applySwitchPostLoadResult",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncStateHelpers.ts:applyPostLoadResult",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts:loadSessionWithoutAdapter",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:loadOwnSessionInitialEvents",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/sessionSyncNoAdapterLoader.ts:loadSessionWithoutAdapter",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncUtils.ts:hydrateSessionStoreBeforeDisplay",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/externalHistoryAutoRefresh.ts:useExternalHistoryAutoRefresh",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/nativeTranscriptReconcile.ts:scheduleNativeTranscriptReconcile",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/sessionSwitchEffectRunner.ts:runSessionSwitchEffect",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/sessionSwitchEffectRunner.ts:resetEmptySessionRefs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncChannel.ts:routeSessionChannelEvent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncDerivedState.ts:isDuplicateSessionSyncInvocation",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useEventStoreCacheSync",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/sessionSyncLifecycle.ts:useSessionSyncCleanup",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/types.ts:getAdapterForSession",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/useSessionSync.ts:useSessionSync",
+      "target": "function:src/engines/SessionCore/sync/useSessionChannel.ts:useSessionChannel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

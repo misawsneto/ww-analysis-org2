@@ -1,0 +1,176 @@
+/**
+ * KanbanBoard Styles
+ */
+
+.kanban-board {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.kanban-board__columns {
+  display: flex;
+  flex: 1;
+  gap: 0; /* Dividers handle spacing */
+  min-width: min-content;
+  min-height: 0; /* KEY: Prevents flex overflow issues */
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Hide horizontal scrollbar track (no reserved strip); scrolling still works via trackpad/wheel. */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.kanban-board__divider {
+  height: 100%;
+  width: 1px;
+  flex-shrink: 0;
+  background: var(--color-border-2);
+}
+
+// ============================================
+// Linear-style card variant
+//
+// Active when the consumer passes `className="kanban-board--linear"` on
+// <KanbanBoard>. Used by Agent Kanban (TaskKanban) and
+// WorkItems Kanban. Scoped to that variant only so other reuses (Gantt,
+// future boards) keep their original look unless they opt in.
+// ============================================
+
+.kanban-board.kanban-board--linear {
+  &.kanban-board--embedded-todo {
+    background: transparent;
+
+    // Communication tab Todo Kanban only: render the per-column task count
+    // as plain text-2 instead of a colored count bubble. The bubble look is
+    // overkill in this surface because the column header already carries
+    // the accent color via its icon. We strip the inline backgroundColor
+    // (set by KanbanColumn) and the rounded-badge base so what's left is
+    // just the number sitting next to the title.
+    .kanban-column__count {
+      background: transparent !important;
+      color: var(--color-text-2) !important;
+      width: auto !important;
+      min-width: 0 !important;
+      height: auto !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+    }
+  }
+
+  .kanban-board__columns {
+    gap: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .kanban-board__divider {
+    display: block;
+    width: 1px;
+    background: var(--color-border-1);
+  }
+
+  .kanban-column {
+    background: transparent;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  // Drop the saturated header fill — use a transparent row; the icon still
+  // carries the column accent color via inline style. No hover/active color
+  // change on the header (cards don't need one).
+  .kanban-column__header {
+    background: transparent !important;
+    border-bottom: none;
+    padding: 0 12px;
+
+    &:hover,
+    &:active {
+      filter: none;
+      background: transparent !important;
+    }
+  }
+
+  .kanban-column__body {
+    --kanban-scroll-fade-top: 12px;
+    --kanban-scroll-fade-bottom: 24px;
+    padding: 0 8px 240px;
+    background: transparent !important;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black var(--kanban-scroll-fade-top),
+      black calc(100% - var(--kanban-scroll-fade-bottom)),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black var(--kanban-scroll-fade-top),
+      black calc(100% - var(--kanban-scroll-fade-bottom)),
+      transparent 100%
+    );
+
+    &--at-top {
+      --kanban-scroll-fade-top: 0px;
+    }
+
+    &--at-bottom {
+      --kanban-scroll-fade-bottom: 0px;
+    }
+
+    &--empty {
+      padding-bottom: 0;
+    }
+  }
+
+  .kanban-column__count {
+    background: var(--color-bg-2);
+  }
+
+  .kanban-task-card {
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border-2);
+    border-radius: 8px;
+    margin-bottom: 6px;
+
+    &:hover {
+      background: var(--color-bg-2);
+    }
+
+    // Card backing the currently-open session preview. Swap the resting
+    // border-color for primary-6 so the source of the floating panel is
+    // visually anchored. Defined here (inside `.kanban-board--linear`)
+    // because the linear variant is what owns the card's real border;
+    // a top-level rule would lose specificity to the variant border.
+    //
+    &--selected {
+      border-color: var(--color-primary-6);
+    }
+  }
+
+  // Drop indicator ("ghost line") — plain line in primary-6, no end caps.
+  // The component still inlines `backgroundColor: column.color` on the dots
+  // and the line, so we override with `!important` and hide the dots.
+  .kanban-drop-indicator {
+    padding: 4px 8px;
+  }
+
+  .kanban-drop-indicator__dot {
+    display: none;
+  }
+
+  .kanban-drop-indicator__line {
+    background: var(--color-primary-6) !important;
+    border-radius: 2px;
+    height: 2px;
+  }
+}

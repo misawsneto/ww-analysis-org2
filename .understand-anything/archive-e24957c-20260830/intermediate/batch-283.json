@@ -1,0 +1,106 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "type": "file",
+      "name": "RecipeRenderer.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "summary": "Data-driven event renderer component that resolves a tool's uiCanonical and action name from raw event props, looks up the corresponding ChatBlock from the Rust tool registry, and dispatches rendering to the matching Block component.",
+      "tags": ["component", "rendering", "dispatcher", "event-handler"],
+      "complexity": "moderate",
+      "languageNotes": "Adding a new tool that reuses an existing Block requires zero frontend changes; only Rust's tool registry needs to set chat_block."
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/index.ts",
+      "summary": "Barrel file re-exporting all chat block adapter components (ReadFileAdapter, ShellAdapter, OrgTaskAdapter, DiffAdapter, etc.) that wrap Block components with pre-translated labels from the Rust tool registry.",
+      "tags": ["barrel", "adapters", "chat-panel", "re-exports"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/chatBlocks.ts",
+      "type": "file",
+      "name": "chatBlocks.ts",
+      "filePath": "src/engines/ChatPanel/rendering/chatBlocks.ts",
+      "summary": "Defines CHAT_BLOCKS, a lookup map from each ChatBlock variant (read_file, diff, shell, org_task, etc.) to its adapter component, plus a FALLBACK_BLOCK and a hidden-block sentinel, used by RecipeRenderer to select which Block to render.",
+      "tags": ["registry", "mapping", "chat-panel", "component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:extractActualToolName",
+      "type": "function",
+      "name": "extractActualToolName",
+      "filePath": "src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "lineRange": [33, 50],
+      "summary": "Resolves the actual tool/function name from raw event props by checking functionName, nested event.functionName, and function fields in priority order, falling back to the generic 'tool_call' sentinel.",
+      "tags": ["utility", "extraction", "fallback-logic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:extractAction",
+      "type": "function",
+      "name": "extractAction",
+      "filePath": "src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "lineRange": [54, 73],
+      "summary": "Derives the action name for a normalized event, first via deriveToolAction, then falling back to matching an '[action: x]' marker in the result output or content string.",
+      "tags": ["utility", "extraction", "regex"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:RecipeRenderer",
+      "type": "function",
+      "name": "RecipeRenderer",
+      "filePath": "src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "lineRange": [75, 99],
+      "summary": "React functional component that normalizes raw event props, resolves the uiCanonical/tool/action combination, looks up the matching ChatBlock via getActionChatBlock with fallbacks, and renders the resolved Block component.",
+      "tags": ["component", "dispatcher", "react", "rendering"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "target": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:extractActualToolName",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "target": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:extractAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "target": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:RecipeRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "target": "function:src/engines/ChatPanel/rendering/RecipeRenderer.tsx:RecipeRenderer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/ChatPanel/rendering/RecipeRenderer.tsx",
+      "target": "file:src/engines/ChatPanel/rendering/chatBlocks.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/ChatPanel/rendering/chatBlocks.ts",
+      "target": "file:src/engines/ChatPanel/rendering/adapters/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

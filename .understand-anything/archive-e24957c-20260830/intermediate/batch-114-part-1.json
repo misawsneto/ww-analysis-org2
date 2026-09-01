@@ -1,0 +1,1379 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "type": "file",
+      "name": "ai.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "summary": "Generates AI-powered git commit messages by summarizing the diff and sending it to the user's configured LLM provider, with a three-tier credential fallback chain across direct API keys, CLI-agent stored keys, and Cursor's session-token Connect RPC API.",
+      "tags": [
+        "ai-integration",
+        "commit-message",
+        "llm",
+        "tauri-command",
+        "git"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements a 3-tier credential fallback (direct API keys -> CLI agent keys -> Cursor Connect RPC) to pick an LLM provider for commit-message generation."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/ai.rs:build_system_prompt",
+      "type": "function",
+      "name": "build_system_prompt",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "lineRange": [
+        39,
+        58
+      ],
+      "summary": "Builds the system prompt for the commit-message LLM call, optionally appending user-configured custom instructions with a length cap.",
+      "tags": [
+        "prompt-building",
+        "validation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/ai.rs:default_model_for",
+      "type": "function",
+      "name": "default_model_for",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "lineRange": [
+        94,
+        111
+      ],
+      "summary": "Maps an LLM provider ModelType to its default lightweight model id used for commit-message generation.",
+      "tags": [
+        "utility",
+        "mapping",
+        "llm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/ai.rs:provider_name_for",
+      "type": "function",
+      "name": "provider_name_for",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "lineRange": [
+        114,
+        131
+      ],
+      "summary": "Maps an LLM provider ModelType to its provider-registry name string.",
+      "tags": [
+        "utility",
+        "mapping",
+        "llm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/ai.rs:build_diff_summary",
+      "type": "function",
+      "name": "build_diff_summary",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "lineRange": [
+        134,
+        190
+      ],
+      "summary": "Builds a truncated textual summary of staged changes (or unstaged changes as fallback) to feed into the commit-message prompt, capping output at MAX_DIFF_CHARS.",
+      "tags": [
+        "diff",
+        "summarization",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/ai.rs:generate_commit_message",
+      "type": "function",
+      "name": "generate_commit_message",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "lineRange": [
+        194,
+        352
+      ],
+      "summary": "Tauri command that generates a commit message by trying direct API-key providers, then CLI-agent stored keys, then Cursor's Connect RPC StreamChat API, returning the first successful LLM response.",
+      "tags": [
+        "tauri-command",
+        "entry-point",
+        "ai-integration",
+        "commit-message"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "type": "file",
+      "name": "branch.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "summary": "Implements git branch operations (list, create, delete, rename, checkout, default-branch detection) via CLI git commands, with retry logic for transient errors and an adapter from the git crate's BranchInfo into the API's GitBranchInfo type.",
+      "tags": [
+        "git",
+        "branch-management",
+        "cli-wrapper",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        13,
+        23
+      ],
+      "summary": "Converts the git crate's BranchInfo into the API's GitBranchInfo response type.",
+      "tags": [
+        "conversion",
+        "adapter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:list_branches",
+      "type": "function",
+      "name": "list_branches",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        31,
+        37
+      ],
+      "summary": "Lists all local and remote branches for a repository.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:create_branch",
+      "type": "function",
+      "name": "create_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        40,
+        63
+      ],
+      "summary": "Creates a new branch, optionally from a start point, and optionally checks it out immediately.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:delete_branch",
+      "type": "function",
+      "name": "delete_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        66,
+        76
+      ],
+      "summary": "Deletes a local branch, with an optional force flag for unmerged branches.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:rename_branch",
+      "type": "function",
+      "name": "rename_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        83,
+        105
+      ],
+      "summary": "Renames a branch, with an optional force flag to overwrite an existing branch of the target name.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:remote_tracking_branch",
+      "type": "function",
+      "name": "remote_tracking_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        112,
+        123
+      ],
+      "summary": "Resolves the remote-tracking ref name for a given local ref, if one exists.",
+      "tags": [
+        "git",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:checkout_ref",
+      "type": "function",
+      "name": "checkout_ref",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        138,
+        232
+      ],
+      "summary": "Checks out a branch, tag, or commit ref, handling detached HEAD and force-checkout scenarios.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_default_branch",
+      "type": "function",
+      "name": "get_default_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        235,
+        261
+      ],
+      "summary": "Determines the repository's default branch, preferring the given remote's HEAD reference.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_current_branch_info",
+      "type": "function",
+      "name": "get_current_branch_info",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        297,
+        307
+      ],
+      "summary": "Returns the current branch name along with ahead/behind counts relative to its upstream.",
+      "tags": [
+        "git",
+        "branch-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "type": "file",
+      "name": "commit.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "summary": "Implements git commit operations: listing commit history, creating commits with optional staging and ORGII co-author trailers, retrieving local (unpushed) commits, and amending the last commit.",
+      "tags": [
+        "git",
+        "commit-management",
+        "tauri-command",
+        "cli-wrapper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/commit.rs:append_orgii_coauthor_trailer",
+      "type": "function",
+      "name": "append_orgii_coauthor_trailer",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "lineRange": [
+        7,
+        22
+      ],
+      "summary": "Appends the ORGII bot co-author trailer to a commit message if enabled and not already present.",
+      "tags": [
+        "utility",
+        "commit-message"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/commit.rs:list_commits",
+      "type": "function",
+      "name": "list_commits",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "lineRange": [
+        35,
+        132
+      ],
+      "summary": "Lists commit history for a repository (or for a specific file) with pagination via limit/skip.",
+      "tags": [
+        "git",
+        "commit-history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/commit.rs:create_commit",
+      "type": "function",
+      "name": "create_commit",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "lineRange": [
+        135,
+        171
+      ],
+      "summary": "Creates a new commit, optionally staging all changes or a specific file list first, and appending the ORGII co-author trailer.",
+      "tags": [
+        "git",
+        "commit-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/commit.rs:get_local_commits",
+      "type": "function",
+      "name": "get_local_commits",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "lineRange": [
+        174,
+        268
+      ],
+      "summary": "Returns commits on the current branch that have not yet been pushed to its upstream remote.",
+      "tags": [
+        "git",
+        "commit-history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/commit.rs:amend_commit",
+      "type": "function",
+      "name": "amend_commit",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "lineRange": [
+        271,
+        305
+      ],
+      "summary": "Amends the most recent commit's message and/or staged files.",
+      "tags": [
+        "git",
+        "commit-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "type": "file",
+      "name": "cursor_chat.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "summary": "Reverse-engineered client for Cursor IDE's Connect-RPC StreamChat API, replicating Cursor's checksum generation, JWT extraction, and streaming envelope protocol to let users route AI commit-message generation through their existing Cursor subscription.",
+      "tags": [
+        "reverse-engineering",
+        "http-client",
+        "ai-integration",
+        "protocol-implementation"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements Cursor's proprietary Connect-RPC streaming envelope format ([flags][length][payload]) and its rolling-XOR checksum algorithm purely in Rust, without gRPC/protobuf dependencies."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_state_db_path",
+      "type": "function",
+      "name": "cursor_state_db_path",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        30,
+        41
+      ],
+      "summary": "Locates Cursor's SQLite state database path per OS (macOS/Windows/Linux).",
+      "tags": [
+        "utility",
+        "filesystem"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_client_version",
+      "type": "function",
+      "name": "cursor_client_version",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        52,
+        69
+      ],
+      "summary": "Reads and caches the installed Cursor app version (from Info.plist on macOS), with a hardcoded fallback.",
+      "tags": [
+        "utility",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_machine_ids",
+      "type": "function",
+      "name": "cursor_machine_ids",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        72,
+        91
+      ],
+      "summary": "Reads and caches Cursor's telemetry machine IDs from its local state database, used for API request headers.",
+      "tags": [
+        "utility",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:generate_checksum",
+      "type": "function",
+      "name": "generate_checksum",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        107,
+        131
+      ],
+      "summary": "Generates the x-cursor-checksum header value by rolling-XOR-encrypting a timestamp and combining it with the machine ID, replicating Cursor's JS implementation.",
+      "tags": [
+        "security",
+        "protocol-implementation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:extract_jwt",
+      "type": "function",
+      "name": "extract_jwt",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        152,
+        161
+      ],
+      "summary": "Extracts the JWT portion from a Cursor session token in the stored userId::jwtToken format.",
+      "tags": [
+        "utility",
+        "auth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:localtime_timezone",
+      "type": "function",
+      "name": "localtime_timezone",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        175,
+        188
+      ],
+      "summary": "Reads the system's IANA timezone identifier from the /etc/localtime symlink on macOS.",
+      "tags": [
+        "utility",
+        "filesystem"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_stream_chat",
+      "type": "function",
+      "name": "cursor_stream_chat",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        195,
+        286
+      ],
+      "summary": "Calls Cursor's Connect-RPC StreamChat API with a wrapped JSON envelope and Cursor-mimicking HTTP headers, returning the concatenated streamed response text.",
+      "tags": [
+        "http-client",
+        "ai-integration",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:parse_connect_stream",
+      "type": "function",
+      "name": "parse_connect_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "lineRange": [
+        297,
+        347
+      ],
+      "summary": "Parses Connect-RPC streaming response envelopes (data and trailer frames) and concatenates the text payloads, surfacing API errors from trailer frames.",
+      "tags": [
+        "protocol-implementation",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "type": "file",
+      "name": "blame.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "summary": "Retrieves git blame information for a file at a given ref using libgit2, returning per-line author, commit, and timestamp metadata.",
+      "tags": [
+        "git",
+        "blame",
+        "git2",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/blame.rs:get_blame",
+      "type": "function",
+      "name": "get_blame",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "lineRange": [
+        10,
+        149
+      ],
+      "summary": "Computes git blame for a file at an optional ref using libgit2's BlameOptions, mapping each line to its originating commit, author, and formatted timestamp.",
+      "tags": [
+        "git",
+        "blame",
+        "git2"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "type": "file",
+      "name": "commit.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "summary": "Retrieves the diff for a specific commit against its parent (or against an empty tree for root commits), supporting first-parent and selected-parent modes for merge commits.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/commit.rs:get_commit_diff",
+      "type": "function",
+      "name": "get_commit_diff",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "lineRange": [
+        14,
+        124
+      ],
+      "summary": "Computes the diff introduced by a commit relative to a chosen parent (first-parent, selected-parent, or root-commit mode), reusing the batch diff collector for file-level results.",
+      "tags": [
+        "git",
+        "diff",
+        "commit-diff"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "type": "file",
+      "name": "diff_ops.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "summary": "Core libgit2-based diff engine providing single-file, batch, staged, and rename-aware diff computation with structured hunks and lines, replacing shell-outs to the git CLI for reliable status detection.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "core-logic"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses git2's diff foreach callbacks (file/binary/hunk/line) collected into two visitor structs (SingleFileDiffCollector, DiffCollector) implementing a shared collection pattern for single-file vs. batch diffs."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:delta_status_to_string",
+      "type": "function",
+      "name": "delta_status_to_string",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        12,
+        26
+      ],
+      "summary": "Converts a git2::Delta status enum into its string representation (added/deleted/modified/etc.) used in API responses.",
+      "tags": [
+        "utility",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:read_file_content",
+      "type": "function",
+      "name": "read_file_content",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        121,
+        150
+      ],
+      "summary": "Reads a file's content from a git2 tree (or the working directory when tree is None), used to build old/new content for single-file diffs.",
+      "tags": [
+        "git",
+        "git2",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff",
+      "type": "function",
+      "name": "get_file_diff",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        153,
+        252
+      ],
+      "summary": "Computes a structured diff for a single file between two refs (or against the working tree/index), including full old/new content and hunks.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff_with_rename",
+      "type": "function",
+      "name": "get_file_diff_with_rename",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        258,
+        393
+      ],
+      "summary": "Like get_file_diff but also handles renamed files by diffing the original path in the old tree against the new path in the new tree.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "rename-detection"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:diff_single_file_in_repo",
+      "type": "function",
+      "name": "diff_single_file_in_repo",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        402,
+        512
+      ],
+      "summary": "Shared helper that diffs a single file between two tree OIDs (or an empty base) inside an already-open repository, used by both single-file and batch diff paths.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "internal"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_batch_file_diffs",
+      "type": "function",
+      "name": "get_batch_file_diffs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        520,
+        640
+      ],
+      "summary": "Computes diffs for multiple files in a single repository open, batching libgit2 diff operations for the file list view.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "batch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_diff",
+      "type": "function",
+      "name": "get_staged_diff",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        643,
+        670
+      ],
+      "summary": "Computes the diff between the working tree/index and HEAD, restricted to staged files, with a configurable context-line count.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "staging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_file_diff",
+      "type": "function",
+      "name": "get_staged_file_diff",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        673,
+        679
+      ],
+      "summary": "Computes the staged diff for a single file, delegating to get_file_diff with the STAGED sentinel ref.",
+      "tags": [
+        "git",
+        "diff",
+        "git2"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:collect_batch_diff",
+      "type": "function",
+      "name": "collect_batch_diff",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        798,
+        840
+      ],
+      "summary": "Iterates a git2::Diff via foreach callbacks, aggregating per-file stats and content into a BatchFileDiffResult list.",
+      "tags": [
+        "git",
+        "diff",
+        "git2",
+        "aggregation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:format_time",
+      "type": "function",
+      "name": "format_time",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        843,
+        855
+      ],
+      "summary": "Formats a git2 signature time into an ISO-8601-like timestamp string used across diff, blame, and commit responses.",
+      "tags": [
+        "utility",
+        "formatting",
+        "date"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:SingleFileDiffCollector",
+      "type": "class",
+      "name": "SingleFileDiffCollector",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        29,
+        32
+      ],
+      "summary": "Diff visitor that accumulates hunks and lines for a single file's diff foreach callbacks, producing a FileDiffResult with full content.",
+      "tags": [
+        "git2",
+        "visitor-pattern",
+        "diff"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:DiffCollector",
+      "type": "class",
+      "name": "DiffCollector",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "lineRange": [
+        682,
+        686
+      ],
+      "summary": "Diff visitor that accumulates per-file results across a multi-file diff foreach callback, used for staged/batch diff aggregation.",
+      "tags": [
+        "git2",
+        "visitor-pattern",
+        "diff",
+        "batch"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/ai.rs:build_system_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/ai.rs:default_model_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/ai.rs:provider_name_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/ai.rs:build_diff_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/ai.rs:generate_commit_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/ai.rs:generate_commit_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/ai.rs:build_diff_summary",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_diff",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/ai.rs:build_diff_summary",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/ai.rs:generate_commit_message",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_stream_chat",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:list_branches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:create_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:delete_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:rename_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:remote_tracking_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:checkout_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_default_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_current_branch_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:list_branches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:create_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:delete_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:rename_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:checkout_ref",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_default_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_current_branch_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:append_orgii_coauthor_trailer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:append_orgii_coauthor_trailer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:list_commits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:list_commits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:create_commit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:create_commit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:get_local_commits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:get_local_commits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:amend_commit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:amend_commit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/commit.rs:create_commit",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_all_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/commit.rs:create_commit",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_file",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_state_db_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_client_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_machine_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:generate_checksum",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:extract_jwt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:localtime_timezone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_stream_chat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:parse_connect_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/cursor_chat.rs:cursor_stream_chat",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/blame.rs:get_blame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/blame.rs:get_blame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/blame.rs:get_blame",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:format_time",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/commit.rs:get_commit_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/commit.rs:get_commit_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/commit.rs:get_commit_diff",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:collect_batch_diff",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/commit.rs:get_commit_diff",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:format_time",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:delta_status_to_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:read_file_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff_with_rename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:diff_single_file_in_repo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_batch_file_diffs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_file_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:collect_batch_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:format_time",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:SingleFileDiffCollector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:DiffCollector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:delta_status_to_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff_with_rename",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_batch_file_diffs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_staged_file_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:collect_batch_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:format_time",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff_with_rename",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_file_diff_with_rename",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_batch_file_diffs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs:get_batch_file_diffs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

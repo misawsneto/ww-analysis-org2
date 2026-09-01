@@ -1,0 +1,1357 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "type": "file",
+      "name": "worker.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "summary": "Background tokio worker that drains the sync outbox on three independent timers (push every 30s, merge every 30s, pull every 5min, plus a tail-end GC sweep), spawned once at app boot and living for the process lifetime.",
+      "tags": [
+        "service",
+        "sync",
+        "background-job",
+        "entry-point"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Declares worker::{bulk_import,merge,merge_helpers,pull,push} as child modules via `mod` (not `use`), so the cross-file call relationships to those cycle functions aren't visible as static imports."
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "type": "file",
+      "name": "bulk_import.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "summary": "Drives every import_progress row in pending/running state forward by up to max_pages_per_project pages per tick, walking the adapter's paginated history import and recording metrics for each page outcome.",
+      "tags": [
+        "background-job",
+        "sync",
+        "pagination"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "type": "file",
+      "name": "merge.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "summary": "Merge cycle: claims one merge_external outbox row at a time, runs the conflict resolver against local revision watermarks, and applies inbound creates/updates/deletes (including remote catalog/label/member backfill) to the local work item store.",
+      "tags": [
+        "background-job",
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "type": "file",
+      "name": "merge_helpers.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "summary": "Helper functions that translate a conflict resolver's adopted-fields decision into a WorkItemPartialUpdate, mapping typed field-map entries to the local work item field names the write surface understands.",
+      "tags": [
+        "utility",
+        "sync",
+        "conflict-resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "type": "file",
+      "name": "pull.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "summary": "Pull cycle: for every project with an attached adapter, fetches external changes since the last cursor (skipping projects with a recent webhook), appends merge_external outbox rows per change, and advances the sync cursor.",
+      "tags": [
+        "background-job",
+        "sync",
+        "polling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "type": "file",
+      "name": "push.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "summary": "Push cycle: drains up to max_pushes pending outbox rows, dispatches each to its bound SyncAdapter, and persists success or failure-with-backoff, emitting one sync-status event per processed entry.",
+      "tags": [
+        "background-job",
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/worker.rs:LoopConfig",
+      "type": "class",
+      "name": "LoopConfig",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        144,
+        152
+      ],
+      "summary": "Tunable intervals and per-tick caps for the worker's push/pull/merge/import cycles.",
+      "tags": [
+        "data-model",
+        "sync",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:start_worker",
+      "type": "function",
+      "name": "start_worker",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        110,
+        122
+      ],
+      "summary": "Initializes the event emitter, recovers orphaned in-flight rows, and spawns the singleton worker loop on the Tauri async runtime.",
+      "tags": [
+        "background-job",
+        "entry-point",
+        "tauri"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:recover_in_flight_orphans",
+      "type": "function",
+      "name": "recover_in_flight_orphans",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        129,
+        139
+      ],
+      "summary": "On startup, resets any rows stuck in_flight from an unclean shutdown back to pending.",
+      "tags": [
+        "background-job",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:run_loop",
+      "type": "function",
+      "name": "run_loop",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        168,
+        199
+      ],
+      "summary": "The worker's main tokio loop: runs the push cycle plus GC every tick, and the merge/pull/import cycles on their own longer intervals.",
+      "tags": [
+        "background-job",
+        "scheduler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:gc_cycle",
+      "type": "function",
+      "name": "gc_cycle",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        204,
+        218
+      ],
+      "summary": "Tail-end garbage collection of succeeded outbox rows older than the retention window, run once per push tick.",
+      "tags": [
+        "background-job",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:finalize_success",
+      "type": "function",
+      "name": "finalize_success",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        220,
+        227
+      ],
+      "summary": "Marks an outbox row succeeded after a push/merge attempt.",
+      "tags": [
+        "background-job",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:finalize_failure",
+      "type": "function",
+      "name": "finalize_failure",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        234,
+        250
+      ],
+      "summary": "Marks an outbox row failed, applying backoff or immediate abandonment for non-retryable errors.",
+      "tags": [
+        "background-job",
+        "database",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:now_ms",
+      "type": "function",
+      "name": "now_ms",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        255,
+        260
+      ],
+      "summary": "Returns the current time in epoch milliseconds.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker.rs:now_ms_pub",
+      "type": "function",
+      "name": "now_ms_pub",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker.rs",
+      "lineRange": [
+        265,
+        267
+      ],
+      "summary": "Public wrapper around now_ms for use by sibling worker submodules.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:ImportPageOutcome",
+      "type": "class",
+      "name": "ImportPageOutcome",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "lineRange": [
+        60,
+        69
+      ],
+      "summary": "Outcome of fetching one import page: Advanced, Completed, or Stopped.",
+      "tags": [
+        "type-definition",
+        "background-job"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:import_cycle",
+      "type": "function",
+      "name": "import_cycle",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "lineRange": [
+        25,
+        57
+      ],
+      "summary": "Drives every runnable import_progress row forward by up to max_pages_per_project pages, skipping/failing rows whose adapter doesn't support import.",
+      "tags": [
+        "background-job",
+        "pagination",
+        "scheduler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:import_one_page",
+      "type": "function",
+      "name": "import_one_page",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "lineRange": [
+        71,
+        308
+      ],
+      "summary": "Fetches and applies a single import page for one project/adapter: calls the adapter, upserts imported rows as local outbox creates, advances the cursor, and records a metric for the page outcome.",
+      "tags": [
+        "background-job",
+        "pagination",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:merge_cycle",
+      "type": "function",
+      "name": "merge_cycle",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        29,
+        38
+      ],
+      "summary": "Processes up to max_merges pending merge_external outbox rows, emitting a sync-status event per processed entry.",
+      "tags": [
+        "background-job",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:claim_one_merge",
+      "type": "function",
+      "name": "claim_one_merge",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        42,
+        49
+      ],
+      "summary": "Atomically claims one merge_external outbox row.",
+      "tags": [
+        "background-job",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:process_merge_entry",
+      "type": "function",
+      "name": "process_merge_entry",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        51,
+        62
+      ],
+      "summary": "Processes one merge entry and finalizes it as succeeded or failed-with-backoff.",
+      "tags": [
+        "background-job",
+        "conflict-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:process_merge_entry_inner",
+      "type": "function",
+      "name": "process_merge_entry_inner",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        64,
+        327
+      ],
+      "summary": "Core merge logic: routes a merge_external entry to inbound-create, remote-delete, or field-conflict-resolution handling based on the local item's binding state and the resolver's decision.",
+      "tags": [
+        "conflict-resolution",
+        "background-job",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:apply_inbound_create",
+      "type": "function",
+      "name": "apply_inbound_create",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        342,
+        387
+      ],
+      "summary": "Creates a local work item from an unbound external change, backfilling revision watermarks so future conflict resolution treats the fields as remote-authored.",
+      "tags": [
+        "conflict-resolution",
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:apply_remote_delete",
+      "type": "function",
+      "name": "apply_remote_delete",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        401,
+        441
+      ],
+      "summary": "Deletes the local work item corresponding to a remote delete change, when one is bound.",
+      "tags": [
+        "conflict-resolution",
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:build_creator_backfill_update",
+      "type": "function",
+      "name": "build_creator_backfill_update",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        449,
+        474
+      ],
+      "summary": "Builds a partial update that stamps the local item with the creator/assignee identity inferred from the inbound remote fields.",
+      "tags": [
+        "conflict-resolution",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:build_inbound_create_frontmatter",
+      "type": "function",
+      "name": "build_inbound_create_frontmatter",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        476,
+        535
+      ],
+      "summary": "Builds the WorkItemFrontmatter for a brand-new local item created from an inbound remote change.",
+      "tags": [
+        "conflict-resolution",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:upsert_remote_labels",
+      "type": "function",
+      "name": "upsert_remote_labels",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        546,
+        574
+      ],
+      "summary": "Upserts labels referenced by an inbound remote change into the project's local label catalog.",
+      "tags": [
+        "conflict-resolution",
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:upsert_remote_members",
+      "type": "function",
+      "name": "upsert_remote_members",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        576,
+        619
+      ],
+      "summary": "Upserts members referenced by an inbound remote change into the project's local member catalog.",
+      "tags": [
+        "conflict-resolution",
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:build_inbound_create_revisions",
+      "type": "function",
+      "name": "build_inbound_create_revisions",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "lineRange": [
+        637,
+        670
+      ],
+      "summary": "Builds the per-field revision-watermark stamps for a freshly created local item so later local edits are correctly recognized as newer than the remote import.",
+      "tags": [
+        "conflict-resolution",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:build_partial_update",
+      "type": "function",
+      "name": "build_partial_update",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "lineRange": [
+        15,
+        17
+      ],
+      "summary": "Translates a resolver decision's adopted fields into a WorkItemPartialUpdate.",
+      "tags": [
+        "conflict-resolution",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:partial_update_from_map",
+      "type": "function",
+      "name": "partial_update_from_map",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "lineRange": [
+        24,
+        28
+      ],
+      "summary": "Builds a WorkItemPartialUpdate from a plain field-name-to-value map.",
+      "tags": [
+        "conflict-resolution",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:partial_update_from_iter",
+      "type": "function",
+      "name": "partial_update_from_iter",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "lineRange": [
+        30,
+        98
+      ],
+      "summary": "Core field-mapping loop: matches each local field name to its WorkItemPartialUpdate slot; unknown field names are silently dropped as not yet writable.",
+      "tags": [
+        "conflict-resolution",
+        "utility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:local_values_for_field_map",
+      "type": "function",
+      "name": "local_values_for_field_map",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "lineRange": [
+        107,
+        143
+      ],
+      "summary": "Reads the local values for every field declared in a FieldMap so the resolver can compare them against inbound remote values.",
+      "tags": [
+        "conflict-resolution",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_cycle",
+      "type": "function",
+      "name": "pull_cycle",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "lineRange": [
+        14,
+        59
+      ],
+      "summary": "For every project with an attached adapter, fetches external changes since the last cursor and queues them for the merge cycle, skipping projects with a recent webhook delivery.",
+      "tags": [
+        "background-job",
+        "polling",
+        "scheduler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_one_project_by_slug",
+      "type": "function",
+      "name": "pull_one_project_by_slug",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "lineRange": [
+        64,
+        86
+      ],
+      "summary": "Looks up a project's binding by slug and runs one pull for it; used by the manual force-pull command.",
+      "tags": [
+        "background-job",
+        "polling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_one_project_inner",
+      "type": "function",
+      "name": "pull_one_project_inner",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "lineRange": [
+        105,
+        255
+      ],
+      "summary": "Fetches external changes for one project from its adapter, appends merge_external outbox rows, advances the cursor, and records pull metrics.",
+      "tags": [
+        "background-job",
+        "polling",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:push_cycle",
+      "type": "function",
+      "name": "push_cycle",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "lineRange": [
+        18,
+        27
+      ],
+      "summary": "Drains up to max_pushes pending outbox rows, dispatching each to process_entry.",
+      "tags": [
+        "background-job",
+        "scheduler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:process_entry",
+      "type": "function",
+      "name": "process_entry",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "lineRange": [
+        46,
+        58
+      ],
+      "summary": "Processes one outbox entry and finalizes it as succeeded or failed-with-backoff.",
+      "tags": [
+        "background-job"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:process_entry_inner",
+      "type": "function",
+      "name": "process_entry_inner",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "lineRange": [
+        63,
+        156
+      ],
+      "summary": "Dispatches one outbox entry to its bound SyncAdapter's push method, emits a status event, and records a push metric.",
+      "tags": [
+        "background-job",
+        "database"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/metrics.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/io/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/types/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/types/work_items.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/types/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/conflict.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/metrics.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/worker.rs:LoopConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:start_worker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:recover_in_flight_orphans",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:run_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:gc_cycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:finalize_success",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:finalize_failure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:now_ms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:now_ms_pub",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:ImportPageOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:import_cycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:import_one_page",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:merge_cycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:claim_one_merge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:process_merge_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:process_merge_entry_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:apply_inbound_create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:apply_remote_delete",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:build_creator_backfill_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:build_inbound_create_frontmatter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:upsert_remote_labels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:upsert_remote_members",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:build_inbound_create_revisions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:build_partial_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:partial_update_from_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:partial_update_from_iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:local_values_for_field_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_cycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_one_project_by_slug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_one_project_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:push_cycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:process_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:process_entry_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/worker.rs:LoopConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:start_worker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:finalize_success",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:finalize_failure",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker.rs:now_ms_pub",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:import_cycle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:merge_cycle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:build_partial_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:partial_update_from_map",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:local_values_for_field_map",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_cycle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_one_project_by_slug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:push_cycle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs:import_cycle",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge.rs:merge_cycle",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/pull.rs:pull_cycle",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/push.rs:push_cycle",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:gc_succeeded",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_succeeded",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_failed_with_backoff",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:list_runnable",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_failed",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:read_status",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/metrics.rs:record",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/metrics.rs:record_with_note",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/bulk_import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_bound_projects",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_sync_cursor",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:emit_status",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/metrics.rs:record",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/metrics.rs:record_with_note",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_pending",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:emit_status",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/metrics.rs:record",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/metrics.rs:record_with_note",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_merge_external",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:emit_status",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:build_partial_update",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/merge_helpers.rs:local_values_for_field_map",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/push.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/worker/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/pull.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/worker/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/merge.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/worker/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/worker/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

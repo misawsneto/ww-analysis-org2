@@ -1,0 +1,424 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-editor.js",
+      "type": "file",
+      "name": "inspector-editor.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-editor.js",
+      "summary": "Implements the inspector's DOM editor CRUD operations (insert/update/delete elements, attribute edits) exposed on window.__ORGII_*, backed by an undo/redo mutation-history stack shared with the other inspector modules.",
+      "tags": [
+        "injected-script",
+        "dom-editing",
+        "undo-redo",
+        "browser-devtools"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Depends on globals defined in inspector-core.js, inspector-element-info.js, and inspector-dom-tree.js per its header comment; its CRUD entry points are anonymous functions assigned to window.__ORGII_* so the extractor only picked up the top-level recordMutation helper."
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-element-info.js",
+      "type": "file",
+      "name": "inspector-element-info.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-element-info.js",
+      "summary": "Extracts detailed element metadata (bounding rect, computed style, a curated allowlist of attributes) for display in the inspector's element-info panel.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "browser-devtools"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-element-info.js:getElementInfo",
+      "type": "function",
+      "name": "getElementInfo",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-element-info.js",
+      "lineRange": [
+        5,
+        84
+      ],
+      "summary": "Builds a detailed info object (bounding rect, computed style, key attributes such as id/class/href/aria-label) for a given DOM element, used to populate the inspector's element-info panel.",
+      "tags": [
+        "dom",
+        "utility",
+        "injected-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-mode.js",
+      "type": "file",
+      "name": "inspector-mode.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-mode.js",
+      "summary": "Implements enable/disable/toggle of the page's inspect mode, wiring capture-phase listeners for mouse/keyboard events and blocking default browser actions (context menu, drag-start, submit, etc.) while active.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "event-handling",
+        "browser-devtools"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-multi-select.js",
+      "type": "file",
+      "name": "inspector-multi-select.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-multi-select.js",
+      "summary": "Manages multi-element selection for the inspector \u2014 creating, positioning, and tracking bounding-box overlays for every simultaneously selected element.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "overlay",
+        "browser-devtools"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Depends on recordMutation from inspector-editor.js per its header comment, extending the shared undo/redo history to multi-select operations."
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-multi-select.js:createMultiSelectOverlay",
+      "type": "function",
+      "name": "createMultiSelectOverlay",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-multi-select.js",
+      "lineRange": [
+        8,
+        22
+      ],
+      "summary": "Creates and appends a purple bounding-box overlay div used to visually mark one multi-selected element.",
+      "tags": [
+        "dom",
+        "overlay",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "type": "file",
+      "name": "inspector-source-loc.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "summary": "Detects the original source-code location (file/line/component) of a DOM element via multiple strategies \u2014 code-inspector data attributes, React Fiber internals, styled-components, Vue, and Svelte component metadata \u2014 powering \"jump to source\" in the inspector.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "source-mapping",
+        "browser-devtools"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getSourceLocation",
+      "type": "function",
+      "name": "getSourceLocation",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        5,
+        79
+      ],
+      "summary": "Orchestrates source-location detection for an element by trying each detection method (data-insp-path, debug attributes, React fiber, styled-components, Vue, Svelte) in priority order.",
+      "tags": [
+        "dom",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getDebugAttributeSource",
+      "type": "function",
+      "name": "getDebugAttributeSource",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        82,
+        132
+      ],
+      "summary": "Reads framework-agnostic debug data attributes on an element to resolve its source file/line when present.",
+      "tags": [
+        "dom",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getReactFiberSource",
+      "type": "function",
+      "name": "getReactFiberSource",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        135,
+        262
+      ],
+      "summary": "Walks a DOM element's React Fiber tree to recover the owning component's original source file, line, and component name.",
+      "tags": [
+        "dom",
+        "react",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:tryExtractSourceFromFunction",
+      "type": "function",
+      "name": "tryExtractSourceFromFunction",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        265,
+        325
+      ],
+      "summary": "Parses a component function's toString output as a fallback to locate its source when Fiber debug info is unavailable.",
+      "tags": [
+        "dom",
+        "react",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getStyledComponentSource",
+      "type": "function",
+      "name": "getStyledComponentSource",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        328,
+        358
+      ],
+      "summary": "Extracts source-location metadata injected by styled-components' babel plugin.",
+      "tags": [
+        "dom",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getVueComponentSource",
+      "type": "function",
+      "name": "getVueComponentSource",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        361,
+        397
+      ],
+      "summary": "Recovers source-location metadata from a Vue component instance attached to the element.",
+      "tags": [
+        "dom",
+        "vue",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getSvelteComponentSource",
+      "type": "function",
+      "name": "getSvelteComponentSource",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "lineRange": [
+        400,
+        438
+      ],
+      "summary": "Recovers source-location metadata from a Svelte component instance attached to the element.",
+      "tags": [
+        "dom",
+        "svelte",
+        "source-mapping",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/page_agent/page_agent.js",
+      "type": "file",
+      "name": "page_agent.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/page_agent/page_agent.js",
+      "summary": "Injected page-automation agent exposing window.__PAGE_AGENT__: extracts interactive DOM elements with highlight labels, dispatches synthetic click/input/scroll events, and shows a user-takeover mask to block interaction during automated runs in Tauri inline webviews.",
+      "tags": [
+        "injected-script",
+        "dom-automation",
+        "browser-automation",
+        "tauri-webview"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Wrapped in a single IIFE with a double-initialization guard (`if (window.__PAGE_AGENT__) return;`), so all its internals are function-scoped and invisible to the tree-sitter top-level function extractor."
+    },
+    {
+      "id": "config:src-tauri/crates/container/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/container/Cargo.toml",
+      "summary": "Cargo manifest for the container crate: local Docker container inspection and lifecycle Tauri commands (via bollard) for the Launchpad feature, depending on app_platform.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "containerization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/container/src/types_tests.rs",
+      "type": "file",
+      "name": "types_tests.rs",
+      "filePath": "src-tauri/crates/container/src/types_tests.rs",
+      "summary": "Unit test verifying that every known Docker container-state string is mapped correctly to the crate's internal container-state type.",
+      "tags": [
+        "test",
+        "rust",
+        "containerization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/container/src/types_tests.rs:maps_known_container_states",
+      "type": "function",
+      "name": "maps_known_container_states",
+      "filePath": "src-tauri/crates/container/src/types_tests.rs",
+      "lineRange": [
+        4,
+        21
+      ],
+      "summary": "Asserts that each known Docker container-state string parses to the expected internal state value.",
+      "tags": [
+        "test",
+        "containerization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/database/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/database/Cargo.toml",
+      "summary": "Cargo manifest for the database leaf crate: SQLite connection plumbing (rusqlite, WAL mode, PRAGMA tuning) with a registration-based schema-init dispatcher; intentionally has zero Tauri dependency.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src-tauri/crates/database/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src-tauri/crates/database/README.md",
+      "summary": "Documents the database crate's shared SQLite connection pool (WAL mode, PRAGMA tuning) and its registration-based schema-initialization dispatcher, listing the ten-plus consumer modules and the ordered list of domain table initializers that `app::run()` invokes at startup.",
+      "tags": [
+        "documentation",
+        "database",
+        "architecture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/db-browser/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/db-browser/Cargo.toml",
+      "summary": "Cargo manifest for db_browser: ~12 Tauri commands for opening and querying arbitrary SQLite files from the WorkStation code-editor panel, replacing the older WASM sql.js frontend layer.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/db-clients/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/db-clients/Cargo.toml",
+      "summary": "Cargo manifest for db_clients: remote PostgreSQL/MySQL client Tauri commands (connect/query/execute/list tables) via sqlx, split into its own crate with postgres/mysql cargo features so sqlx's compile-heavy driver stack (top-15 fattest crates in the workspace) doesn't get pulled into the main app build.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "database"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-element-info.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-element-info.js:getElementInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-multi-select.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-multi-select.js:createMultiSelectOverlay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getSourceLocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getDebugAttributeSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getReactFiberSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:tryExtractSourceFromFunction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getStyledComponentSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getVueComponentSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-source-loc.js:getSvelteComponentSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/container/src/types_tests.rs",
+      "target": "function:src-tauri/crates/container/src/types_tests.rs:maps_known_container_states",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "config:src-tauri/crates/container/Cargo.toml",
+      "target": "file:src-tauri/crates/container/src/types_tests.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

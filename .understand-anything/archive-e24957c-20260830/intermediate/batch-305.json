@@ -1,0 +1,149 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/ui/globalTabsActions.ts",
+      "type": "file",
+      "name": "globalTabsActions.ts",
+      "filePath": "src/store/ui/globalTabsActions.ts",
+      "summary": "Write-only Jotai action atoms for global tab state, providing add/remove/set-active/update operations for browser tabs, terminal sessions, editor repos, document files, workspace sessions, and shortcuts, all mutating the shared navigationSidebarTabsAtom with FIFO eviction per tab type.",
+      "tags": ["state-management", "jotai", "action-atom", "tab-management", "tauri-ipc"],
+      "complexity": "complex",
+      "languageNotes": "Uses Jotai write-only atoms (atom(null, (get, set, ...) => ...)) as action creators, a common alternative to Redux-style reducers/dispatchers; removeTerminalSessionAtom additionally invokes the Tauri backend (close_pty) as a side effect."
+    },
+    {
+      "id": "file:src/store/ui/globalTabsTypes.ts",
+      "type": "file",
+      "name": "globalTabsTypes.ts",
+      "filePath": "src/store/ui/globalTabsTypes.ts",
+      "summary": "Shared TypeScript interfaces (BrowserTab, TerminalSession, EditorRepo, DocumentFile, WorkspaceSession, ShortcutItem, GlobalTabsState) plus per-tab-type max-size constants and utility functions (favicon URL, site name derivation, FIFO eviction) used across the global tabs state module.",
+      "tags": ["type-definition", "utility", "data-model", "constants"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/ui/navigationSidebarTabsAtom.ts",
+      "type": "file",
+      "name": "navigationSidebarTabsAtom.ts",
+      "filePath": "src/store/ui/navigationSidebarTabsAtom.ts",
+      "summary": "Core Jotai atom holding the navigation sidebar's persisted tab state (atomWithStorage under the 'orgii-global-tabs' key) plus read-only derived atoms for the active browser tab, terminal session, editor repo, document file, workspace session, shortcut, and aggregate tab counts.",
+      "tags": ["state-management", "jotai", "derived-atom", "persistence"],
+      "complexity": "moderate",
+      "languageNotes": "Deliberately does not re-export the write action atoms from globalTabsActions.ts to avoid a circular import, per the file's header comment."
+    },
+    {
+      "id": "function:src/store/ui/globalTabsTypes.ts:getFaviconUrl",
+      "type": "function",
+      "name": "getFaviconUrl",
+      "filePath": "src/store/ui/globalTabsTypes.ts",
+      "lineRange": [74, 83],
+      "summary": "Builds a favicon URL for a given site URL using Google's public favicon service, returning undefined for missing or unparseable URLs.",
+      "tags": ["utility", "url-parsing", "favicon"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/globalTabsTypes.ts:getSiteNameFromUrl",
+      "type": "function",
+      "name": "getSiteNameFromUrl",
+      "filePath": "src/store/ui/globalTabsTypes.ts",
+      "lineRange": [88, 103],
+      "summary": "Derives a human-readable site name (e.g., 'google.com' -> 'Google') from a URL's hostname, falling back to 'New Tab' when the URL is missing or invalid.",
+      "tags": ["utility", "url-parsing", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/globalTabsTypes.ts:evictOldest",
+      "type": "function",
+      "name": "evictOldest",
+      "filePath": "src/store/ui/globalTabsTypes.ts",
+      "lineRange": [114, 125],
+      "summary": "Generic FIFO eviction helper that trims an array of timestamped, activatable items down to maxSize, always preserving active items and evicting the oldest inactive ones first.",
+      "tags": ["utility", "generic", "eviction", "array-processing"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/ui/globalTabsActions.ts",
+      "target": "file:src/store/ui/globalTabsTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/globalTabsActions.ts",
+      "target": "file:src/store/ui/navigationSidebarTabsAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/navigationSidebarTabsAtom.ts",
+      "target": "file:src/store/ui/globalTabsTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/globalTabsTypes.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:getFaviconUrl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/ui/globalTabsTypes.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:getSiteNameFromUrl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/ui/globalTabsTypes.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:evictOldest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/ui/globalTabsTypes.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:getFaviconUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/globalTabsTypes.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:getSiteNameFromUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/globalTabsTypes.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:evictOldest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/globalTabsActions.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:evictOldest",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/navigationSidebarTabsAtom.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:getFaviconUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/navigationSidebarTabsAtom.ts",
+      "target": "function:src/store/ui/globalTabsTypes.ts:getSiteNameFromUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

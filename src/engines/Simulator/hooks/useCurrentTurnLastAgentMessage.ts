@@ -1,0 +1,133 @@
+/**
+ * useCurrentTurnLastAgentMessage (simulator)
+ *
+ * Returns the most recent agent text message of the CURRENT simulator
+ * turn — i.e. the latest agent reply that is at-or-before the replay
+ * cursor and still inside the turn the cursor sits in. A "turn" starts
+ * at a user message and ends just before the next user message; if there
+ * is no user message yet, the whole timeline up to the cursor counts as
+ * the current turn.
+ *
+ * Used by the floating caption bar above the SimulatorStatusBar to keep
+ * the latest agent reply visible while the user free-browses tool calls
+ * between two user messages.
+ *
+ * Returns `null` when the timeline is empty or the current turn has no
+ * agent text message yet.
+ */
+import { useAtomValue } from "jotai";
+
+import {
+  currentSimulatorEventIndexAtom,
+  effectiveSimulatorEventIdsAtom,
+  simulatorEventPreviewByIdAtom,
+} from "@src/engines/SessionCore";
+import type {
+  SessionEvent,
+  SimulatorEventPreview,
+} from "@src/engines/SessionCore";
+import { simulatorEventsAtom } from "@src/engines/SessionCore/derived/simulatorEvents";
+
+export interface CurrentTurnLastAgentMessage {
+  text: string;
+  source: "assistant" | "user";
+  eventKind: "message" | "thought";
+  /** Event id of the source message, useful for keying renderers. */
+  eventId: string;
+  /** Whether the replay cursor is currently on this exact message event. */
+  isCurrentEvent: boolean;
+}
+
+function isAssistantMessagePreview(preview: SimulatorEventPreview): boolean {
+  return (
+    preview.actionType === "assistant" ||
+    preview.functionName === "assistant_message" ||
+    preview.functionName === "agent_message" ||
+    preview.functionName === "message"
+  );
+}
+
+function safeString(value: unknown): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+function getThinkingText(event: SessionEvent | undefined): string | undefined {
+  if (!event || event.extracted?.kind !== "thinking") return undefined;
+  return event.extracted.content?.trim() || undefined;
+}
+
+function getMessageOrThinkingCaption(
+  preview: SimulatorEventPreview,
+  event: SessionEvent | undefined
+): { text: string; eventKind: "message" | "thought" } | undefined {
+  if (preview.displayVariant === "thinking") {
+    const text =
+      getThinkingText(event) ||
+      safeString(event?.result?.thought)?.trim() ||
+      safeString(event?.result?.content)?.trim() ||
+      safeString(event?.result?.observation)?.trim() ||
+      preview.displayText?.trim() ||
+      undefined;
+    return text ? { text, eventKind: "thought" } : undefined;
+  }
+
+  if (!isAssistantMessagePreview(preview)) return undefined;
+  const text = preview.displayText?.trim() || undefined;
+  return text ? { text, eventKind: "message" } : undefined;
+}
+
+export function useCurrentTurnLastAgentMessage(): CurrentTurnLastAgentMessage | null {
+  const eventIds = useAtomValue(effectiveSimulatorEventIdsAtom);
+  const previewById = useAtomValue(simulatorEventPreviewByIdAtom);
+  const simulatorEvents = useAtomValue(simulatorEventsAtom);
+  const currentIndex = useAtomValue(currentSimulatorEventIndexAtom);
+  const eventById = new Map(simulatorEvents.map((event) => [event.id, event]));
+
+  if (eventIds.length === 0) return null;
+
+  const cursor =
+    currentIndex < 0 || currentIndex >= eventIds.length
+      ? eventIds.length - 1
+      : currentIndex;
+
+  const currentPreview = previewById[eventIds[cursor]];
+  const currentText = currentPreview?.displayText?.trim();
+  if (currentPreview?.source === "user" && currentText) {
+    return {
+      text: currentText,
+      source: "user",
+      eventKind: "message",
+      eventId: currentPreview.id,
+      isCurrentEvent: true,
+    };
+  }
+
+  let turnStart = 0;
+  for (let index = cursor; index >= 0; index--) {
+    const preview = previewById[eventIds[index]];
+    if (preview?.source === "user" && preview.displayText) {
+      turnStart = index;
+      break;
+    }
+  }
+
+  for (let index = cursor; index >= turnStart; index--) {
+    const eventId = eventIds[index];
+    const preview = previewById[eventId];
+    if (!preview) continue;
+    const caption = getMessageOrThinkingCaption(
+      preview,
+      eventById.get(eventId)
+    );
+    if (!caption) continue;
+    return {
+      text: caption.text,
+      source: "assistant",
+      eventKind: caption.eventKind,
+      eventId: preview.id,
+      isCurrentEvent: index === cursor,
+    };
+  }
+
+  return null;
+}

@@ -1,0 +1,1555 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "type": "file",
+      "name": "prefetch.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "summary": "Implements TurnPrefetchHook, which kicks off skill-listing and memory-surfacing lookups concurrently at the start of a turn so their results are ready by the time the prompt is built, hiding their latency.",
+      "tags": [
+        "prefetch",
+        "async-task",
+        "latency-optimization",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        53,
+        71
+      ],
+      "summary": "Constructs a TurnPrefetchHook wrapping already-spawned skill and memory prefetch tasks along with any pre-known memory surface state.",
+      "tags": [
+        "constructor",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:test_with_delayed_outputs",
+      "type": "function",
+      "name": "test_with_delayed_outputs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        74,
+        91
+      ],
+      "summary": "Test helper that builds a TurnPrefetchHook whose prefetch tasks resolve after an artificial delay, used to exercise prefetch-timing edge cases.",
+      "tags": [
+        "test",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:abort_pending",
+      "type": "function",
+      "name": "abort_pending",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        93,
+        104
+      ],
+      "summary": "Aborts any still-running skill/memory prefetch tasks, used when a turn is cancelled before prefetch completes.",
+      "tags": [
+        "lifecycle",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:collect_skill",
+      "type": "function",
+      "name": "collect_skill",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        106,
+        184
+      ],
+      "summary": "Awaits, up to a max wait, the skill-listing prefetch task and returns its rendered section for injection into the prompt.",
+      "tags": [
+        "async-task",
+        "prefetch",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:collect_memory",
+      "type": "function",
+      "name": "collect_memory",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        186,
+        250
+      ],
+      "summary": "Awaits the memory-surfacing prefetch task and returns its rendered section plus the paths it surfaced.",
+      "tags": [
+        "async-task",
+        "prefetch",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:before_llm_iteration",
+      "type": "function",
+      "name": "before_llm_iteration",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        261,
+        276
+      ],
+      "summary": "Hook invoked before each LLM iteration to inject any prefetch results that have become available since the turn started.",
+      "tags": [
+        "hook-registry",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_turn_prefetch",
+      "type": "function",
+      "name": "start_turn_prefetch",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        280,
+        304
+      ],
+      "summary": "Kicks off the skill and memory prefetch tasks concurrently at the start of a turn so their results are ready, or nearly ready, by the time the prompt is built.",
+      "tags": [
+        "async-task",
+        "prefetch",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_skill_prefetch_task",
+      "type": "function",
+      "name": "start_skill_prefetch_task",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        306,
+        363
+      ],
+      "summary": "Spawns the async task that looks up and renders the relevant skill listing for the incoming message.",
+      "tags": [
+        "async-task",
+        "prefetch",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_memory_prefetch_task",
+      "type": "function",
+      "name": "start_memory_prefetch_task",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        365,
+        435
+      ],
+      "summary": "Spawns the async task that surfaces relevant memory entries for the incoming message and conversation history.",
+      "tags": [
+        "async-task",
+        "prefetch",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:prepend_to_last_user_message",
+      "type": "function",
+      "name": "prepend_to_last_user_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        438,
+        457
+      ],
+      "summary": "Prepends a prefix string onto the content of the most recent user message in the history.",
+      "tags": [
+        "helper",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:insert_system_after_existing_system",
+      "type": "function",
+      "name": "insert_system_after_existing_system",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        459,
+        472
+      ],
+      "summary": "Inserts a new system message immediately after the existing leading system message(s) in the history.",
+      "tags": [
+        "helper",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:TurnPrefetchHook",
+      "type": "class",
+      "name": "TurnPrefetchHook",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "lineRange": [
+        47,
+        50
+      ],
+      "summary": "Owns the concurrently-running skill and memory prefetch tasks for a turn and exposes hooks to collect their results or abort them mid-flight.",
+      "tags": [
+        "state-management",
+        "prefetch",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "type": "file",
+      "name": "prompt.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "summary": "Assembles the static system prompt and per-turn dynamic prompt sections \u2014 prefetched memory, skills, IDE/presence context and the current user message \u2014 for a session's turn.",
+      "tags": [
+        "prompt-engineering",
+        "system-prompt",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:render_linked_work_item_context",
+      "type": "function",
+      "name": "render_linked_work_item_context",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "lineRange": [
+        22,
+        40
+      ],
+      "summary": "Renders a short context block describing a linked work item or ticket for inclusion in the system prompt.",
+      "tags": [
+        "rendering",
+        "prompt-engineering",
+        "system-prompt",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:build_system_prompt",
+      "type": "function",
+      "name": "build_system_prompt",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "lineRange": [
+        49,
+        99
+      ],
+      "summary": "Assembles the full static system prompt for a session from its configured identity, rules, tools and workspace sections.",
+      "tags": [
+        "builder",
+        "prompt-engineering",
+        "system-prompt",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:build_dynamic_sections",
+      "type": "function",
+      "name": "build_dynamic_sections",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "lineRange": [
+        107,
+        395
+      ],
+      "summary": "Assembles the per-turn dynamic prompt sections, including prefetched memory, skills, IDE/presence context and the current user message, appended after the static system prompt.",
+      "tags": [
+        "builder",
+        "prompt-engineering",
+        "system-prompt",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:rounds_since_tool",
+      "type": "function",
+      "name": "rounds_since_tool",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "lineRange": [
+        402,
+        422
+      ],
+      "summary": "Computes how many turn rounds have elapsed since a given tool was last used, used to drive periodic reminder injections.",
+      "tags": [
+        "query",
+        "prompt-engineering",
+        "system-prompt",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "type": "file",
+      "name": "streaming.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "summary": "Defines StreamingError/StreamingErrorCode for classifying provider streaming failures, and broadcasts agent-complete, agent-error and agent-warning events to the frontend.",
+      "tags": [
+        "streaming",
+        "error-handling",
+        "broadcast",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        69,
+        76
+      ],
+      "summary": "Constructs a StreamingError with a message and a classified StreamingErrorCode.",
+      "tags": [
+        "constructor",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:with_details",
+      "type": "function",
+      "name": "with_details",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        79,
+        82
+      ],
+      "summary": "Attaches extra diagnostic details to a StreamingError, returning the enriched error.",
+      "tags": [
+        "builder",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:is_retryable",
+      "type": "function",
+      "name": "is_retryable",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        92,
+        100
+      ],
+      "summary": "Reports whether this class of streaming error is safe to automatically retry.",
+      "tags": [
+        "predicate",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:wire_value",
+      "type": "function",
+      "name": "wire_value",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        102,
+        118
+      ],
+      "summary": "Returns the stable string identifier for a StreamingErrorCode sent to the frontend over the wire.",
+      "tags": [
+        "query",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:classify_streaming_error_message",
+      "type": "function",
+      "name": "classify_streaming_error_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        121,
+        149
+      ],
+      "summary": "Classifies a raw provider error message string into a StreamingErrorCode such as auth, rate-limit, overload or network.",
+      "tags": [
+        "parsing",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        152,
+        210
+      ],
+      "summary": "Converts a lower-level provider/transport error into a StreamingError, preserving its classification.",
+      "tags": [
+        "helper",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:is_file_modifying_tool",
+      "type": "function",
+      "name": "is_file_modifying_tool",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        230,
+        232
+      ],
+      "summary": "Reports whether a tool name is known to modify files on disk, used to decide whether to trigger snapshot/refresh logic.",
+      "tags": [
+        "predicate",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_complete",
+      "type": "function",
+      "name": "broadcast_agent_complete",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        255,
+        271
+      ],
+      "summary": "Broadcasts the agent-turn-complete event to the frontend with the final content, token usage and context snapshot.",
+      "tags": [
+        "broadcast",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_error_structured",
+      "type": "function",
+      "name": "broadcast_agent_error_structured",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        276,
+        287
+      ],
+      "summary": "Broadcasts a structured StreamingError to the frontend so the UI can render an appropriate error state.",
+      "tags": [
+        "broadcast",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_warning",
+      "type": "function",
+      "name": "broadcast_agent_warning",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        293,
+        302
+      ],
+      "summary": "Broadcasts a non-fatal warning event to the frontend, tagged with its originating source.",
+      "tags": [
+        "broadcast",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:StreamingError",
+      "type": "class",
+      "name": "StreamingError",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        21,
+        31
+      ],
+      "summary": "Structured error type for streaming/provider failures, carrying a message, classified error code, retryability flag and optional details.",
+      "tags": [
+        "data-model",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:StreamingErrorCode",
+      "type": "class",
+      "name": "StreamingErrorCode",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        38,
+        65
+      ],
+      "summary": "Enumerates the classes of streaming failure, such as auth, rate limit, overload, network and context overflow, with retryability and wire-format helpers.",
+      "tags": [
+        "enum-type",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:AgentCompleteParams",
+      "type": "class",
+      "name": "AgentCompleteParams",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "lineRange": [
+        241,
+        252
+      ],
+      "summary": "Parameters for broadcasting a completed turn: session/turn ids, content, model, token counts and context usage snapshot.",
+      "tags": [
+        "config-object",
+        "streaming",
+        "error-handling",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "type": "file",
+      "name": "context.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "summary": "Defines the data types describing turn input context and user-presence state: ProcessingContext, UserPresence, IdeContext, SystemPromptConfig and related DTOs.",
+      "tags": [
+        "type-definition",
+        "session-context",
+        "ide-integration",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/context.rs:as_str",
+      "type": "function",
+      "name": "as_str",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        68,
+        74
+      ],
+      "summary": "Returns the stable string form of a PresenceStance variant, such as Interactive, DeferAndBatch or Autonomous.",
+      "tags": [
+        "query",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/context.rs:display_label",
+      "type": "function",
+      "name": "display_label",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        129,
+        131
+      ],
+      "summary": "Returns the UI-facing display label for the current user-presence mode.",
+      "tags": [
+        "query",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ProcessingContext",
+      "type": "class",
+      "name": "ProcessingContext",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        17,
+        45
+      ],
+      "summary": "Carries per-message processing context, including attached images, resume flag, display text and turn/turn-intent ids, through the turn pipeline.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:PresenceStance",
+      "type": "class",
+      "name": "PresenceStance",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        54,
+        65
+      ],
+      "summary": "Enumerates how the agent should behave relative to a present-or-away user: interactive, defer-and-batch, or fully autonomous.",
+      "tags": [
+        "enum-type",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:UserPresence",
+      "type": "class",
+      "name": "UserPresence",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        94,
+        125
+      ],
+      "summary": "Describes the user's current presence mode, label, expected return time, stance and auto-resolve/auto-approve timeout settings.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:UserProfile",
+      "type": "class",
+      "name": "UserProfile",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        137,
+        148
+      ],
+      "summary": "Describes the user's profile, including name, tech-savviness, job roles, familiar tech stacks and a free-text description, used to tailor agent behavior.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:IdeContext",
+      "type": "class",
+      "name": "IdeContext",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        157,
+        211
+      ],
+      "summary": "Snapshots the connected IDE's state, including open files, active file/selection/cursor, terminal context, lint errors, git status and workspace folders, plus embedded user presence/profile.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ProcessingResult",
+      "type": "class",
+      "name": "ProcessingResult",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        220,
+        252
+      ],
+      "summary": "Result of processing a turn: final content, token counts, tool-call count, truncation flag, turn summary and optional fork-redirect outcome.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ToolSummary",
+      "type": "class",
+      "name": "ToolSummary",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        261,
+        264
+      ],
+      "summary": "A tool's name and description, used when summarizing available tools in the prompt.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:SystemPromptConfig",
+      "type": "class",
+      "name": "SystemPromptConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "lineRange": [
+        269,
+        302
+      ],
+      "summary": "Full configuration needed to build a session's system prompt: model, agent identity, skills, workspace/resource loading flags, agent-org context and sovereign-prompt settings.",
+      "tags": [
+        "config-object",
+        "type-definition",
+        "session-context",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "type": "file",
+      "name": "enums.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "summary": "Defines SessionStatus and AgentExecMode, the core lifecycle and execution-mode enums used throughout session management, with parse/serialize helpers.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "session-status",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:as_str",
+      "type": "function",
+      "name": "as_str",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        60,
+        75
+      ],
+      "summary": "Returns the stable string form of an enum variant, implemented separately for SessionStatus (its lowercase wire status) and AgentExecMode (Build/Ask/Plan/Debug/Review/Wingman), used for persistence and API responses.",
+      "tags": [
+        "query",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        84,
+        100
+      ],
+      "summary": "Parses an enum value from its stable string representation, implemented separately for SessionStatus and AgentExecMode, used when loading persisted session records and exec-mode settings.",
+      "tags": [
+        "parsing",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:is_terminal",
+      "type": "function",
+      "name": "is_terminal",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        103,
+        113
+      ],
+      "summary": "Reports whether a SessionStatus represents a terminal state, such as Completed, Failed, Cancelled, Abandoned, Timeout or Archived, after which the session no longer runs.",
+      "tags": [
+        "predicate",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:is_active",
+      "type": "function",
+      "name": "is_active",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        116,
+        118
+      ],
+      "summary": "Reports whether a SessionStatus represents an actively-running state.",
+      "tags": [
+        "predicate",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        128,
+        137
+      ],
+      "summary": "Converts a raw value into a SessionStatus, defaulting sensibly for unrecognized input.",
+      "tags": [
+        "helper",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/enums.rs:SessionStatus",
+      "type": "class",
+      "name": "SessionStatus",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        27,
+        56
+      ],
+      "summary": "Enumerates a session's lifecycle states, such as Pending, Idle, Running, WaitingForUser, Paused, Completed, Failed, Cancelled, Abandoned, Timeout and Archived, with parse/serialize and terminal/active helpers.",
+      "tags": [
+        "enum-type",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/types/enums.rs:AgentExecMode",
+      "type": "class",
+      "name": "AgentExecMode",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "lineRange": [
+        153,
+        168
+      ],
+      "summary": "Enumerates the agent's execution mode, such as Build, Ask, Plan, Debug, Review and Wingman, governing which behaviors and tools are active.",
+      "tags": [
+        "enum-type",
+        "type-definition",
+        "enum",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/types/filter.rs",
+      "type": "file",
+      "name": "filter.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/filter.rs",
+      "summary": "Tiny stub module reserved for session-related filter type definitions.",
+      "tags": [
+        "type-definition",
+        "stub",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "summary": "Barrel module re-exporting the session types submodules (context, enums, filter, turn) as a single import surface.",
+      "tags": [
+        "barrel",
+        "type-definition",
+        "re-export",
+        "rust"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:test_with_delayed_outputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:test_with_delayed_outputs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:abort_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:abort_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:collect_skill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:collect_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:before_llm_iteration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_turn_prefetch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_turn_prefetch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_skill_prefetch_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:start_memory_prefetch_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:prepend_to_last_user_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:insert_system_after_existing_system",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:TurnPrefetchHook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs:TurnPrefetchHook",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prefetch.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:render_linked_work_item_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:build_system_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:build_system_prompt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:build_dynamic_sections",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:build_dynamic_sections",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs:rounds_since_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/sections.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/processor/prompt.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:with_details",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:with_details",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:is_retryable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:is_retryable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:wire_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:wire_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:classify_streaming_error_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:classify_streaming_error_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:is_file_modifying_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:is_file_modifying_tool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_complete",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_complete",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_error_structured",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_error_structured",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_warning",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:broadcast_agent_warning",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:StreamingError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:StreamingError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:StreamingErrorCode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:StreamingErrorCode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:AgentCompleteParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs:AgentCompleteParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/streaming.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/context.rs:as_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/context.rs:as_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/context.rs:display_label",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/context.rs:display_label",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ProcessingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ProcessingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:PresenceStance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:PresenceStance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:UserPresence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:UserPresence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:UserProfile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:UserProfile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:IdeContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:IdeContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ProcessingResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ProcessingResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ToolSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:ToolSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:SystemPromptConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/context.rs:SystemPromptConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/workspace.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:as_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:as_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:parse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:is_terminal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:is_terminal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:is_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:is_active",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/types/enums.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/enums.rs:SessionStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/enums.rs:SessionStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/enums.rs:AgentExecMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/types/enums.rs:AgentExecMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/types/context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/types/enums.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/types/filter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/types/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/types/turn.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

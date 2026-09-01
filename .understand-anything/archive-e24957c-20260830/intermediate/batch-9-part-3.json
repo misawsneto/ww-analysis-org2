@@ -1,0 +1,1602 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "type": "file",
+      "name": "service.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "summary": "GatewayService owns channel lifecycle (start/stop/toggle) and spawns the inbound/outbound background workers that shuttle messages between channels and OS agent sessions.",
+      "tags": [
+        "service",
+        "lifecycle",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "type": "file",
+      "name": "workers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "summary": "Background tokio tasks that drain the inbound message-merge buffer to the session handler and dispatch outbound messages back through the ChannelManager.",
+      "tags": [
+        "background-task",
+        "concurrency",
+        "message-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "summary": "Layer 2b module root aggregating chat-channel connectors, the decoupled message gateway, rule-based automation, and integrations config/patch.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "module-root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "type": "file",
+      "name": "patch.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "summary": "Typed IntegrationsConfigPatch with Option<T> fields for replace-per-field updates to channels, databases, nodes, web_search, mcp, embedding, and excluded skills.",
+      "tags": [
+        "data-model",
+        "patch",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/agent-core/src/lib.rs",
+      "summary": "agent-core crate root documenting the 4-layer architecture (foundation -> core -> intelligence/integrations -> state) and re-exporting the public module surface.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "documentation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "type": "file",
+      "name": "lifecycle.rs",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "summary": "Shared post-turn lifecycle helpers for agent sessions: emits session status/rename/account-switch events, persists terminal turn state, builds error events, and finalizes agent-org member turns.",
+      "tags": [
+        "event-handler",
+        "session-management",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "type": "file",
+      "name": "handlers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "summary": "Per-event handlers that pull structured review feedback, proof-of-work summaries, and default-branch detection out of a session transcript for orchestrator bookkeeping.",
+      "tags": [
+        "message-parsing",
+        "utility",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "summary": "Notifies the orchestrator/agent-org subsystem when a session or routine fire terminates, dequeuing queued fires and spawning follow-up phase launches or inbox notifications.",
+      "tags": [
+        "orchestration",
+        "event-handler",
+        "notification"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "type": "file",
+      "name": "tests.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "summary": "Unit test suite (29 tests) for the external-import detector and apply pipeline, covering Cursor/Claude Code/Copilot/Kiro/Codex rule, subagent, skill, and MCP-config detection and import.",
+      "tags": [
+        "test",
+        "test-coverage",
+        "fixtures"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        61,
+        93
+      ],
+      "summary": "Registers enabled channels, spawns the inbound/outbound worker tasks, and starts the automation engine.",
+      "tags": [
+        "lifecycle",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:ensure_channel_manager",
+      "type": "function",
+      "name": "ensure_channel_manager",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        95,
+        104
+      ],
+      "summary": "Lazily creates the shared ChannelManager the gateway service operates on.",
+      "tags": [
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start_automation_engine",
+      "type": "function",
+      "name": "start_automation_engine",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        106,
+        123
+      ],
+      "summary": "Boots the rule-based automation engine alongside the gateway workers.",
+      "tags": [
+        "lifecycle",
+        "orchestration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:stop",
+      "type": "function",
+      "name": "stop",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        126,
+        157
+      ],
+      "summary": "Stops all channels and background workers, tearing down the gateway service.",
+      "tags": [
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:toggle_channel",
+      "type": "function",
+      "name": "toggle_channel",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        160,
+        204
+      ],
+      "summary": "Enables or disables a single channel account at runtime, constructing or removing it from the ChannelManager.",
+      "tags": [
+        "lifecycle",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:restore_channels",
+      "type": "function",
+      "name": "restore_channels",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        207,
+        223
+      ],
+      "summary": "Re-registers previously enabled channels after a config reload.",
+      "tags": [
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:InboundMessageHandler",
+      "type": "class",
+      "name": "InboundMessageHandler",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        27,
+        29
+      ],
+      "summary": "Trait for the handler the gateway hands inbound messages to (implemented by GatewayInboundHandler in state::commands).",
+      "tags": [
+        "interface"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:InboundProcessorDeps",
+      "type": "class",
+      "name": "InboundProcessorDeps",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        32,
+        34
+      ],
+      "summary": "Dependency bundle passed to the inbound worker task.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:GatewayService",
+      "type": "class",
+      "name": "GatewayService",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [
+        40,
+        46
+      ],
+      "summary": "Owns the ChannelManager, message bus, and background worker handles; the top-level lifecycle controller for the gateway subsystem.",
+      "tags": [
+        "service",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_inbound_processor",
+      "type": "function",
+      "name": "spawn_inbound_processor",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "lineRange": [
+        28,
+        111
+      ],
+      "summary": "Spawns the background task that drains merged inbound messages and hands them to the InboundMessageHandler.",
+      "tags": [
+        "background-task",
+        "concurrency"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:handle_ready_message",
+      "type": "function",
+      "name": "handle_ready_message",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "lineRange": [
+        116,
+        249
+      ],
+      "summary": "Processes one ready (merged, TTL-checked) inbound message: media injection, handler dispatch, and error handling.",
+      "tags": [
+        "message-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_outbound_dispatcher",
+      "type": "function",
+      "name": "spawn_outbound_dispatcher",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "lineRange": [
+        255,
+        344
+      ],
+      "summary": "Spawns the background task that listens for outbound messages and routes them to the correct channel via ChannelManager.",
+      "tags": [
+        "background-task",
+        "concurrency"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/patch.rs:apply",
+      "type": "function",
+      "name": "apply",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "lineRange": [
+        43,
+        65
+      ],
+      "summary": "Applies a set of Option<T> field replacements from the patch onto a target IntegrationsConfig in place.",
+      "tags": [
+        "patch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/patch.rs:IntegrationsConfigPatch",
+      "type": "class",
+      "name": "IntegrationsConfigPatch",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "lineRange": [
+        24,
+        38
+      ],
+      "summary": "Typed wholesale-replace patch for IntegrationsConfig sub-blocks (channels, databases, nodes, web_search, mcp, embedding, excluded_skills).",
+      "tags": [
+        "data-model",
+        "patch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_renamed",
+      "type": "function",
+      "name": "emit_session_renamed",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        50,
+        65
+      ],
+      "summary": "Emits a SessionRenamed Tauri event and broadcasts it on the internal bus.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_status_changed",
+      "type": "function",
+      "name": "emit_session_status_changed",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        91,
+        113
+      ],
+      "summary": "Emits a SessionStatusChanged Tauri event when a session's activity status transitions.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_account_switched",
+      "type": "function",
+      "name": "emit_session_account_switched",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        130,
+        156
+      ],
+      "summary": "Emits a SessionAccountSwitched event when the session's active LLM account changes.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:persist_and_emit_terminal_turn",
+      "type": "function",
+      "name": "persist_and_emit_terminal_turn",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        158,
+        199
+      ],
+      "summary": "Persists a turn's terminal status to the DB and emits the corresponding terminal-turn signal/event.",
+      "tags": [
+        "persistence",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:build_session_error_event",
+      "type": "function",
+      "name": "build_session_error_event",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        201,
+        242
+      ],
+      "summary": "Builds a structured SessionEvent describing a turn error, classifying the failure for display.",
+      "tags": [
+        "event-handler",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:persist_session_error_event",
+      "type": "function",
+      "name": "persist_session_error_event",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        244,
+        257
+      ],
+      "summary": "Persists a built session error event to the session's message log.",
+      "tags": [
+        "persistence",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:member_failure_recovery_guidance",
+      "type": "function",
+      "name": "member_failure_recovery_guidance",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        277,
+        315
+      ],
+      "summary": "Produces human-readable recovery guidance text for an agent-org member turn failure.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:requeue_agent_org_member_in_progress_work",
+      "type": "function",
+      "name": "requeue_agent_org_member_in_progress_work",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        321,
+        353
+      ],
+      "summary": "Requeues an agent-org member's in-progress task when its turn terminates abnormally so work is not lost.",
+      "tags": [
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:finalize_agent_org_member_turn",
+      "type": "function",
+      "name": "finalize_agent_org_member_turn",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        355,
+        486
+      ],
+      "summary": "Finalizes an agent-org member's turn: persists status, handles requeueing/recovery guidance, and triggers rewake logic.",
+      "tags": [
+        "orchestration",
+        "session-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:should_rewake_agent_org_member_after_turn",
+      "type": "function",
+      "name": "should_rewake_agent_org_member_after_turn",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        494,
+        514
+      ],
+      "summary": "Decides whether an idle agent-org member should be automatically rewoken after its turn completes.",
+      "tags": [
+        "orchestration",
+        "policy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/lifecycle.rs:finalize_session",
+      "type": "function",
+      "name": "finalize_session",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        520,
+        705
+      ],
+      "summary": "Top-level post-turn finalization: persists terminal state, emits events, and runs agent-org member bookkeeping for a completed session turn.",
+      "tags": [
+        "session-management",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/lifecycle.rs:SessionStatusChangedPayload",
+      "type": "class",
+      "name": "SessionStatusChangedPayload",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        38,
+        41
+      ],
+      "summary": "Tauri event payload for a session activity-status change.",
+      "tags": [
+        "data-model",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/lifecycle.rs:SessionRenamedPayload",
+      "type": "class",
+      "name": "SessionRenamedPayload",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        45,
+        48
+      ],
+      "summary": "Tauri event payload for a session rename.",
+      "tags": [
+        "data-model",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/lifecycle.rs:TurnTerminalStatus",
+      "type": "class",
+      "name": "TurnTerminalStatus",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        68,
+        72
+      ],
+      "summary": "Enum of terminal states a turn can reach (completed, failed, cancelled, etc.).",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/lifecycle.rs:TerminalTurnSignal",
+      "type": "class",
+      "name": "TerminalTurnSignal",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        85,
+        89
+      ],
+      "summary": "Signal payload describing how a turn terminated, used to drive downstream event emission.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/lifecycle.rs:SessionAccountSwitchedPayload",
+      "type": "class",
+      "name": "SessionAccountSwitchedPayload",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        123,
+        128
+      ],
+      "summary": "Tauri event payload for a session's active LLM account switching.",
+      "tags": [
+        "data-model",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/lifecycle.rs:AgentOrgMemberLifecycleSnapshot",
+      "type": "class",
+      "name": "AgentOrgMemberLifecycleSnapshot",
+      "filePath": "src-tauri/crates/agent-core/src/lifecycle.rs",
+      "lineRange": [
+        260,
+        266
+      ],
+      "summary": "Snapshot of an agent-org member's state used during turn finalization to decide requeue/rewake behavior.",
+      "tags": [
+        "data-model",
+        "orchestration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_review_feedback",
+      "type": "function",
+      "name": "extract_review_feedback",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        10,
+        53
+      ],
+      "summary": "Pulls the last assistant message from a session and parses it into a structured ReviewFeedback, falling back to keyword heuristics.",
+      "tags": [
+        "message-parsing",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_structured_review_block",
+      "type": "function",
+      "name": "parse_structured_review_block",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        55,
+        110
+      ],
+      "summary": "Parses a fenced structured-review block out of an assistant message into ReviewFeedback fields.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_issue_line",
+      "type": "function",
+      "name": "parse_issue_line",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        112,
+        153
+      ],
+      "summary": "Parses a single issue line from a structured review block into its component fields.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_file_location",
+      "type": "function",
+      "name": "parse_file_location",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        155,
+        167
+      ],
+      "summary": "Parses a file:line style location reference out of a review issue line.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_first_sentence",
+      "type": "function",
+      "name": "extract_first_sentence",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        169,
+        185
+      ],
+      "summary": "Extracts the first sentence from a block of text for use as a short summary.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:collect_proof_of_work",
+      "type": "function",
+      "name": "collect_proof_of_work",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        187,
+        236
+      ],
+      "summary": "Aggregates a session's tool calls and token usage into a proof-of-work summary for orchestrator bookkeeping.",
+      "tags": [
+        "orchestration",
+        "metrics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:detect_default_branch",
+      "type": "function",
+      "name": "detect_default_branch",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "lineRange": [
+        238,
+        252
+      ],
+      "summary": "Detects the repository's default git branch for use in proof-of-work / review context.",
+      "tags": [
+        "utility",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_routine_fire_session_terminal",
+      "type": "function",
+      "name": "notify_routine_fire_session_terminal",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        17,
+        82
+      ],
+      "summary": "When a routine-triggered session terminates, marks the fire succeeded/failed and executes the next queued fire of the same routine.",
+      "tags": [
+        "orchestration",
+        "notification"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:dequeue_next_routine_fire",
+      "type": "function",
+      "name": "dequeue_next_routine_fire",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        85,
+        131
+      ],
+      "summary": "Pops and returns the oldest queued fire for a routine under QueueIfActive semantics.",
+      "tags": [
+        "orchestration",
+        "queue"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:spawn_execute_pending_fire",
+      "type": "function",
+      "name": "spawn_execute_pending_fire",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        137,
+        162
+      ],
+      "summary": "Spawns a background task to execute a dequeued pending routine fire.",
+      "tags": [
+        "background-task",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_orchestrator_session_terminal",
+      "type": "function",
+      "name": "notify_orchestrator_session_terminal",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        165,
+        457
+      ],
+      "summary": "Central handler for orchestrator/agent-org session termination: extracts review feedback and proof-of-work, then notifies the orchestrator.",
+      "tags": [
+        "orchestration",
+        "notification"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:spawn_phase_launch",
+      "type": "function",
+      "name": "spawn_phase_launch",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        463,
+        494
+      ],
+      "summary": "Spawns a background task to launch the next phase of an agent-org run.",
+      "tags": [
+        "background-task",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_inbox_phase_launch_failed",
+      "type": "function",
+      "name": "notify_inbox_phase_launch_failed",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        498,
+        541
+      ],
+      "summary": "Notifies the inbox when a phase-launch attempt fails.",
+      "tags": [
+        "notification",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_routine_fire_work_item_terminal",
+      "type": "function",
+      "name": "notify_routine_fire_work_item_terminal",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        545,
+        593
+      ],
+      "summary": "Notifies the routine-fire subsystem when a work item within a fire completes.",
+      "tags": [
+        "notification",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_inbox_awaiting_user",
+      "type": "function",
+      "name": "notify_inbox_awaiting_user",
+      "filePath": "src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "lineRange": [
+        597,
+        634
+      ],
+      "summary": "Notifies the inbox that a session is awaiting user input.",
+      "tags": [
+        "notification"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "lineRange": [
+        1031,
+        1048
+      ],
+      "summary": "Constructs a HomeEnvGuard that overrides HOME/ORGII_HOME env vars for the duration of a test, restoring them on drop.",
+      "tags": [
+        "test",
+        "fixtures"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "lineRange": [
+        1064,
+        1077
+      ],
+      "summary": "Restores the original HOME/ORGII_HOME environment variables when the guard goes out of scope.",
+      "tags": [
+        "test",
+        "fixtures"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs:HomeEnvGuard",
+      "type": "class",
+      "name": "HomeEnvGuard",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "lineRange": [
+        1024,
+        1028
+      ],
+      "summary": "RAII test fixture that temporarily overrides HOME and ORGII_HOME so external-import detection tests run against an isolated fake home directory.",
+      "tags": [
+        "test",
+        "fixtures"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:ensure_channel_manager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start_automation_engine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:stop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:stop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:toggle_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:toggle_channel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:restore_channels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:restore_channels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:InboundMessageHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:InboundMessageHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:InboundProcessorDeps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:InboundProcessorDeps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:GatewayService",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:GatewayService",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_inbound_processor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_inbound_processor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:handle_ready_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_outbound_dispatcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_outbound_dispatcher",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/patch.rs:apply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/patch.rs:apply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/patch.rs:IntegrationsConfigPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/patch.rs:IntegrationsConfigPatch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_renamed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_renamed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_status_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_account_switched",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:emit_session_account_switched",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:persist_and_emit_terminal_turn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:build_session_error_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:build_session_error_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:persist_session_error_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:persist_session_error_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:member_failure_recovery_guidance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:requeue_agent_org_member_in_progress_work",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:finalize_agent_org_member_turn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:finalize_agent_org_member_turn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:should_rewake_agent_org_member_after_turn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:finalize_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/lifecycle.rs:finalize_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:SessionStatusChangedPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:SessionRenamedPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:TurnTerminalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:TurnTerminalStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:TerminalTurnSignal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:TerminalTurnSignal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:SessionAccountSwitchedPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "target": "class:src-tauri/crates/agent-core/src/lifecycle.rs:AgentOrgMemberLifecycleSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_review_feedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_review_feedback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_structured_review_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_structured_review_block",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_issue_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_issue_line",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_file_location",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:parse_file_location",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_first_sentence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_first_sentence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:collect_proof_of_work",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:collect_proof_of_work",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:detect_default_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_routine_fire_session_terminal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_routine_fire_session_terminal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:dequeue_next_routine_fire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:spawn_execute_pending_fire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_orchestrator_session_terminal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_orchestrator_session_terminal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:spawn_phase_launch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_inbox_phase_launch_failed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_routine_fire_work_item_terminal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_inbox_awaiting_user",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs:HomeEnvGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/automation/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/channels/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/patch.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/init/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/lifecycle.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-core/src/test_support.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/store.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:register_enabled_channels",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:toggle_channel",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:build_channel_for_toggle",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_inbound_processor",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/integrations/gateway/service.rs:start",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs:spawn_outbound_dispatcher",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_orchestrator_session_terminal",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:extract_review_feedback",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_orchestrator_session_terminal",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:collect_proof_of_work",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/orchestrator_notify/mod.rs:notify_orchestrator_session_terminal",
+      "target": "function:src-tauri/crates/agent-core/src/orchestrator_notify/handlers.rs:detect_default_branch",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/external_import/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

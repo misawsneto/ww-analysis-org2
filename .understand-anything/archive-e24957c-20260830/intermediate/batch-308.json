@@ -1,0 +1,214 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/types/session/hostedSession.ts",
+      "type": "file",
+      "name": "hostedSession.ts",
+      "filePath": "src/types/session/hostedSession.ts",
+      "summary": "Defines the wire-format response shape (snake_case fields) returned by the hosted ORGII session endpoint for sessions running under a hosted API key.",
+      "tags": ["type-definition", "api-schema", "session", "hosted-key"],
+      "complexity": "simple",
+      "languageNotes": "Single interface kept intentionally in wire (snake_case) naming to match the hosted HTTP contract; doc comment warns against renaming market_* fields without a server-side update."
+    },
+    {
+      "id": "file:src/types/session/session.ts",
+      "type": "file",
+      "name": "session.ts",
+      "filePath": "src/types/session/session.ts",
+      "summary": "Central type definitions and status-normalization helpers for the Session API, unifying CLI, Market, and Workflow session status models into a single 3-state (active/completed/failed) model mirrored from the Rust backend.",
+      "tags": ["type-definition", "data-model", "session", "status-normalization"],
+      "complexity": "complex",
+      "languageNotes": "Uses discriminated string-literal unions to mirror Rust's SessionStatus enum, with doc comments explicitly calling out the Rust source-of-truth files (agent_core/core/session/types/enums.rs) that must be kept in sync."
+    },
+    {
+      "id": "file:src/types/session/steps.ts",
+      "type": "file",
+      "name": "steps.ts",
+      "filePath": "src/types/session/steps.ts",
+      "summary": "Large collection of wire-format TypeScript interfaces spanning chat messages, WebSocket/backend events, git operations, dashboard metrics, and Cursor IDE conversation import — the response contract consumed across the session, chat, and git UI.",
+      "tags": ["type-definition", "api-schema", "data-model", "git"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/types/session/session.ts:isTerminalStatus",
+      "type": "function",
+      "name": "isTerminalStatus",
+      "filePath": "src/types/session/session.ts",
+      "lineRange": [131, 133],
+      "summary": "Checks whether a raw status string belongs to the TERMINAL_STATUSES set, indicating the session has finished.",
+      "tags": ["utility", "validation", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/session/session.ts:isActiveStatus",
+      "type": "function",
+      "name": "isActiveStatus",
+      "filePath": "src/types/session/session.ts",
+      "lineRange": [135, 137],
+      "summary": "Checks whether a raw status string belongs to the ACTIVE_STATUSES set, indicating the session is still alive.",
+      "tags": ["utility", "validation", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/session/session.ts:toUnifiedStatus",
+      "type": "function",
+      "name": "toUnifiedStatus",
+      "filePath": "src/types/session/session.ts",
+      "lineRange": [143, 150],
+      "summary": "Converts any CLI/Market/Workflow session status string into the unified 3-state model (active/completed/failed), matching the Rust unified_session_status mapping.",
+      "tags": ["utility", "status", "status-normalization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/session/session.ts:isUnifiedActive",
+      "type": "function",
+      "name": "isUnifiedActive",
+      "filePath": "src/types/session/session.ts",
+      "lineRange": [155, 157],
+      "summary": "Returns true if a status maps to the unified 'active' state.",
+      "tags": ["utility", "validation", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/session/session.ts:isUnifiedCompleted",
+      "type": "function",
+      "name": "isUnifiedCompleted",
+      "filePath": "src/types/session/session.ts",
+      "lineRange": [162, 164],
+      "summary": "Returns true if a status maps to the unified 'completed' state.",
+      "tags": ["utility", "validation", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/types/session/session.ts:isUnifiedFailed",
+      "type": "function",
+      "name": "isUnifiedFailed",
+      "filePath": "src/types/session/session.ts",
+      "lineRange": [169, 171],
+      "summary": "Returns true if a status maps to the unified 'failed' state.",
+      "tags": ["utility", "validation", "status"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/types/session/hostedSession.ts",
+      "target": "file:src/types/session/session.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "file:src/types/session/steps.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isTerminalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isActiveStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:toUnifiedStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isUnifiedActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isUnifiedCompleted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isUnifiedFailed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isTerminalStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isActiveStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:toUnifiedStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isUnifiedActive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isUnifiedCompleted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/types/session/session.ts",
+      "target": "function:src/types/session/session.ts:isUnifiedFailed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/types/session/session.ts:isUnifiedActive",
+      "target": "function:src/types/session/session.ts:toUnifiedStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/types/session/session.ts:isUnifiedCompleted",
+      "target": "function:src/types/session/session.ts:toUnifiedStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/types/session/session.ts:isUnifiedFailed",
+      "target": "function:src/types/session/session.ts:toUnifiedStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

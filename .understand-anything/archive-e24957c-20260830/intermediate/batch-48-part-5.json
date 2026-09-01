@@ -1,0 +1,997 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "type": "file",
+      "name": "rewind.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "summary": "Rewind/restore API that walks captured snapshots newest-first and restores each file's pre-edit bytes, or deletes files that did not exist when the snapshot was taken.",
+      "tags": [
+        "restore",
+        "snapshot",
+        "file-io"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_to_message",
+      "type": "function",
+      "name": "rewind_to_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "lineRange": [
+        38,
+        111
+      ],
+      "summary": "Restores a session's tracked files to their state as of a target message timestamp by replaying backups newest-first, producing a redo snapshot and aggregate RewindStats.",
+      "tags": [
+        "restore",
+        "snapshot"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_snapshot",
+      "type": "function",
+      "name": "restore_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "lineRange": [
+        116,
+        133
+      ],
+      "summary": "Restores every file backup recorded in a single snapshot, without message-timestamp targeting.",
+      "tags": [
+        "restore",
+        "snapshot"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file_to_message",
+      "type": "function",
+      "name": "rewind_file_to_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "lineRange": [
+        135,
+        160
+      ],
+      "summary": "Restores a single file's pre-edit content as of a target message timestamp.",
+      "tags": [
+        "restore",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file",
+      "type": "function",
+      "name": "rewind_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "lineRange": [
+        165,
+        170
+      ],
+      "summary": "Restores a single file from a specific snapshot id.",
+      "tags": [
+        "restore",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_file_from_snapshot",
+      "type": "function",
+      "name": "restore_file_from_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "lineRange": [
+        172,
+        183
+      ],
+      "summary": "Looks up a file's backup within a specific snapshot manifest and restores it.",
+      "tags": [
+        "restore",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_one",
+      "type": "function",
+      "name": "restore_one",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "lineRange": [
+        185,
+        228
+      ],
+      "summary": "Restores (or deletes, for untrackable/new-file markers) a single FileBackup back onto disk, producing a RestoreOutcome and updating RewindStats.",
+      "tags": [
+        "restore",
+        "file-io"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "summary": "Public data types and tunable constants for the per-session file-copy snapshot system (FileBackup, FileSnapshot, RewindStats, DiffStats, EvictionStats, TtlPruneStats, RestoreOutcome) \u2014 pure shape definitions, no I/O or DB access.",
+      "tags": [
+        "data-model",
+        "type-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:FileBackup",
+      "type": "class",
+      "name": "FileBackup",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        21,
+        37
+      ],
+      "summary": "One captured file's backup record: path, content hash, size, and whether it's an 'untrackable' marker (new file / delete-on-restore).",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:FileSnapshot",
+      "type": "class",
+      "name": "FileSnapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        42,
+        47
+      ],
+      "summary": "A manifest of file backups captured at one point in time, keyed by snapshot id and creation timestamp.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:RewindStats",
+      "type": "class",
+      "name": "RewindStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        51,
+        59
+      ],
+      "summary": "Aggregate outcome counts (restored, deleted, skipped-unchanged, failed, redo snapshot id) returned by a rewind operation.",
+      "tags": [
+        "data-model",
+        "statistics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:DiffStats",
+      "type": "class",
+      "name": "DiffStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        65,
+        69
+      ],
+      "summary": "Aggregate file change counts (changed, added, deleted) for a snapshot.",
+      "tags": [
+        "data-model",
+        "statistics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:EvictionStats",
+      "type": "class",
+      "name": "EvictionStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        74,
+        81
+      ],
+      "summary": "Aggregate counts of manifests/DB rows/blobs removed during eviction.",
+      "tags": [
+        "data-model",
+        "statistics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:TtlPruneStats",
+      "type": "class",
+      "name": "TtlPruneStats",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        85,
+        90
+      ],
+      "summary": "Aggregate counts of sessions and DB rows removed during TTL-based pruning.",
+      "tags": [
+        "data-model",
+        "statistics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:RestoreOutcome",
+      "type": "class",
+      "name": "RestoreOutcome",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "lineRange": [
+        95,
+        99
+      ],
+      "summary": "Enum of possible per-file outcomes when restoring a backup: Restored, Deleted, or Unchanged.",
+      "tags": [
+        "data-model",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "type": "file",
+      "name": "agent_actions.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "summary": "CRUD handlers (list, get, create, update, remove) for AgentDefinition entries, backing the agent-definition management tool's core actions.",
+      "tags": [
+        "crud",
+        "api-handler",
+        "agent-definitions"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:parse_optional_config",
+      "type": "function",
+      "name": "parse_optional_config",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "lineRange": [
+        21,
+        32
+      ],
+      "summary": "Parses an optional typed config sub-object out of a tool-call params Value by field name, propagating a validation error on malformed input.",
+      "tags": [
+        "parsing",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:list_agents",
+      "type": "function",
+      "name": "list_agents",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "lineRange": [
+        34,
+        50
+      ],
+      "summary": "Lists all custom agent definitions in the store, formatted as a Markdown summary.",
+      "tags": [
+        "crud",
+        "api-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:get_agent",
+      "type": "function",
+      "name": "get_agent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "lineRange": [
+        52,
+        68
+      ],
+      "summary": "Fetches a single agent definition by id and formats it as Markdown detail.",
+      "tags": [
+        "crud",
+        "api-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:create_agent",
+      "type": "function",
+      "name": "create_agent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "lineRange": [
+        70,
+        178
+      ],
+      "summary": "Creates a new AgentDefinition from tool-call params, parsing policy/skills/tool-selection/delegation/model sub-configs and persisting it to the store.",
+      "tags": [
+        "crud",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:update_agent",
+      "type": "function",
+      "name": "update_agent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "lineRange": [
+        180,
+        222
+      ],
+      "summary": "Applies partial updates to an existing AgentDefinition's fields from tool-call params.",
+      "tags": [
+        "crud",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:remove_agent",
+      "type": "function",
+      "name": "remove_agent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "lineRange": [
+        224,
+        246
+      ],
+      "summary": "Deletes an agent definition by id from the store.",
+      "tags": [
+        "crud",
+        "api-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "type": "file",
+      "name": "formatting.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "summary": "Markdown-formatting helpers that render AgentDefinition and OrgDefinition/OrgMember values into human-readable summary and detail strings for tool responses.",
+      "tags": [
+        "formatting",
+        "markdown",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_agent_summary",
+      "type": "function",
+      "name": "format_agent_summary",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "lineRange": [
+        6,
+        26
+      ],
+      "summary": "Renders a one-line Markdown summary of an agent definition (name, id, truncated description).",
+      "tags": [
+        "formatting",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_agent_detail",
+      "type": "function",
+      "name": "format_agent_detail",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "lineRange": [
+        28,
+        56
+      ],
+      "summary": "Renders a full Markdown detail block for an agent definition.",
+      "tags": [
+        "formatting",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_summary",
+      "type": "function",
+      "name": "format_org_summary",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "lineRange": [
+        58,
+        71
+      ],
+      "summary": "Renders a one-line Markdown summary of an agent org.",
+      "tags": [
+        "formatting",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_detail",
+      "type": "function",
+      "name": "format_org_detail",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "lineRange": [
+        73,
+        89
+      ],
+      "summary": "Renders a full Markdown detail block for an agent org, including its member tree.",
+      "tags": [
+        "formatting",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_member_tree",
+      "type": "function",
+      "name": "format_member_tree",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "lineRange": [
+        91,
+        102
+      ],
+      "summary": "Recursively renders an org's member hierarchy as an indented Markdown list.",
+      "tags": [
+        "formatting",
+        "markdown",
+        "recursion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "summary": "Implements AgentDefinitionTool, the Tool trait implementation for agent-definition and org management (list/inspect/create/update/remove custom agents, manage agent organizations), dispatching to sibling submodules for schema, actions, and formatting.",
+      "tags": [
+        "tool-implementation",
+        "entry-point",
+        "agent-definitions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:AgentDefinitionTool",
+      "type": "class",
+      "name": "AgentDefinitionTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "lineRange": [
+        32,
+        34
+      ],
+      "summary": "Tool trait implementation backing the agent-definition management tool; holds the Tauri AppHandle used to reach the AgentDefinitionsStore and AgentOrgsStore, and dispatches action names to the agent_actions/org_actions submodules.",
+      "tags": [
+        "tool-implementation",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "lineRange": [
+        37,
+        39
+      ],
+      "summary": "Constructs an AgentDefinitionTool from a Tauri AppHandle.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "lineRange": [
+        72,
+        98
+      ],
+      "summary": "Tool::execute_text entry point: parses the requested action from params and dispatches to the matching agent_actions/org_actions handler function.",
+      "tags": [
+        "tool-implementation",
+        "dispatch"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_to_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file_to_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_file_from_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_to_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file_to_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_to_message",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_one",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_one",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file_to_message",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_file_from_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:rewind_file",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_file_from_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_file_from_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs:restore_one",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:FileBackup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:FileBackup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:FileSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:FileSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:RewindStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:RewindStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:DiffStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:DiffStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:EvictionStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:EvictionStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:TtlPruneStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:TtlPruneStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:RestoreOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs:RestoreOutcome",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:parse_optional_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:list_agents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:get_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:create_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:update_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:remove_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:list_agents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:get_agent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:create_agent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:update_agent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:remove_agent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:create_agent",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:parse_optional_config",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:update_agent",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:parse_optional_config",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_agent_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_agent_summary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_agent_detail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_agent_detail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_summary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_detail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_detail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_member_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_member_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_org_detail",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs:format_member_tree",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:AgentDefinitionTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:AgentDefinitionTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:AgentDefinitionTool",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:AgentDefinitionTool",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/formatting.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/org_actions.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/parsing.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/schema.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:list_agents",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:get_agent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:create_agent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:update_agent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/agent_def/agent_actions.rs:remove_agent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

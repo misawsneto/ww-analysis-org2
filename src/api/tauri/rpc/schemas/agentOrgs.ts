@@ -1,0 +1,368 @@
+import { z } from "zod/v4";
+
+import { ModelTypeSchema, NativeHarnessTypeSchema } from "./validation";
+
+const JsonRecordSchema = z.record(z.string(), z.unknown());
+
+export const ConfigRecordSchema = JsonRecordSchema;
+
+export const ConfigPartialInput = z.object({
+  partial: JsonRecordSchema,
+});
+
+export const RawConfigWriteInput = z.object({
+  content: z.string(),
+});
+
+export const SessionProvenanceHookPlatformSchema = z.enum([
+  "claude_code",
+  "codex",
+  "cursor",
+  "qwen_code",
+  "factory_droid",
+  "trae",
+  "opencode",
+  "windsurf",
+  "kimi",
+  "antigravity",
+  "zcode",
+]);
+
+export const SessionProvenanceHookActivationStateSchema = z.enum([
+  "inactive",
+  "awaiting_verification",
+  "active",
+]);
+
+export const SessionProvenanceHookStatusSchema = z.object({
+  platform: SessionProvenanceHookPlatformSchema,
+  enabled: z.boolean(),
+  desiredEnabled: z.boolean(),
+  activationState: SessionProvenanceHookActivationStateSchema,
+  lastActivatedAt: z.string().nullable().optional(),
+  configPath: z.string(),
+  error: z.string().nullable().optional(),
+});
+
+export const SessionProvenanceHookSetEnabledInput = z.object({
+  platform: SessionProvenanceHookPlatformSchema,
+  enabled: z.boolean(),
+});
+
+export const SessionProvenanceSignalActionSchema = z.enum([
+  "read",
+  "write",
+  "create",
+  "delete",
+  "rename",
+  "search",
+]);
+
+export const SessionProvenanceSignalOutcomeSchema = z.enum([
+  "succeeded",
+  "failed",
+  "unknown",
+]);
+
+export const SessionProvenanceRecentSignalSchema = z.object({
+  source: z.string(),
+  sessionId: z.string(),
+  // Human-readable session title, resolved from the sessions table when the
+  // session has been reconciled with a real name. Null for hook-only sessions
+  // whose title is still just the raw id — the UI shows a shortened id instead.
+  sessionTitle: z.string().nullable().optional(),
+  actorId: z.string().nullable().optional(),
+  filePath: z.string(),
+  workspacePath: z.string(),
+  // Unknown future action/outcome kinds fall back to a plain string rather
+  // than dropping the row, so the table degrades gracefully across upgrades.
+  action: z.union([SessionProvenanceSignalActionSchema, z.string()]),
+  outcome: z.union([SessionProvenanceSignalOutcomeSchema, z.string()]),
+  occurredAt: z.string(),
+  captureMethod: z.string(),
+});
+
+export const SessionProvenanceRecentSignalsInput = z.object({
+  limit: z.number().int().positive().optional(),
+});
+
+// One live agent-status row, keyed by the canonical session id (equal to the
+// imported-history session id, e.g. `claudecodeapp-<uuid>`). `status` uses the
+// existing session-status vocabulary (`running`, `waiting_for_user`,
+// `completed`, `failed`) so it can be assigned onto Session rows directly.
+export const AgentLiveStatusSchema = z.object({
+  sessionId: z.string(),
+  orgiiSessionId: z.string().optional(),
+  source: z.string(),
+  status: z.string(),
+  toolName: z.string().optional(),
+  toolInputPreview: z.string().optional(),
+  interactivePrompt: z.string().optional(),
+  isInterrupt: z.boolean(),
+  updatedAtMs: z.number().int(),
+});
+
+export type SessionProvenanceHookPlatform = z.output<
+  typeof SessionProvenanceHookPlatformSchema
+>;
+export type SessionProvenanceHookStatus = z.output<
+  typeof SessionProvenanceHookStatusSchema
+>;
+export type SessionProvenanceRecentSignal = z.output<
+  typeof SessionProvenanceRecentSignalSchema
+>;
+export type AgentLiveStatus = z.output<typeof AgentLiveStatusSchema>;
+export type SessionProvenanceSignalAction = z.output<
+  typeof SessionProvenanceSignalActionSchema
+>;
+
+export const CliConfigFileInput = z.object({
+  agentName: z.string(),
+  fileId: z.string(),
+});
+
+export const CliConfigFileWriteInput = CliConfigFileInput.extend({
+  content: z.string(),
+});
+
+export const HierarchyModeSchema = z.enum(["flat", "soft", "strict"]);
+export const PlanApprovalPolicySchema = z.enum([
+  "coordinator",
+  "user",
+  "automatic",
+]);
+export const OrgMemberRuntimeConfigSchema = z.object({
+  keySource: z.enum(["own_key", "hosted_key"]).optional(),
+  accountId: z.string().optional(),
+  model: z.string().optional(),
+  nativeHarnessType: NativeHarnessTypeSchema.optional(),
+  tier: z.string().optional(),
+  listingModel: z.string().optional(),
+  listingModelDisplay: z.string().optional(),
+  listingModelType: ModelTypeSchema.optional(),
+  selectedSourceLabel: z.string().optional(),
+  selectedSourceModelType: ModelTypeSchema.optional(),
+});
+
+export type OrgMemberRuntimeConfig = z.infer<
+  typeof OrgMemberRuntimeConfigSchema
+>;
+
+export type OrgMember = {
+  id: string;
+  name: string;
+  role: string;
+  agentId: string;
+  runtimeConfig?: OrgMemberRuntimeConfig;
+  description?: string;
+  hierarchyMode?: z.output<typeof HierarchyModeSchema>;
+  planApprovalPolicy?: z.output<typeof PlanApprovalPolicySchema>;
+  children: OrgMember[];
+};
+
+export const OrgMemberSchema: z.ZodType<OrgMember> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    name: z.string(),
+    role: z.string(),
+    agentId: z.string(),
+    runtimeConfig: OrgMemberRuntimeConfigSchema.optional(),
+    description: z.string().optional(),
+    hierarchyMode: HierarchyModeSchema.optional(),
+    planApprovalPolicy: PlanApprovalPolicySchema.optional(),
+    children: z.array(OrgMemberSchema),
+  })
+);
+
+export const OrgJsonInput = z.object({
+  orgJson: z.string(),
+});
+
+export const OrgIdInput = z.object({
+  orgId: z.string(),
+});
+
+export const CliPermissionModeSchema = z.enum([
+  "plan",
+  "full_permission",
+  "auto_edit",
+  "manual",
+]);
+
+export const CliLaunchProfileModeDefaultsSchema = z.object({
+  mode: CliPermissionModeSchema,
+  args: z.array(z.string()),
+  env: z.record(z.string(), z.string()),
+});
+
+export const CliLaunchProfileInput = z.object({
+  agentName: z.string(),
+});
+
+export const CliLaunchProfileUpdateInput = z.object({
+  agentName: z.string(),
+  permissionMode: CliPermissionModeSchema,
+  commandOverride: z.string().optional(),
+  argsOverride: z.array(z.string()).optional(),
+  envOverride: z.record(z.string(), z.string()).optional(),
+});
+
+export const CliLaunchProfileViewSchema = z.object({
+  agentName: z.string(),
+  permissionMode: CliPermissionModeSchema,
+  defaultCommand: z.string(),
+  command: z.string(),
+  args: z.array(z.string()),
+  env: z.record(z.string(), z.string()),
+  manualArgs: z.array(z.string()),
+  fullPermissionArgs: z.array(z.string()),
+  manualEnv: z.record(z.string(), z.string()),
+  fullPermissionEnv: z.record(z.string(), z.string()),
+  supportedPermissionModes: z.array(CliPermissionModeSchema),
+  modeDefaults: z.array(CliLaunchProfileModeDefaultsSchema),
+  commandOverridden: z.boolean(),
+  argsOverridden: z.boolean(),
+  envOverridden: z.boolean(),
+  effectiveCommand: z.array(z.string()),
+  requiredArgs: z.array(z.string()),
+});
+
+export type CliPermissionMode = z.infer<typeof CliPermissionModeSchema>;
+export type CliLaunchProfileView = z.infer<typeof CliLaunchProfileViewSchema>;
+
+export const CliConfigModeSchema = z.enum(["default", "orgii_managed"]);
+
+export const CliConfigManagedStatusInput = z.object({
+  agentName: z.string(),
+});
+
+export const CliConfigEnableOrgiiManagedInput = z.object({
+  agentName: z.string(),
+  keyId: z.string().nullable().optional(),
+  model: z.string().nullable().optional(),
+  force: z.boolean(),
+});
+
+export const CliConfigRestoreDefaultInput = z.object({
+  agentName: z.string(),
+  force: z.boolean(),
+});
+
+export const CliManagedProxyStatusInput = z.object({
+  agentName: z.string(),
+});
+
+export const CliConfigTargetFileStatusSchema = z.object({
+  id: z.string(),
+  targetPath: z.string(),
+  defaultBackupPath: z.string(),
+  managedProfilePath: z.string(),
+  targetExists: z.boolean(),
+  hasDefaultBackup: z.boolean(),
+  defaultWasMissing: z.boolean(),
+  originalHash: z.string().nullable().optional(),
+  lastAppliedHash: z.string().nullable().optional(),
+  currentHash: z.string().nullable().optional(),
+  conflict: z.boolean(),
+});
+
+export const CliConfigManagedStatusSchema = z.object({
+  agentName: z.string(),
+  supported: z.boolean(),
+  mode: CliConfigModeSchema,
+  hasDefaultBackup: z.boolean(),
+  conflict: z.boolean(),
+  selectedKeyId: z.string().nullable().optional(),
+  selectedProvider: z.string().nullable().optional(),
+  selectedModel: z.string().nullable().optional(),
+  proxyUrl: z.string().nullable().optional(),
+  targetFiles: z.array(CliConfigTargetFileStatusSchema),
+  message: z.string().nullable().optional(),
+});
+
+export const CliManagedProxyStatusSchema = z.object({
+  agentName: z.string(),
+  supported: z.boolean(),
+  running: z.boolean(),
+  ready: z.boolean(),
+  url: z.string(),
+  selectedKeyId: z.string().nullable().optional(),
+  selectedProvider: z.string().nullable().optional(),
+  selectedModel: z.string().nullable().optional(),
+  upstreamBaseUrl: z.string().nullable().optional(),
+  compatibleKeyIds: z.array(z.string()),
+  message: z.string().nullable().optional(),
+});
+
+export type CliConfigMode = z.infer<typeof CliConfigModeSchema>;
+export type CliConfigManagedStatus = z.infer<
+  typeof CliConfigManagedStatusSchema
+>;
+export type CliManagedProxyStatus = z.infer<typeof CliManagedProxyStatusSchema>;
+
+export const SkillsListInput = z.object({
+  workspacePath: z.string().optional(),
+  agentId: z.string().optional(),
+});
+
+export const SkillReadInput = z.object({
+  workspacePath: z.string().optional(),
+  name: z.string(),
+});
+
+export const SkillToggleInput = z.object({
+  workspacePath: z.string().optional(),
+  agentId: z.string().optional(),
+  name: z.string(),
+  enabled: z.boolean(),
+});
+
+export const DescriptionQualitySchema = z.enum(["good", "short", "missing"]);
+
+export const SkillInfoSchema = z.object({
+  name: z.string(),
+  path: z.string(),
+  description: z.string(),
+  source: z.string(),
+  available: z.boolean(),
+  always: z.boolean(),
+  enabled: z.boolean(),
+  requiredBins: z.array(z.string()),
+  requiredEnv: z.array(z.string()),
+  estimatedTokens: z.number(),
+  fullContentTokens: z.number(),
+  descriptionQuality: DescriptionQualitySchema,
+  version: z.string(),
+});
+
+export const SkillsListSchema = z.array(SkillInfoSchema);
+
+export const CursorPluginSkillSchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  description: z.string(),
+  skillPath: z.string(),
+});
+
+export type CursorPluginSkill = z.infer<typeof CursorPluginSkillSchema>;
+
+export const CursorPluginHookSchema = z.object({
+  eventType: z.string(),
+  label: z.string(),
+  hookPath: z.string(),
+});
+
+export type CursorPluginHook = z.infer<typeof CursorPluginHookSchema>;
+
+export const CursorPluginInfoSchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  description: z.string(),
+  version: z.string().nullable(),
+  mcpConfig: z.record(z.string(), z.unknown()).nullable(),
+  skills: z.array(CursorPluginSkillSchema),
+  hooks: z.array(CursorPluginHookSchema),
+  logoPath: z.string().nullable(),
+});
+
+export type CursorPluginInfo = z.infer<typeof CursorPluginInfoSchema>;

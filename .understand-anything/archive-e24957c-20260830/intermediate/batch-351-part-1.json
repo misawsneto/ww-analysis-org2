@@ -1,0 +1,1984 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/api/realtime/websocket/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/realtime/websocket/index.ts",
+      "summary": "Barrel module for the real-time WebSocket layer, re-exporting the client (OrgiiaiWSClient), the React WSProvider/hooks (useWSClient, useWSClientSafe, useWSAvailable), and all WS message/event type definitions used for streaming session activity to the UI.",
+      "tags": [
+        "barrel",
+        "websocket",
+        "realtime",
+        "hook",
+        "entry-point"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Pure re-export barrel \u2014 no logic of its own; actual client/provider implementations live in sibling ./client and ./WSProvider files outside this batch."
+    },
+    {
+      "id": "file:src/api/services/keyValidation.ts",
+      "type": "file",
+      "name": "keyValidation.ts",
+      "filePath": "src/api/services/keyValidation.ts",
+      "summary": "Frontend service layer for provider API-key management: validates keys, checks model availability/quotas, drives OAuth login flows for Claude Code and Codex, and exposes CRUD plus health-tracking operations for stored keys via Tauri invoke calls.",
+      "tags": [
+        "service",
+        "api-handler",
+        "validation",
+        "oauth",
+        "credentials"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:validateKey",
+      "type": "function",
+      "name": "validateKey",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        90,
+        106
+      ],
+      "summary": "Validates a provider API key (and optional model) against the backend, returning whether it authenticates successfully.",
+      "tags": [
+        "validation",
+        "api-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:testModelAvailability",
+      "type": "function",
+      "name": "testModelAvailability",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        112,
+        125
+      ],
+      "summary": "Checks whether a specific model is reachable/usable for the given provider key.",
+      "tags": [
+        "validation",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:fetchKeyQuota",
+      "type": "function",
+      "name": "fetchKeyQuota",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        128,
+        136
+      ],
+      "summary": "Fetches the current usage quota for a provider API key.",
+      "tags": [
+        "api-handler",
+        "quota"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:refreshKeyQuota",
+      "type": "function",
+      "name": "refreshKeyQuota",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        139,
+        141
+      ],
+      "summary": "Refreshes and re-persists the cached quota for a stored key by id.",
+      "tags": [
+        "api-handler",
+        "quota"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getCursorCliModels",
+      "type": "function",
+      "name": "getCursorCliModels",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        147,
+        149
+      ],
+      "summary": "Lists models available through the Cursor CLI for a given key.",
+      "tags": [
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getCursorNativeModels",
+      "type": "function",
+      "name": "getCursorNativeModels",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        161,
+        166
+      ],
+      "summary": "Lists models available via Cursor's native API using a session token.",
+      "tags": [
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getOAuthModelCatalog",
+      "type": "function",
+      "name": "getOAuthModelCatalog",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        173,
+        183
+      ],
+      "summary": "Fetches the OAuth-provider model catalog for a given agent type.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getClaudeCodeOAuthModels",
+      "type": "function",
+      "name": "getClaudeCodeOAuthModels",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        185,
+        189
+      ],
+      "summary": "Lists models available to a Claude Code OAuth session.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getCodexOAuthModels",
+      "type": "function",
+      "name": "getCodexOAuthModels",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        191,
+        201
+      ],
+      "summary": "Lists models available to a Codex OAuth session.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:refreshOauthToken",
+      "type": "function",
+      "name": "refreshOauthToken",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        208,
+        210
+      ],
+      "summary": "Refreshes an expired OAuth access token for a stored key.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:startClaudeCodeOauthLogin",
+      "type": "function",
+      "name": "startClaudeCodeOauthLogin",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        212,
+        214
+      ],
+      "summary": "Starts the Claude Code OAuth login flow.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:exchangeClaudeCodeOauthCode",
+      "type": "function",
+      "name": "exchangeClaudeCodeOauthCode",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        216,
+        228
+      ],
+      "summary": "Exchanges a Claude Code OAuth authorization code (with PKCE verifier/state) for access tokens.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:startCodexOauthLogin",
+      "type": "function",
+      "name": "startCodexOauthLogin",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        230,
+        232
+      ],
+      "summary": "Starts the Codex OAuth login flow.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:exchangeCodexOauthCode",
+      "type": "function",
+      "name": "exchangeCodexOauthCode",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        234,
+        248
+      ],
+      "summary": "Exchanges a Codex OAuth authorization code for access tokens.",
+      "tags": [
+        "api-handler",
+        "oauth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:listKeys",
+      "type": "function",
+      "name": "listKeys",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        255,
+        257
+      ],
+      "summary": "Lists metadata for all stored provider API keys.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getKey",
+      "type": "function",
+      "name": "getKey",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        260,
+        268
+      ],
+      "summary": "Retrieves metadata for a single stored key by agent type and key id.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getKeyById",
+      "type": "function",
+      "name": "getKeyById",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        271,
+        273
+      ],
+      "summary": "Retrieves metadata for a single stored key by id.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getFullKey",
+      "type": "function",
+      "name": "getFullKey",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        276,
+        284
+      ],
+      "summary": "Retrieves the full unmasked key value for a stored credential.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:saveKey",
+      "type": "function",
+      "name": "saveKey",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        287,
+        289
+      ],
+      "summary": "Persists a new or updated provider API key.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:deleteKey",
+      "type": "function",
+      "name": "deleteKey",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        292,
+        300
+      ],
+      "summary": "Deletes a stored key by agent type and key id.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:deleteKeyById",
+      "type": "function",
+      "name": "deleteKeyById",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        303,
+        305
+      ],
+      "summary": "Deletes a stored key by id.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:updateKeyHealth",
+      "type": "function",
+      "name": "updateKeyHealth",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        308,
+        326
+      ],
+      "summary": "Updates the recorded health status, available/enabled models, quota, and context lengths for a stored key.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:promptPolish",
+      "type": "function",
+      "name": "promptPolish",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        329,
+        340
+      ],
+      "summary": "Sends text to the prompt-polish service and returns an improved version.",
+      "tags": [
+        "api-handler",
+        "ai-service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:sessionStepExplain",
+      "type": "function",
+      "name": "sessionStepExplain",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        343,
+        354
+      ],
+      "summary": "Requests an AI-generated explanation of a session step.",
+      "tags": [
+        "api-handler",
+        "ai-service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:housekeeperHealthCheck",
+      "type": "function",
+      "name": "housekeeperHealthCheck",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        357,
+        369
+      ],
+      "summary": "Runs a health-check request against the housekeeper backend service.",
+      "tags": [
+        "api-handler",
+        "ai-service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:housekeeperTokenBenchmark",
+      "type": "function",
+      "name": "housekeeperTokenBenchmark",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        372,
+        384
+      ],
+      "summary": "Runs a token-throughput benchmark via the housekeeper service.",
+      "tags": [
+        "api-handler",
+        "benchmark"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:housekeeperUiIntent",
+      "type": "function",
+      "name": "housekeeperUiIntent",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        387,
+        405
+      ],
+      "summary": "Sends UI context text to the housekeeper service to resolve user intent.",
+      "tags": [
+        "api-handler",
+        "ai-service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getEnvForAgent",
+      "type": "function",
+      "name": "getEnvForAgent",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        408,
+        416
+      ],
+      "summary": "Builds the environment variables needed to run a given agent with its configured key.",
+      "tags": [
+        "api-handler",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:getAllKeysForAgent",
+      "type": "function",
+      "name": "getAllKeysForAgent",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        419,
+        425
+      ],
+      "summary": "Retrieves all stored keys applicable to a given agent's configured providers.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:autoDetectKey",
+      "type": "function",
+      "name": "autoDetectKey",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        438,
+        442
+      ],
+      "summary": "Attempts to auto-detect an already-configured provider key on the local machine.",
+      "tags": [
+        "api-handler",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/keyValidation.ts:scanCliVersion",
+      "type": "function",
+      "name": "scanCliVersion",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        445,
+        450
+      ],
+      "summary": "Detects the installed version of a provider's CLI tool, optionally forcing a rescan.",
+      "tags": [
+        "api-handler",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/services/microphone.ts",
+      "type": "file",
+      "name": "microphone.ts",
+      "filePath": "src/api/services/microphone.ts",
+      "summary": "Service wrapping OS-level microphone permission checks and settings deep-links so the renderer can detect and request microphone access across platforms.",
+      "tags": [
+        "service",
+        "permissions",
+        "api-handler",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/microphone.ts:getMicrophoneSettingsDeepLink",
+      "type": "function",
+      "name": "getMicrophoneSettingsDeepLink",
+      "filePath": "src/api/services/microphone.ts",
+      "lineRange": [
+        41,
+        49
+      ],
+      "summary": "Returns the OS-specific deep-link URL to open microphone privacy settings.",
+      "tags": [
+        "utility",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/microphone.ts:canOpenMicrophoneSystemSettings",
+      "type": "function",
+      "name": "canOpenMicrophoneSystemSettings",
+      "filePath": "src/api/services/microphone.ts",
+      "lineRange": [
+        51,
+        53
+      ],
+      "summary": "Reports whether the current platform supports opening microphone settings directly.",
+      "tags": [
+        "utility",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/microphone.ts:openMicrophoneSystemSettings",
+      "type": "function",
+      "name": "openMicrophoneSystemSettings",
+      "filePath": "src/api/services/microphone.ts",
+      "lineRange": [
+        55,
+        67
+      ],
+      "summary": "Opens the OS microphone privacy settings page via the deep link.",
+      "tags": [
+        "api-handler",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/microphone.ts:checkMicrophonePermission",
+      "type": "function",
+      "name": "checkMicrophonePermission",
+      "filePath": "src/api/services/microphone.ts",
+      "lineRange": [
+        74,
+        103
+      ],
+      "summary": "Checks the current microphone permission status for the app.",
+      "tags": [
+        "api-handler",
+        "permissions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/microphone.ts:requestMicrophonePermission",
+      "type": "function",
+      "name": "requestMicrophonePermission",
+      "filePath": "src/api/services/microphone.ts",
+      "lineRange": [
+        110,
+        138
+      ],
+      "summary": "Requests microphone permission from the OS, prompting the user if needed.",
+      "tags": [
+        "api-handler",
+        "permissions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/services/notification.ts",
+      "type": "file",
+      "name": "notification.ts",
+      "filePath": "src/api/services/notification.ts",
+      "summary": "Desktop notification and sound service: manages notification permission requests, plays completion/alert sounds, and dispatches system notifications for task completion, approvals, errors, session status changes, and git operations.",
+      "tags": [
+        "service",
+        "notification",
+        "api-handler",
+        "event-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:getAudioElement",
+      "type": "function",
+      "name": "getAudioElement",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        18,
+        27
+      ],
+      "summary": "Lazily creates/caches the HTMLAudioElement used to play notification sounds.",
+      "tags": [
+        "utility",
+        "audio"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:playGeneratedSound",
+      "type": "function",
+      "name": "playGeneratedSound",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        30,
+        65
+      ],
+      "summary": "Plays a generated notification chime at the given volume.",
+      "tags": [
+        "utility",
+        "audio"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:checkNotificationPermission",
+      "type": "function",
+      "name": "checkNotificationPermission",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        80,
+        96
+      ],
+      "summary": "Checks whether desktop notification permission is currently granted.",
+      "tags": [
+        "api-handler",
+        "permissions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:requestNotificationPermission",
+      "type": "function",
+      "name": "requestNotificationPermission",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        101,
+        121
+      ],
+      "summary": "Requests desktop notification permission from the OS.",
+      "tags": [
+        "api-handler",
+        "permissions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:sendSystemNotification",
+      "type": "function",
+      "name": "sendSystemNotification",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        126,
+        143
+      ],
+      "summary": "Sends a native OS notification with the given title and body.",
+      "tags": [
+        "api-handler",
+        "notification"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:playCompletionSound",
+      "type": "function",
+      "name": "playCompletionSound",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        148,
+        166
+      ],
+      "summary": "Plays the task-completion sound effect at the given volume.",
+      "tags": [
+        "utility",
+        "audio"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:notify",
+      "type": "function",
+      "name": "notify",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        171,
+        196
+      ],
+      "summary": "Central dispatcher that sends a notification (and optional sound) honoring the user's notification settings.",
+      "tags": [
+        "api-handler",
+        "notification",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:notifyTaskCompletion",
+      "type": "function",
+      "name": "notifyTaskCompletion",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        201,
+        214
+      ],
+      "summary": "Sends a notification announcing that a task has completed.",
+      "tags": [
+        "notification",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:notifyAgentApproval",
+      "type": "function",
+      "name": "notifyAgentApproval",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        219,
+        232
+      ],
+      "summary": "Sends a notification requesting user approval for an agent action.",
+      "tags": [
+        "notification",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:notifyError",
+      "type": "function",
+      "name": "notifyError",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        237,
+        250
+      ],
+      "summary": "Sends a notification surfacing an error message to the user.",
+      "tags": [
+        "notification",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:notifySessionStatus",
+      "type": "function",
+      "name": "notifySessionStatus",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        255,
+        268
+      ],
+      "summary": "Sends a notification reflecting a session status change.",
+      "tags": [
+        "notification",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:notifyGitOperation",
+      "type": "function",
+      "name": "notifyGitOperation",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        273,
+        286
+      ],
+      "summary": "Sends a notification about the outcome of a git operation.",
+      "tags": [
+        "notification",
+        "event-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/services/notification.ts:sendTestNotification",
+      "type": "function",
+      "name": "sendTestNotification",
+      "filePath": "src/api/services/notification.ts",
+      "lineRange": [
+        291,
+        313
+      ],
+      "summary": "Sends a test notification so the user can preview their notification settings.",
+      "tags": [
+        "notification",
+        "api-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "type": "file",
+      "name": "cliTerminalSession.ts",
+      "filePath": "src/api/tauri/agent/cliTerminalSession.ts",
+      "summary": "Builds and launches CLI TUI (terminal UI) sessions for coding agents \u2014 formats platform-specific shell commands and creates/releases the underlying Tauri terminal session.",
+      "tags": [
+        "api-handler",
+        "cli",
+        "terminal",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/tauri/agent/cliTerminalSession.ts:formatCliTuiCommand",
+      "type": "function",
+      "name": "formatCliTuiCommand",
+      "filePath": "src/api/tauri/agent/cliTerminalSession.ts",
+      "lineRange": [
+        38,
+        49
+      ],
+      "summary": "Formats the shell command line used to launch a CLI agent's terminal UI for a given profile.",
+      "tags": [
+        "utility",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/cliTerminalSession.ts:resolveCliTuiCommand",
+      "type": "function",
+      "name": "resolveCliTuiCommand",
+      "filePath": "src/api/tauri/agent/cliTerminalSession.ts",
+      "lineRange": [
+        52,
+        64
+      ],
+      "summary": "Resolves the platform-appropriate CLI TUI command, quoting arguments for POSIX shells as needed.",
+      "tags": [
+        "utility",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/cliTerminalSession.ts:cliAgentCreateTuiSession",
+      "type": "function",
+      "name": "cliAgentCreateTuiSession",
+      "filePath": "src/api/tauri/agent/cliTerminalSession.ts",
+      "lineRange": [
+        66,
+        81
+      ],
+      "summary": "Creates a new Tauri-backed terminal session running the resolved CLI TUI command.",
+      "tags": [
+        "api-handler",
+        "terminal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/tauri/agent/cliTerminalSession.ts:cliAgentTuiRelease",
+      "type": "function",
+      "name": "cliAgentTuiRelease",
+      "filePath": "src/api/tauri/agent/cliTerminalSession.ts",
+      "lineRange": [
+        88,
+        94
+      ],
+      "summary": "Releases/tears down a previously created CLI TUI terminal session.",
+      "tags": [
+        "api-handler",
+        "terminal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/agent/config.ts",
+      "type": "file",
+      "name": "config.ts",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "summary": "Assembles and patches the per-agent configuration blob sent to the Rust backend, merging agent definition, integrations, policy, session-model, and tool-permission edits into the persisted config shape.",
+      "tags": [
+        "config",
+        "api-handler",
+        "service",
+        "utility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:cloneCommandRiskRules",
+      "type": "function",
+      "name": "cloneCommandRiskRules",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        41,
+        48
+      ],
+      "summary": "Deep-clones a set of command risk rules so callers can mutate a copy safely.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:getDefaultCommandRiskRules",
+      "type": "function",
+      "name": "getDefaultCommandRiskRules",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        50,
+        53
+      ],
+      "summary": "Returns the default set of command risk rules used when none are configured.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:riskRulesForBlob",
+      "type": "function",
+      "name": "riskRulesForBlob",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        73,
+        84
+      ],
+      "summary": "Resolves the effective risk rules to embed in a config blob, falling back to defaults.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:assembleAgentConfigBlob",
+      "type": "function",
+      "name": "assembleAgentConfigBlob",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        97,
+        149
+      ],
+      "summary": "Assembles the full persisted agent config blob from the agent definition, integrations, kind, and risk rules.",
+      "tags": [
+        "config",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:getAgentConfig",
+      "type": "function",
+      "name": "getAgentConfig",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        151,
+        171
+      ],
+      "summary": "Fetches the persisted configuration for a given agent type/workspace.",
+      "tags": [
+        "api-handler",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:updateAgentConfig",
+      "type": "function",
+      "name": "updateAgentConfig",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        183,
+        208
+      ],
+      "summary": "Sends a partial update to persist changes to an agent's configuration.",
+      "tags": [
+        "api-handler",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:extractAgentDefPatch",
+      "type": "function",
+      "name": "extractAgentDefPatch",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        217,
+        257
+      ],
+      "summary": "Extracts the agent-definition portion of a patch from a raw config blob.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:extractIntegrationsPatch",
+      "type": "function",
+      "name": "extractIntegrationsPatch",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        270,
+        275
+      ],
+      "summary": "Extracts the integrations portion of a patch from a raw config blob.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:buildAgentPolicyPatch",
+      "type": "function",
+      "name": "buildAgentPolicyPatch",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        284,
+        299
+      ],
+      "summary": "Builds the policy-section patch object from a config blob.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:buildSessionModelPatch",
+      "type": "function",
+      "name": "buildSessionModelPatch",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        308,
+        317
+      ],
+      "summary": "Builds a patch object for session-model edits.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/agent/config.ts:buildAgentToolsPatch",
+      "type": "function",
+      "name": "buildAgentToolsPatch",
+      "filePath": "src/api/tauri/agent/config.ts",
+      "lineRange": [
+        336,
+        348
+      ],
+      "summary": "Builds the tools-section patch object from a config blob.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/agent/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/agent/index.ts",
+      "summary": "Barrel module aggregating the Agent API surface (types, tool names, session, workspace, gateway, config, tools, automation, and AgentOrg task submodules) into a single import point for agent-related Tauri IPC commands.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:validateKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:validateKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:testModelAvailability",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:testModelAvailability",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:fetchKeyQuota",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:fetchKeyQuota",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:refreshKeyQuota",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:refreshKeyQuota",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getCursorCliModels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getCursorCliModels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getCursorNativeModels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getCursorNativeModels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getOAuthModelCatalog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getOAuthModelCatalog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getClaudeCodeOAuthModels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getClaudeCodeOAuthModels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getCodexOAuthModels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getCodexOAuthModels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:refreshOauthToken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:refreshOauthToken",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:startClaudeCodeOauthLogin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:startClaudeCodeOauthLogin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:exchangeClaudeCodeOauthCode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:exchangeClaudeCodeOauthCode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:startCodexOauthLogin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:startCodexOauthLogin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:exchangeCodexOauthCode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:exchangeCodexOauthCode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:listKeys",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:listKeys",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getKeyById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getKeyById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getFullKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getFullKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:saveKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:saveKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:deleteKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:deleteKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:deleteKeyById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:deleteKeyById",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:updateKeyHealth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:updateKeyHealth",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:promptPolish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:promptPolish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:sessionStepExplain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:sessionStepExplain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:housekeeperHealthCheck",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:housekeeperHealthCheck",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:housekeeperTokenBenchmark",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:housekeeperTokenBenchmark",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:housekeeperUiIntent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:housekeeperUiIntent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getEnvForAgent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getEnvForAgent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getAllKeysForAgent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:getAllKeysForAgent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:autoDetectKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:autoDetectKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:scanCliVersion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/keyValidation.ts",
+      "target": "function:src/api/services/keyValidation.ts:scanCliVersion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:getMicrophoneSettingsDeepLink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:getMicrophoneSettingsDeepLink",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:canOpenMicrophoneSystemSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:canOpenMicrophoneSystemSettings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:openMicrophoneSystemSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:openMicrophoneSystemSettings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:checkMicrophonePermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:checkMicrophonePermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:requestMicrophonePermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/microphone.ts",
+      "target": "function:src/api/services/microphone.ts:requestMicrophonePermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:getAudioElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:playGeneratedSound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:checkNotificationPermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:checkNotificationPermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:requestNotificationPermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:requestNotificationPermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:sendSystemNotification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:sendSystemNotification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:playCompletionSound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:playCompletionSound",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notify",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyTaskCompletion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyTaskCompletion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyAgentApproval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyAgentApproval",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifySessionStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifySessionStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyGitOperation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:notifyGitOperation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:sendTestNotification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/services/notification.ts",
+      "target": "function:src/api/services/notification.ts:sendTestNotification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:formatCliTuiCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:formatCliTuiCommand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:resolveCliTuiCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:resolveCliTuiCommand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:cliAgentCreateTuiSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:cliAgentCreateTuiSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:cliAgentTuiRelease",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/cliTerminalSession.ts",
+      "target": "function:src/api/tauri/agent/cliTerminalSession.ts:cliAgentTuiRelease",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:cloneCommandRiskRules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:cloneCommandRiskRules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:getDefaultCommandRiskRules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:getDefaultCommandRiskRules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:riskRulesForBlob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:assembleAgentConfigBlob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:assembleAgentConfigBlob",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:getAgentConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:getAgentConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:updateAgentConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:updateAgentConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:extractAgentDefPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:extractAgentDefPatch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:extractIntegrationsPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:extractIntegrationsPatch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:buildAgentPolicyPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:buildSessionModelPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/agent/config.ts",
+      "target": "function:src/api/tauri/agent/config.ts:buildAgentToolsPatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

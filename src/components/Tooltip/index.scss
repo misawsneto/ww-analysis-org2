@@ -1,0 +1,178 @@
+// ==========================================
+// Tooltip Component Styles
+// Uses "native-tooltip" prefix to match component class names
+// ==========================================
+
+.native-tooltip {
+  position: fixed;
+  z-index: 1060;
+  box-sizing: border-box;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.95);
+  // Only transition opacity and transform, NOT position (top/left) to prevent "flying" effect
+  transition:
+    opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.native-tooltip-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &.native-tooltip-interactive.native-tooltip-visible {
+    pointer-events: auto;
+  }
+
+  &.native-tooltip-panel {
+    background: var(--color-bg-2);
+    color: var(--color-text-1);
+    border: 1px solid var(--color-border-2);
+
+    .native-tooltip-arrow {
+      background: var(--color-bg-2);
+    }
+  }
+
+  &.native-tooltip-framed-panel {
+    width: max-content;
+    max-width: calc(100vw - 16px);
+    background: var(--cm-editor-background, var(--color-bg-2));
+    color: var(--color-text-1);
+    border: 1px solid var(--color-border-2);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.1);
+
+    .native-tooltip-content-inner {
+      max-width: min(320px, calc(100vw - 40px));
+    }
+
+    &.native-tooltip-framed-panel-wide .native-tooltip-content-inner {
+      max-width: min(480px, calc(100vw - 40px));
+    }
+
+    kbd {
+      color: var(--color-text-1);
+    }
+  }
+}
+
+.native-tooltip-content {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.native-tooltip-content-inner {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+
+  // Rich tooltip bodies (breadcrumbs, shortcut rows, model metadata) must
+  // participate in the viewport constraint instead of keeping max-content
+  // width and painting beyond the framed surface.
+  > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+.native-tooltip-arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+// Arrow positions
+.native-tooltip-top,
+.native-tooltip-top-start,
+.native-tooltip-top-end {
+  .native-tooltip-arrow {
+    bottom: -4px;
+    left: 50%;
+    margin-left: -4px;
+  }
+}
+
+.native-tooltip-top-start .native-tooltip-arrow {
+  left: 16px;
+  margin-left: 0;
+}
+
+.native-tooltip-top-end .native-tooltip-arrow {
+  left: auto;
+  right: 16px;
+  margin-left: 0;
+}
+
+.native-tooltip-bottom,
+.native-tooltip-bottom-start,
+.native-tooltip-bottom-end {
+  .native-tooltip-arrow {
+    top: -4px;
+    left: 50%;
+    margin-left: -4px;
+  }
+}
+
+.native-tooltip-bottom-start .native-tooltip-arrow {
+  left: 16px;
+  margin-left: 0;
+}
+
+.native-tooltip-bottom-end .native-tooltip-arrow {
+  left: auto;
+  right: 16px;
+  margin-left: 0;
+}
+
+.native-tooltip-left,
+.native-tooltip-left-start,
+.native-tooltip-left-end {
+  .native-tooltip-arrow {
+    right: -4px;
+    top: 50%;
+    margin-top: -4px;
+  }
+}
+
+.native-tooltip-left-start .native-tooltip-arrow {
+  top: 12px;
+  margin-top: 0;
+}
+
+.native-tooltip-left-end .native-tooltip-arrow {
+  top: auto;
+  bottom: 12px;
+  margin-top: 0;
+}
+
+.native-tooltip-right,
+.native-tooltip-right-start,
+.native-tooltip-right-end {
+  .native-tooltip-arrow {
+    left: -4px;
+    top: 50%;
+    margin-top: -4px;
+  }
+}
+
+.native-tooltip-right-start .native-tooltip-arrow {
+  top: 12px;
+  margin-top: 0;
+}
+
+.native-tooltip-right-end .native-tooltip-arrow {
+  top: auto;
+  bottom: 12px;
+  margin-top: 0;
+}

@@ -1,0 +1,629 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/git/staged-rs-crates.mjs",
+      "type": "file",
+      "name": "staged-rs-crates.mjs",
+      "filePath": "scripts/git/staged-rs-crates.mjs",
+      "summary": "Git hook helper that maps staged Rust file paths to their owning Cargo workspace crate names, used to scope crate-specific checks (e.g. clippy) to only the affected crates.",
+      "tags": [
+        "git-hooks",
+        "rust",
+        "cargo",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/git/staged-rs-crates.mjs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/git/staged-rs-crates.mjs",
+      "lineRange": [
+        57,
+        78
+      ],
+      "summary": "Reads staged file paths from stdin/argv, resolves each to its owning workspace crate via loadWorkspacePackages, and prints the unique set of affected crate names.",
+      "tags": [
+        "entry-point",
+        "cargo",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/git/staged-rs-crates.mjs:loadWorkspacePackages",
+      "type": "function",
+      "name": "loadWorkspacePackages",
+      "filePath": "scripts/git/staged-rs-crates.mjs",
+      "lineRange": [
+        34,
+        48
+      ],
+      "summary": "Runs `cargo metadata` and parses the workspace package list into name/directory pairs sorted by path depth.",
+      "tags": [
+        "cargo",
+        "workspace",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/maintenance/cargo-cleanup.sh",
+      "type": "file",
+      "name": "cargo-cleanup.sh",
+      "filePath": "scripts/maintenance/cargo-cleanup.sh",
+      "summary": "Maintenance script that prunes stale Cargo build artifacts (working directories, target caches) to reclaim disk space, reporting human-readable sizes before and after cleanup.",
+      "tags": [
+        "maintenance",
+        "cargo",
+        "disk-cleanup",
+        "shell"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/maintenance/cargo-cleanup.sh:prune_stale_working",
+      "type": "function",
+      "name": "prune_stale_working",
+      "filePath": "scripts/maintenance/cargo-cleanup.sh",
+      "lineRange": [
+        134,
+        151
+      ],
+      "summary": "Removes stale per-build working directories under the Cargo target dir that are older than a retention threshold.",
+      "tags": [
+        "cargo",
+        "disk-cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/maintenance/cargo-cleanup.sh:wipe_dir",
+      "type": "function",
+      "name": "wipe_dir",
+      "filePath": "scripts/maintenance/cargo-cleanup.sh",
+      "lineRange": [
+        168,
+        181
+      ],
+      "summary": "Deletes a target directory's contents while reporting its size before removal, used as a shared helper across cleanup steps.",
+      "tags": [
+        "disk-cleanup",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/maintenance/cargo-cleanup.sh:bytes_to_human",
+      "type": "function",
+      "name": "bytes_to_human",
+      "filePath": "scripts/maintenance/cargo-cleanup.sh",
+      "lineRange": [
+        64,
+        75
+      ],
+      "summary": "Converts a raw byte count into a human-readable size string (KB/MB/GB) for cleanup reporting.",
+      "tags": [
+        "formatting",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/quality/check-e2e-oauth-guards.mjs",
+      "type": "file",
+      "name": "check-e2e-oauth-guards.mjs",
+      "filePath": "scripts/quality/check-e2e-oauth-guards.mjs",
+      "summary": "CI quality gate that recursively scans the repository for dangerous E2E OAuth-seeding environment variable patterns (e.g. rotation seeds pointed at a real home directory) and flags them as violations.",
+      "tags": [
+        "ci",
+        "security",
+        "e2e",
+        "quality-gate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/quality/check-e2e-oauth-guards.mjs:walk",
+      "type": "function",
+      "name": "walk",
+      "filePath": "scripts/quality/check-e2e-oauth-guards.mjs",
+      "lineRange": [
+        14,
+        38
+      ],
+      "summary": "Recursively walks the source tree, reading matching files and testing their contents against dangerous OAuth-seed patterns, collecting any violations found.",
+      "tags": [
+        "filesystem-traversal",
+        "security",
+        "recursion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/quality/check-missing-i18n-keys.mjs",
+      "type": "file",
+      "name": "check-missing-i18n-keys.mjs",
+      "filePath": "scripts/quality/check-missing-i18n-keys.mjs",
+      "summary": "CI quality gate that diffs locale JSON files against a base locale to detect missing or mismatched i18n translation keys across languages.",
+      "tags": [
+        "ci",
+        "i18n",
+        "quality-gate",
+        "localization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/quality/check-missing-i18n-keys.mjs:flattenKeys",
+      "type": "function",
+      "name": "flattenKeys",
+      "filePath": "scripts/quality/check-missing-i18n-keys.mjs",
+      "lineRange": [
+        38,
+        49
+      ],
+      "summary": "Recursively flattens a nested locale object into a list of dot-separated key paths for comparison across locales.",
+      "tags": [
+        "i18n",
+        "recursion",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/quality/check-missing-i18n-keys.mjs:setNestedValue",
+      "type": "function",
+      "name": "setNestedValue",
+      "filePath": "scripts/quality/check-missing-i18n-keys.mjs",
+      "lineRange": [
+        61,
+        72
+      ],
+      "summary": "Sets a value at a dot-separated key path within a nested object, creating intermediate objects as needed.",
+      "tags": [
+        "i18n",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/setup/json-merge-driver.mjs",
+      "type": "file",
+      "name": "json-merge-driver.mjs",
+      "filePath": "scripts/setup/json-merge-driver.mjs",
+      "summary": "Postinstall setup script that registers the project's custom JSON deep-merge git driver in the local repository's git config so every developer picks it up automatically.",
+      "tags": [
+        "setup",
+        "git-hooks",
+        "postinstall"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/setup/postinstall.mjs",
+      "type": "file",
+      "name": "postinstall.mjs",
+      "filePath": "scripts/setup/postinstall.mjs",
+      "summary": "Orchestrates the npm postinstall sequence, running a series of setup steps (each a shell command) in order and reporting per-step timing and pass/fail status.",
+      "tags": [
+        "setup",
+        "postinstall",
+        "orchestration",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup/postinstall.mjs:runStep",
+      "type": "function",
+      "name": "runStep",
+      "filePath": "scripts/setup/postinstall.mjs",
+      "lineRange": [
+        24,
+        48
+      ],
+      "summary": "Executes a single postinstall step as a synchronous child process, logging its duration and exiting the process on failure (unless marked optional).",
+      "tags": [
+        "process-management",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/setup/sidecar-symlinks.js",
+      "type": "file",
+      "name": "sidecar-symlinks.js",
+      "filePath": "scripts/setup/sidecar-symlinks.js",
+      "summary": "Dev-environment setup script that creates architecture-specific symlinks pointing at downloaded sidecar binaries (e.g. Node, Peekaboo) so Tauri can locate them during local development.",
+      "tags": [
+        "setup",
+        "sidecar",
+        "symlinks",
+        "dev-tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup/sidecar-symlinks.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/setup/sidecar-symlinks.js",
+      "lineRange": [
+        143,
+        170
+      ],
+      "summary": "Determines the current platform architecture and creates each required sidecar symlink via createSymlink, reporting overall success or failure.",
+      "tags": [
+        "entry-point",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup/sidecar-symlinks.js:createSymlink",
+      "type": "function",
+      "name": "createSymlink",
+      "filePath": "scripts/setup/sidecar-symlinks.js",
+      "lineRange": [
+        98,
+        137
+      ],
+      "summary": "Creates or repairs a symlink at a given path pointing to a target binary, replacing stale or broken existing links and reporting the outcome.",
+      "tags": [
+        "symlinks",
+        "filesystem"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup/sidecar-symlinks.js:getArchitecture",
+      "type": "function",
+      "name": "getArchitecture",
+      "filePath": "scripts/setup/sidecar-symlinks.js",
+      "lineRange": [
+        29,
+        44
+      ],
+      "summary": "Maps the current OS/CPU architecture to the Rust target-triple naming convention used for sidecar binary filenames.",
+      "tags": [
+        "platform-detection",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/tools/download_sidecars.py",
+      "type": "file",
+      "name": "download_sidecars.py",
+      "filePath": "scripts/tools/download_sidecars.py",
+      "summary": "Build-time tool that downloads and installs platform-specific sidecar binaries (agent-browser and Peekaboo) into the app's bin directory, skipping already-installed non-placeholder binaries.",
+      "tags": [
+        "build-tooling",
+        "sidecar",
+        "download",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/tools/download_sidecars.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/tools/download_sidecars.py",
+      "lineRange": [
+        165,
+        172
+      ],
+      "summary": "Detects the current OS/architecture and drives installation of the agent-browser and Peekaboo sidecars for that platform.",
+      "tags": [
+        "entry-point",
+        "orchestration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tools/download_sidecars.py:install_peekaboo",
+      "type": "function",
+      "name": "install_peekaboo",
+      "filePath": "scripts/tools/download_sidecars.py",
+      "lineRange": [
+        116,
+        153
+      ],
+      "summary": "Downloads, extracts, and installs the Peekaboo sidecar binary for the current platform into both a universal and architecture-specific destination, skipping if already installed.",
+      "tags": [
+        "sidecar",
+        "download",
+        "installation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/tools/download_sidecars.py:install_agent_browser",
+      "type": "function",
+      "name": "install_agent_browser",
+      "filePath": "scripts/tools/download_sidecars.py",
+      "lineRange": [
+        89,
+        106
+      ],
+      "summary": "Downloads and installs the agent-browser sidecar binary for the current platform, skipping if a non-placeholder binary already exists.",
+      "tags": [
+        "sidecar",
+        "download",
+        "installation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/tools/download.py",
+      "type": "file",
+      "name": "download.py",
+      "filePath": "scripts/tools/download.py",
+      "summary": "Build-time tool that downloads and extracts the correct Node.js binary distribution for the current platform, placing the extracted `node` executable in the working directory for use as a Tauri sidecar.",
+      "tags": [
+        "build-tooling",
+        "nodejs",
+        "sidecar",
+        "download"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src-tauri/.cargo/config.toml",
+      "type": "config",
+      "name": "config.toml",
+      "filePath": "src-tauri/.cargo/config.toml",
+      "summary": "Cargo build configuration tuning parallel rustc job count and disabling incremental compilation to control peak memory usage, plus a target-specific override for aarch64-apple-darwin.",
+      "tags": [
+        "configuration",
+        "cargo",
+        "rust",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Job count and incremental settings are deliberately conservative, with comments documenting the observed peak memory usage tradeoffs for each setting."
+    },
+    {
+      "id": "file:src-tauri/.taurignore",
+      "type": "file",
+      "name": ".taurignore",
+      "filePath": "src-tauri/.taurignore",
+      "summary": "Tauri dev-watcher ignore file (gitignore syntax) excluding Rust build output, sidecar node_modules/dist/build directories, and misc log/temp files from triggering rebuilds.",
+      "tags": [
+        "configuration",
+        "tauri",
+        "ignore-file",
+        "dev-tooling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/build.rs",
+      "type": "file",
+      "name": "build.rs",
+      "filePath": "src-tauri/build.rs",
+      "summary": "Cargo build script for the Tauri backend; generates a Rust source file from a handler-list manifest and ensures optional sidecar resource placeholder files exist before invoking tauri_build::build().",
+      "tags": [
+        "build-script",
+        "rust",
+        "tauri",
+        "code-generation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/build.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "src-tauri/build.rs",
+      "lineRange": [
+        20,
+        41
+      ],
+      "summary": "Reads a handler-list file, writes generated code derived from it into OUT_DIR, ensures optional sidecar placeholders exist, and runs the standard tauri_build build step.",
+      "tags": [
+        "entry-point",
+        "code-generation",
+        "build-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/build.rs:ensure_optional_sidecar_resources",
+      "type": "function",
+      "name": "ensure_optional_sidecar_resources",
+      "filePath": "src-tauri/build.rs",
+      "lineRange": [
+        43,
+        74
+      ],
+      "summary": "Creates placeholder files for optional sidecar resources that are missing at build time, so packaging does not fail when an optional binary was not downloaded.",
+      "tags": [
+        "build-script",
+        "sidecar",
+        "filesystem"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/git/staged-rs-crates.mjs",
+      "target": "function:scripts/git/staged-rs-crates.mjs:loadWorkspacePackages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/staged-rs-crates.mjs",
+      "target": "function:scripts/git/staged-rs-crates.mjs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/maintenance/cargo-cleanup.sh",
+      "target": "function:scripts/maintenance/cargo-cleanup.sh:bytes_to_human",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/maintenance/cargo-cleanup.sh",
+      "target": "function:scripts/maintenance/cargo-cleanup.sh:prune_stale_working",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/maintenance/cargo-cleanup.sh",
+      "target": "function:scripts/maintenance/cargo-cleanup.sh:wipe_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/quality/check-e2e-oauth-guards.mjs",
+      "target": "function:scripts/quality/check-e2e-oauth-guards.mjs:walk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/quality/check-missing-i18n-keys.mjs",
+      "target": "function:scripts/quality/check-missing-i18n-keys.mjs:flattenKeys",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/quality/check-missing-i18n-keys.mjs",
+      "target": "function:scripts/quality/check-missing-i18n-keys.mjs:setNestedValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/setup/json-merge-driver.mjs",
+      "target": "file:scripts/git/json-merge-driver.mjs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:scripts/setup/postinstall.mjs",
+      "target": "function:scripts/setup/postinstall.mjs:runStep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/setup/postinstall.mjs",
+      "target": "file:scripts/setup/json-merge-driver.mjs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:scripts/setup/postinstall.mjs",
+      "target": "file:scripts/setup/sidecar-symlinks.js",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:scripts/setup/postinstall.mjs",
+      "target": "file:scripts/tools/download_sidecars.py",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:scripts/setup/sidecar-symlinks.js",
+      "target": "function:scripts/setup/sidecar-symlinks.js:getArchitecture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/setup/sidecar-symlinks.js",
+      "target": "function:scripts/setup/sidecar-symlinks.js:createSymlink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/setup/sidecar-symlinks.js",
+      "target": "function:scripts/setup/sidecar-symlinks.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/setup/sidecar-symlinks.js",
+      "target": "file:scripts/tools/download_sidecars.py",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:scripts/tools/download_sidecars.py",
+      "target": "function:scripts/tools/download_sidecars.py:install_agent_browser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/tools/download_sidecars.py",
+      "target": "function:scripts/tools/download_sidecars.py:install_peekaboo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/tools/download_sidecars.py",
+      "target": "function:scripts/tools/download_sidecars.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/tools/download_sidecars.py",
+      "target": "function:scripts/tools/download_sidecars.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/tools/download.py",
+      "target": "file:scripts/tools/download_sidecars.py",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/.cargo/config.toml",
+      "target": "file:src-tauri/build.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/build.rs",
+      "target": "function:src-tauri/build.rs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/build.rs",
+      "target": "function:src-tauri/build.rs:ensure_optional_sidecar_resources",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

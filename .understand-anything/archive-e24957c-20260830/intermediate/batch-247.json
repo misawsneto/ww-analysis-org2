@@ -1,0 +1,355 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/components/MarkDown/MarkDownImpl.tsx",
+      "type": "file",
+      "name": "MarkDownImpl.tsx",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "summary": "Implements the core markdown rendering component with syntax-highlighted code blocks, canvas-inline card support, in-repo file link resolution, and Mermaid diagram embedding; lazy-loaded from index.tsx to keep react-markdown/react-syntax-highlighter out of the initial bundle.",
+      "tags": ["markdown", "component", "code-highlighting", "lazy-loaded", "renderer"],
+      "complexity": "complex",
+      "languageNotes": "Wraps the main render function in React.memo with a hand-written props comparator (arePropsEqual) to avoid re-parsing unchanged streamed content."
+    },
+    {
+      "id": "file:src/components/MarkDown/MermaidBlock.tsx",
+      "type": "file",
+      "name": "MermaidBlock.tsx",
+      "filePath": "src/components/MarkDown/MermaidBlock.tsx",
+      "summary": "Renders Mermaid diagram code into cached SVG via a lazily-loaded mermaid library, with a FIFO SVG cache, streaming-aware debounce, and click-to-zoom fullscreen overlay.",
+      "tags": ["markdown", "mermaid", "diagram", "caching", "component"],
+      "complexity": "complex",
+      "languageNotes": "Uses a module-level Map as a FIFO cache (max 50 entries / 2MB) keyed by a hand-rolled FNV-1a-style string hash of code+theme."
+    },
+    {
+      "id": "file:src/components/MarkDown/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/components/MarkDown/index.tsx",
+      "summary": "Thin re-export wrapper that lazy-loads MarkDownImpl.tsx behind a Suspense boundary and error boundary, keeping ~700KB of markdown-rendering dependencies out of the initial bundle for all consumers.",
+      "tags": ["entry-point", "barrel", "lazy-loading", "error-boundary", "markdown"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/MarkDown/markdownUtils.tsx",
+      "type": "file",
+      "name": "markdownUtils.tsx",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "summary": "Utility functions supporting markdown rendering: URL/file-content heuristics, ASCII-diagram detection and wrapping, inline code-type detection, file/browser open helpers, and citation-aware child rendering.",
+      "tags": ["utility", "markdown", "text-processing", "heuristics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:parseCodeFenceMeta",
+      "type": "function",
+      "name": "parseCodeFenceMeta",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [99, 116],
+      "summary": "Parses a fenced code block's info string into language, optional file path, and canvas-fenced mode metadata.",
+      "tags": ["parsing", "markdown", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:splitIntoStableMarkdownBlocks",
+      "type": "function",
+      "name": "splitIntoStableMarkdownBlocks",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [171, 212],
+      "summary": "Splits streaming markdown content into stable, already-closed blocks versus a trailing in-progress block to avoid re-rendering unchanged content while streaming.",
+      "tags": ["streaming", "parsing", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:isPathInCurrentRepo",
+      "type": "function",
+      "name": "isPathInCurrentRepo",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [305, 317],
+      "summary": "Determines whether a given file path resolves inside the active workspace repo root.",
+      "tags": ["path-resolution", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:resolveCurrentRepoFilePath",
+      "type": "function",
+      "name": "resolveCurrentRepoFilePath",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [319, 330],
+      "summary": "Resolves a code-fence file path reference to an absolute path within the current repo, or null if it falls outside it.",
+      "tags": ["path-resolution", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownRenderer",
+      "type": "function",
+      "name": "MarkdownRenderer",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [342, 354],
+      "summary": "Thin wrapper around ReactMarkdown that wires up content, custom components, and remark plugins.",
+      "tags": ["component", "markdown", "wrapper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent",
+      "type": "function",
+      "name": "MarkdownComponent",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [383, 698],
+      "summary": "Main markdown rendering component: memoizes theme/plugin setup, renders custom pre/code/link handlers with syntax highlighting, canvas-inline cards, and Mermaid diagrams, and preprocesses/splits streaming content into stable blocks. Default-exported (memoized) as Markdown.",
+      "tags": ["component", "markdown", "rendering", "code-highlighting"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/MarkDown/MarkDownImpl.tsx:arePropsEqual",
+      "type": "function",
+      "name": "arePropsEqual",
+      "filePath": "src/components/MarkDown/MarkDownImpl.tsx",
+      "lineRange": [707, 719],
+      "summary": "Custom memo comparator that only allows MarkdownComponent to re-render when content or rendering-mode props actually change.",
+      "tags": ["memoization", "performance", "comparator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MermaidBlock.tsx:evictOldestCacheEntry",
+      "type": "function",
+      "name": "evictOldestCacheEntry",
+      "filePath": "src/components/MarkDown/MermaidBlock.tsx",
+      "lineRange": [62, 71],
+      "summary": "Evicts the oldest entry from the module-level SVG cache to enforce the FIFO cache size and byte limits.",
+      "tags": ["caching", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MermaidBlock.tsx:setCachedSvg",
+      "type": "function",
+      "name": "setCachedSvg",
+      "filePath": "src/components/MarkDown/MermaidBlock.tsx",
+      "lineRange": [80, 103],
+      "summary": "Stores a rendered Mermaid SVG in the module-level cache keyed by code+theme hash, evicting old entries and respecting per-entry size eligibility.",
+      "tags": ["caching", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MermaidBlock.tsx:getMermaid",
+      "type": "function",
+      "name": "getMermaid",
+      "filePath": "src/components/MarkDown/MermaidBlock.tsx",
+      "lineRange": [171, 201],
+      "summary": "Lazily imports and initializes the mermaid library singleton, configuring theme variables for light/dark mode on first use.",
+      "tags": ["lazy-loading", "initialization", "mermaid"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/MarkDown/MermaidBlock.tsx:MermaidBlockHeader",
+      "type": "function",
+      "name": "MermaidBlockHeader",
+      "filePath": "src/components/MarkDown/MermaidBlock.tsx",
+      "lineRange": [221, 246],
+      "summary": "Renders the collapsible header row for a Mermaid diagram block with hover state and toggle affordance.",
+      "tags": ["component", "header", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/MermaidBlock.tsx:MermaidBlock",
+      "type": "function",
+      "name": "MermaidBlock",
+      "filePath": "src/components/MarkDown/MermaidBlock.tsx",
+      "lineRange": [248, 598],
+      "summary": "Default-exported component that renders Mermaid diagram code as cached SVG with loading/error states, streaming debounce, collapse toggle, and a click-to-zoom fullscreen overlay portal.",
+      "tags": ["component", "mermaid", "diagram", "rendering"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/components/MarkDown/index.tsx:MarkdownErrorBoundary",
+      "type": "class",
+      "name": "MarkdownErrorBoundary",
+      "filePath": "src/components/MarkDown/index.tsx",
+      "lineRange": [28, 52],
+      "summary": "React error boundary that catches rendering failures in the lazy-loaded Markdown implementation and shows a fallback error message.",
+      "tags": ["error-boundary", "component", "resilience"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/index.tsx:Markdown",
+      "type": "function",
+      "name": "Markdown",
+      "filePath": "src/components/MarkDown/index.tsx",
+      "lineRange": [73, 79],
+      "summary": "Default-exported Markdown component that wraps the lazily-loaded MarkDownImpl behind a Suspense fallback and MarkdownErrorBoundary; the single import point used by all consumers.",
+      "tags": ["component", "lazy-loading", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:openUrlInBrowserApp",
+      "type": "function",
+      "name": "openUrlInBrowserApp",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [85, 94],
+      "summary": "Dispatches a custom window event to open a URL in the desktop app's external browser, optionally bypassing localhost confirmation.",
+      "tags": ["utility", "browser", "event-dispatch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:isLocalhostUrl",
+      "type": "function",
+      "name": "isLocalhostUrl",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [98, 109],
+      "summary": "Checks whether a URL points to localhost or a local/loopback address.",
+      "tags": ["utility", "url", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:mayContainFileContentPattern",
+      "type": "function",
+      "name": "mayContainFileContentPattern",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [113, 122],
+      "summary": "Heuristically detects whether a text block looks like raw file content (e.g. diffs, shebangs) rather than prose.",
+      "tags": ["heuristics", "text-detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:mayContainUnformattedCode",
+      "type": "function",
+      "name": "mayContainUnformattedCode",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [124, 151],
+      "summary": "Heuristically detects unformatted code missing markdown fences by scanning for common code syntax patterns and keywords.",
+      "tags": ["heuristics", "text-detection", "markdown"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:containsMarkdownFence",
+      "type": "function",
+      "name": "containsMarkdownFence",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [163, 165],
+      "summary": "Checks whether text already contains a markdown code fence.",
+      "tags": ["utility", "markdown", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:normalizeCopyableMarkdownDocumentFence",
+      "type": "function",
+      "name": "normalizeCopyableMarkdownDocumentFence",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [167, 192],
+      "summary": "Normalizes an outer document-level code fence so nested fences of equal or greater backtick length are extended, keeping the whole document copy/paste safe.",
+      "tags": ["markdown", "normalization", "text-processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:preprocessTextContent",
+      "type": "function",
+      "name": "preprocessTextContent",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [198, 284],
+      "summary": "Preprocesses raw assistant text before markdown rendering: wraps detected unformatted code and file content in fenced code blocks and delegates ASCII-diagram wrapping.",
+      "tags": ["preprocessing", "markdown", "heuristics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:wrapAsciiDiagrams",
+      "type": "function",
+      "name": "wrapAsciiDiagrams",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [291, 359],
+      "summary": "Scans text line by line and wraps runs of ASCII box-drawing/diagram lines in fenced code blocks so they render as monospace diagrams.",
+      "tags": ["text-processing", "ascii-diagram", "markdown"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:detectCodeType",
+      "type": "function",
+      "name": "detectCodeType",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [367, 407],
+      "summary": "Detects and caches the likely type of an inline code span (e.g. file path, directory, class name, boolean expression) for styling and interaction purposes.",
+      "tags": ["heuristics", "caching", "classification"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:openFileInEditor",
+      "type": "function",
+      "name": "openFileInEditor",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [411, 413],
+      "summary": "Opens a file or directory path in the user's configured editor via the shared editor-opening utility.",
+      "tags": ["utility", "file-system", "editor-integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:renderMessageWithCitations",
+      "type": "function",
+      "name": "renderMessageWithCitations",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [417, 431],
+      "summary": "Splits a message string on citation markers and renders citation references as styled inline elements.",
+      "tags": ["rendering", "citations", "text-processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/MarkDown/markdownUtils.tsx:renderChildren",
+      "type": "function",
+      "name": "renderChildren",
+      "filePath": "src/components/MarkDown/markdownUtils.tsx",
+      "lineRange": [437, 454],
+      "summary": "Recursively walks React children to apply citation-aware text rendering to nested markdown output.",
+      "tags": ["rendering", "recursion", "react"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:parseCodeFenceMeta", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:splitIntoStableMarkdownBlocks", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:isPathInCurrentRepo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:resolveCurrentRepoFilePath", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownRenderer", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:arePropsEqual", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MermaidBlock.tsx", "target": "function:src/components/MarkDown/MermaidBlock.tsx:evictOldestCacheEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MermaidBlock.tsx", "target": "function:src/components/MarkDown/MermaidBlock.tsx:setCachedSvg", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MermaidBlock.tsx", "target": "function:src/components/MarkDown/MermaidBlock.tsx:getMermaid", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MermaidBlock.tsx", "target": "function:src/components/MarkDown/MermaidBlock.tsx:MermaidBlockHeader", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/MermaidBlock.tsx", "target": "function:src/components/MarkDown/MermaidBlock.tsx:MermaidBlock", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/index.tsx", "target": "class:src/components/MarkDown/index.tsx:MarkdownErrorBoundary", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/index.tsx", "target": "function:src/components/MarkDown/index.tsx:Markdown", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:openUrlInBrowserApp", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:isLocalhostUrl", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:mayContainFileContentPattern", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:mayContainUnformattedCode", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:containsMarkdownFence", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:normalizeCopyableMarkdownDocumentFence", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:preprocessTextContent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:wrapAsciiDiagrams", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:detectCodeType", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:openFileInEditor", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:renderMessageWithCitations", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:renderChildren", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "file:src/components/MarkDown/markdownUtils.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "file:src/components/MarkDown/MermaidBlock.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/components/MarkDown/index.tsx", "target": "file:src/components/MarkDown/MarkDownImpl.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/components/MarkDown/MarkDownImpl.tsx", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/MermaidBlock.tsx", "target": "function:src/components/MarkDown/MermaidBlock.tsx:MermaidBlock", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/index.tsx", "target": "function:src/components/MarkDown/index.tsx:Markdown", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:openUrlInBrowserApp", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:isLocalhostUrl", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:containsMarkdownFence", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:normalizeCopyableMarkdownDocumentFence", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:preprocessTextContent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:detectCodeType", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:openFileInEditor", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:renderMessageWithCitations", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/components/MarkDown/markdownUtils.tsx", "target": "function:src/components/MarkDown/markdownUtils.tsx:renderChildren", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "target": "function:src/components/MarkDown/markdownUtils.tsx:detectCodeType", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "target": "function:src/components/MarkDown/markdownUtils.tsx:openFileInEditor", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "target": "function:src/components/MarkDown/markdownUtils.tsx:preprocessTextContent", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "target": "function:src/components/MarkDown/markdownUtils.tsx:normalizeCopyableMarkdownDocumentFence", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "target": "function:src/components/MarkDown/markdownUtils.tsx:renderChildren", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "target": "function:src/components/MarkDown/MermaidBlock.tsx:MermaidBlock", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/components/MarkDown/index.tsx:Markdown", "target": "function:src/components/MarkDown/MarkDownImpl.tsx:MarkdownComponent", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

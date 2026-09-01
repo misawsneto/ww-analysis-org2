@@ -1,0 +1,242 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/hooks/theme/luminanceSampling.ts",
+      "type": "file",
+      "name": "luminanceSampling.ts",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "summary": "Pure helper functions for background-image luminance calculation (color parsing, canvas and Rust-accelerated region sampling, LRU cache) extracted from useRegionLuminance to keep the hook under its line limit.",
+      "tags": ["utility", "image-processing", "caching", "performance", "theme"],
+      "complexity": "complex",
+      "languageNotes": "Combines a module-level Map used as a manual LRU cache with a Tauri invoke() call to a Rust command for 5-10x faster sampling, falling back to canvas-based per-region sampling in the browser."
+    },
+    {
+      "id": "file:src/hooks/theme/luminanceTypes.ts",
+      "type": "file",
+      "name": "luminanceTypes.ts",
+      "filePath": "src/hooks/theme/luminanceTypes.ts",
+      "summary": "Shared TypeScript types (LuminanceRegion, RegionLuminanceData, RegionLuminanceMap) for region-based background luminance sampling, deliberately kept as a leaf module so the hook and sampling utilities can both depend on it without an import cycle.",
+      "tags": ["type-definition", "shared-types", "theme"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/theme/useBackgroundImage.ts",
+      "type": "file",
+      "name": "useBackgroundImage.ts",
+      "filePath": "src/hooks/theme/useBackgroundImage.ts",
+      "summary": "React hook that loads and caches the currently selected background image, resolving preset asset URLs synchronously and custom stored images asynchronously as blob URLs.",
+      "tags": ["hook", "caching", "image-loading", "theme"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/theme/useGlassMaterial.ts",
+      "type": "file",
+      "name": "useGlassMaterial.ts",
+      "filePath": "src/hooks/theme/useGlassMaterial.ts",
+      "summary": "React hook that resolves the glass material (tint, blur, rim styling) for a given UI region from the current wallpaper/theme, with sync-then-async resolution, caching, and preload support.",
+      "tags": ["hook", "theme", "glassmorphism", "caching"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/theme/useRegionLuminance.ts",
+      "type": "file",
+      "name": "useRegionLuminance.ts",
+      "filePath": "src/hooks/theme/useRegionLuminance.ts",
+      "summary": "React hook that pre-calculates per-region background luminance (sidebar, toolbar, tabbar, content, global) for adaptive text contrast, using cached or Rust-accelerated sampling.",
+      "tags": ["hook", "theme", "accessibility", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:parseColor",
+      "type": "function",
+      "name": "parseColor",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [71, 97],
+      "summary": "Parses a CSS color string (hex or rgb/rgba) into RGB channel values.",
+      "tags": ["utility", "color-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:calculateColorLuminance",
+      "type": "function",
+      "name": "calculateColorLuminance",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [99, 107],
+      "summary": "Computes relative luminance (0-1) from an RGB color using the standard linear-light luminance formula.",
+      "tags": ["utility", "color-math", "accessibility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:luminanceToData",
+      "type": "function",
+      "name": "luminanceToData",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [109, 118],
+      "summary": "Converts a raw luminance value into a full RegionLuminanceData object (isLight flag, primary text color, text opacity table).",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:createUniformLuminanceMap",
+      "type": "function",
+      "name": "createUniformLuminanceMap",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [120, 131],
+      "summary": "Builds a RegionLuminanceMap where every UI region shares the same luminance value, used as a fast synchronous fallback.",
+      "tags": ["utility", "fallback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:extractImagePath",
+      "type": "function",
+      "name": "extractImagePath",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [133, 139],
+      "summary": "Extracts a plain filesystem path from an asset:// or file:// image URL for use with the Rust sampling backend.",
+      "tags": ["utility", "url-parsing", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:sampleAllRegionsRust",
+      "type": "function",
+      "name": "sampleAllRegionsRust",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [141, 166],
+      "summary": "Invokes the Tauri Rust backend to sample luminance for all UI regions from an image path in a single accelerated call, logging a warning and returning null on failure.",
+      "tags": ["tauri-command", "performance", "image-processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:sampleRegionLuminance",
+      "type": "function",
+      "name": "sampleRegionLuminance",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [168, 232],
+      "summary": "Samples a single UI region's average luminance client-side by drawing the background image onto an offscreen canvas and reading pixel data.",
+      "tags": ["canvas", "image-processing", "browser-api"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:sampleAllRegionsForImageUrl",
+      "type": "function",
+      "name": "sampleAllRegionsForImageUrl",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [234, 259],
+      "summary": "Orchestrates luminance sampling for all regions of an image URL, preferring the Rust-accelerated path and falling back to per-region canvas sampling, then caches results and evicts stale entries.",
+      "tags": ["orchestration", "caching", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:resolveRegionsSync",
+      "type": "function",
+      "name": "resolveRegionsSync",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [274, 290],
+      "summary": "Synchronously resolves the current RegionLuminanceMap from cache or from a solid background color, used as the useMemo fast path in the consuming hook.",
+      "tags": ["cache-lookup", "synchronous"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/luminanceSampling.ts:getOrStartSampling",
+      "type": "function",
+      "name": "getOrStartSampling",
+      "filePath": "src/hooks/theme/luminanceSampling.ts",
+      "lineRange": [292, 304],
+      "summary": "Returns a cached or in-flight sampling promise for an image URL, or starts a new deduplicated sampling operation.",
+      "tags": ["caching", "deduplication", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/useBackgroundImage.ts:getInitialImageUrl",
+      "type": "function",
+      "name": "getInitialImageUrl",
+      "filePath": "src/hooks/theme/useBackgroundImage.ts",
+      "lineRange": [34, 53],
+      "summary": "Synchronously determines the best available background image URL by checking the HMR-persistent cache before falling back to the preset asset URL.",
+      "tags": ["cache-lookup", "synchronous", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/theme/useBackgroundImage.ts:useBackgroundImage",
+      "type": "function",
+      "name": "useBackgroundImage",
+      "filePath": "src/hooks/theme/useBackgroundImage.ts",
+      "lineRange": [58, 113],
+      "summary": "Hook that returns the currently selected background image URL, loading and caching custom images asynchronously as blob URLs while showing preset images instantly.",
+      "tags": ["hook", "caching", "async", "image-loading"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/useGlassMaterial.ts:useGlassMaterial",
+      "type": "function",
+      "name": "useGlassMaterial",
+      "filePath": "src/hooks/theme/useGlassMaterial.ts",
+      "lineRange": [119, 272],
+      "summary": "Hook returning the resolved glass material (tint, blur, rim styling) for a given UI region, with synchronous fast-path resolution, async refinement, debounced refresh, and cleanup on unmount.",
+      "tags": ["hook", "theme", "glassmorphism", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/theme/useGlassMaterial.ts:usePreloadGlassMaterials",
+      "type": "function",
+      "name": "usePreloadGlassMaterials",
+      "filePath": "src/hooks/theme/useGlassMaterial.ts",
+      "lineRange": [290, 336],
+      "summary": "Hook that eagerly resolves and caches glass materials for all UI regions ahead of time to avoid first-render flicker.",
+      "tags": ["hook", "preloading", "caching", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance",
+      "type": "function",
+      "name": "useRegionLuminance",
+      "filePath": "src/hooks/theme/useRegionLuminance.ts",
+      "lineRange": [66, 123],
+      "summary": "Hook returning per-region luminance data plus isLight/getRegion helpers, synchronously resolving from cache and asynchronously refreshing via background image sampling.",
+      "tags": ["hook", "theme", "accessibility", "caching"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "file:src/hooks/theme/luminanceTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/theme/useGlassMaterial.ts", "target": "file:src/hooks/theme/useBackgroundImage.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/theme/useRegionLuminance.ts", "target": "file:src/hooks/theme/luminanceSampling.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/theme/useRegionLuminance.ts", "target": "file:src/hooks/theme/luminanceTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/theme/useRegionLuminance.ts", "target": "file:src/hooks/theme/useBackgroundImage.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:parseColor", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:calculateColorLuminance", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:luminanceToData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:createUniformLuminanceMap", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:extractImagePath", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:sampleAllRegionsRust", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:sampleRegionLuminance", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:sampleAllRegionsForImageUrl", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:resolveRegionsSync", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:getOrStartSampling", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/useBackgroundImage.ts", "target": "function:src/hooks/theme/useBackgroundImage.ts:getInitialImageUrl", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/useBackgroundImage.ts", "target": "function:src/hooks/theme/useBackgroundImage.ts:useBackgroundImage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/useGlassMaterial.ts", "target": "function:src/hooks/theme/useGlassMaterial.ts:useGlassMaterial", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/useGlassMaterial.ts", "target": "function:src/hooks/theme/useGlassMaterial.ts:usePreloadGlassMaterials", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/theme/useRegionLuminance.ts", "target": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:parseColor", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:calculateColorLuminance", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:luminanceToData", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:createUniformLuminanceMap", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:extractImagePath", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:resolveRegionsSync", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/luminanceSampling.ts", "target": "function:src/hooks/theme/luminanceSampling.ts:getOrStartSampling", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/useBackgroundImage.ts", "target": "function:src/hooks/theme/useBackgroundImage.ts:useBackgroundImage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/useGlassMaterial.ts", "target": "function:src/hooks/theme/useGlassMaterial.ts:useGlassMaterial", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/useGlassMaterial.ts", "target": "function:src/hooks/theme/useGlassMaterial.ts:usePreloadGlassMaterials", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/theme/useRegionLuminance.ts", "target": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/hooks/theme/useGlassMaterial.ts:useGlassMaterial", "target": "function:src/hooks/theme/useBackgroundImage.ts:useBackgroundImage", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/theme/useGlassMaterial.ts:usePreloadGlassMaterials", "target": "function:src/hooks/theme/useBackgroundImage.ts:useBackgroundImage", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance", "target": "function:src/hooks/theme/useBackgroundImage.ts:useBackgroundImage", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance", "target": "function:src/hooks/theme/luminanceSampling.ts:createUniformLuminanceMap", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance", "target": "function:src/hooks/theme/luminanceSampling.ts:resolveRegionsSync", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/theme/useRegionLuminance.ts:useRegionLuminance", "target": "function:src/hooks/theme/luminanceSampling.ts:getOrStartSampling", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

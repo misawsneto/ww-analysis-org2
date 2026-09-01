@@ -1,0 +1,277 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "type": "file",
+      "name": "creatorDefaultModelAtom.ts",
+      "filePath": "src/store/session/creatorDefaultModelAtom.ts",
+      "summary": "Persists the session creator's last-used model+source pair per dispatch category (cli_agent / rust_agent) using a two-tier localStorage write-through cache plus authoritative settings.jsonc storage, so the SessionCreator can pre-fill a default selection on new sessions.",
+      "tags": ["state-management", "jotai-atom", "persistence", "model-selection", "caching"],
+      "complexity": "complex",
+      "languageNotes": "Uses a module-level synchronous cachedMap seeded from localStorage so the derived read atom returns data before the async Rust-backed settings RPC resolves."
+    },
+    {
+      "id": "file:src/store/session/creatorStateAtom.ts",
+      "type": "file",
+      "name": "creatorStateAtom.ts",
+      "filePath": "src/store/session/creatorStateAtom.ts",
+      "summary": "Defines the shared SessionCreatorState (dispatch category, target kind, source, selected agent) persisted to localStorage via atomWithStorage, plus derived read/write atoms consumed by the session creator UI and toolbar.",
+      "tags": ["state-management", "jotai-atom", "session-creator", "persistence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/session/recentAgentSelectionsAtom.ts",
+      "type": "file",
+      "name": "recentAgentSelectionsAtom.ts",
+      "filePath": "src/store/session/recentAgentSelectionsAtom.ts",
+      "summary": "Tracks the 3 most-recently-used agent/CLI/agent-org selections in localStorage, deduped by a composite key, for quick re-selection in the session creator.",
+      "tags": ["state-management", "jotai-atom", "recent-selections", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/session/recentModelEntriesAtom.ts",
+      "type": "file",
+      "name": "recentModelEntriesAtom.ts",
+      "filePath": "src/store/session/recentModelEntriesAtom.ts",
+      "summary": "Persists the last 5 model+source selections to localStorage with Zod schema validation, powering the \"Recent Models\" one-click re-selection tab.",
+      "tags": ["state-management", "jotai-atom", "model-selection", "validation", "persistence"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a Zod schema transform to cap and validate the persisted array on read, guarding against corrupt or oversized localStorage payloads."
+    },
+    {
+      "id": "function:src/store/session/creatorDefaultModelAtom.ts:loadLocalStorageCache",
+      "type": "function",
+      "name": "loadLocalStorageCache",
+      "filePath": "src/store/session/creatorDefaultModelAtom.ts",
+      "lineRange": [96, 109],
+      "summary": "Reads and parses the localStorage write-through cache of the last model pair map, returning an empty map on missing or corrupt data.",
+      "tags": ["caching", "localstorage", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/creatorDefaultModelAtom.ts:deriveLastModelSelection",
+      "type": "function",
+      "name": "deriveLastModelSelection",
+      "filePath": "src/store/session/creatorDefaultModelAtom.ts",
+      "lineRange": [162, 189],
+      "summary": "Converts a stored RecentModelEntry into the read-only LastModelSelection shape consumed by dispatch hooks and creator UI, branching on hosted vs. own key source.",
+      "tags": ["model-selection", "mapping", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/creatorDefaultModelAtom.ts:pruneStaleEntries",
+      "type": "function",
+      "name": "pruneStaleEntries",
+      "filePath": "src/store/session/creatorDefaultModelAtom.ts",
+      "lineRange": [195, 220],
+      "summary": "Removes creator-default model entries whose account ID no longer exists among shared local keys, run once during startup hydration.",
+      "tags": ["validation", "cleanup", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/creatorDefaultModelAtom.ts:extractModelPair",
+      "type": "function",
+      "name": "extractModelPair",
+      "filePath": "src/store/session/creatorDefaultModelAtom.ts",
+      "lineRange": [328, 369],
+      "summary": "Extracts a validated RecentModelEntry (model+source pair) from an AdvancedConfig object, returning null when no meaningful selection exists.",
+      "tags": ["model-selection", "validation", "mapping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/creatorStateAtom.ts:createDefaultSessionLaunchOrgContext",
+      "type": "function",
+      "name": "createDefaultSessionLaunchOrgContext",
+      "filePath": "src/store/session/creatorStateAtom.ts",
+      "lineRange": [71, 76],
+      "summary": "Builds the default SessionLaunchOrgContext pointing at the built-in \"Personal Org\".",
+      "tags": ["factory", "default-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/creatorStateAtom.ts:withDefaultSdeAgent",
+      "type": "function",
+      "name": "withDefaultSdeAgent",
+      "filePath": "src/store/session/creatorStateAtom.ts",
+      "lineRange": [147, 159],
+      "summary": "Resets a SessionCreatorState back to the default built-in SDE rust agent target (dispatch category, agent ID, name, icon, CLI settings).",
+      "tags": ["default-state", "normalization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/creatorStateAtom.ts:normalizeSessionCreatorState",
+      "type": "function",
+      "name": "normalizeSessionCreatorState",
+      "filePath": "src/store/session/creatorStateAtom.ts",
+      "lineRange": [161, 181],
+      "summary": "Repairs a persisted SessionCreatorState that is missing a valid agent or agent-org selection by falling back to the default SDE agent.",
+      "tags": ["normalization", "validation", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/recentAgentSelectionsAtom.ts:getRecentAgentSelectionKey",
+      "type": "function",
+      "name": "getRecentAgentSelectionKey",
+      "filePath": "src/store/session/recentAgentSelectionsAtom.ts",
+      "lineRange": [23, 34],
+      "summary": "Computes a dedupe key for a recent agent selection based on target kind, CLI agent type, or agent definition ID.",
+      "tags": ["dedupe", "key-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/recentModelEntriesAtom.ts:recentEntriesEquivalent",
+      "type": "function",
+      "name": "recentEntriesEquivalent",
+      "filePath": "src/store/session/recentModelEntriesAtom.ts",
+      "lineRange": [56, 84],
+      "summary": "Determines whether two recent model entries represent the same account+model selection, used to dedupe the recent-entries list.",
+      "tags": ["comparison", "dedupe", "model-selection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/session/recentModelEntriesAtom.ts:recordRecentEntry",
+      "type": "function",
+      "name": "recordRecentEntry",
+      "filePath": "src/store/session/recentModelEntriesAtom.ts",
+      "lineRange": [89, 97],
+      "summary": "Inserts a new model+source selection at the front of the recent-entries list, deduping equivalent entries and capping the list at the max length.",
+      "tags": ["state-update", "dedupe", "list-management"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "file:src/store/session/creatorStateAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "file:src/store/session/recentModelEntriesAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/recentAgentSelectionsAtom.ts",
+      "target": "file:src/store/session/creatorStateAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "function:src/store/session/creatorDefaultModelAtom.ts:loadLocalStorageCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "function:src/store/session/creatorDefaultModelAtom.ts:deriveLastModelSelection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "function:src/store/session/creatorDefaultModelAtom.ts:pruneStaleEntries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "function:src/store/session/creatorDefaultModelAtom.ts:extractModelPair",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "function:src/store/session/creatorDefaultModelAtom.ts:deriveLastModelSelection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/creatorDefaultModelAtom.ts",
+      "target": "function:src/store/session/creatorDefaultModelAtom.ts:extractModelPair",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/creatorStateAtom.ts",
+      "target": "function:src/store/session/creatorStateAtom.ts:createDefaultSessionLaunchOrgContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorStateAtom.ts",
+      "target": "function:src/store/session/creatorStateAtom.ts:withDefaultSdeAgent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorStateAtom.ts",
+      "target": "function:src/store/session/creatorStateAtom.ts:normalizeSessionCreatorState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorStateAtom.ts",
+      "target": "function:src/store/session/creatorStateAtom.ts:createDefaultSessionLaunchOrgContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/creatorStateAtom.ts",
+      "target": "function:src/store/session/creatorStateAtom.ts:normalizeSessionCreatorState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/recentAgentSelectionsAtom.ts",
+      "target": "function:src/store/session/recentAgentSelectionsAtom.ts:getRecentAgentSelectionKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/recentModelEntriesAtom.ts",
+      "target": "function:src/store/session/recentModelEntriesAtom.ts:recentEntriesEquivalent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/recentModelEntriesAtom.ts",
+      "target": "function:src/store/session/recentModelEntriesAtom.ts:recordRecentEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/recentModelEntriesAtom.ts",
+      "target": "function:src/store/session/recentModelEntriesAtom.ts:recentEntriesEquivalent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/recentModelEntriesAtom.ts",
+      "target": "function:src/store/session/recentModelEntriesAtom.ts:recordRecentEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

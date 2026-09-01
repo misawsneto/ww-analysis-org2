@@ -1,0 +1,1498 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "type": "file",
+      "name": "goal_loop.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "summary": "Implements the autonomous goal-loop feature: persists GoalState, evaluates turn-end via an LLM judge, parses judge verdicts, and enqueues continuation messages until the goal is satisfied.",
+      "tags": [
+        "goal-loop",
+        "autonomous-agent",
+        "llm-judge",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:init_schema",
+      "type": "function",
+      "name": "init_schema",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "Initializes the database schema/tables used to persist goal-loop state.",
+      "tags": [
+        "goal-loop",
+        "schema-init",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:load_state",
+      "type": "function",
+      "name": "load_state",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        68,
+        86
+      ],
+      "summary": "Loads the persisted GoalState for a session from the database.",
+      "tags": [
+        "goal-loop",
+        "persistence",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:save_state",
+      "type": "function",
+      "name": "save_state",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        88,
+        110
+      ],
+      "summary": "Persists the current GoalState for a session to the database.",
+      "tags": [
+        "goal-loop",
+        "persistence",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:on_user_message",
+      "type": "function",
+      "name": "on_user_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        135,
+        156
+      ],
+      "summary": "Hook invoked when a user sends a message, used to detect and record a new goal for the goal-loop feature.",
+      "tags": [
+        "goal-loop",
+        "event-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:parse_judge_verdict",
+      "type": "function",
+      "name": "parse_judge_verdict",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        172,
+        198
+      ],
+      "summary": "Parses the raw LLM judge response text into a structured JudgeVerdict (continue/stop decision and reasoning).",
+      "tags": [
+        "goal-loop",
+        "llm-judge",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:build_judge_messages",
+      "type": "function",
+      "name": "build_judge_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        211,
+        230
+      ],
+      "summary": "Builds the prompt messages sent to the LLM judge to evaluate whether the current turn satisfied the stated goal.",
+      "tags": [
+        "goal-loop",
+        "llm-judge",
+        "prompt-building"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:spawn_turn_end_evaluation",
+      "type": "function",
+      "name": "spawn_turn_end_evaluation",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        254,
+        264
+      ],
+      "summary": "Spawns an asynchronous task that evaluates the end of a turn against the active goal without blocking the main session loop.",
+      "tags": [
+        "goal-loop",
+        "async",
+        "orchestration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:evaluate_turn_end",
+      "type": "function",
+      "name": "evaluate_turn_end",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        266,
+        346
+      ],
+      "summary": "Evaluates whether the just-completed turn satisfies the active goal, invoking the LLM judge and deciding whether to continue or stop the goal loop.",
+      "tags": [
+        "goal-loop",
+        "llm-judge",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:run_judge",
+      "type": "function",
+      "name": "run_judge",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        348,
+        385
+      ],
+      "summary": "Runs the LLM judge side-query to obtain a verdict on the current goal-loop turn.",
+      "tags": [
+        "goal-loop",
+        "llm-judge",
+        "side-query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:session_has_pending_messages",
+      "type": "function",
+      "name": "session_has_pending_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        387,
+        402
+      ],
+      "summary": "Checks whether a session has pending/queued user messages, used to avoid auto-continuing the goal loop over a user who is mid-typing.",
+      "tags": [
+        "goal-loop",
+        "predicate",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:enqueue_continuation",
+      "type": "function",
+      "name": "enqueue_continuation",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        404,
+        456
+      ],
+      "summary": "Enqueues a synthetic continuation message to keep the goal loop running for another turn, up to the configured max-turns limit.",
+      "tags": [
+        "goal-loop",
+        "orchestration",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:broadcast_goal_event",
+      "type": "function",
+      "name": "broadcast_goal_event",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        459,
+        476
+      ],
+      "summary": "Broadcasts a goal-loop status event (progress, turns used, message) to the frontend over the event bus.",
+      "tags": [
+        "goal-loop",
+        "event-broadcast",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:GoalState",
+      "type": "class",
+      "name": "GoalState",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        45,
+        52
+      ],
+      "summary": "Persisted state for the goal-loop feature on a session: the active goal text, turns used, and status.",
+      "tags": [
+        "data-model",
+        "goal-loop",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:JudgeVerdict",
+      "type": "class",
+      "name": "JudgeVerdict",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        164,
+        167
+      ],
+      "summary": "Structured verdict returned by the LLM judge evaluating whether a goal-loop turn satisfied the goal (continue/stop plus reasoning).",
+      "tags": [
+        "data-model",
+        "goal-loop",
+        "llm-judge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:GoalLoopTurnEnd",
+      "type": "class",
+      "name": "GoalLoopTurnEnd",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "lineRange": [
+        238,
+        249
+      ],
+      "summary": "Input bundle describing the state at the end of a turn, passed to the goal-loop evaluation logic.",
+      "tags": [
+        "data-model",
+        "goal-loop",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "type": "file",
+      "name": "summarization.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "summary": "Builds LLM summarization prompts from conversation history and drives summarize_messages/summarize_messages_forked via a side-query to produce compaction summaries, with validation of the returned summary.",
+      "tags": [
+        "summarization",
+        "llm",
+        "side-query",
+        "compaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:truncate_for_summary",
+      "type": "function",
+      "name": "truncate_for_summary",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        16,
+        25
+      ],
+      "summary": "Truncates arbitrary text to a maximum character length before including it in a summarization prompt.",
+      "tags": [
+        "truncation",
+        "utility",
+        "summarization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:flatten_content_text",
+      "type": "function",
+      "name": "flatten_content_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        62,
+        81
+      ],
+      "summary": "Flattens a structured message content block into a single plain-text string for summarization purposes.",
+      "tags": [
+        "utility",
+        "extraction",
+        "summarization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:format_messages_for_summary_refs",
+      "type": "function",
+      "name": "format_messages_for_summary_refs",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        89,
+        134
+      ],
+      "summary": "Formats the conversation history into a compact textual representation used as input to the summarization prompt.",
+      "tags": [
+        "summarization",
+        "formatting",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:format_tool_calls",
+      "type": "function",
+      "name": "format_tool_calls",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        137,
+        163
+      ],
+      "summary": "Formats a message's tool calls into readable text for inclusion in the summarization prompt.",
+      "tags": [
+        "summarization",
+        "formatting",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:build_summary_prompt",
+      "type": "function",
+      "name": "build_summary_prompt",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        171,
+        210
+      ],
+      "summary": "Builds the full LLM prompt used to request a conversation summary, optionally including custom instructions and the prior summary for continuity.",
+      "tags": [
+        "summarization",
+        "prompt-building",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:validate_summary",
+      "type": "function",
+      "name": "validate_summary",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        219,
+        240
+      ],
+      "summary": "Validates an LLM-produced summary for completeness (e.g., checking finish_reason and output length against the configured cap).",
+      "tags": [
+        "summarization",
+        "validation",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:summarize_messages_forked",
+      "type": "function",
+      "name": "summarize_messages_forked",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        282,
+        328
+      ],
+      "summary": "Runs LLM summarization for the forked-compaction path, issuing a side-query against the given provider and returning the summary result.",
+      "tags": [
+        "summarization",
+        "side-query",
+        "forked-compaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:summarize_messages",
+      "type": "function",
+      "name": "summarize_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        339,
+        417
+      ],
+      "summary": "Top-level entry point that summarizes a message history via an LLM side-query, applying the configured token budget and custom instructions.",
+      "tags": [
+        "summarization",
+        "side-query",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:ForkSummaryInputs",
+      "type": "class",
+      "name": "ForkSummaryInputs",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "lineRange": [
+        256,
+        271
+      ],
+      "summary": "Bundled inputs (messages, state, model) required to run the forked-compaction summarization path.",
+      "tags": [
+        "data-model",
+        "summarization",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "type": "file",
+      "name": "resolved.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "summary": "Resolves a raw AgentDefinition plus session overrides and integrations config into a fully-resolved ResolvedAgent runtime configuration, including tool selection and skills parameters.",
+      "tags": [
+        "data-model",
+        "resolver",
+        "agent-config"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:skills_from_schema",
+      "type": "function",
+      "name": "skills_from_schema",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "lineRange": [
+        397,
+        407
+      ],
+      "summary": "Converts a schema-level AgentSkillsConfig into resolved SkillsParams used at runtime.",
+      "tags": [
+        "conversion",
+        "skills",
+        "resolver"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:SkillsParams",
+      "type": "class",
+      "name": "SkillsParams",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "lineRange": [
+        44,
+        54
+      ],
+      "summary": "Resolved runtime parameters controlling which skills are available to an agent and how they're loaded.",
+      "tags": [
+        "data-model",
+        "skills",
+        "agent-config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolvedToolSelection",
+      "type": "class",
+      "name": "ResolvedToolSelection",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "lineRange": [
+        71,
+        80
+      ],
+      "summary": "Fully-resolved tool allow/deny selection for an agent, derived from schema-level AgentToolSelection via from_schema().",
+      "tags": [
+        "data-model",
+        "tool-configuration",
+        "agent-config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolveError",
+      "type": "class",
+      "name": "ResolveError",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "lineRange": [
+        162,
+        167
+      ],
+      "summary": "Error type returned when agent definition resolution fails (e.g., missing parent, invalid reference).",
+      "tags": [
+        "error-handling",
+        "resolver",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolvedAgent",
+      "type": "class",
+      "name": "ResolvedAgent",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "lineRange": [
+        174,
+        223
+      ],
+      "summary": "Fully-resolved runtime configuration for an agent, combining its definition, session overrides, and integrations config, with a resolve() constructor and workspace() accessor.",
+      "tags": [
+        "data-model",
+        "agent-config",
+        "resolver"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "type": "file",
+      "name": "compaction.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "summary": "Core context-window compaction engine (ContextCompactor) implementing trigger detection, adaptive keep-ratio calculation, forked/manual compaction attempts, summary acceptance, and prompt-too-long recovery/calibration.",
+      "tags": [
+        "context-compaction",
+        "algorithm",
+        "token-budget",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionConfig",
+      "type": "class",
+      "name": "CompactionConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "lineRange": [
+        33,
+        72
+      ],
+      "summary": "Configuration for the compaction engine (trigger ratio, keep ratio, summary token budget, minimum messages, floor/reserved/buffer tokens), with defaults and an effective_budget() calculation.",
+      "tags": [
+        "config",
+        "compaction",
+        "token-budget"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionState",
+      "type": "class",
+      "name": "CompactionState",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "lineRange": [
+        145,
+        157
+      ],
+      "summary": "Tracks the current compaction-related state of a session (e.g., last compacted index, recompaction info).",
+      "tags": [
+        "state",
+        "compaction",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:RecompactionInfo",
+      "type": "class",
+      "name": "RecompactionInfo",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "lineRange": [
+        162,
+        167
+      ],
+      "summary": "Metadata describing a prior recompaction event, used to decide whether/how to recompact.",
+      "tags": [
+        "data-model",
+        "compaction",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionOutcome",
+      "type": "class",
+      "name": "CompactionOutcome",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "lineRange": [
+        175,
+        189
+      ],
+      "summary": "Result type describing the outcome of a compaction attempt (success, boundaries, token counts, or failure reason).",
+      "tags": [
+        "data-model",
+        "compaction",
+        "result-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:ContextCompactor",
+      "type": "class",
+      "name": "ContextCompactor",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "lineRange": [
+        237,
+        237
+      ],
+      "summary": "Core compaction engine: detects when compaction is needed (needs_compaction*), performs standard/forked/manual compaction attempts (compact, compact_with_fork, compact_manual_force, try_compact), accepts LLM-produced summaries, and recovers from prompt-too-long errors via budget calibration and truncation.",
+      "tags": [
+        "core-logic",
+        "compaction",
+        "algorithm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "type": "file",
+      "name": "fork.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "summary": "Implements attempt_fork, which forks session state during compaction by writing a new session record/file rather than mutating history in place.",
+      "tags": [
+        "session-fork",
+        "compaction",
+        "persistence"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:attempt_fork",
+      "type": "function",
+      "name": "attempt_fork",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "lineRange": [
+        83,
+        331
+      ],
+      "summary": "Attempts to fork the current session during compaction: writes a new forked session record so compaction can proceed without mutating the original session's history in place.",
+      "tags": [
+        "session-fork",
+        "compaction",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:build_forked_record",
+      "type": "function",
+      "name": "build_forked_record",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "lineRange": [
+        349,
+        373
+      ],
+      "summary": "Builds the new session record metadata for a forked session, linking it back to the original session id.",
+      "tags": [
+        "session-fork",
+        "record-building",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:ForkOutcome",
+      "type": "class",
+      "name": "ForkOutcome",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "lineRange": [
+        43,
+        59
+      ],
+      "summary": "Result type describing the outcome of a fork attempt (success with new session id, or failure reason).",
+      "tags": [
+        "data-model",
+        "session-fork",
+        "result-type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:ForkInputs",
+      "type": "class",
+      "name": "ForkInputs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "lineRange": [
+        63,
+        74
+      ],
+      "summary": "Bundled inputs required to attempt a session fork (original session id, messages, compaction context).",
+      "tags": [
+        "data-model",
+        "session-fork",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "summary": "Module root for the definitions subsystem that re-exports builtin agents, capabilities, commands, orgs, patch, prefix lookup, resolved/resolver, schema, and store submodules.",
+      "tags": [
+        "barrel",
+        "module-root",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "type": "file",
+      "name": "prefix_lookup.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "summary": "Provides lookup helpers that map session IDs to builtin agent definition prefixes, including workspace-personal and wingman session detection.",
+      "tags": [
+        "utility",
+        "lookup",
+        "session-routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs:session_prefix_for_launch",
+      "type": "function",
+      "name": "session_prefix_for_launch",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "lineRange": [
+        84,
+        98
+      ],
+      "summary": "Determines the session id prefix to use when launching a session for a given agent definition, factoring in whether a workspace path is present.",
+      "tags": [
+        "session-routing",
+        "utility",
+        "lookup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs:BuiltinPrefixEntry",
+      "type": "class",
+      "name": "BuiltinPrefixEntry",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "lineRange": [
+        25,
+        33
+      ],
+      "summary": "Maps a builtin agent definition id to its session-id prefix convention.",
+      "tags": [
+        "data-model",
+        "builtin",
+        "session-routing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "type": "file",
+      "name": "cleanup.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "summary": "Performs post-compaction cleanup of stale tool-call state by collecting and clearing tool_call_ids no longer referenced in the trimmed message history.",
+      "tags": [
+        "cleanup",
+        "post-processing",
+        "context-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs:post_compact_cleanup",
+      "type": "function",
+      "name": "post_compact_cleanup",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "lineRange": [
+        24,
+        67
+      ],
+      "summary": "Cleans up tool-call bookkeeping state after a compaction pass by removing entries for tool_call_ids no longer present in the trimmed message history.",
+      "tags": [
+        "cleanup",
+        "context-management",
+        "post-compaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs:collect_tool_call_ids",
+      "type": "function",
+      "name": "collect_tool_call_ids",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "lineRange": [
+        70,
+        85
+      ],
+      "summary": "Walks a message list and collects the set of tool_call_ids referenced within it, used to determine which tool-call state entries are still live.",
+      "tags": [
+        "utility",
+        "tool-calls",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/compaction/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/mod.rs",
+      "summary": "Module root for the session compaction subsystem, re-exporting fork, manual, and persist submodules.",
+      "tags": [
+        "barrel",
+        "module-root",
+        "compaction"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:init_schema",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:init_schema",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:load_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:save_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:on_user_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:on_user_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:parse_judge_verdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:parse_judge_verdict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:build_judge_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:spawn_turn_end_evaluation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:spawn_turn_end_evaluation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:evaluate_turn_end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:run_judge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:session_has_pending_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:enqueue_continuation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:broadcast_goal_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:GoalState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:GoalState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:JudgeVerdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:JudgeVerdict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:GoalLoopTurnEnd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/goal_loop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/goal_loop.rs:GoalLoopTurnEnd",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:truncate_for_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:truncate_for_summary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:flatten_content_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:flatten_content_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:format_messages_for_summary_refs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:format_messages_for_summary_refs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:format_tool_calls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:format_tool_calls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:build_summary_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:validate_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:summarize_messages_forked",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:summarize_messages_forked",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:summarize_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:summarize_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:ForkSummaryInputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/summarization.rs:ForkSummaryInputs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/summarization.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query_typed",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:skills_from_schema",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:SkillsParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:SkillsParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolvedToolSelection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolvedToolSelection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolveError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolveError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolvedAgent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/resolved.rs:ResolvedAgent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/tests_extended.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/overrides.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/tests_extended.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:RecompactionInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:RecompactionInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:CompactionOutcome",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:ContextCompactor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/compaction.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/model_context/compaction.rs:ContextCompactor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:attempt_fork",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:attempt_fork",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:build_forked_record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:ForkOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:ForkOutcome",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:ForkInputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs:ForkInputs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/builtin/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/capabilities.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/learnings_lookup.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/orgs.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/patch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/resolved.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/resolver.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/schema.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/store.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs:session_prefix_for_launch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs:session_prefix_for_launch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs:BuiltinPrefixEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/definitions/prefix_lookup.rs:BuiltinPrefixEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs:post_compact_cleanup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs:post_compact_cleanup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/model_context/cleanup.rs:collect_tool_call_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/compaction/manual.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/compaction/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/compaction/persist.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

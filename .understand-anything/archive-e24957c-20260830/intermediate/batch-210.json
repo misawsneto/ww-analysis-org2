@@ -1,0 +1,316 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/repo/atoms.ts",
+      "type": "file",
+      "name": "atoms.ts",
+      "filePath": "src/store/repo/atoms.ts",
+      "summary": "Defines core and persisted Jotai atoms for repo state: the core repo list, window-scoped selected repo/branch atoms backed by sessionStorage with a localStorage global fallback, branch data/cache atoms, and loading/error/freshness tracking atoms.",
+      "tags": ["state-management", "jotai", "atoms", "persistence", "repo"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a custom Jotai storage adapter for selectedRepoIdAtom that reads from sessionStorage but falls back to a global lastUsedRepo key in localStorage, enabling per-window repo isolation while surviving Tauri webview restarts."
+    },
+    {
+      "id": "file:src/store/repo/branchCache.ts",
+      "type": "file",
+      "name": "branchCache.ts",
+      "filePath": "src/store/repo/branchCache.ts",
+      "summary": "LRU cache utility functions for git branch data keyed by repo ID, providing freshness checks, capacity-bounded eviction, pruning of expired entries, and cache statistics to avoid redundant branch-fetch API calls.",
+      "tags": ["caching", "lru-cache", "utility", "branches"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/repo/derived.ts",
+      "type": "file",
+      "name": "derived.ts",
+      "filePath": "src/store/repo/derived.ts",
+      "summary": "Derived/computed Jotai atoms built on the core repo atoms: repo lookup maps, selected repo/path resolution with cached-repo fallback, filtered and grouped repo lists, aggregate stats, and a cross-window 'switch to repo' hint atom for the status bar.",
+      "tags": ["state-management", "jotai", "derived-atoms", "repo"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/repo/matchRepoByPath.ts",
+      "type": "file",
+      "name": "matchRepoByPath.ts",
+      "filePath": "src/store/repo/matchRepoByPath.ts",
+      "summary": "Shared filesystem path normalization and repo-matching helpers used to determine which registered repo corresponds to a given path, keeping session and workspace logic in agreement about repo identity.",
+      "tags": ["utility", "path-normalization", "matching", "repo"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/repo/storage.ts",
+      "type": "file",
+      "name": "storage.ts",
+      "filePath": "src/store/repo/storage.ts",
+      "summary": "Storage-key definitions and persistence helpers for the repo store: clearing/resetting local and session storage, UUID validation, cache-invalidation timestamps, and cross-window tracking of which repo each Tauri window has open.",
+      "tags": ["storage", "persistence", "jotai", "cross-window"],
+      "complexity": "complex",
+      "languageNotes": "resetRepoStore uses a dynamic require('./atoms') to avoid a circular import between storage.ts and atoms.ts while still directly writing every repo atom via the instrumented Jotai store."
+    },
+    {
+      "id": "file:src/store/repo/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/store/repo/types.ts",
+      "summary": "Type definitions and constants for the repo store: Repo/Branch/CachedRepo interfaces, the REPO_KIND enum distinguishing git repos from plain work folders, and LRU branch-cache configuration constants.",
+      "tags": ["type-definition", "repo", "data-model", "constants"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:updateCachedRepos",
+      "type": "function",
+      "name": "updateCachedRepos",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [22, 42],
+      "summary": "Adds or moves a repo to the front of the recently-used cache list, deduping by ID and capping the list at MAX_CACHED_REPOS.",
+      "tags": ["caching", "lru-cache", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:isBranchCacheFresh",
+      "type": "function",
+      "name": "isBranchCacheFresh",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [51, 58],
+      "summary": "Checks whether a repo's cached branch entry is still within the configured TTL window.",
+      "tags": ["caching", "validation", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:getBranchesFromCache",
+      "type": "function",
+      "name": "getBranchesFromCache",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [63, 68],
+      "summary": "Retrieves a repo's branch cache entry without updating its access time.",
+      "tags": ["caching", "lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:setBranchCacheWithLRU",
+      "type": "function",
+      "name": "setBranchCacheWithLRU",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [81, 105],
+      "summary": "Inserts or updates a branch cache entry, evicting the least-recently-used entry when the cache is at capacity.",
+      "tags": ["caching", "lru-cache", "eviction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:touchBranchCache",
+      "type": "function",
+      "name": "touchBranchCache",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [114, 131],
+      "summary": "Moves a cache entry to the most-recently-used position and refreshes its fetched timestamp.",
+      "tags": ["caching", "lru-cache"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:pruneBranchCache",
+      "type": "function",
+      "name": "pruneBranchCache",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [139, 155],
+      "summary": "Removes all branch cache entries older than the configured TTL, returning the pruned cache and eviction count.",
+      "tags": ["caching", "cleanup", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/branchCache.ts:getBranchCacheStats",
+      "type": "function",
+      "name": "getBranchCacheStats",
+      "filePath": "src/store/repo/branchCache.ts",
+      "lineRange": [160, 184],
+      "summary": "Computes cache utilization statistics including size, capacity percentage, and age of the oldest/newest entries.",
+      "tags": ["caching", "metrics", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/matchRepoByPath.ts:toRepoFileSystemPath",
+      "type": "function",
+      "name": "toRepoFileSystemPath",
+      "filePath": "src/store/repo/matchRepoByPath.ts",
+      "lineRange": [9, 15],
+      "summary": "Normalizes a possibly file://-prefixed path by stripping the protocol prefix and trailing slashes.",
+      "tags": ["utility", "path-normalization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/matchRepoByPath.ts:normalizeRepoPath",
+      "type": "function",
+      "name": "normalizeRepoPath",
+      "filePath": "src/store/repo/matchRepoByPath.ts",
+      "lineRange": [19, 21],
+      "summary": "Produces a case-insensitive, filesystem-normalized form of a path for cross-platform repo path comparison.",
+      "tags": ["utility", "path-normalization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/matchRepoByPath.ts:matchRepoByPath",
+      "type": "function",
+      "name": "matchRepoByPath",
+      "filePath": "src/store/repo/matchRepoByPath.ts",
+      "lineRange": [24, 33],
+      "summary": "Finds the registered repo whose path or fs_uri matches the given filesystem path after normalization.",
+      "tags": ["utility", "matching", "repo"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:getCacheInvalidationTimestamp",
+      "type": "function",
+      "name": "getCacheInvalidationTimestamp",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [52, 59],
+      "summary": "Reads the last cache-invalidation timestamp from localStorage, defaulting to 0 on error or absence.",
+      "tags": ["storage", "cache-invalidation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:clearRepoStorage",
+      "type": "function",
+      "name": "clearRepoStorage",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [72, 97],
+      "summary": "Clears window-scoped sessionStorage keys (selected repo/branch) and global localStorage keys (last-used repo, cached repos).",
+      "tags": ["storage", "cleanup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:isValidUUID",
+      "type": "function",
+      "name": "isValidUUID",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [102, 107],
+      "summary": "Validates that a string matches the UUID v1-5 format via regex.",
+      "tags": ["validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:resetRepoStore",
+      "type": "function",
+      "name": "resetRepoStore",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [124, 163],
+      "summary": "Resets the entire repo store by clearing storage, directly writing all repo Jotai atoms back to their initial values via the instrumented store, and stamping a cache-invalidation timestamp.",
+      "tags": ["state-management", "reset", "jotai"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:getOpenedReposMap",
+      "type": "function",
+      "name": "getOpenedReposMap",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [177, 184],
+      "summary": "Reads and parses the cross-window map of windowId to open repoId from localStorage.",
+      "tags": ["storage", "cross-window"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:isMainAppWindowLabel",
+      "type": "function",
+      "name": "isMainAppWindowLabel",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [199, 206],
+      "summary": "Determines whether a window label belongs to a main application window versus a specialty window (wingman, tab, welcome) that should not participate in repo focus tracking.",
+      "tags": ["window-management", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:getWindowIdsForRepo",
+      "type": "function",
+      "name": "getWindowIdsForRepo",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [214, 223],
+      "summary": "Returns the IDs of all main-app windows that currently have the given repo open.",
+      "tags": ["cross-window", "lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:registerOpenedRepo",
+      "type": "function",
+      "name": "registerOpenedRepo",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [231, 246],
+      "summary": "Registers or clears a window's currently open repo in the cross-window opened-repos map, skipping specialty windows.",
+      "tags": ["cross-window", "storage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:unregisterWindow",
+      "type": "function",
+      "name": "unregisterWindow",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [251, 261],
+      "summary": "Removes a window's entry from the cross-window opened-repos map, typically called on window close.",
+      "tags": ["cross-window", "storage", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/repo/storage.ts:clearAllOpenedRepos",
+      "type": "function",
+      "name": "clearAllOpenedRepos",
+      "filePath": "src/store/repo/storage.ts",
+      "lineRange": [267, 275],
+      "summary": "Clears the entire cross-window opened-repos map, used on app startup to remove stale entries from windows that crashed or force-closed.",
+      "tags": ["cross-window", "storage", "cleanup"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/store/repo/atoms.ts", "target": "file:src/store/repo/storage.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/atoms.ts", "target": "file:src/store/repo/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "file:src/store/repo/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/derived.ts", "target": "file:src/store/repo/atoms.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/derived.ts", "target": "file:src/store/repo/matchRepoByPath.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/derived.ts", "target": "file:src/store/repo/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "file:src/store/repo/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/store/repo/storage.ts", "target": "file:src/store/repo/atoms.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:updateCachedRepos", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:isBranchCacheFresh", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:getBranchesFromCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:setBranchCacheWithLRU", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:touchBranchCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:pruneBranchCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:getBranchCacheStats", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "function:src/store/repo/matchRepoByPath.ts:toRepoFileSystemPath", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "function:src/store/repo/matchRepoByPath.ts:normalizeRepoPath", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "function:src/store/repo/matchRepoByPath.ts:matchRepoByPath", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:getCacheInvalidationTimestamp", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:clearRepoStorage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:isValidUUID", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:resetRepoStore", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:getOpenedReposMap", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:isMainAppWindowLabel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:getWindowIdsForRepo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:registerOpenedRepo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:unregisterWindow", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:clearAllOpenedRepos", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:updateCachedRepos", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:isBranchCacheFresh", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:getBranchesFromCache", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:setBranchCacheWithLRU", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:touchBranchCache", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:pruneBranchCache", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/branchCache.ts", "target": "function:src/store/repo/branchCache.ts:getBranchCacheStats", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "function:src/store/repo/matchRepoByPath.ts:toRepoFileSystemPath", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "function:src/store/repo/matchRepoByPath.ts:normalizeRepoPath", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/matchRepoByPath.ts", "target": "function:src/store/repo/matchRepoByPath.ts:matchRepoByPath", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:getCacheInvalidationTimestamp", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:clearRepoStorage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:isValidUUID", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:resetRepoStore", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:getOpenedReposMap", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:isMainAppWindowLabel", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:getWindowIdsForRepo", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:registerOpenedRepo", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:unregisterWindow", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/repo/storage.ts", "target": "function:src/store/repo/storage.ts:clearAllOpenedRepos", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

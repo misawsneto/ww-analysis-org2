@@ -1,0 +1,1447 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "type": "file",
+      "name": "cache.rs",
+      "summary": "TTL-based SQLite cache for Linear GraphQL metadata (projects/teams/issues/workflow states) keyed by connection+scope+scope_id, with async read/write helpers, per-scope/per-record invalidation, and row-count pruning.",
+      "tags": [
+        "cache",
+        "database",
+        "service",
+        "sqlite"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/project-management/src/sync/linear_native/cache.rs"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:LinearCacheScope",
+      "type": "class",
+      "name": "LinearCacheScope",
+      "summary": "Enum of the Linear metadata cache scopes (Projects/Project/Teams/ProjectIssues/WorkflowStates) used as a cache-key discriminator.",
+      "tags": [
+        "data-model",
+        "enum",
+        "cache"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        13,
+        19
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:root_scope_id",
+      "type": "function",
+      "name": "root_scope_id",
+      "summary": "Resolves the cache scope_id to a pagination cursor or the sentinel 'root' id when no cursor is given.",
+      "tags": [
+        "utility",
+        "cache",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        33,
+        35
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:read",
+      "type": "function",
+      "name": "read",
+      "summary": "Async cache lookup that returns None on force_refresh, otherwise queries linear_metadata_cache for a non-expired row and deserializes its JSON payload off the async runtime via spawn_blocking.",
+      "tags": [
+        "cache",
+        "database",
+        "async"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        37,
+        73
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:write",
+      "type": "function",
+      "name": "write",
+      "summary": "Async cache upsert that serializes a value, inserts/updates its row in linear_metadata_cache with a TTL-based expiry, and triggers pruning of expired/excess rows.",
+      "tags": [
+        "cache",
+        "database",
+        "async"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        75,
+        112
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:invalidate_scope",
+      "type": "function",
+      "name": "invalidate_scope",
+      "summary": "Deletes all cached rows for a given connection+scope, used to force a refetch after mutations affecting an entire scope.",
+      "tags": [
+        "cache",
+        "database",
+        "async"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        114,
+        130
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:invalidate_record",
+      "type": "function",
+      "name": "invalidate_record",
+      "summary": "Deletes a single cached row identified by connection+scope+scope_id, used to force a refetch of one record after a targeted mutation.",
+      "tags": [
+        "cache",
+        "database",
+        "async"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        132,
+        150
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:prune",
+      "type": "function",
+      "name": "prune",
+      "summary": "Removes expired cache rows and, if the table still exceeds the row cap, trims the oldest rows by fetched_at to enforce LINEAR_METADATA_CACHE_MAX_ROWS.",
+      "tags": [
+        "cache",
+        "database",
+        "cleanup"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        152,
+        172
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/linear_native/queries.rs",
+      "type": "file",
+      "name": "queries.rs",
+      "summary": "Static GraphQL query/mutation string constants (projects, single project, teams, workflow states, issues, plus create/update mutations) used by the native Linear API client to fetch and mutate project-management data.",
+      "tags": [
+        "graphql",
+        "api-client",
+        "service",
+        "linear"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/project-management/src/sync/linear_native/queries.rs"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "summary": "Serde data-transfer types mirroring Linear's GraphQL schema: read-model summaries (projects, teams, issues, workflow states, labels, users) and create/update request payloads used by the native Linear sync client.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "serialization",
+        "linear"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/project-management/src/sync/linear_native/types.rs"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearPageInfo",
+      "type": "class",
+      "name": "LinearPageInfo",
+      "summary": "GraphQL pagination cursor info (has_next_page, end_cursor) shared by all paginated Linear list results.",
+      "tags": [
+        "data-model",
+        "pagination",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        4,
+        7
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearUserSummary",
+      "type": "class",
+      "name": "LinearUserSummary",
+      "summary": "Minimal Linear user reference (id, name, email) used for lead/assignee fields.",
+      "tags": [
+        "data-model",
+        "linear",
+        "user"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        10,
+        14
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearTeamSummary",
+      "type": "class",
+      "name": "LinearTeamSummary",
+      "summary": "Minimal Linear team reference (id, name, key).",
+      "tags": [
+        "data-model",
+        "linear",
+        "team"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        17,
+        21
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearLabelSummary",
+      "type": "class",
+      "name": "LinearLabelSummary",
+      "summary": "Minimal Linear issue label reference (id, name, color).",
+      "tags": [
+        "data-model",
+        "linear",
+        "label"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        24,
+        28
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectStatusType",
+      "type": "class",
+      "name": "LinearProjectStatusType",
+      "summary": "Enum of Linear project statuses (Backlog/Planned/Started/Completed/Canceled) with a snake_case wire mapping and a from_linear_value parser.",
+      "tags": [
+        "data-model",
+        "enum",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        32,
+        38
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectStatusSummary",
+      "type": "class",
+      "name": "LinearProjectStatusSummary",
+      "summary": "Linear project status reference combining id, name, typed status, and display color.",
+      "tags": [
+        "data-model",
+        "linear",
+        "project"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        54,
+        59
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectSummary",
+      "type": "class",
+      "name": "LinearProjectSummary",
+      "summary": "Full read-model of a Linear project including status, lead, teams, and lifecycle dates, returned by project list/detail queries.",
+      "tags": [
+        "data-model",
+        "linear",
+        "project"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        62,
+        78
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectListResult",
+      "type": "class",
+      "name": "LinearProjectListResult",
+      "summary": "Paginated list of LinearProjectSummary with page_info for cursor-based pagination.",
+      "tags": [
+        "data-model",
+        "pagination",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        81,
+        84
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearTeamListResult",
+      "type": "class",
+      "name": "LinearTeamListResult",
+      "summary": "Paginated list of LinearTeamSummary with page_info for cursor-based pagination.",
+      "tags": [
+        "data-model",
+        "pagination",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        87,
+        90
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateType",
+      "type": "class",
+      "name": "LinearWorkflowStateType",
+      "summary": "Enum of Linear workflow-state types (Backlog/Unstarted/Started/Completed/Canceled) with a snake_case wire mapping and a from_linear_value parser.",
+      "tags": [
+        "data-model",
+        "enum",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        94,
+        100
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateSummary",
+      "type": "class",
+      "name": "LinearWorkflowStateSummary",
+      "summary": "Read-model of a Linear workflow state including its type, color, board position, archival timestamp, and owning team.",
+      "tags": [
+        "data-model",
+        "linear",
+        "workflow-state"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        116,
+        125
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateListResult",
+      "type": "class",
+      "name": "LinearWorkflowStateListResult",
+      "summary": "Paginated list of LinearWorkflowStateSummary with page_info.",
+      "tags": [
+        "data-model",
+        "pagination",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        128,
+        131
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueSummary",
+      "type": "class",
+      "name": "LinearIssueSummary",
+      "summary": "Full read-model of a Linear issue including state, assignee, project, team, and labels, returned by issue list/detail queries.",
+      "tags": [
+        "data-model",
+        "linear",
+        "issue"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        134,
+        150
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueState",
+      "type": "class",
+      "name": "LinearIssueState",
+      "summary": "Minimal Linear issue workflow-state reference (id, name, type) embedded in issue summaries.",
+      "tags": [
+        "data-model",
+        "linear",
+        "issue"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        153,
+        157
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectRef",
+      "type": "class",
+      "name": "LinearProjectRef",
+      "summary": "Minimal Linear project reference (id, name) embedded in issue summaries.",
+      "tags": [
+        "data-model",
+        "linear",
+        "project"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        160,
+        163
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueListResult",
+      "type": "class",
+      "name": "LinearIssueListResult",
+      "summary": "Paginated list of LinearIssueSummary with page_info.",
+      "tags": [
+        "data-model",
+        "pagination",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        166,
+        169
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectCreateRequest",
+      "type": "class",
+      "name": "LinearProjectCreateRequest",
+      "summary": "Deserialized request payload for creating a Linear project, with optional description/team_ids/lead/date fields defaulted when omitted.",
+      "tags": [
+        "data-model",
+        "api-handler",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        172,
+        184
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectUpdateRequest",
+      "type": "class",
+      "name": "LinearProjectUpdateRequest",
+      "summary": "Deserialized request payload for patching a Linear project, using nested Option<Option<T>> to distinguish 'omit field' from 'set field to null'.",
+      "tags": [
+        "data-model",
+        "api-handler",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        187,
+        198
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateCreateRequest",
+      "type": "class",
+      "name": "LinearWorkflowStateCreateRequest",
+      "summary": "Deserialized request payload for creating a Linear workflow state under a team, with optional description/color/type/position.",
+      "tags": [
+        "data-model",
+        "api-handler",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        201,
+        212
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateUpdateRequest",
+      "type": "class",
+      "name": "LinearWorkflowStateUpdateRequest",
+      "summary": "Deserialized request payload for patching a Linear workflow state's name/description/color/type/position.",
+      "tags": [
+        "data-model",
+        "api-handler",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        215,
+        226
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueCreateRequest",
+      "type": "class",
+      "name": "LinearIssueCreateRequest",
+      "summary": "Deserialized request payload for creating a Linear issue with required title/team/project and optional description/priority/estimate/state.",
+      "tags": [
+        "data-model",
+        "api-handler",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        229,
+        241
+      ]
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueUpdateRequest",
+      "type": "class",
+      "name": "LinearIssueUpdateRequest",
+      "summary": "Deserialized request payload for patching a Linear issue's title/description/priority/estimate/state.",
+      "tags": [
+        "data-model",
+        "api-handler",
+        "linear"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        244,
+        255
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "type": "file",
+      "name": "linear_tests.rs",
+      "summary": "Wiremock-backed unit tests for the Linear OAuth helper (start_auth_flow, await_callback, exchange_code, refresh), covering PKCE derivation, authorize-URL construction, callback state matching/timeout/cancellation/denial, and token exchange/refresh error paths.",
+      "tags": [
+        "test",
+        "oauth",
+        "linear",
+        "http-mocking"
+      ],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:start_auth_flow_builds_pkce_compliant_authorize_url",
+      "type": "function",
+      "name": "start_auth_flow_builds_pkce_compliant_authorize_url",
+      "summary": "Asserts start_auth_flow produces an authorize URL with the expected PKCE challenge, state, and redirect parameters.",
+      "tags": [
+        "test",
+        "oauth",
+        "pkce"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        39,
+        67
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_resolves_with_code_on_state_match",
+      "type": "function",
+      "name": "await_callback_resolves_with_code_on_state_match",
+      "summary": "Asserts await_callback resolves with the authorization code once a callback request with the matching state param arrives.",
+      "tags": [
+        "test",
+        "oauth",
+        "http-mocking"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        77,
+        104
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_returns_state_mismatch_when_state_differs",
+      "type": "function",
+      "name": "await_callback_returns_state_mismatch_when_state_differs",
+      "summary": "Asserts await_callback returns a state-mismatch error when the callback's state parameter differs from the one issued.",
+      "tags": [
+        "test",
+        "oauth",
+        "http-mocking"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        108,
+        137
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_times_out_when_no_callback_arrives",
+      "type": "function",
+      "name": "await_callback_times_out_when_no_callback_arrives",
+      "summary": "Asserts await_callback times out and returns an error when no OAuth callback request arrives within the deadline.",
+      "tags": [
+        "test",
+        "oauth",
+        "timeout"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        141,
+        155
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_returns_cancelled_when_token_signalled",
+      "type": "function",
+      "name": "await_callback_returns_cancelled_when_token_signalled",
+      "summary": "Asserts await_callback returns a cancelled result when an external cancellation token is signalled before the callback arrives.",
+      "tags": [
+        "test",
+        "oauth",
+        "cancellation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        159,
+        179
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_returns_access_denied_on_authorize_error",
+      "type": "function",
+      "name": "await_callback_returns_access_denied_on_authorize_error",
+      "summary": "Asserts await_callback surfaces an access-denied error when the callback request carries an OAuth error query parameter.",
+      "tags": [
+        "test",
+        "oauth",
+        "error-handling"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        183,
+        206
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:exchange_code_returns_token_record_with_refresh_and_expiry",
+      "type": "function",
+      "name": "exchange_code_returns_token_record_with_refresh_and_expiry",
+      "summary": "Asserts exchange_code trades an authorization code for a token record populated with access/refresh tokens and a computed expiry.",
+      "tags": [
+        "test",
+        "oauth",
+        "http-mocking"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        209,
+        249
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:exchange_code_surfaces_http_error_through_poll_failed",
+      "type": "function",
+      "name": "exchange_code_surfaces_http_error_through_poll_failed",
+      "summary": "Asserts exchange_code surfaces the token endpoint's HTTP error response as a poll-failed error.",
+      "tags": [
+        "test",
+        "oauth",
+        "error-handling"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        252,
+        278
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:refresh_returns_fresh_record_with_new_expiry",
+      "type": "function",
+      "name": "refresh_returns_fresh_record_with_new_expiry",
+      "summary": "Asserts refresh exchanges a refresh token for a new token record with an updated expiry.",
+      "tags": [
+        "test",
+        "oauth",
+        "http-mocking"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        281,
+        307
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:refresh_returns_error_string_on_revoked_token",
+      "type": "function",
+      "name": "refresh_returns_error_string_on_revoked_token",
+      "summary": "Asserts refresh surfaces an error string when the token endpoint reports the refresh token has been revoked.",
+      "tags": [
+        "test",
+        "oauth",
+        "error-handling"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        310,
+        331
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:test_token_endpoint_override_round_trips",
+      "type": "function",
+      "name": "test_token_endpoint_override_round_trips",
+      "summary": "Asserts the Linear token-endpoint URL override env var is respected end-to-end when exchanging a code for a token.",
+      "tags": [
+        "test",
+        "oauth",
+        "configuration"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        349,
+        359
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/worker/debug.rs",
+      "type": "file",
+      "name": "debug.rs",
+      "summary": "Debug-only entry point for e2e sync test harnesses that resets backoff state on a project's pending outbox rows and drives one push cycle synchronously.",
+      "tags": [
+        "test-helper",
+        "sync",
+        "debug",
+        "service"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/project-management/src/sync/worker/debug.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/worker/debug.rs:pump_once_for_project",
+      "type": "function",
+      "name": "pump_once_for_project",
+      "summary": "Resets last_attempted_at to NULL for every Pending outbox row owned by the given project slug, then drives one push cycle up to the standard tick cap, for use by e2e test harnesses.",
+      "tags": [
+        "test-helper",
+        "sync",
+        "database"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        9,
+        30
+      ]
+    },
+    {
+      "id": "config:src-tauri/crates/search/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the search crate, pulling in ripgrep-core (grep-searcher/grep-regex), tree-sitter grammars for TS/JS/Python/Rust symbol indexing, nucleo fuzzy matching, and blake3 for workspace merkle-tree caching.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/search/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/session-persistence/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the session-persistence crate, depending on agent_core, database, core_types, and orgtrack_core to back its Tauri commands and rusqlite-backed persistence layer.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/session-persistence/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/settings/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the settings crate, a small Tauri-integrated crate using the notify filesystem-watcher and serde_json for reading/watching app settings.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/settings/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/shared-state/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the shared-state crate, depending on app_paths/app_platform plus tokio and uuid, with a unix-only target-specific dependency block.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/shared-state/Cargo.toml"
+    },
+    {
+      "id": "config:src-tauri/crates/system-services/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "summary": "Cargo manifest for the system-services crate, wiring Tauri notifications, app_window/app_platform/git/integrations workspace crates, and platform-specific (unix/macos/windows) dependency blocks for OS-level services like workspace port scanning.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/system-services/Cargo.toml"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls_tests.rs",
+      "type": "file",
+      "name": "advertised_urls_tests.rs",
+      "summary": "Unit tests for advertised dev-server URL ingestion, covering http(s) origin parsing/change detection, rejection of non-http schemes, and trailing-punctuation stripping.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "url-parsing"
+      ],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls_tests.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls_tests.rs:ingests_http_origin_and_reports_change",
+      "type": "function",
+      "name": "ingests_http_origin_and_reports_change",
+      "summary": "Asserts ingest_advertised_url parses an http origin, reports a change on first ingest vs. no change on a repeat, and that lookup_advertised_url returns the cached origin.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "url-parsing"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        4,
+        14
+      ]
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs",
+      "type": "file",
+      "name": "scanner_tests.rs",
+      "summary": "Unit tests for the workspace port scanner's platform-specific listening-port parsers (lsof, netstat, /proc/net/tcp) and container-process-name detection, plus a timeout test for the run_command helper.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "process-scanning"
+      ],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:parses_lsof_pcn_output",
+      "type": "function",
+      "name": "parses_lsof_pcn_output",
+      "summary": "Asserts parse_lsof_listening_output correctly parses macOS lsof -P -i -n output into per-process listening-port entries.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "lsof"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        4,
+        19
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:parses_netstat_listening_rows",
+      "type": "function",
+      "name": "parses_netstat_listening_rows",
+      "summary": "Asserts the netstat output parser extracts listening ports and process names on platforms that expose netstat.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "netstat"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        22,
+        34
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:parses_proc_net_tcp_listen_rows",
+      "type": "function",
+      "name": "parses_proc_net_tcp_listen_rows",
+      "summary": "Asserts the /proc/net/tcp parser extracts listening ports from Linux's hex-encoded socket table.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "proc-net-tcp"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        37,
+        48
+      ]
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:detects_container_process_names",
+      "type": "function",
+      "name": "detects_container_process_names",
+      "summary": "Asserts the scanner recognizes container-runtime process names (e.g. docker-proxy) when classifying listening ports.",
+      "tags": [
+        "test",
+        "workspace-ports",
+        "containers"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        51,
+        61
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:LinearCacheScope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:LinearCacheScope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:root_scope_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:root_scope_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:read",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:invalidate_scope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:invalidate_scope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:invalidate_record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:invalidate_record",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/cache.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/linear_native/cache.rs:prune",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearPageInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearPageInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearUserSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearUserSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearTeamSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearTeamSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearLabelSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearLabelSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectStatusType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectStatusType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectStatusSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectStatusSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectListResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectListResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearTeamListResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearTeamListResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateListResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateListResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectRef",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectRef",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueListResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueListResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectCreateRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectCreateRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectUpdateRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearProjectUpdateRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateCreateRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateCreateRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateUpdateRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearWorkflowStateUpdateRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueCreateRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueCreateRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueUpdateRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/linear_native/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/linear_native/types.rs:LinearIssueUpdateRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:start_auth_flow_builds_pkce_compliant_authorize_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_resolves_with_code_on_state_match",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_returns_state_mismatch_when_state_differs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_times_out_when_no_callback_arrives",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_returns_cancelled_when_token_signalled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:await_callback_returns_access_denied_on_authorize_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:exchange_code_returns_token_record_with_refresh_and_expiry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:exchange_code_surfaces_http_error_through_poll_failed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:refresh_returns_fresh_record_with_new_expiry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:refresh_returns_error_string_on_revoked_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear_tests.rs:test_token_endpoint_override_round_trips",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/debug.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/debug.rs:pump_once_for_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/worker/debug.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/worker/debug.rs:pump_once_for_project",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls_tests.rs:ingests_http_origin_and_reports_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:parses_lsof_pcn_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:parses_netstat_listening_rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:parses_proc_net_tcp_listen_rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs:detects_container_process_names",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "config:src-tauri/crates/system-services/Cargo.toml",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls_tests.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/system-services/Cargo.toml",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/scanner_tests.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

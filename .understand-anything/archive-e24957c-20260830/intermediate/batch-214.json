@@ -1,0 +1,321 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/settings/src/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "summary": "Tauri command handlers exposed to the frontend for reading, writing, resetting, and locating the settings.jsonc file, plus writing the settings JSON schema.",
+      "tags": ["api-handler", "tauri-command", "settings", "ipc"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/settings/src/file_io.rs",
+      "type": "file",
+      "name": "file_io.rs",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "summary": "Implements settings file I/O: JSONC comment stripping and corrupt-JSON recovery, default-file creation, and pretty-printed reads/writes of ~/.orgii/settings.jsonc.",
+      "tags": ["file-io", "parsing", "settings", "error-recovery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/settings/src/hooks.rs",
+      "type": "file",
+      "name": "hooks.rs",
+      "filePath": "src-tauri/crates/settings/src/hooks.rs",
+      "summary": "Inversion-of-control registry allowing other subsystems to register a single callback invoked whenever the on-disk settings file changes.",
+      "tags": ["hooks", "event-handler", "ioc", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/settings/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/settings/src/lib.rs",
+      "summary": "Crate root for the settings module; declares submodules and defines SettingsState, the Tauri-managed state holding the file watcher handle.",
+      "tags": ["entry-point", "barrel", "state", "tauri"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/settings/src/watcher.rs",
+      "type": "file",
+      "name": "watcher.rs",
+      "filePath": "src-tauri/crates/settings/src/watcher.rs",
+      "summary": "Background thread that watches settings.jsonc for external changes using the notify crate, debounces events, and emits Tauri events (or triggers registered hooks) so the frontend and other subsystems can react.",
+      "tags": ["file-watcher", "background-thread", "event-handler", "settings"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/commands.rs:settings_read",
+      "type": "function",
+      "name": "settings_read",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "lineRange": [19, 21],
+      "summary": "Tauri command that reads and returns the full parsed settings JSON, creating the file with defaults if missing.",
+      "tags": ["api-handler", "tauri-command", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/commands.rs:settings_write",
+      "type": "function",
+      "name": "settings_write",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "lineRange": [26, 28],
+      "summary": "Tauri command that writes a complete JSONC string (with comments) to the settings file.",
+      "tags": ["api-handler", "tauri-command", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/commands.rs:settings_write_partial",
+      "type": "function",
+      "name": "settings_write_partial",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "lineRange": [33, 45],
+      "summary": "Tauri command that merges a partial JSON object into the existing settings and writes the result back without comments.",
+      "tags": ["api-handler", "tauri-command", "settings", "merge"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/commands.rs:settings_reset",
+      "type": "function",
+      "name": "settings_reset",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "lineRange": [51, 58],
+      "summary": "Tauri command that deletes the settings file so the watcher can notify the frontend to fall back to defaults.",
+      "tags": ["api-handler", "tauri-command", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/commands.rs:settings_get_path",
+      "type": "function",
+      "name": "settings_get_path",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "lineRange": [63, 65],
+      "summary": "Tauri command returning the absolute path to the settings file for display or agent use.",
+      "tags": ["api-handler", "tauri-command", "settings", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/commands.rs:settings_write_schema",
+      "type": "function",
+      "name": "settings_write_schema",
+      "filePath": "src-tauri/crates/settings/src/commands.rs",
+      "lineRange": [70, 79],
+      "summary": "Tauri command that writes the JSON Schema file alongside settings.jsonc to enable editor autocomplete.",
+      "tags": ["api-handler", "tauri-command", "settings", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_dir",
+      "type": "function",
+      "name": "get_settings_dir",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [14, 16],
+      "summary": "Returns the settings directory path (~/.orgii/).",
+      "tags": ["utility", "path-resolution", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_path",
+      "type": "function",
+      "name": "get_settings_path",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [19, 21],
+      "summary": "Returns the full path to settings.jsonc.",
+      "tags": ["utility", "path-resolution", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:get_schema_path",
+      "type": "function",
+      "name": "get_schema_path",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [24, 26],
+      "summary": "Returns the full path to the settings JSON Schema file.",
+      "tags": ["utility", "path-resolution", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:strip_jsonc_comments",
+      "type": "function",
+      "name": "strip_jsonc_comments",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [30, 90],
+      "summary": "Strips single-line and block comments from JSONC content, respecting string literals, to produce valid parseable JSON.",
+      "tags": ["parsing", "jsonc", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:find_complete_json_prefix",
+      "type": "function",
+      "name": "find_complete_json_prefix",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [92, 136],
+      "summary": "Scans input to find the longest valid JSON prefix, used to recover from trailing garbage after a truncated or corrupted write.",
+      "tags": ["parsing", "error-recovery", "json"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:read_settings",
+      "type": "function",
+      "name": "read_settings",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [156, 192],
+      "summary": "Reads and parses settings.jsonc, creating a default empty file if absent and attempting corrupt-content recovery (backup plus prefix repair) on parse failure.",
+      "tags": ["file-io", "error-recovery", "settings"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_jsonc",
+      "type": "function",
+      "name": "write_settings_jsonc",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [196, 204],
+      "summary": "Writes a raw JSONC string (with comments) to the settings file, creating the settings directory if needed.",
+      "tags": ["file-io", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_json",
+      "type": "function",
+      "name": "write_settings_json",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [208, 219],
+      "summary": "Serializes a JSON value and writes it to the settings file as pretty-printed JSON.",
+      "tags": ["file-io", "serialization", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/file_io.rs:settings_file_exists",
+      "type": "function",
+      "name": "settings_file_exists",
+      "filePath": "src-tauri/crates/settings/src/file_io.rs",
+      "lineRange": [222, 225],
+      "summary": "Checks whether the settings file currently exists on disk.",
+      "tags": ["utility", "file-io"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/hooks.rs:register_on_settings_changed",
+      "type": "function",
+      "name": "register_on_settings_changed",
+      "filePath": "src-tauri/crates/settings/src/hooks.rs",
+      "lineRange": [19, 23],
+      "summary": "Registers the single global callback invoked when settings change; logs a warning if a second registration is attempted.",
+      "tags": ["hooks", "ioc", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/hooks.rs:on_settings_changed",
+      "type": "function",
+      "name": "on_settings_changed",
+      "filePath": "src-tauri/crates/settings/src/hooks.rs",
+      "lineRange": [25, 29],
+      "summary": "Invokes the registered settings-changed callback, if any, with the parsed settings value.",
+      "tags": ["hooks", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/settings/src/lib.rs:SettingsState",
+      "type": "class",
+      "name": "SettingsState",
+      "filePath": "src-tauri/crates/settings/src/lib.rs",
+      "lineRange": [22, 31],
+      "summary": "Tauri-managed application state holding the optional settings file watcher handle so it stays alive for the app's lifetime.",
+      "tags": ["state", "tauri", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/settings/src/watcher.rs:SettingsWatcherHandle",
+      "type": "class",
+      "name": "SettingsWatcherHandle",
+      "filePath": "src-tauri/crates/settings/src/watcher.rs",
+      "lineRange": [28, 40],
+      "summary": "Handle to the background settings-file watcher thread; stopping or dropping it signals the thread to exit.",
+      "tags": ["file-watcher", "handle", "background-thread"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/watcher.rs:start_watching",
+      "type": "function",
+      "name": "start_watching",
+      "filePath": "src-tauri/crates/settings/src/watcher.rs",
+      "lineRange": [44, 70],
+      "summary": "Starts a background thread watching the settings directory for changes to settings.jsonc and returns a handle to it.",
+      "tags": ["file-watcher", "background-thread", "settings"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/settings/src/watcher.rs:watcher_loop",
+      "type": "function",
+      "name": "watcher_loop",
+      "filePath": "src-tauri/crates/settings/src/watcher.rs",
+      "lineRange": [73, 167],
+      "summary": "Debounced watch loop that polls filesystem events for settings.jsonc, re-reads it on change, invokes registered hooks, and emits Tauri change/delete events to the frontend.",
+      "tags": ["file-watcher", "event-handler", "debounce", "background-thread"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_read", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_write", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_write_partial", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_reset", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_get_path", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_write_schema", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_read", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_write", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_write_partial", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_reset", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_get_path", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/commands.rs", "target": "function:src-tauri/crates/settings/src/commands.rs:settings_write_schema", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_dir", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_path", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_schema_path", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:strip_jsonc_comments", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:find_complete_json_prefix", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:read_settings", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_jsonc", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_json", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:settings_file_exists", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_dir", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_path", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_schema_path", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:read_settings", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_jsonc", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_json", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/file_io.rs", "target": "function:src-tauri/crates/settings/src/file_io.rs:settings_file_exists", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/settings/src/hooks.rs", "target": "function:src-tauri/crates/settings/src/hooks.rs:register_on_settings_changed", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/hooks.rs", "target": "function:src-tauri/crates/settings/src/hooks.rs:on_settings_changed", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/hooks.rs", "target": "function:src-tauri/crates/settings/src/hooks.rs:register_on_settings_changed", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/hooks.rs", "target": "function:src-tauri/crates/settings/src/hooks.rs:on_settings_changed", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/settings/src/lib.rs", "target": "class:src-tauri/crates/settings/src/lib.rs:SettingsState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/lib.rs", "target": "class:src-tauri/crates/settings/src/lib.rs:SettingsState", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/lib.rs", "target": "file:src-tauri/crates/settings/src/commands.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/settings/src/lib.rs", "target": "file:src-tauri/crates/settings/src/file_io.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/settings/src/lib.rs", "target": "file:src-tauri/crates/settings/src/hooks.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/settings/src/lib.rs", "target": "file:src-tauri/crates/settings/src/watcher.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src-tauri/crates/settings/src/watcher.rs", "target": "class:src-tauri/crates/settings/src/watcher.rs:SettingsWatcherHandle", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/watcher.rs", "target": "function:src-tauri/crates/settings/src/watcher.rs:start_watching", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/watcher.rs", "target": "function:src-tauri/crates/settings/src/watcher.rs:watcher_loop", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/settings/src/watcher.rs", "target": "class:src-tauri/crates/settings/src/watcher.rs:SettingsWatcherHandle", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/settings/src/watcher.rs", "target": "function:src-tauri/crates/settings/src/watcher.rs:start_watching", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_read", "target": "function:src-tauri/crates/settings/src/file_io.rs:read_settings", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_write", "target": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_jsonc", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_write_partial", "target": "function:src-tauri/crates/settings/src/file_io.rs:read_settings", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_write_partial", "target": "function:src-tauri/crates/settings/src/file_io.rs:write_settings_json", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_reset", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_path", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_get_path", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_path", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_write_schema", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_schema_path", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/commands.rs:settings_write_schema", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_dir", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src-tauri/crates/settings/src/watcher.rs:start_watching", "target": "function:src-tauri/crates/settings/src/file_io.rs:get_settings_path", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/watcher.rs:watcher_loop", "target": "function:src-tauri/crates/settings/src/file_io.rs:read_settings", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/settings/src/watcher.rs:watcher_loop", "target": "function:src-tauri/crates/settings/src/hooks.rs:on_settings_changed", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

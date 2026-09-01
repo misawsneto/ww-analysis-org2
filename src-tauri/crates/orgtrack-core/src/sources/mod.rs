@@ -1,0 +1,65 @@
+use crate::canonical::{
+    ActivityRecord, CommitLinkRecord, FileChangeRecord, SessionCheckpointFileStateRecord,
+    SessionCheckpointRecord, SessionDiffChunkRecord, SessionEditArtifactRecord,
+    SessionFinalDiffRecord, SessionRecord,
+};
+
+#[derive(Debug, Clone)]
+pub struct SourceDescriptor {
+    pub id: String,
+    pub label: String,
+    pub parser_version: u32,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct SourceScanOptions {
+    pub workspace_path: Option<String>,
+    pub resume: bool,
+    pub rebuild: bool,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct SourceRecords {
+    pub sessions: Vec<SessionRecord>,
+    pub activities: Vec<ActivityRecord>,
+    pub file_changes: Vec<FileChangeRecord>,
+    pub commit_links: Vec<CommitLinkRecord>,
+    pub edit_artifacts: Vec<SessionEditArtifactRecord>,
+    pub diff_chunks: Vec<SessionDiffChunkRecord>,
+    pub final_diffs: Vec<SessionFinalDiffRecord>,
+    pub checkpoints: Vec<SessionCheckpointRecord>,
+    pub checkpoint_file_states: Vec<SessionCheckpointFileStateRecord>,
+}
+
+pub trait SourceAdapter {
+    fn descriptor(&self) -> SourceDescriptor;
+    fn scan(&self, options: &SourceScanOptions) -> Result<SourceRecords, String>;
+}
+
+pub mod activity;
+pub mod anthropic_jsonl;
+pub mod app_open;
+pub mod claude_code;
+pub mod cli_resume;
+pub mod cline;
+pub mod codex;
+pub mod copilot;
+pub mod cursor_cli;
+pub mod cursor_ide;
+pub mod imported_history;
+pub mod kimi;
+pub mod mimo_code;
+pub mod omp;
+pub mod opencode;
+pub mod orgii_cli;
+pub mod orgii_rust_agents;
+pub mod pi;
+pub mod qoder;
+pub mod qoder_cli;
+pub mod qwen_code;
+pub mod registry;
+pub mod trae;
+pub mod warp;
+pub mod windsurf;
+pub mod workbuddy;
+pub mod zcode;

@@ -1,0 +1,469 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs",
+      "type": "file",
+      "name": "media.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs",
+      "summary": "Extracts and classifies media file references embedded in message content, and injects local media paths back into inbound message text for the agent to consume.",
+      "tags": ["channel", "media", "message-processing", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:extract_media_refs",
+      "type": "function",
+      "name": "extract_media_refs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs",
+      "lineRange": [29, 48],
+      "summary": "Scans message content for embedded media path references and extracts them as a structured list.",
+      "tags": ["media", "text-processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:inject_inbound_media",
+      "type": "function",
+      "name": "inject_inbound_media",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs",
+      "lineRange": [58, 68],
+      "summary": "Injects downloaded/local media file paths into inbound message content so the agent can reference them.",
+      "tags": ["media", "message-processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:classify_media_label",
+      "type": "function",
+      "name": "classify_media_label",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs",
+      "lineRange": [70, 96],
+      "summary": "Classifies a media file path (image, audio, video, document, etc.) based on its extension for labeling purposes.",
+      "tags": ["media", "classification"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs",
+      "summary": "Module barrel re-exporting the message-delivery helper submodules: context header, markdown stripping, media handling, sender-id redaction, retry, and message splitting.",
+      "tags": ["barrel", "channel", "message-delivery", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs",
+      "type": "file",
+      "name": "redact.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs",
+      "summary": "Redacts sender identifiers in logged/displayed channel messages when PII redaction is enabled in the channels configuration.",
+      "tags": ["privacy", "redaction", "channel", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs:redact_sender_id",
+      "type": "function",
+      "name": "redact_sender_id",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs",
+      "lineRange": [15, 29],
+      "summary": "Masks a sender id string (e.g. to a hashed or truncated form) when PII redaction is enabled, otherwise returns it unchanged.",
+      "tags": ["privacy", "redaction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs",
+      "type": "file",
+      "name": "retry.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs",
+      "summary": "Implements retry-with-backoff logic for sending outbound channel messages, classifying errors as retryable/timeout to decide whether to retry.",
+      "tags": ["retry", "channel", "reliability", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs:send_with_retry",
+      "type": "function",
+      "name": "send_with_retry",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs",
+      "lineRange": [55, 138],
+      "summary": "Sends a message through a channel, retrying with exponential backoff up to a maximum retry count on retryable/timeout errors.",
+      "tags": ["retry", "reliability", "channel"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs",
+      "type": "file",
+      "name": "splitting.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs",
+      "summary": "Splits long outbound messages into chunks that fit each channel's maximum length constraint, supporting custom unit-length measurement (e.g. UTF-16 code units) for platforms with non-standard limits.",
+      "tags": ["message-formatting", "channel", "text-processing", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs:split_message",
+      "type": "function",
+      "name": "split_message",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs",
+      "lineRange": [31, 141],
+      "summary": "Splits a message into chunks no longer than max_len, preferring to break on paragraph/sentence/word boundaries and using a pluggable length-measurement function.",
+      "tags": ["message-formatting", "text-processing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs:custom_unit_to_cp",
+      "type": "function",
+      "name": "custom_unit_to_cp",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs",
+      "lineRange": [145, 162],
+      "summary": "Converts a custom-unit length budget (e.g. UTF-16 code units) into a codepoint count for slicing a string.",
+      "tags": ["text-processing", "unicode"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/discord.rs",
+      "type": "file",
+      "name": "discord.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/discord.rs",
+      "summary": "Implements the Discord channel integration -- connecting to the Discord gateway, receiving inbound messages, and sending outbound messages via the Discord API client.",
+      "tags": ["channel", "discord", "integration", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:DiscordChannel",
+      "type": "class",
+      "name": "DiscordChannel",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/discord.rs",
+      "lineRange": [26, 32],
+      "summary": "Channel implementation for Discord, holding the account id, config, API client, running flag, and gateway task handle; implements start/stop/send/is_connected lifecycle methods.",
+      "tags": ["channel", "discord", "data-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/discord.rs",
+      "lineRange": [52, 229],
+      "summary": "Establishes the Discord gateway connection and spawns the event loop that forwards inbound messages onto the shared inbound channel.",
+      "tags": ["discord", "gateway", "connection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:send",
+      "type": "function",
+      "name": "send",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/discord.rs",
+      "lineRange": [240, 258],
+      "summary": "Sends an outbound message to a Discord channel via the REST API client.",
+      "tags": ["discord", "message-delivery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "type": "file",
+      "name": "api.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "summary": "REST client functions for the Feishu (Lark) Open Platform: sending text/card messages, uploading/downloading images and files, resolving inbound media, and reacting to/updating messages.",
+      "tags": ["channel", "feishu", "http-client", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:send_feishu_message",
+      "type": "function",
+      "name": "send_feishu_message",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [47, 134],
+      "summary": "Sends a text or interactive-card message to a Feishu chat, choosing the message format based on the configured render mode.",
+      "tags": ["feishu", "message-delivery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_image",
+      "type": "function",
+      "name": "download_image",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [153, 180],
+      "summary": "Downloads an image resource from Feishu by image key, saving it locally and inferring the file extension from its bytes.",
+      "tags": ["feishu", "media", "download"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_message_image",
+      "type": "function",
+      "name": "download_message_image",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [185, 219],
+      "summary": "Downloads an image attached to a specific Feishu message by message id and image key.",
+      "tags": ["feishu", "media", "download"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_file",
+      "type": "function",
+      "name": "download_file",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [222, 249],
+      "summary": "Downloads a non-image file attachment from Feishu by file key.",
+      "tags": ["feishu", "media", "download"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:resolve_feishu_media",
+      "type": "function",
+      "name": "resolve_feishu_media",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [254, 310],
+      "summary": "Resolves an inbound Feishu media reference (image or file) to a locally downloaded file, dispatching to the appropriate download function.",
+      "tags": ["feishu", "media"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:upload_image",
+      "type": "function",
+      "name": "upload_image",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [317, 371],
+      "summary": "Uploads a local image file to Feishu's media API and returns the resulting image key.",
+      "tags": ["feishu", "media", "upload"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:upload_file",
+      "type": "function",
+      "name": "upload_file",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [374, 429],
+      "summary": "Uploads a local non-image file to Feishu's media API and returns the resulting file key.",
+      "tags": ["feishu", "media", "upload"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:send_media_message",
+      "type": "function",
+      "name": "send_media_message",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [434, 500],
+      "summary": "Uploads a local media file and sends it as an outbound message to a Feishu chat, selecting image or file message type based on content.",
+      "tags": ["feishu", "media", "message-delivery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:add_reaction",
+      "type": "function",
+      "name": "add_reaction",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [505, 547],
+      "summary": "Adds an emoji reaction to a Feishu message via the reactions API.",
+      "tags": ["feishu", "reaction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:remove_reaction",
+      "type": "function",
+      "name": "remove_reaction",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [550, 604],
+      "summary": "Removes a previously-added emoji reaction from a Feishu message.",
+      "tags": ["feishu", "reaction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:update_feishu_message",
+      "type": "function",
+      "name": "update_feishu_message",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs",
+      "lineRange": [607, 652],
+      "summary": "Edits the content of a previously-sent Feishu message in place, used for streaming/progressive response updates.",
+      "tags": ["feishu", "message-delivery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "type": "file",
+      "name": "auth.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "summary": "Manages Feishu app-level access tokens -- fetching, caching, and auto-refreshing the tenant access token used to authenticate all Feishu API calls -- and resolves the bot's own open id.",
+      "tags": ["channel", "feishu", "authentication", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:FeishuAuth",
+      "type": "class",
+      "name": "FeishuAuth",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "lineRange": [25, 31],
+      "summary": "Holds the Feishu app id/secret, HTTP client, and cached token state, providing methods to fetch and auto-refresh the tenant access token.",
+      "tags": ["feishu", "authentication", "data-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "lineRange": [34, 45],
+      "summary": "Constructs a FeishuAuth instance from a Feishu account configuration.",
+      "tags": ["feishu", "authentication", "constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:get_token",
+      "type": "function",
+      "name": "get_token",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "lineRange": [48, 58],
+      "summary": "Returns a valid tenant access token, refreshing it first if the cached token is expired or missing.",
+      "tags": ["feishu", "authentication"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:refresh_token",
+      "type": "function",
+      "name": "refresh_token",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "lineRange": [61, 109],
+      "summary": "Calls the Feishu tenant-access-token endpoint to obtain a fresh token and caches it with its expiry time.",
+      "tags": ["feishu", "authentication", "http-client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:fetch_bot_open_id",
+      "type": "function",
+      "name": "fetch_bot_open_id",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs",
+      "lineRange": [128, 165],
+      "summary": "Fetches the bot's own open id from Feishu, used to detect self-mentions and avoid processing the bot's own messages.",
+      "tags": ["feishu", "authentication"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "type": "file",
+      "name": "channel.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "summary": "Implements the Feishu channel integration -- resolving the WebSocket endpoint, maintaining the persistent WS connection, and exposing start/stop/send/message-update lifecycle methods.",
+      "tags": ["channel", "feishu", "websocket", "integration", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:FeishuChannel",
+      "type": "class",
+      "name": "FeishuChannel",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "lineRange": [110, 118],
+      "summary": "Channel implementation for Feishu, holding the account id, config, auth state, running/connection flags, and websocket task handle.",
+      "tags": ["channel", "feishu", "data-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:request_ws_endpoint",
+      "type": "function",
+      "name": "request_ws_endpoint",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "lineRange": [37, 107],
+      "summary": "Requests a fresh WebSocket connection endpoint URL from the Feishu long-connection API using the app credentials.",
+      "tags": ["feishu", "websocket", "http-client"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "lineRange": [121, 132],
+      "summary": "Constructs a FeishuChannel instance from an account id and Feishu account configuration.",
+      "tags": ["feishu", "constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "lineRange": [141, 216],
+      "summary": "Starts the Feishu channel by requesting a WS endpoint and spawning the reconnecting websocket event loop.",
+      "tags": ["feishu", "websocket", "connection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:send",
+      "type": "function",
+      "name": "send",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs",
+      "lineRange": [228, 246],
+      "summary": "Sends an outbound message to a Feishu chat via the Feishu API client.",
+      "tags": ["feishu", "message-delivery"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:extract_media_refs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:inject_inbound_media", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:classify_media_label", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:extract_media_refs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs:inject_inbound_media", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/context_header.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/markdown_strip.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/media.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs:redact_sender_id", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/redact.rs:redact_sender_id", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs:send_with_retry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/retry.rs:send_with_retry", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs:split_message", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs:custom_unit_to_cp", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs:split_message", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/delivery/splitting.rs:custom_unit_to_cp", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/discord.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:DiscordChannel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/discord.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:start", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/discord.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:send", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/discord.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/channels/discord.rs:DiscordChannel", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/discord.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/config.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:send_feishu_message", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_image", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_message_image", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_file", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:resolve_feishu_media", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:upload_image", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:upload_file", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:send_media_message", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:add_reaction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:remove_reaction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:update_feishu_message", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:send_feishu_message", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_image", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_message_image", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:download_file", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:resolve_feishu_media", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:upload_image", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:upload_file", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:send_media_message", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:add_reaction", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:remove_reaction", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/api.rs:update_feishu_message", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:FeishuAuth", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:new", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:get_token", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:refresh_token", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:fetch_bot_open_id", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:FeishuAuth", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:new", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:get_token", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:refresh_token", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/auth.rs:fetch_bot_open_id", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:FeishuChannel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:request_ws_endpoint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:new", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:start", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:send", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:FeishuChannel", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:request_ws_endpoint", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/channels/feishu/channel.rs:new", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

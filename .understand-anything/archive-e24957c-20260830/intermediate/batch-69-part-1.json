@@ -1,0 +1,591 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "type": "file",
+      "name": "resultParsers.ts",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "summary": "Parses raw tool-call result payloads into structured UI data — browser JSON, error detection, workspace/LSP/project-tool listings, and background-job rows — powering ToolCallBlock's styled output variants.",
+      "tags": ["utility", "parsing", "tool-call", "data-transformation"],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of regex-based text parsing to reverse-engineer structured rows from plain-text agent tool output."
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts",
+      "type": "file",
+      "name": "toolSource.ts",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts",
+      "summary": "Derives a jump-to-source file path (and optional line) from a tool call's arguments, used to render an 'open source' action only for tools that reference a concrete file.",
+      "tags": ["utility", "tool-call", "navigation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx",
+      "summary": "Generic transparent tool-call block that renders tool name, argument/result sections, and dispatches to specialized styled-output renderers (workspace, LSP, job listing, cards) as a fallback for tools without a dedicated block.",
+      "tags": ["component", "tool-call", "fallback-renderer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/ToolCallBlock/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/types.ts",
+      "summary": "Type definitions for ToolCallBlock's props and the discriminated StyledOutput union covering workspace, LSP, job-listing, card, and command-result renderings.",
+      "tags": ["type-definition", "tool-call"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/WebSearchBlock/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/ChatPanel/blocks/WebSearchBlock/index.tsx",
+      "summary": "Renders web search results as an expandable stack list of link rows with domain, title, and snippet.",
+      "tags": ["component", "web-search", "list-view"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "summary": "Renders git worktree tool-call events (add/list/leave) as a header row with expandable detail rows and a worktree entry list.",
+      "tags": ["component", "git", "worktree", "list-view"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/primitives/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/ChatPanel/blocks/primitives/index.ts",
+      "summary": "Barrel module re-exporting the shared event-block primitives (header, output, section, stack-list, hooks, context) used across all chat block components.",
+      "tags": ["barrel", "entry-point", "primitives"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/primitives/nestedBlockContext.ts",
+      "type": "file",
+      "name": "nestedBlockContext.ts",
+      "filePath": "src/engines/ChatPanel/blocks/primitives/nestedBlockContext.ts",
+      "summary": "React context flag signalling a block subtree is rendered nested inside another event (e.g. subagent sub-activity), defaulting nested child blocks to collapsed.",
+      "tags": ["context", "state", "primitives"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts",
+      "type": "file",
+      "name": "useEventBlockHeader.ts",
+      "filePath": "src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts",
+      "summary": "Core hook managing collapsed/hover state for event block headers, including persisted per-event collapse state and global collapse-all/expand-all command handling.",
+      "tags": ["hook", "state-management", "primitives"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts",
+      "type": "file",
+      "name": "useBlockLocate.ts",
+      "filePath": "src/engines/ChatPanel/blocks/useBlockLocate.ts",
+      "summary": "Thin wrapper around useEventBlockHeader that adds event-replay 'locate' navigation, avoiding a circular dependency between primitives and SessionCore.",
+      "tags": ["hook", "navigation", "primitives"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx",
+      "type": "file",
+      "name": "DiffAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx",
+      "summary": "Adapter that routes file create/edit/delete/patch events to DiffBlock with a lifecycle-aware, filename-interpolated title.",
+      "tags": ["adapter", "diff", "event-renderer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "type": "file",
+      "name": "ExploreAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "summary": "Adapter that renders list_dir/tool_search/query_lsp events, parsing directory entries and diagnostics from multiple result shapes and offering an inline LSP-install action on failure.",
+      "tags": ["adapter", "file-explorer", "event-renderer", "lsp"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx",
+      "type": "file",
+      "name": "FallbackAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx",
+      "summary": "Catch-all adapter for tools without a specialized chat block (MCP tools, manage_lsp, setup_repo, etc.), branching to WorktreeListBlock, ManageAgentDefBlock, or SkillBlock before falling back to ToolCallBlock.",
+      "tags": ["adapter", "fallback-renderer", "event-renderer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx",
+      "type": "file",
+      "name": "GlobAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx",
+      "summary": "Adapter that renders find_files/glob_file_search hits via the header-only GlobBlock, extracting the search pattern from multiple arg shapes.",
+      "tags": ["adapter", "search", "event-renderer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseBrowserJsonResult",
+      "type": "function",
+      "name": "parseBrowserJsonResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [23, 44],
+      "summary": "Attempts to parse a tool result string as browser-tool JSON, returning extracted text/screenshot/url or null if the string isn't structured browser output.",
+      "tags": ["parsing", "browser-tool", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractResultText",
+      "type": "function",
+      "name": "extractResultText",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [46, 74],
+      "summary": "Extracts human-readable text from a tool result by checking known text fields (content, output, message, etc.) and unwrapping embedded browser JSON, falling back to error text.",
+      "tags": ["parsing", "tool-call", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractScreenshot",
+      "type": "function",
+      "name": "extractScreenshot",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [76, 102],
+      "summary": "Extracts a base64 screenshot from a tool result, checking direct fields, embedded browser JSON, and a screenshot-ID cache.",
+      "tags": ["parsing", "browser-tool", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isErrorResult",
+      "type": "function",
+      "name": "isErrorResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [104, 113],
+      "summary": "Detects whether a tool result represents an error via success/is_error flags, error fields, or an 'error:' prefixed text.",
+      "tags": ["validation", "tool-call", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:hasNonEmptyResultValues",
+      "type": "function",
+      "name": "hasNonEmptyResultValues",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [115, 124],
+      "summary": "Checks whether a tool result object has at least one meaningful (non-null, non-empty-string) value.",
+      "tags": ["validation", "tool-call", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isBrowserSnapshotResult",
+      "type": "function",
+      "name": "isBrowserSnapshotResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [126, 139],
+      "summary": "Determines whether a tool result is a large browser accessibility snapshot that should render specially.",
+      "tags": ["validation", "browser-tool", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseSearchFilesResult",
+      "type": "function",
+      "name": "parseSearchFilesResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [141, 151],
+      "summary": "Parses newline-delimited file-search output into a list of file paths, filtering watch-status lines.",
+      "tags": ["parsing", "search", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseManageWorkspaceResult",
+      "type": "function",
+      "name": "parseManageWorkspaceResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [156, 170],
+      "summary": "Parses manage_workspace 'list' output lines of the form `[kind] name → path` into structured workspace entries.",
+      "tags": ["parsing", "workspace", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseManageLspResult",
+      "type": "function",
+      "name": "parseManageLspResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [172, 228],
+      "summary": "Builds LSP status key/value rows (language, running, installed, workspace, command, servers) from manage_lsp args and result for the styled LSP-status card.",
+      "tags": ["parsing", "lsp", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolListResult",
+      "type": "function",
+      "name": "parseProjectToolListResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [230, 251],
+      "summary": "Parses manage_work_item/manage_story list/mutation output into structured project-tool rows, delegating to mutation-line and list-line parsers.",
+      "tags": ["parsing", "project-tool", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isProjectToolRowAction",
+      "type": "function",
+      "name": "isProjectToolRowAction",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [253, 278],
+      "summary": "Determines whether a manage_work_item/manage_story action produces list-style rows worth rendering as a styled table.",
+      "tags": ["validation", "project-tool", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolMutationLine",
+      "type": "function",
+      "name": "parseProjectToolMutationLine",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [280, 299],
+      "summary": "Parses a single-item mutation result line (create/update/delete) into a named project-tool row with a change indicator.",
+      "tags": ["parsing", "project-tool", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractProjectToolMutationName",
+      "type": "function",
+      "name": "extractProjectToolMutationName",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [301, 314],
+      "summary": "Falls back to tool-call args (title/name/short_id/slug) to name a mutation row when the result text doesn't contain one.",
+      "tags": ["parsing", "project-tool", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolListLine",
+      "type": "function",
+      "name": "parseProjectToolListLine",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [323, 346],
+      "summary": "Parses a single bullet line from a project/work-item list result into a named row, handling multiple bullet formats.",
+      "tags": ["parsing", "project-tool", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:buildWorkspaceInfoRows",
+      "type": "function",
+      "name": "buildWorkspaceInfoRows",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [358, 406],
+      "summary": "Builds key/value info rows (operation, path, url, name) for a manage_workspace mutation action, rendered immediately from args before the git operation completes.",
+      "tags": ["formatting", "workspace", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseAwaitListingResult",
+      "type": "function",
+      "name": "parseAwaitListingResult",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts",
+      "lineRange": [411, 435],
+      "summary": "Converts an await_output(list) result's job items into BackgroundJobRow entries with normalized status, kind, and age label.",
+      "tags": ["parsing", "await-output", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:pickString",
+      "type": "function",
+      "name": "pickString",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts",
+      "lineRange": [55, 66],
+      "summary": "Returns the first non-empty trimmed string value found among a list of candidate arg keys.",
+      "tags": ["utility", "tool-call", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:pickLine",
+      "type": "function",
+      "name": "pickLine",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts",
+      "lineRange": [68, 80],
+      "summary": "Extracts a positive 1-based line number from tool args by trying several numeric/string line-key candidates.",
+      "tags": ["utility", "tool-call", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:extractToolSource",
+      "type": "function",
+      "name": "extractToolSource",
+      "filePath": "src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts",
+      "lineRange": [89, 98],
+      "summary": "Resolves a tool call's jump-to-source file path and optional line, returning null for tools without a concrete file argument or on the excluded-tools deny-list.",
+      "tags": ["utility", "tool-call", "navigation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:parseJsonObject",
+      "type": "function",
+      "name": "parseJsonObject",
+      "filePath": "src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "lineRange": [58, 68],
+      "summary": "Safely parses a string as a JSON object, returning null for non-object or malformed values.",
+      "tags": ["parsing", "utility", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:unwrapWorktreeResult",
+      "type": "function",
+      "name": "unwrapWorktreeResult",
+      "filePath": "src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "lineRange": [70, 82],
+      "summary": "Merges a worktree tool result with any JSON object embedded in its output/content string, so downstream readers see a flattened shape.",
+      "tags": ["data-transformation", "git", "worktree"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:extractWorktreeEntries",
+      "type": "function",
+      "name": "extractWorktreeEntries",
+      "filePath": "src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "lineRange": [84, 96],
+      "summary": "Extracts and validates the worktree entries array (path + branch) from a worktree tool result.",
+      "tags": ["parsing", "git", "worktree"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:buildWorktreeRows",
+      "type": "function",
+      "name": "buildWorktreeRows",
+      "filePath": "src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "lineRange": [98, 126],
+      "summary": "Builds labelled detail rows (action, branch, base, path, removed, message) for a worktree tool call from its args and result.",
+      "tags": ["formatting", "git", "worktree"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:WorktreeListBlock",
+      "type": "function",
+      "name": "WorktreeListBlock",
+      "filePath": "src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx",
+      "lineRange": [148, 243],
+      "summary": "React component rendering the worktree event header plus expandable detail-row and entry-list sections, driven by collapse state from useBlockHeader.",
+      "tags": ["component", "git", "worktree"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts:useEventBlockHeader",
+      "type": "function",
+      "name": "useEventBlockHeader",
+      "filePath": "src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts",
+      "lineRange": [67, 159],
+      "summary": "Hook managing an event block's collapsed/hover state, integrating persisted per-event collapse state, nested-block defaults, and global collapse-all/expand-all command epochs.",
+      "tags": ["hook", "state-management", "primitives"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/blocks/useBlockLocate.ts:useBlockHeader",
+      "type": "function",
+      "name": "useBlockHeader",
+      "filePath": "src/engines/ChatPanel/blocks/useBlockLocate.ts",
+      "lineRange": [26, 44],
+      "summary": "Extended header hook combining useEventBlockHeader with useChatEventReplay so blocks can locate/navigate to an eventId in the simulator.",
+      "tags": ["hook", "navigation", "primitives"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx:DiffAdapter",
+      "type": "function",
+      "name": "DiffAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx",
+      "lineRange": [32, 66],
+      "summary": "Resolves a filename-interpolated lifecycle title (or a no-name fallback) for a file edit/create/delete event and renders DiffBlock.",
+      "tags": ["component", "adapter", "diff"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:LspInstallInlineButton",
+      "type": "function",
+      "name": "LspInstallInlineButton",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "lineRange": [52, 92],
+      "summary": "Inline button shown on a failed query_lsp event that invokes the Tauri lsp_get_install_command and runs the returned install command in a terminal.",
+      "tags": ["component", "lsp", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:parseTextEntries",
+      "type": "function",
+      "name": "parseTextEntries",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "lineRange": [99, 134],
+      "summary": "Parses plain-text directory listing lines (bracketed [dir]/[file] format or trailing-slash format) into typed DirEntry objects.",
+      "tags": ["parsing", "file-explorer", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:parseToolSearchEntries",
+      "type": "function",
+      "name": "parseToolSearchEntries",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "lineRange": [136, 147],
+      "summary": "Extracts bold-markdown entry names from tool_search result text into DirEntry objects.",
+      "tags": ["parsing", "search", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:extractListDirData",
+      "type": "function",
+      "name": "extractListDirData",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "lineRange": [149, 263],
+      "summary": "Resolves directory path and entries for a list_dir-shaped event across many possible result shapes: tool_search text, Rust-extracted listDir data, directory-tree objects, and raw entry arrays/text fallbacks.",
+      "tags": ["parsing", "file-explorer", "data-transformation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:ExploreAdapter",
+      "type": "function",
+      "name": "ExploreAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx",
+      "lineRange": [265, 371],
+      "summary": "Top-level adapter that renders a compact ListDirBlock header row for list_dir/tool_search, a full ExploreBlock for other directory/LSP events, or a FailedEventRow (with LSP-install action) on failure.",
+      "tags": ["component", "adapter", "file-explorer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx:extractManageAgentDefProps",
+      "type": "function",
+      "name": "extractManageAgentDefProps",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx",
+      "lineRange": [54, 94],
+      "summary": "Extracts agent/team name, description, and result text for a manage_agent_def event, falling back to regex-matching the result text for a created-agent name.",
+      "tags": ["parsing", "internal"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx:FallbackAdapter",
+      "type": "function",
+      "name": "FallbackAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx",
+      "lineRange": [99, 188],
+      "summary": "Routes an unrecognized tool event to WorktreeListBlock, ManageAgentDefBlock, or SkillBlock based on tool name, suppressing plan-signal tools and defaulting to ToolCallBlock otherwise.",
+      "tags": ["component", "adapter", "fallback-renderer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx:extractPattern",
+      "type": "function",
+      "name": "extractPattern",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx",
+      "lineRange": [17, 30],
+      "summary": "Resolves the glob/search pattern from Rust-extracted data or several possible arg key names.",
+      "tags": ["parsing", "search", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx:GlobAdapter",
+      "type": "function",
+      "name": "GlobAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx",
+      "lineRange": [32, 59],
+      "summary": "Resolves the lifecycle title and loading state for a glob/find_files event and renders GlobBlock, or null when the event failed.",
+      "tags": ["component", "adapter", "search"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/argsSummary.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/primitives/index.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/config.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/McpProgressRow.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/OutputContent.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/ToolResultActions.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/ToolUsageBadge.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/WebSearchBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/primitives/index.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/WebSearchBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/ToolUsageBadge.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/WebSearchBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/primitives/index.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/ToolUsageBadge.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts", "target": "file:src/engines/ChatPanel/blocks/primitives/nestedBlockContext.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts", "target": "file:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/DiffBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ExploreBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ListDirBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/primitives/index.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ManageAgentDefBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/SkillBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/GlobBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseBrowserJsonResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractResultText", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractScreenshot", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isErrorResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:hasNonEmptyResultValues", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isBrowserSnapshotResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseSearchFilesResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseManageWorkspaceResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseManageLspResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolListResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isProjectToolRowAction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolMutationLine", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractProjectToolMutationName", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolListLine", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:buildWorkspaceInfoRows", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseAwaitListingResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractResultText", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:extractScreenshot", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isErrorResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:hasNonEmptyResultValues", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:isBrowserSnapshotResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseSearchFilesResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseManageWorkspaceResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseManageLspResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseProjectToolListResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:buildWorkspaceInfoRows", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/resultParsers.ts:parseAwaitListingResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:pickString", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:pickLine", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:extractToolSource", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts", "target": "function:src/engines/ChatPanel/blocks/ToolCallBlock/helpers/toolSource.ts:extractToolSource", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:parseJsonObject", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:unwrapWorktreeResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:extractWorktreeEntries", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:buildWorktreeRows", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:WorktreeListBlock", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:unwrapWorktreeResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:extractWorktreeEntries", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:buildWorktreeRows", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx", "target": "function:src/engines/ChatPanel/blocks/WorktreeListBlock/index.tsx:WorktreeListBlock", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts", "target": "function:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts:useEventBlockHeader", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts", "target": "function:src/engines/ChatPanel/blocks/primitives/useEventBlockHeader.ts:useEventBlockHeader", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts", "target": "function:src/engines/ChatPanel/blocks/useBlockLocate.ts:useBlockHeader", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/blocks/useBlockLocate.ts", "target": "function:src/engines/ChatPanel/blocks/useBlockLocate.ts:useBlockHeader", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx:DiffAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/DiffAdapter.tsx:DiffAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:LspInstallInlineButton", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:parseTextEntries", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:parseToolSearchEntries", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:extractListDirData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:ExploreAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ExploreAdapter.tsx:ExploreAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx:extractManageAgentDefProps", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx:FallbackAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/FallbackAdapter.tsx:FallbackAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx:extractPattern", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx:GlobAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/GlobAdapter.tsx:GlobAdapter", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

@@ -1,0 +1,600 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/modules/WorkStation/TabContent/TabLoadingPlaceholder.tsx",
+      "type": "file",
+      "name": "TabLoadingPlaceholder.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/TabLoadingPlaceholder.tsx",
+      "summary": "Tiny memoized placeholder shown inside the Suspense fallback while a lazy-loaded WorkStation tab renderer chunk is still loading.",
+      "tags": ["placeholder", "loading-state", "component", "workstation-tabs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "type": "file",
+      "name": "UnifiedTabContent.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "summary": "Single dispatcher component that looks up the active tab's type in the renderer REGISTRY and mounts the matching lazy-loaded renderer inside a Suspense boundary, falling back to an unknown-type placeholder.",
+      "tags": ["dispatcher", "component", "suspense", "workstation-tabs"],
+      "complexity": "simple",
+      "languageNotes": "Intended as the eventual single mount point replacing per-host tab-content switch statements; not yet wired into AppShell as of Phase 1b."
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/UnknownTabPlaceholder.tsx",
+      "type": "file",
+      "name": "UnknownTabPlaceholder.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/UnknownTabPlaceholder.tsx",
+      "summary": "Fallback placeholder rendered when a WorkStation tab's type has no matching entry in the renderer registry.",
+      "tags": ["placeholder", "error-state", "component", "workstation-tabs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "type": "file",
+      "name": "registry.ts",
+      "filePath": "src/modules/WorkStation/TabContent/registry.ts",
+      "summary": "Exhaustive tab-type-to-renderer registry mapping every WorkStationTabType to a lazily-imported renderer wrapper component, consumed exclusively by UnifiedTabContent; a compile-time exhaustiveness check guarantees every tab type has an entry.",
+      "tags": ["registry", "lazy-loading", "tab-dispatch", "data-model"],
+      "complexity": "complex",
+      "languageNotes": "Uses React.lazy(() => import(...)) per entry so each renderer wrapper is its own code-split chunk; these dynamic imports are not captured as static import edges."
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx",
+      "type": "file",
+      "name": "CliAgentHeaderSwitcher.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx",
+      "summary": "Searchable dropdown for switching between configured CLI coding agents in the agent-config tab header, with query matching, alphabetical sorting, and a shortcut into the CLI agent configuration screen.",
+      "tags": ["component", "dropdown", "search", "cli-agents"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/HostCoupledPlaceholder.tsx",
+      "type": "file",
+      "name": "HostCoupledPlaceholder.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/HostCoupledPlaceholder.tsx",
+      "summary": "Shared placeholder for Phase 1b renderer wrappers whose underlying view still depends on host-owned context that hasn't been hoisted into the dispatcher yet.",
+      "tags": ["placeholder", "shared-component", "migration-stub", "workstation-tabs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx",
+      "type": "file",
+      "name": "LinearProjectsRenderer.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx",
+      "summary": "Shared renderer implementation backing both the project-linear-projects and project-linear-work-items tab types, wiring the Linear surface page to host-context project callbacks and breadcrumb derivation.",
+      "tags": ["component", "renderer", "linear-integration", "project-manager"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "type": "file",
+      "name": "agentConfig.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "summary": "Renderer wrapper for agent-config tabs hosting the multi-variant (built-in, wingman, custom, CLI, org) agent/team detail view, including CLI agent discovery and org create/update/remove flows against the RPC layer.",
+      "tags": ["component", "agent-config", "renderer", "rpc"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/aiImpact.tsx",
+      "type": "file",
+      "name": "aiImpact.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/aiImpact.tsx",
+      "summary": "Thin renderer wrapper for ai-impact tabs that mounts the self-contained AIImpactContent component with no tab-data adaptation.",
+      "tags": ["component", "renderer", "wrapper", "ai-impact"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/benchmark.tsx",
+      "type": "file",
+      "name": "benchmark.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/benchmark.tsx",
+      "summary": "Renderer wrapper for benchmark tabs that syncs the active benchmark batch/task ids into Jotai atoms and mounts the BenchmarkPanel in task-info surface mode.",
+      "tags": ["component", "renderer", "benchmark", "wrapper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/browserSession.tsx",
+      "type": "file",
+      "name": "browserSession.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/browserSession.tsx",
+      "summary": "Staged renderer wrapper for browser-session tabs that mounts the rect-publishing SharedBrowserWorkspace slot for the WorkStation host, pulling browser state from the hoisted Browser host context.",
+      "tags": ["component", "renderer", "browser", "webview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/canvasPreview.tsx",
+      "type": "file",
+      "name": "canvasPreview.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/canvasPreview.tsx",
+      "summary": "Renderer for canvas-preview tabs that reads session-scoped canvas state and renders the generated HTML/React canvas payload, closing the tab and clearing the canvas entry when dismissed.",
+      "tags": ["component", "renderer", "canvas", "preview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/chatSession.tsx",
+      "type": "file",
+      "name": "chatSession.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/chatSession.tsx",
+      "summary": "Renderer wrapper for chat-session tabs that mounts the self-contained ChatView with a chat-gradient container, session header actions, raw-transcript toggle, and session move/retarget controls.",
+      "tags": ["component", "renderer", "chat", "session"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/devtools.tsx",
+      "type": "file",
+      "name": "devtools.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/devtools.tsx",
+      "summary": "Staged renderer wrapper for devtools tabs that will surface the Browser host's SharedBrowserDevToolsPanel inspector once the polling stack is hoisted through BrowserHostProvider.",
+      "tags": ["component", "renderer", "devtools", "browser"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/directory.tsx",
+      "type": "file",
+      "name": "directory.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/directory.tsx",
+      "summary": "Renderer wrapper for directory tabs that lazily mounts DirectoryExplorerContent using repoPath and file-select callbacks from the hoisted Code Editor host context.",
+      "tags": ["component", "renderer", "directory", "lazy-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/domComponentPreview.tsx",
+      "type": "file",
+      "name": "domComponentPreview.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/domComponentPreview.tsx",
+      "summary": "Renderer wrapper for dom-component-preview tabs that mounts the self-contained DomComponentPreviewContent with fileName/jsonText pulled from tab data.",
+      "tags": ["component", "renderer", "dom-preview", "wrapper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/explorer.tsx",
+      "type": "file",
+      "name": "explorer.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/explorer.tsx",
+      "summary": "Placeholder renderer for explorer tabs, the marker tab type the Code Editor host treats as its default/empty state, offering a workspace-switch spotlight shortcut.",
+      "tags": ["component", "renderer", "placeholder", "explorer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/file.tsx",
+      "type": "file",
+      "name": "file.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/file.tsx",
+      "summary": "Renderer wrapper for file tabs that lazily mounts the code editor's CodeViewerContent, wiring the live file-content manager and git status from the hoisted Code Editor host context.",
+      "tags": ["component", "renderer", "code-editor", "lazy-loading"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/gitCommitDetail.tsx",
+      "type": "file",
+      "name": "gitCommitDetail.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/gitCommitDetail.tsx",
+      "summary": "Renderer wrapper for git-commit-detail tabs that lazily mounts GitCommitDetailContent with commit metadata from tab data and repo context from the hoisted Code Editor host.",
+      "tags": ["component", "renderer", "git", "commit-detail"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/gitDiff.tsx",
+      "type": "file",
+      "name": "gitDiff.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/gitDiff.tsx",
+      "summary": "Renderer wrapper for git-diff tabs (including the timeline-diff variant) that resolves the GitFile from the hoisted Code Editor host's gitFilesByPath map and lazily mounts GitDiffContent.",
+      "tags": ["component", "renderer", "git", "diff"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/gitLog.tsx",
+      "type": "file",
+      "name": "gitLog.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/gitLog.tsx",
+      "summary": "Renderer wrapper for git-log tabs that synthesizes an error banner from tab data and pipes it into a read-only lazily-mounted CodeViewerContent.",
+      "tags": ["component", "renderer", "git", "error-log"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/gitStashDetail.tsx",
+      "type": "file",
+      "name": "gitStashDetail.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/gitStashDetail.tsx",
+      "summary": "Renderer wrapper for git-stash-detail tabs, a stash-flavoured variant of the commit-detail renderer that lazily mounts GitCommitDetailContent with a stash header.",
+      "tags": ["component", "renderer", "git", "stash"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/githubIssueDetail.tsx",
+      "type": "file",
+      "name": "githubIssueDetail.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/githubIssueDetail.tsx",
+      "summary": "Renderer for github-issue-detail tabs that reads the selected issue and callback atoms and delegates rendering plus comment/close/reopen actions to the existing IssueDetailPanel.",
+      "tags": ["component", "renderer", "github", "issue-detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/TabContent/renderers/githubPrDetail.tsx",
+      "type": "file",
+      "name": "githubPrDetail.tsx",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/githubPrDetail.tsx",
+      "summary": "Renderer for github-pr-detail tabs that reconstructs a PrIdentity from tab data and delegates to the existing PrDetailPanel, which self-loads PR conversation/commits/checks/changes.",
+      "tags": ["component", "renderer", "github", "pr-detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx:UnifiedTabContent",
+      "type": "function",
+      "name": "UnifiedTabContent",
+      "filePath": "src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "lineRange": [26, 38],
+      "summary": "Looks up REGISTRY[tab.type], renders UnknownTabPlaceholder when no entry exists, and otherwise mounts the matched lazy renderer Component inside a Suspense boundary with TabLoadingPlaceholder as fallback.",
+      "tags": ["dispatcher", "component", "suspense", "lazy-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx:CliAgentHeaderSwitcher",
+      "type": "function",
+      "name": "CliAgentHeaderSwitcher",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx",
+      "lineRange": [52, 178],
+      "summary": "Dropdown component that filters and alphabetically sorts the configured CLI agents by search query, displays the active agent's icon/name, and opens the CLI agent configuration screen via a menu action.",
+      "tags": ["component", "dropdown", "search", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx:LinearProjectsRenderer",
+      "type": "function",
+      "name": "LinearProjectsRenderer",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx",
+      "lineRange": [29, 118],
+      "summary": "Derives the active Linear surface and breadcrumb segments from tab data and host context, then renders LinearProjectsPage with project/work-item creation and embedded work-item-detail-state callbacks.",
+      "tags": ["component", "linear-integration", "project-manager", "wrapper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx:AgentConfigInner",
+      "type": "function",
+      "name": "AgentConfigInner",
+      "filePath": "src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "lineRange": [61, 350],
+      "summary": "Core agent-config tab body that fetches CLI agents and org list via RPC, dispatches to the built-in/wingman/custom/CLI/org detail view based on tab.data.variant, and implements org add/update/remove with confirmation dialogs and toast feedback.",
+      "tags": ["component", "agent-config", "state-management", "rpc"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/TabLoadingPlaceholder.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/UnknownTabPlaceholder.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/aiImpact.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/benchmark.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/browserSession.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/canvasPreview.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/chatSession.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/devtools.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/directory.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/domComponentPreview.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/explorer.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/file.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/gitCommitDetail.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/gitDiff.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/gitLog.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/gitStashDetail.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/githubIssueDetail.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/githubPrDetail.tsx",
+      "target": "file:src/modules/WorkStation/TabContent/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx:UnifiedTabContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx:CliAgentHeaderSwitcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx:LinearProjectsRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx:AgentConfigInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/UnifiedTabContent.tsx:UnifiedTabContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx:CliAgentHeaderSwitcher",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx",
+      "target": "function:src/modules/WorkStation/TabContent/renderers/LinearProjectsRenderer.tsx:LinearProjectsRenderer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx:AgentConfigInner",
+      "target": "function:src/modules/WorkStation/TabContent/renderers/CliAgentHeaderSwitcher.tsx:CliAgentHeaderSwitcher",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/file.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/explorer.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/directory.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/gitDiff.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/gitLog.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/gitCommitDetail.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/gitStashDetail.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/domComponentPreview.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/aiImpact.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/agentConfig.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/chatSession.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/browserSession.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/devtools.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/benchmark.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/canvasPreview.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/githubIssueDetail.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/modules/WorkStation/TabContent/registry.ts",
+      "target": "file:src/modules/WorkStation/TabContent/renderers/githubPrDetail.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

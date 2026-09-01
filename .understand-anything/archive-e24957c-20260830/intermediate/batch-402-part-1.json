@@ -1,0 +1,527 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/util/core/storage/cleanup.ts",
+      "type": "file",
+      "name": "cleanup.ts",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "summary": "Provides one-off and deferred localStorage/sessionStorage cleanup routines that purge invalid UUID keys, stale per-repo cache entries, and session-scoped state to prevent storage bloat across app sessions.",
+      "tags": ["utility", "storage", "cleanup", "localstorage"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:parseStorageValue",
+      "type": "function",
+      "name": "parseStorageValue",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [35, 46],
+      "summary": "Safely parses a raw localStorage string value as JSON, returning null on parse failure or null input.",
+      "tags": ["utility", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:cleanupInvalidUUIDStorage",
+      "type": "function",
+      "name": "cleanupInvalidUUIDStorage",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [60, 99],
+      "summary": "Scans known repo-related localStorage keys and removes entries whose stored value or key suffix is not a valid UUID.",
+      "tags": ["storage", "validation", "cleanup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:deferredCleanup",
+      "type": "function",
+      "name": "deferredCleanup",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [105, 116],
+      "summary": "Schedules cleanupInvalidUUIDStorage to run during browser idle time (or via setTimeout fallback) so it doesn't block startup.",
+      "tags": ["scheduling", "cleanup", "idle-callback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:cleanupStaleRepoReferences",
+      "type": "function",
+      "name": "cleanupStaleRepoReferences",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [128, 218],
+      "summary": "Removes localStorage, cache, and session keys that reference repo IDs no longer present in the current valid repo set.",
+      "tags": ["storage", "cleanup", "repo-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:clearProjectRepoCache",
+      "type": "function",
+      "name": "clearProjectRepoCache",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [225, 320],
+      "summary": "Clears all cached repo, story, and project-scoped keys from localStorage and sessionStorage, then resets the repo store.",
+      "tags": ["storage", "cache", "cleanup"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:clearSessionData",
+      "type": "function",
+      "name": "clearSessionData",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [326, 356],
+      "summary": "Removes all localStorage keys under the app's session-scoped persistence prefix.",
+      "tags": ["storage", "session", "cleanup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/cleanup.ts:clearAllProjectData",
+      "type": "function",
+      "name": "clearAllProjectData",
+      "filePath": "src/util/core/storage/cleanup.ts",
+      "lineRange": [362, 368],
+      "summary": "Convenience wrapper that clears both project repo cache and session data in one call.",
+      "tags": ["storage", "cleanup", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/util/core/storage/devIndexedDBProtection.ts",
+      "type": "file",
+      "name": "devIndexedDBProtection.ts",
+      "filePath": "src/util/core/storage/devIndexedDBProtection.ts",
+      "summary": "Detects browser devtools storage settings that can silently wipe IndexedDB (e.g. 'Clear storage on refresh') and periodically checks for IndexedDB persistence, warning via logs when data may be at risk.",
+      "tags": ["storage", "indexeddb", "devtools", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/devIndexedDBProtection.ts:checkDevToolsStorageSettings",
+      "type": "function",
+      "name": "checkDevToolsStorageSettings",
+      "filePath": "src/util/core/storage/devIndexedDBProtection.ts",
+      "lineRange": [17, 30],
+      "summary": "Reads and logs devtools-related storage flags to help diagnose accidental IndexedDB clearing.",
+      "tags": ["devtools", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/devIndexedDBProtection.ts:monitorIndexedDBPersistence",
+      "type": "function",
+      "name": "monitorIndexedDBPersistence",
+      "filePath": "src/util/core/storage/devIndexedDBProtection.ts",
+      "lineRange": [35, 69],
+      "summary": "Polls IndexedDB database presence on visibility change to detect and log unexpected data loss.",
+      "tags": ["indexeddb", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/devIndexedDBProtection.ts:initDevIndexedDBProtection",
+      "type": "function",
+      "name": "initDevIndexedDBProtection",
+      "filePath": "src/util/core/storage/devIndexedDBProtection.ts",
+      "lineRange": [74, 81],
+      "summary": "Initializes devtools storage checks and IndexedDB persistence monitoring on app startup.",
+      "tags": ["entry-point", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/util/core/storage/localStorage.ts",
+      "type": "file",
+      "name": "localStorage.ts",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "summary": "In-memory cache layer over the browser's localStorage that supports typed get/set (string, JSON, boolean, number), preloading of known keys for fast synchronous startup reads, and cache statistics.",
+      "tags": ["storage", "cache", "localstorage", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:getCached",
+      "type": "function",
+      "name": "getCached",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [67, 81],
+      "summary": "Reads a value from the in-memory cache, falling back to and populating from localStorage on a cache miss.",
+      "tags": ["cache", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:getCachedJSON",
+      "type": "function",
+      "name": "getCachedJSON",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [86, 95],
+      "summary": "Reads and JSON-parses a cached value, returning a default when missing or invalid.",
+      "tags": ["cache", "json"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:setCached",
+      "type": "function",
+      "name": "setCached",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [100, 107],
+      "summary": "Writes a value to both the in-memory cache and localStorage.",
+      "tags": ["cache", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:setCachedJSON",
+      "type": "function",
+      "name": "setCachedJSON",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [112, 114],
+      "summary": "JSON-stringifies a value and stores it via setCached.",
+      "tags": ["cache", "json"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:removeCached",
+      "type": "function",
+      "name": "removeCached",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [119, 126],
+      "summary": "Removes a key from both the in-memory cache and localStorage.",
+      "tags": ["cache", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:isCachePreloaded",
+      "type": "function",
+      "name": "isCachePreloaded",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [131, 133],
+      "summary": "Returns whether the preload pass has already populated the in-memory cache.",
+      "tags": ["cache", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:preloadCache",
+      "type": "function",
+      "name": "preloadCache",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [143, 174],
+      "summary": "Asynchronously preloads all known localStorage keys into the in-memory cache during idle time for fast subsequent reads.",
+      "tags": ["cache", "preloading", "idle-callback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:preloadKeys",
+      "type": "function",
+      "name": "preloadKeys",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [179, 189],
+      "summary": "Preloads a specific list of localStorage keys into the in-memory cache.",
+      "tags": ["cache", "preloading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:getCachedBoolean",
+      "type": "function",
+      "name": "getCachedBoolean",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [198, 202],
+      "summary": "Reads a cached boolean flag, defaulting when the value is not exactly 'true'/'false'.",
+      "tags": ["cache", "boolean"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:getCachedNumber",
+      "type": "function",
+      "name": "getCachedNumber",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [207, 222],
+      "summary": "Reads and parses a cached numeric value with an optional default and parsing options.",
+      "tags": ["cache", "number"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:getCacheStats",
+      "type": "function",
+      "name": "getCacheStats",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [231, 241],
+      "summary": "Returns diagnostic statistics (size, keys, preload state) about the in-memory cache.",
+      "tags": ["cache", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/localStorage.ts:clearCache",
+      "type": "function",
+      "name": "clearCache",
+      "filePath": "src/util/core/storage/localStorage.ts",
+      "lineRange": [246, 250],
+      "summary": "Clears the entire in-memory cache without touching localStorage.",
+      "tags": ["cache", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/util/core/storage/zodStorage.ts",
+      "type": "file",
+      "name": "zodStorage.ts",
+      "filePath": "src/util/core/storage/zodStorage.ts",
+      "summary": "Factory for creating a Zod-validated JSON storage wrapper around localStorage, with schema parsing on read and an invalid-data callback.",
+      "tags": ["storage", "validation", "zod", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/storage/zodStorage.ts:createZodJsonStorage",
+      "type": "function",
+      "name": "createZodJsonStorage",
+      "filePath": "src/util/core/storage/zodStorage.ts",
+      "lineRange": [19, 48],
+      "summary": "Creates a get/set/remove storage accessor for a given key that validates stored JSON against a Zod schema and invokes onInvalid when validation fails.",
+      "tags": ["factory", "validation", "zod"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/util/core/windowFocus.ts",
+      "type": "file",
+      "name": "windowFocus.ts",
+      "filePath": "src/util/core/windowFocus.ts",
+      "summary": "Utilities for detecting whether the app window currently has focus and for registering a callback that fires when focus/visibility is regained.",
+      "tags": ["utility", "window", "focus", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/windowFocus.ts:isWindowFocused",
+      "type": "function",
+      "name": "isWindowFocused",
+      "filePath": "src/util/core/windowFocus.ts",
+      "lineRange": [7, 12],
+      "summary": "Returns whether the document currently has focus.",
+      "tags": ["window", "focus"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/core/windowFocus.ts:onWindowFocusRegained",
+      "type": "function",
+      "name": "onWindowFocusRegained",
+      "filePath": "src/util/core/windowFocus.ts",
+      "lineRange": [19, 33],
+      "summary": "Registers window focus and document visibility listeners that invoke a handler when the window regains focus, returning an unsubscribe function.",
+      "tags": ["event-handler", "window", "focus"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/util/data/clipboard.ts",
+      "type": "file",
+      "name": "clipboard.ts",
+      "filePath": "src/util/data/clipboard.ts",
+      "summary": "Cross-context clipboard write helper that tries the browser Clipboard API first, falls back to Tauri's native clipboard plugin, and finally to a hidden-textarea execCommand fallback.",
+      "tags": ["clipboard", "utility", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/data/clipboard.ts:writeBrowserClipboard",
+      "type": "function",
+      "name": "writeBrowserClipboard",
+      "filePath": "src/util/data/clipboard.ts",
+      "lineRange": [10, 27],
+      "summary": "Attempts to write text via the browser navigator.clipboard API with a timeout race to avoid indefinite hangs.",
+      "tags": ["clipboard", "browser-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/clipboard.ts:copyText",
+      "type": "function",
+      "name": "copyText",
+      "filePath": "src/util/data/clipboard.ts",
+      "lineRange": [29, 60],
+      "summary": "Copies text to the clipboard, trying the browser API, then the Tauri native clipboard plugin, then a legacy execCommand fallback.",
+      "tags": ["clipboard", "tauri", "fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/util/data/converters/eventPayload.ts",
+      "type": "file",
+      "name": "eventPayload.ts",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "summary": "Normalizes raw agent tool-call event payloads (file edit, file view, and search events) from various upstream shapes into consistent typed structures used by the UI, and provides event-type classification helpers.",
+      "tags": ["data-transformation", "event-handling", "normalization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:normalizeFileEditPayload",
+      "type": "function",
+      "name": "normalizeFileEditPayload",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [60, 238],
+      "summary": "Normalizes a raw file-edit tool event payload -- parsing diffs, extracting file paths/names, and handling multiple legacy payload shapes -- into a consistent FileEditPayload structure.",
+      "tags": ["normalization", "file-edit", "event-handling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:normalizeFileViewPayload",
+      "type": "function",
+      "name": "normalizeFileViewPayload",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [256, 325],
+      "summary": "Normalizes a raw file-view tool event payload into a consistent structure, extracting file path/name and optional line range.",
+      "tags": ["normalization", "file-view", "event-handling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:normalizeSearchPayload",
+      "type": "function",
+      "name": "normalizeSearchPayload",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [352, 454],
+      "summary": "Normalizes a raw search tool event payload -- parsing result lists, match counts, and content snippets from multiple legacy formats -- into a consistent SearchPayload structure.",
+      "tags": ["normalization", "search", "event-handling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:extractFileName",
+      "type": "function",
+      "name": "extractFileName",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [463, 467],
+      "summary": "Extracts the file name (last path segment) from a full file path.",
+      "tags": ["utility", "path"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:isFileEditEvent",
+      "type": "function",
+      "name": "isFileEditEvent",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [485, 488],
+      "summary": "Returns whether a normalized tool function name represents a file-edit event.",
+      "tags": ["classification", "event-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:isFileViewEvent",
+      "type": "function",
+      "name": "isFileViewEvent",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [494, 497],
+      "summary": "Returns whether a normalized tool function name represents a file-view event.",
+      "tags": ["classification", "event-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/converters/eventPayload.ts:isSearchEvent",
+      "type": "function",
+      "name": "isSearchEvent",
+      "filePath": "src/util/data/converters/eventPayload.ts",
+      "lineRange": [504, 522],
+      "summary": "Returns whether a normalized tool function name represents a search event.",
+      "tags": ["classification", "event-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/util/data/converters/eventStatus.ts",
+      "type": "file",
+      "name": "eventStatus.ts",
+      "filePath": "src/util/data/converters/eventStatus.ts",
+      "summary": "Helpers for deriving and checking the status (e.g. running, success, error) of an agent tool-call event from its payload shape.",
+      "tags": ["event-handling", "status", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/converters/eventStatus.ts:getEventStatus",
+      "type": "function",
+      "name": "getEventStatus",
+      "filePath": "src/util/data/converters/eventStatus.ts",
+      "lineRange": [8, 23],
+      "summary": "Derives a normalized status string for a tool-call event by inspecting its payload fields.",
+      "tags": ["event-handling", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/converters/eventStatus.ts:hasEventStatus",
+      "type": "function",
+      "name": "hasEventStatus",
+      "filePath": "src/util/data/converters/eventStatus.ts",
+      "lineRange": [31, 34],
+      "summary": "Checks whether an event's status matches any of a given list of statuses.",
+      "tags": ["event-handling", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/util/data/converters/eventStatus.ts:isNotEventStatus",
+      "type": "function",
+      "name": "isNotEventStatus",
+      "filePath": "src/util/data/converters/eventStatus.ts",
+      "lineRange": [42, 45],
+      "summary": "Checks whether an event's status differs from a given status.",
+      "tags": ["event-handling", "status"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:parseStorageValue", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:cleanupInvalidUUIDStorage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:deferredCleanup", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:cleanupStaleRepoReferences", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:clearProjectRepoCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:clearSessionData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:clearAllProjectData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:cleanupInvalidUUIDStorage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:deferredCleanup", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:cleanupStaleRepoReferences", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:clearProjectRepoCache", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:clearSessionData", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/cleanup.ts", "target": "function:src/util/core/storage/cleanup.ts:clearAllProjectData", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/core/storage/devIndexedDBProtection.ts", "target": "function:src/util/core/storage/devIndexedDBProtection.ts:checkDevToolsStorageSettings", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/devIndexedDBProtection.ts", "target": "function:src/util/core/storage/devIndexedDBProtection.ts:monitorIndexedDBPersistence", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/devIndexedDBProtection.ts", "target": "function:src/util/core/storage/devIndexedDBProtection.ts:initDevIndexedDBProtection", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/devIndexedDBProtection.ts", "target": "function:src/util/core/storage/devIndexedDBProtection.ts:checkDevToolsStorageSettings", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/devIndexedDBProtection.ts", "target": "function:src/util/core/storage/devIndexedDBProtection.ts:monitorIndexedDBPersistence", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/devIndexedDBProtection.ts", "target": "function:src/util/core/storage/devIndexedDBProtection.ts:initDevIndexedDBProtection", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCached", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCachedJSON", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:setCached", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:setCachedJSON", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:removeCached", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:isCachePreloaded", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:preloadCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:preloadKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCachedBoolean", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCachedNumber", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCacheStats", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:clearCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCached", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCachedJSON", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:setCached", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:setCachedJSON", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:removeCached", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:isCachePreloaded", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:preloadCache", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:preloadKeys", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCachedBoolean", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCachedNumber", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:getCacheStats", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/storage/localStorage.ts", "target": "function:src/util/core/storage/localStorage.ts:clearCache", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/core/storage/zodStorage.ts", "target": "function:src/util/core/storage/zodStorage.ts:createZodJsonStorage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/storage/zodStorage.ts", "target": "function:src/util/core/storage/zodStorage.ts:createZodJsonStorage", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/core/windowFocus.ts", "target": "function:src/util/core/windowFocus.ts:isWindowFocused", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/windowFocus.ts", "target": "function:src/util/core/windowFocus.ts:onWindowFocusRegained", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/core/windowFocus.ts", "target": "function:src/util/core/windowFocus.ts:isWindowFocused", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/core/windowFocus.ts", "target": "function:src/util/core/windowFocus.ts:onWindowFocusRegained", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/data/clipboard.ts", "target": "function:src/util/data/clipboard.ts:writeBrowserClipboard", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/clipboard.ts", "target": "function:src/util/data/clipboard.ts:copyText", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/clipboard.ts", "target": "function:src/util/data/clipboard.ts:copyText", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:normalizeFileEditPayload", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:normalizeFileViewPayload", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:normalizeSearchPayload", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:extractFileName", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:isFileEditEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:isFileViewEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:isSearchEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:normalizeFileEditPayload", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:normalizeFileViewPayload", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:normalizeSearchPayload", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:extractFileName", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:isFileEditEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:isFileViewEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventPayload.ts", "target": "function:src/util/data/converters/eventPayload.ts:isSearchEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/util/data/converters/eventStatus.ts", "target": "function:src/util/data/converters/eventStatus.ts:getEventStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventStatus.ts", "target": "function:src/util/data/converters/eventStatus.ts:hasEventStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventStatus.ts", "target": "function:src/util/data/converters/eventStatus.ts:isNotEventStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/util/data/converters/eventStatus.ts", "target": "function:src/util/data/converters/eventStatus.ts:getEventStatus", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventStatus.ts", "target": "function:src/util/data/converters/eventStatus.ts:hasEventStatus", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/util/data/converters/eventStatus.ts", "target": "function:src/util/data/converters/eventStatus.ts:isNotEventStatus", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

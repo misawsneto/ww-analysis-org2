@@ -1,0 +1,1129 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "type": "file",
+      "name": "manage_todo.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "summary": "Implements the unified `manage_todo` session-scoped task-tracking tool (write/update/read/list_ready actions), persisting records to SQLite and broadcasting `agent:todos_updated` events to the frontend.",
+      "tags": [
+        "api-handler",
+        "state-management",
+        "tool-infra",
+        "persistence"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:TodoTool",
+      "type": "class",
+      "name": "TodoTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        36,
+        38
+      ],
+      "summary": "Tool struct implementing `manage_todo`, holding a TodoSessionContext used to scope write/update/read/list_ready actions against the session's persisted todo list.",
+      "tags": [
+        "api-handler",
+        "state-management",
+        "persistence"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:stale_todo_reminder",
+      "type": "function",
+      "name": "stale_todo_reminder",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        59,
+        77
+      ],
+      "summary": "Builds a nudge message reminding the LLM to keep driving a stale todo list forward, appended to tool results.",
+      "tags": [
+        "prompting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:is_internal_plan_artifact_token",
+      "type": "function",
+      "name": "is_internal_plan_artifact_token",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        82,
+        94
+      ],
+      "summary": "Detects internal planning-artifact tokens that should be filtered out of todo text before display/persistence.",
+      "tags": [
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:sanitize_todo_text",
+      "type": "function",
+      "name": "sanitize_todo_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        96,
+        137
+      ],
+      "summary": "Sanitizes free-text todo content, stripping internal artifact tokens and normalizing whitespace before persistence.",
+      "tags": [
+        "validation",
+        "sanitization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:sanitize_required_todo_content",
+      "type": "function",
+      "name": "sanitize_required_todo_content",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        139,
+        148
+      ],
+      "summary": "Sanitizes a required todo-content field for a given index, erroring if the sanitized result is empty.",
+      "tags": [
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:optional_index_array",
+      "type": "function",
+      "name": "optional_index_array",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        160,
+        183
+      ],
+      "summary": "Extracts an optional JSON array of integer indices for a given parameter key from the call params.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:todo_update_from_params",
+      "type": "function",
+      "name": "todo_update_from_params",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        185,
+        212
+      ],
+      "summary": "Builds a TodoUpdate persistence struct from the raw `update` action parameters.",
+      "tags": [
+        "parsing",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:description",
+      "type": "function",
+      "name": "description",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        220,
+        265
+      ],
+      "summary": "Returns the human-readable tool description for manage_todo surfaced to the LLM.",
+      "tags": [
+        "metadata"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:parameters",
+      "type": "function",
+      "name": "parameters",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        271,
+        344
+      ],
+      "summary": "Builds the JSON schema for manage_todo's action/todos/updates parameters.",
+      "tags": [
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        346,
+        363
+      ],
+      "summary": "Dispatches a manage_todo call to the write/update/read/list_ready implementation based on the `action` parameter.",
+      "tags": [
+        "api-handler",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_write",
+      "type": "function",
+      "name": "exec_write",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        405,
+        458
+      ],
+      "summary": "Implements the `write` action, replacing the session's entire todo list with sanitized, validated records persisted to SQLite.",
+      "tags": [
+        "persistence",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_update",
+      "type": "function",
+      "name": "exec_update",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        460,
+        502
+      ],
+      "summary": "Implements the `update` action, applying incremental per-index changes to existing todo records without a full rewrite.",
+      "tags": [
+        "persistence",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_read",
+      "type": "function",
+      "name": "exec_read",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        504,
+        517
+      ],
+      "summary": "Implements the `read` action, returning the session's current full todo list.",
+      "tags": [
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_list_ready",
+      "type": "function",
+      "name": "exec_list_ready",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        519,
+        569
+      ],
+      "summary": "Implements the `list_ready` action, returning todos whose dependencies are satisfied and are ready to start.",
+      "tags": [
+        "persistence",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:records_to_json",
+      "type": "function",
+      "name": "records_to_json",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        579,
+        597
+      ],
+      "summary": "Serializes a list of TodoRecords into the JSON shape returned in tool results and broadcast events.",
+      "tags": [
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:render_result",
+      "type": "function",
+      "name": "render_result",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "lineRange": [
+        610,
+        637
+      ],
+      "summary": "Renders the human-readable text summary of a todo action's effect for the tool result.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "type": "file",
+      "name": "manage_workspace.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "summary": "Implements the `manage_workspace` tool consolidating list/add/create/remove actions for orgii-tracked git repositories and work folders, delegating to the shared `repo_service` layer.",
+      "tags": [
+        "api-handler",
+        "workspace",
+        "tool-infra"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:ManageWorkspaceParams",
+      "type": "class",
+      "name": "ManageWorkspaceParams",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        36,
+        57
+      ],
+      "summary": "Deserializable parameter struct for manage_workspace calls, carrying the action (list/add/create/remove) plus path, name, git flag, and repo_id fields.",
+      "tags": [
+        "data-model",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:ManageWorkspaceTool",
+      "type": "class",
+      "name": "ManageWorkspaceTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        73,
+        73
+      ],
+      "summary": "Tool struct implementing `manage_workspace`, dispatching the list/add/create/remove actions to the shared `repo_service` layer.",
+      "tags": [
+        "api-handler",
+        "workspace"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:description",
+      "type": "function",
+      "name": "description",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        95,
+        109
+      ],
+      "summary": "Returns the human-readable tool description for manage_workspace surfaced to the LLM.",
+      "tags": [
+        "metadata"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        115,
+        136
+      ],
+      "summary": "Dispatches a manage_workspace call to the list/add/create/remove implementation based on the `action` parameter.",
+      "tags": [
+        "api-handler",
+        "workspace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_list",
+      "type": "function",
+      "name": "exec_list",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        152,
+        167
+      ],
+      "summary": "Implements the `list` action, enumerating all workspaces currently tracked by the IDE.",
+      "tags": [
+        "workspace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_create",
+      "type": "function",
+      "name": "exec_create",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        176,
+        187
+      ],
+      "summary": "Implements the `create` action, creating a new empty workspace (git repo or plain folder) via the shared repo_service.",
+      "tags": [
+        "workspace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_remove",
+      "type": "function",
+      "name": "exec_remove",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "lineRange": [
+        189,
+        214
+      ],
+      "summary": "Implements the `remove` action, unregistering a tracked workspace without touching files on disk.",
+      "tags": [
+        "workspace"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "summary": "Barrel module declaring every coding-tool submodule (code_search, edit_file, exec, files, manage_lsp, manage_todo, query_lsp, setup_repo, worktree, etc.) plus shared helpers (action_router, terminal_log).",
+      "tags": [
+        "barrel",
+        "tool-infra",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "type": "file",
+      "name": "format.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "summary": "Pure formatters that turn typed `lsp_types::*` responses (diagnostics, locations, hover, document/workspace symbols) into agent-readable text, kept separate from LspTool so it can be reused by tests and the post-edit hook.",
+      "tags": [
+        "formatting",
+        "lsp",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_diagnostics",
+      "type": "function",
+      "name": "format_diagnostics",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        18,
+        43
+      ],
+      "summary": "Formats a slice of LSP diagnostics into agent-readable text, one line per diagnostic with severity and location.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_locations",
+      "type": "function",
+      "name": "format_locations",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        48,
+        57
+      ],
+      "summary": "Formats a goto-definition/references LSP response (single location or list) into agent-readable text.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_location_lines",
+      "type": "function",
+      "name": "format_location_lines",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        69,
+        83
+      ],
+      "summary": "Formats a list of LSP Locations into one line per file:line:col entry.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_location_link_lines",
+      "type": "function",
+      "name": "format_location_link_lines",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        85,
+        98
+      ],
+      "summary": "Formats a list of LSP LocationLinks (with origin/target ranges) into agent-readable text lines.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_hover",
+      "type": "function",
+      "name": "format_hover",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        102,
+        127
+      ],
+      "summary": "Formats an LSP hover response's marked-string/markup contents into agent-readable text.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_nested_document_symbols",
+      "type": "function",
+      "name": "format_nested_document_symbols",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        145,
+        155
+      ],
+      "summary": "Formats a nested DocumentSymbol tree into an indented outline of symbol names and kinds.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:push_document_symbol_line",
+      "type": "function",
+      "name": "push_document_symbol_line",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        157,
+        182
+      ],
+      "summary": "Recursively appends one indented line per DocumentSymbol (and its children) to the output buffer.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_symbol_information_lines",
+      "type": "function",
+      "name": "format_symbol_information_lines",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        184,
+        213
+      ],
+      "summary": "Formats a flat list of legacy SymbolInformation entries into agent-readable text lines.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_workspace_symbol_lines",
+      "type": "function",
+      "name": "format_workspace_symbol_lines",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        215,
+        238
+      ],
+      "summary": "Formats workspace-symbol search results into agent-readable text lines.",
+      "tags": [
+        "formatting",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:symbol_kind_label",
+      "type": "function",
+      "name": "symbol_kind_label",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "lineRange": [
+        240,
+        270
+      ],
+      "summary": "Maps an LSP SymbolKind enum value to its human-readable label (e.g. Class, Function, Variable).",
+      "tags": [
+        "mapping",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "type": "file",
+      "name": "language.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "summary": "Maps file extensions and special filenames (Dockerfile, Makefile, etc.) to LSP server and document language IDs, and infers a workspace root by walking up looking for markers like `.git` or `package.json`.",
+      "tags": [
+        "lsp",
+        "utility",
+        "mapping"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:language_for_special_filename",
+      "type": "function",
+      "name": "language_for_special_filename",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "lineRange": [
+        21,
+        34
+      ],
+      "summary": "Maps special filenames without a conventional extension (Dockerfile, Makefile, etc.) to their LSP server language key.",
+      "tags": [
+        "mapping",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:language_for_file",
+      "type": "function",
+      "name": "language_for_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "lineRange": [
+        41,
+        83
+      ],
+      "summary": "Resolves the LSP server key to use for a file path, checking special filenames first then falling back to extension mapping.",
+      "tags": [
+        "mapping",
+        "lsp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:document_language_id_for_file",
+      "type": "function",
+      "name": "document_language_id_for_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "lineRange": [
+        90,
+        103
+      ],
+      "summary": "Resolves the LSP document language id (e.g. `typescriptreact`) used in `textDocument/didOpen` notifications for a file path.",
+      "tags": [
+        "mapping",
+        "lsp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:has_workspace_root_marker",
+      "type": "function",
+      "name": "has_workspace_root_marker",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "lineRange": [
+        105,
+        122
+      ],
+      "summary": "Checks whether a directory contains a workspace-root marker file (`.git`, `package.json`, `Cargo.toml`, etc).",
+      "tags": [
+        "filesystem"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:infer_workspace_root",
+      "type": "function",
+      "name": "infer_workspace_root",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "lineRange": [
+        128,
+        151
+      ],
+      "summary": "Walks up from a file's directory looking for a workspace-root marker, falling back to a provided default workspace root if none is found.",
+      "tags": [
+        "filesystem",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:TodoTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:TodoTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:stale_todo_reminder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:stale_todo_reminder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:is_internal_plan_artifact_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:sanitize_todo_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:sanitize_required_todo_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:optional_index_array",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:todo_update_from_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:parameters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_list_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:records_to_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:render_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:ManageWorkspaceParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:ManageWorkspaceParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:ManageWorkspaceTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:ManageWorkspaceTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/action_router.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/code_search.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/edit_file/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/files/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/inspect_terminals.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_file_history.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_lsp/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/render_inline_canvas.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/setup_repo.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/skill.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/terminal_log.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/worktree.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_diagnostics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_diagnostics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_locations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_locations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_location_lines",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_location_link_lines",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_hover",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_hover",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_nested_document_symbols",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:push_document_symbol_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_symbol_information_lines",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:format_workspace_symbol_lines",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/format.rs:symbol_kind_label",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:language_for_special_filename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:language_for_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:language_for_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:document_language_id_for_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:document_language_id_for_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:has_workspace_root_marker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:infer_workspace_root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/query_lsp/language.rs:infer_workspace_root",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_todo.rs:exec_write",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/manage_workspace.rs:exec_list",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+/**
+ * ComposerInput Styles
+ *
+ * Mirrors the ComposerInput layout so the swap is visually identical:
+ *  - same padding, line-height, caret color
+ *  - same placeholder styling (driven by `[data-placeholder]` on the host)
+ *  - same scrollbar treatment
+ *
+ * The `.composer-pill` rule overrides selection styling to match the
+ * previous `.file-pill-node` selector. Pills themselves are styled via
+ * inline styles (see ComposerPill.tsx) for parity with the editor tokens
+ * in `@src/config/pillTokens`.
+ */
+
+.composer-input {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+
+  &.project-content-composer {
+    border-radius: 0;
+  }
+
+  &.dark {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  &.light {
+    color: #1d2129;
+  }
+}
+
+.composer-input-wrapper {
+  height: 100%;
+  min-width: 0;
+}
+
+.composer-input-content {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+  padding: 0 12px 8px 12px;
+  outline: none;
+  caret-color: var(--color-primary-6);
+  font-size: 14px;
+  // 1.43 ≈ 20px at 14px font — matches the pill visual height so the caret
+  // on a text-only line is the same height as a line that contains a pill.
+  // The extra vertical rhythm previously provided by 24px is now supplied by
+  // padding-top so layout does not change.
+  line-height: 1.43;
+  padding-top: 2px;
+  // Long unbroken strings (no spaces) must still wrap inside the composer.
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  // Preserve newlines but still soft-wrap.
+  white-space: pre-wrap;
+
+  // Treat portal-backed pill hosts as a single inline atom so WebKit does not
+  // paint the caret at internal icon/text boundaries.
+  > [data-composer-pill="true"] {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: baseline;
+  }
+
+  > [data-composer-pill="true"].is-selection-covered {
+    background: var(--color-fill-2);
+  }
+
+  > [data-composer-pill="true"].is-selection-covered .composer-pill,
+  > [data-composer-pill="true"].is-selection-covered .composer-pill * {
+    color: var(--color-text-1) !important;
+  }
+
+  // Placeholder driven by [data-placeholder] on the host when empty.
+  // Pin to the content padding box and clip with ellipsis so a long
+  // placeholder cannot bleed over neighbouring grid columns (e.g. the
+  // ComposerBar pills cluster when the editor column shrinks).
+  // Inline ghost hint after the last content node (e.g. the argument hint
+  // behind a /compact pill). Same muted treatment as the placeholder.
+  &.has-trailing-hint::after {
+    content: attr(data-trailing-hint);
+    color: var(--color-text-3);
+    pointer-events: none;
+    user-select: none;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  &.is-empty::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    color: var(--color-text-3);
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // Empty paragraph stand-in. We render text + <br> directly into the host,
+  // but when the host is completely empty we want a real line box so the
+  // caret has somewhere to paint.
+  &:empty::after {
+    content: "\200B"; // zero-width space, keeps a line box alive
+    display: inline-block;
+  }
+}
+
+// Pill selection follows the app-wide neutral selection fill.
+.composer-pill {
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color 0.15s ease;
+
+  &::selection,
+  *::selection {
+    background: var(--color-fill-2);
+  }
+}
+
+.composer-input-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-3);
+  font-size: 14px;
+}
+// ===== Chat composer =====
+.composer-input.chat-input-editor {
+  min-width: 0;
+  height: auto !important;
+
+  .composer-input-wrapper {
+    height: auto;
+    min-height: 60px;
+  }
+
+  .composer-input-content {
+    height: auto;
+    min-height: 60px;
+    white-space: pre-wrap;
+  }
+}
+
+// A contextual reference is owned by the surrounding surface rather than the
+// editable document, but visually shares the first line with the editor. Drop
+// the ordinary leading inset so the placeholder/caret follows the shared
+// editor pill at the same spacing as a real inline ComposerPill.
+.composer-input.chat-input-editor-leading {
+  .composer-input-content {
+    padding-left: 0;
+
+    &.is-empty::before {
+      left: 0;
+    }
+  }
+}

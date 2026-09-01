@@ -1,0 +1,384 @@
+import type { ImportedHistorySourceId } from "@src/api/tauri/externalHistory";
+import type {
+  KanbanColumnConfig,
+  TaskStatus,
+} from "@src/features/KanbanBoard/types";
+import {
+  ArchiveIcon,
+  CheckmarkCircle01Icon,
+  CircleIcon,
+  Clock01Icon,
+  type IconSvgElement,
+  MessageCircleWarningIcon,
+} from "@src/icons";
+import type { Session } from "@src/store/session";
+import { SESSION_STATUS_DOT_COLOR } from "@src/util/session/sessionStatusDot";
+
+/**
+ * Kanban Configuration
+ *
+ * Defines session-based column settings for the Agent Kanban board.
+ *
+ * The board mirrors the sidebar status lights:
+ *   - Todo          → agent is queued and has not started running yet
+ *   - In Progress   → agent is actively running or installing
+ *   - Blocking      → user action is pending (`waiting_for_user`)
+ *   - Turn Finished → agent has stopped and the user's review/next turn can begin
+ *   - Archived      → manually archived or stale by TTL
+ *
+ * The Agent Kanban widens the column id space beyond the shared `TaskStatus`
+ * union with extra local buckets. Cards keep their precise backend result
+ * badges independent of column routing.
+ * These ids are kept local to this module so other consumers of `TaskStatus`
+ * (WorkItems, Gantt) are not affected.
+ */
+
+export type { TaskStatus, KanbanColumnConfig };
+
+/** Agent-Kanban-only column ids on top of the shared `TaskStatus` set. */
+export type AgentExtraColumnId =
+  | "todo"
+  | "done"
+  | "blocking"
+  | "turn_finished"
+  | "archived";
+
+export const KANBAN_SIDEBAR_FILTER = {
+  ALL: "all",
+  TODO: "todo",
+  IN_PROGRESS: "in_progress",
+  BLOCKING: "blocking",
+  TURN_FINISHED: "turn_finished",
+  ARCHIVED: "archived",
+} as const;
+
+export type KanbanSidebarFilter =
+  (typeof KANBAN_SIDEBAR_FILTER)[keyof typeof KANBAN_SIDEBAR_FILTER];
+
+export const KANBAN_AGENT_TYPE_FILTER = {
+  ALL: "all",
+  OS_AGENT: "builtin:os",
+  SDE_AGENT: "builtin:sde",
+  CUSTOM_RUST_AGENT: "rust_agent:custom",
+  CURSOR_APP: "cursor_ide",
+  CURSOR_CLI: "cursor_cli",
+  CLAUDE_APP: "claude_app",
+  CLAUDE_CLI: "claude_code",
+  CODEX_APP: "codex_app",
+  CODEX_CLI: "codex",
+  COPILOT: "copilot",
+  KIRO: "kiro",
+  KIMI_CLI: "kimi_cli",
+  OPENCODE_HISTORY: "opencode_history",
+  OPENCODE_CLI: "opencode",
+  WINDSURF_APP: "windsurf_app",
+  WORKBUDDY_APP: "workbuddy_app",
+  TRAE_APP: "trae_app",
+  CLINE_APP: "cline_app",
+  WARP_APP: "warp_app",
+  ZCODE_APP: "zcode_app",
+  QODER_APP: "qoder_app",
+  MIMO_CODE_APP: "mimo_code_app",
+  OMP_APP: "omp_app",
+  PI_APP: "pi_app",
+  QODER_CLI_APP: "qoder_cli_app",
+  QWEN_CODE_APP: "qwen_code_app",
+  COPILOT_APP: "copilot_app",
+} as const;
+
+export type KanbanBuiltInAgentTypeFilter =
+  (typeof KANBAN_AGENT_TYPE_FILTER)[keyof typeof KANBAN_AGENT_TYPE_FILTER];
+export type KanbanAgentTypeFilter = KanbanBuiltInAgentTypeFilter | string;
+
+export const EXTERNAL_HISTORY_FILTER_BY_SOURCE: Record<
+  ImportedHistorySourceId,
+  KanbanAgentTypeFilter
+> = {
+  cursor_ide: KANBAN_AGENT_TYPE_FILTER.CURSOR_APP,
+  cursor_cli: KANBAN_AGENT_TYPE_FILTER.CURSOR_CLI,
+  codex_app: KANBAN_AGENT_TYPE_FILTER.CODEX_APP,
+  claude_code: KANBAN_AGENT_TYPE_FILTER.CLAUDE_APP,
+  opencode: KANBAN_AGENT_TYPE_FILTER.OPENCODE_HISTORY,
+  windsurf: KANBAN_AGENT_TYPE_FILTER.WINDSURF_APP,
+  workbuddy: KANBAN_AGENT_TYPE_FILTER.WORKBUDDY_APP,
+  trae: KANBAN_AGENT_TYPE_FILTER.TRAE_APP,
+  cline: KANBAN_AGENT_TYPE_FILTER.CLINE_APP,
+  warp: KANBAN_AGENT_TYPE_FILTER.WARP_APP,
+  zcode: KANBAN_AGENT_TYPE_FILTER.ZCODE_APP,
+  qoder: KANBAN_AGENT_TYPE_FILTER.QODER_APP,
+  mimo_code: KANBAN_AGENT_TYPE_FILTER.MIMO_CODE_APP,
+  omp: KANBAN_AGENT_TYPE_FILTER.OMP_APP,
+  pi: KANBAN_AGENT_TYPE_FILTER.PI_APP,
+  qoder_cli: KANBAN_AGENT_TYPE_FILTER.QODER_CLI_APP,
+  qwen_code: KANBAN_AGENT_TYPE_FILTER.QWEN_CODE_APP,
+  kimi: KANBAN_AGENT_TYPE_FILTER.KIMI_CLI,
+  copilot: KANBAN_AGENT_TYPE_FILTER.COPILOT_APP,
+};
+
+/** Widened column id used inside Agent Kanban only. */
+export type AgentKanbanColumnId = TaskStatus | AgentExtraColumnId;
+
+/**
+ * Local column-config shape that allows the extra Agent-Kanban id.
+ * Structurally identical to `KanbanColumnConfig` apart from the widened id;
+ * cast to `KanbanColumnConfig[]` at the `<KanbanBoard>` boundary, where the
+ * id is treated purely as an opaque grouping key.
+ */
+interface AgentKanbanColumnConfig {
+  id: AgentKanbanColumnId;
+  title: string;
+  icon: IconSvgElement;
+  color: string;
+  bgColor: string;
+  dotColor: string;
+  headerBgColor: string;
+  /** Show a + button in the column header for this specific column. */
+  showAddButton?: boolean;
+}
+
+/**
+ * Column ID → i18n key mapping for translation at render time.
+ * Keys reference sessions:kanban.columns.* namespace.
+ */
+const COLUMN_TITLE_KEYS: Record<string, string> = {
+  todo: "kanban.columns.todo",
+  in_progress: "kanban.columns.inProgress",
+  blocking: "kanban.columns.blocking",
+  turn_finished: "kanban.columns.turnFinished",
+  archived: "kanban.columns.archived",
+};
+
+export function getColumnTitleKey(columnId: string): string {
+  return COLUMN_TITLE_KEYS[columnId] ?? columnId;
+}
+
+export const KANBAN_COLUMNS: AgentKanbanColumnConfig[] = [
+  {
+    id: "todo",
+    title: "sessions:kanban.columns.todo",
+    icon: CircleIcon,
+    color: "var(--color-fill-4)",
+    bgColor: "color-mix(in srgb, var(--color-fill-4) 55%, transparent)",
+    dotColor: SESSION_STATUS_DOT_COLOR.default,
+    headerBgColor: "color-mix(in srgb, var(--color-fill-4) 45%, transparent)",
+    showAddButton: true,
+  },
+  {
+    id: "in_progress",
+    title: "sessions:kanban.columns.inProgress",
+    icon: Clock01Icon,
+    color: "var(--color-primary-6)",
+    bgColor: "color-mix(in srgb, var(--color-primary-6) 10%, transparent)",
+    dotColor: SESSION_STATUS_DOT_COLOR.working,
+    headerBgColor: "color-mix(in srgb, var(--color-primary-6) 8%, transparent)",
+  },
+  {
+    id: "blocking",
+    title: "sessions:kanban.columns.blocking",
+    icon: MessageCircleWarningIcon,
+    color: "#FF8C42",
+    bgColor: "rgba(255, 140, 66, 0.1)",
+    dotColor: SESSION_STATUS_DOT_COLOR.asking,
+    headerBgColor: "rgba(255, 140, 66, 0.08)",
+  },
+  {
+    id: "turn_finished",
+    title: "sessions:kanban.columns.turnFinished",
+    icon: CheckmarkCircle01Icon,
+    color: "#52C41A",
+    bgColor: "rgba(82, 196, 26, 0.1)",
+    dotColor: SESSION_STATUS_DOT_COLOR.unread,
+    headerBgColor: "rgba(82, 196, 26, 0.08)",
+  },
+  {
+    id: "archived",
+    title: "sessions:kanban.columns.archived",
+    icon: ArchiveIcon,
+    color: "var(--color-text-3)",
+    bgColor: "color-mix(in srgb, var(--color-fill-4) 18%, transparent)",
+    dotColor: SESSION_STATUS_DOT_COLOR.archived,
+    headerBgColor: "color-mix(in srgb, var(--color-fill-4) 14%, transparent)",
+  },
+];
+
+// ============================================
+// Session Status → Kanban Column Mapping
+// ============================================
+
+const KANBAN_SESSION_STATUS = {
+  IDLE: "idle",
+  PENDING: "pending",
+  QUEUED: "queued",
+  RUNNING: "running",
+  IN_PROGRESS: "in_progress",
+  INSTALLING: "installing",
+  WAITING_FOR_USER: "waiting_for_user",
+  WAITING_FOR_FUNDS: "waiting_for_funds",
+  PAUSED: "paused",
+  COMPLETED: "completed",
+  FAILED: "failed",
+  ERROR: "error",
+  CANCELLED: "cancelled",
+  ABANDONED: "abandoned",
+  TIMEOUT: "timeout",
+  KILLED: "killed",
+} as const;
+
+const TODO_SESSION_STATUSES = new Set<string>([
+  KANBAN_SESSION_STATUS.PENDING,
+  KANBAN_SESSION_STATUS.QUEUED,
+]);
+
+const RUNNING_SESSION_STATUSES = new Set<string>([
+  KANBAN_SESSION_STATUS.RUNNING,
+  KANBAN_SESSION_STATUS.IN_PROGRESS,
+  KANBAN_SESSION_STATUS.INSTALLING,
+]);
+
+const ACTIVE_SESSION_STATUSES = new Set<string>([
+  ...TODO_SESSION_STATUSES,
+  ...RUNNING_SESSION_STATUSES,
+]);
+
+/**
+ * Full session → Kanban column routing for Agent Kanban.
+ *
+ * Priority order (first match wins):
+ *   1. Pending / queued session statuses     → todo
+ *   2. Running / installing session statuses → in_progress
+ *   3. Waiting for user action               → blocking
+ *   4. Manual archive override               → archived
+ *   5. Idle longer than auto-archive TTL     → archived
+ *   6. Everything else                       → turn_finished
+ */
+export function mapSessionToKanbanColumn(
+  session: Session,
+  options: {
+    manualArchivedSessionIds?: ReadonlySet<string>;
+    autoArchiveTtl?: KanbanAutoArchiveTtl;
+    nowMs?: number;
+  } = {}
+): AgentKanbanColumnId {
+  const statusColumn = mapSessionStatusToKanbanColumn(session.status);
+  if (statusColumn !== "turn_finished") return statusColumn;
+
+  if (options.manualArchivedSessionIds?.has(session.session_id)) {
+    return "archived";
+  }
+
+  if (
+    isKanbanActivityAutoArchived(
+      session.status,
+      session.updated_at || session.completed_at || session.created_at,
+      options.autoArchiveTtl,
+      options.nowMs
+    )
+  ) {
+    return "archived";
+  }
+
+  return "turn_finished";
+}
+
+/** Status-only routing shared by local sessions and cloud roster rows. */
+export function mapSessionStatusToKanbanColumn(
+  status: string
+): Exclude<AgentKanbanColumnId, "archived"> {
+  if (TODO_SESSION_STATUSES.has(status)) {
+    return "todo";
+  }
+
+  if (RUNNING_SESSION_STATUSES.has(status)) {
+    return "in_progress";
+  }
+
+  if (status === KANBAN_SESSION_STATUS.WAITING_FOR_USER) {
+    return "blocking";
+  }
+
+  return "turn_finished";
+}
+
+// ============================================
+// Time Filter Configuration
+// ============================================
+
+export type KanbanTimeFilter = "12h" | "24h" | "3d" | "7d";
+export type KanbanAutoArchiveTtl = "never" | "12h" | "24h" | "3d" | "7d";
+
+export const DEFAULT_KANBAN_TIME_FILTER: KanbanTimeFilter = "3d";
+
+export const KANBAN_TIME_FILTERS: {
+  key: KanbanTimeFilter;
+  labelKey: string;
+}[] = [
+  { key: "12h", labelKey: "kanban.timeFilter.12h" },
+  { key: "24h", labelKey: "kanban.timeFilter.24h" },
+  { key: "3d", labelKey: "kanban.timeFilter.3d" },
+  { key: "7d", labelKey: "kanban.timeFilter.7d" },
+];
+
+export const KANBAN_AUTO_ARCHIVE_TTLS: {
+  key: KanbanAutoArchiveTtl;
+  labelKey: string;
+}[] = [
+  { key: "never", labelKey: "kanban.autoArchive.never" },
+  { key: "12h", labelKey: "kanban.autoArchive.12h" },
+  { key: "24h", labelKey: "kanban.autoArchive.24h" },
+  { key: "3d", labelKey: "kanban.autoArchive.3d" },
+  { key: "7d", labelKey: "kanban.autoArchive.7d" },
+];
+
+const TIME_FILTER_MS: Record<KanbanTimeFilter, number> = {
+  "12h": 12 * 60 * 60 * 1000,
+  "24h": 24 * 60 * 60 * 1000,
+  "3d": 3 * 24 * 60 * 60 * 1000,
+  "7d": 7 * 24 * 60 * 60 * 1000,
+};
+
+const AUTO_ARCHIVE_TTL_MS: Record<
+  Exclude<KanbanAutoArchiveTtl, "never">,
+  number
+> = {
+  "12h": 12 * 60 * 60 * 1000,
+  "24h": 24 * 60 * 60 * 1000,
+  "3d": 3 * 24 * 60 * 60 * 1000,
+  "7d": 7 * 24 * 60 * 60 * 1000,
+};
+
+/**
+ * Returns the cutoff timestamp for time-based filters.
+ * Sessions with `updated_at` before this cutoff are excluded.
+ */
+export function getTimeFilterCutoff(filter: KanbanTimeFilter): number {
+  return Date.now() - TIME_FILTER_MS[filter];
+}
+
+function getActivityTimestampMs(timestamp: string | undefined): number {
+  if (!timestamp) return 0;
+  const parsed = new Date(timestamp).getTime();
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+export function isKanbanActivityAutoArchived(
+  status: string,
+  lastActivityAt: string | undefined,
+  ttl: KanbanAutoArchiveTtl = "24h",
+  nowMs: number = Date.now()
+): boolean {
+  if (ttl === "never") return false;
+  if (ACTIVE_SESSION_STATUSES.has(status)) return false;
+  const lastActivityMs = getActivityTimestampMs(lastActivityAt);
+  if (lastActivityMs <= 0) return false;
+  return nowMs - lastActivityMs >= AUTO_ARCHIVE_TTL_MS[ttl];
+}
+
+// ============================================
+// Helper Functions
+// ============================================
+
+export function getColumnConfig(
+  status: AgentKanbanColumnId
+): AgentKanbanColumnConfig {
+  return KANBAN_COLUMNS.find((col) => col.id === status) || KANBAN_COLUMNS[0];
+}

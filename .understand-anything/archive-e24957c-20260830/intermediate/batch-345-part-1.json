@@ -1,0 +1,884 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/app-platform/src/objc_bridge/objc_catch.m",
+      "type": "file",
+      "name": "objc_catch.m",
+      "filePath": "src-tauri/crates/app-platform/src/objc_bridge/objc_catch.m",
+      "summary": "Objective-C FFI trampoline that wraps a Rust callback in @try/@catch so NSExceptions raised by AppKit/WebKit calls don't unwind into and abort the Rust runtime; returns a heap-allocated error string when an exception is caught.",
+      "tags": [
+        "objective-c",
+        "ffi",
+        "error-handling",
+        "macos",
+        "native-bridge"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust cannot catch foreign (non-Rust) exceptions, so this file compiles to a C-ABI symbol Rust links against via FFI purely to catch NSExceptions before they cross into Rust frames."
+    },
+    {
+      "id": "function:src-tauri/crates/app-platform/src/objc_bridge/objc_catch.m:orgii_objc_catch",
+      "type": "function",
+      "name": "orgii_objc_catch",
+      "filePath": "src-tauri/crates/app-platform/src/objc_bridge/objc_catch.m",
+      "lineRange": [
+        29,
+        45
+      ],
+      "summary": "Runs a Rust-supplied callback inside an Objective-C @try/@catch block, returning NULL on success or a malloc'd \"Name: reason\" C string when an NSException is caught.",
+      "tags": [
+        "ffi",
+        "exception-handling",
+        "objective-c"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/app-utils/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/app-utils/Cargo.toml",
+      "summary": "Cargo manifest for the app_utils leaf crate, a small shared-helpers library (serde_json, tracing) with an optional `testing` feature that gates the tempfile dependency out of production builds.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/app-window/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/app-window/Cargo.toml",
+      "summary": "Cargo manifest for the app_window crate, which centralizes native-window helpers (macOS traffic-light positioning and liquid-glass material, Windows DWM rounded corners, window open/recreate flows) with per-OS conditional dependencies.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "cross-platform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/bin-gateway-chat-cli/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/Cargo.toml",
+      "summary": "Cargo manifest for the gateway-chat-cli binary, a dogfood CLI that talks only to the local Gateway Agent's debug-only HTTP API over tokio/reqwest, with no tauri or agent_core dependency.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "type": "file",
+      "name": "main.rs",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "summary": "Interactive and scripted CLI client for dogfooding the Gateway Agent over its debug-only localhost HTTP API, supporting live chat, replaying scripted conversations, and recording Markdown transcripts.",
+      "tags": [
+        "cli",
+        "http-client",
+        "entry-point",
+        "testing-tool"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Release builds of the app reject every request this CLI makes: the `/test/gateway/outbound-tap/*` endpoints it depends on are gated behind `#![cfg(debug_assertions)]` in the API layer."
+    },
+    {
+      "id": "class:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:Cli",
+      "type": "class",
+      "name": "Cli",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        80,
+        88
+      ],
+      "summary": "Holds the CLI's connection state (base URL, channel/chat/sender/session identifiers, HTTP client) and drives the debug-only outbound-tap endpoints to arm capture, inject synthetic messages, and drain captured gateway replies.",
+      "tags": [
+        "cli",
+        "http-client",
+        "state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:TranscriptBuffer",
+      "type": "class",
+      "name": "TranscriptBuffer",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        657,
+        660
+      ],
+      "summary": "Accumulates a Markdown-formatted transcript of a scripted CLI run (user turns, gateway replies, notes, errors) and writes it to disk.",
+      "tags": [
+        "cli",
+        "logging",
+        "transcript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:run_interactive",
+      "type": "function",
+      "name": "run_interactive",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        299,
+        403
+      ],
+      "summary": "Runs the interactive REPL loop, reading user input, sending it through the Gateway API, and rendering replies until the user exits.",
+      "tags": [
+        "cli",
+        "repl",
+        "interactive"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:run_script",
+      "type": "function",
+      "name": "run_script",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        531,
+        623
+      ],
+      "summary": "Executes a parsed conversation script against the Gateway CLI end-to-end, sending scripted user turns, waiting between steps, collecting replies, and optionally writing a transcript file.",
+      "tags": [
+        "cli",
+        "automation",
+        "scripting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:parse_script",
+      "type": "function",
+      "name": "parse_script",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        460,
+        484
+      ],
+      "summary": "Parses a raw script file into an ordered list of ScriptStep values (user turns and waits).",
+      "tags": [
+        "parsing",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:collect_replies",
+      "type": "function",
+      "name": "collect_replies",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        625,
+        650
+      ],
+      "summary": "Polls the debug outbound-tap endpoint to collect gateway reply messages accumulated since the last drain.",
+      "tags": [
+        "cli",
+        "http-client",
+        "polling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:parse_mode",
+      "type": "function",
+      "name": "parse_mode",
+      "filePath": "src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "lineRange": [
+        254,
+        275
+      ],
+      "summary": "Parses CLI arguments to determine which RunMode (interactive, scripted, or help) to execute.",
+      "tags": [
+        "cli",
+        "argument-parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/bin-provider-key-check/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/bin-provider-key-check/Cargo.toml",
+      "summary": "Cargo manifest for the provider-key-check binary, a headless CLI harness that reuses key_vault's run_validate_key so CI validates provider API keys with the exact same logic as the in-app Key Vault wizard.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "cli",
+        "testing-tool"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "type": "file",
+      "name": "main.rs",
+      "filePath": "src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "summary": "Headless CLI that loads a JSON config listing provider API-key checks and validates each key against its provider using key_vault's shared validator, printing pass/fail results for CI.",
+      "tags": [
+        "cli",
+        "entry-point",
+        "validation",
+        "testing-tool"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-provider-key-check/src/main.rs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "lineRange": [
+        78,
+        151
+      ],
+      "summary": "Iterates each configured provider check entry, calls key_vault's shared key validator for it, and prints pass/fail results, returning the process exit status for CI.",
+      "tags": [
+        "cli",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-provider-key-check/src/main.rs:resolve_config_path",
+      "type": "function",
+      "name": "resolve_config_path",
+      "filePath": "src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "lineRange": [
+        46,
+        60
+      ],
+      "summary": "Resolves the path to the JSON config file listing provider key checks, applying CLI-arg and default-path fallback logic.",
+      "tags": [
+        "cli",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/bin-telegram-smoke/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/bin-telegram-smoke/Cargo.toml",
+      "summary": "Cargo manifest for the telegram-smoke binary, an isolated smoke-test that exercises agent_core's channels/bus surface for Telegram without booting the full Tauri app.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "cli",
+        "testing-tool"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "type": "file",
+      "name": "main.rs",
+      "filePath": "src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "summary": "Standalone smoke-test binary that connects to Telegram via agent_core's channel/bus abstractions, echoes received messages back, and enforces a sender allow-list without running the full desktop app.",
+      "tags": [
+        "cli",
+        "entry-point",
+        "testing-tool",
+        "integration-test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-telegram-smoke/src/main.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "lineRange": [
+        67,
+        171
+      ],
+      "summary": "Boots a standalone Telegram channel using agent_core's channel/bus abstractions, applies the sender allow-list, and echoes incoming messages back for smoke testing.",
+      "tags": [
+        "cli",
+        "entry-point",
+        "testing-tool"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/bin-telegram-smoke/src/main.rs:load_allow_from",
+      "type": "function",
+      "name": "load_allow_from",
+      "filePath": "src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "lineRange": [
+        54,
+        64
+      ],
+      "summary": "Loads the allow-listed sender IDs used to filter which Telegram senders the smoke test responds to.",
+      "tags": [
+        "cli",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/browser/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/browser/Cargo.toml",
+      "summary": "Cargo manifest for the browser crate, covering standalone/inline WebView management, DOM editing, screenshots, cookie access, navigation/console logging, and anti-bot/inspector JS injection, with macOS and Windows-specific native dependencies.",
+      "tags": [
+        "configuration",
+        "rust",
+        "cargo",
+        "cross-platform",
+        "webview"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "type": "file",
+      "name": "inspector-core.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "summary": "Establishes the shared inspector state (selection/hover/drag flags, overlay DOM elements) and capture-phase event-suppression utilities used by the other inspector-*.js modules injected into the inline WebView's element inspector.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "state-management",
+        "browser-devtools"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Injected via include_str! into inspector.rs and shares globals (module-scoped `let`/`const`) with sibling scripts rather than using ES modules, since it runs directly in the target page's webview context."
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:suppressInspectEvent",
+      "type": "function",
+      "name": "suppressInspectEvent",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        28,
+        37
+      ],
+      "summary": "Prevents default behavior and stops propagation of a DOM event while inspect mode is active, blocking page interactions during inspection.",
+      "tags": [
+        "dom",
+        "event-handling",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:appendOverlays",
+      "type": "function",
+      "name": "appendOverlays",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        100,
+        109
+      ],
+      "summary": "Appends the highlight/selection/tooltip/drop-indicator overlay elements to the document body.",
+      "tags": [
+        "dom",
+        "overlay",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:getElementSelector",
+      "type": "function",
+      "name": "getElementSelector",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        113,
+        128
+      ],
+      "summary": "Builds a readable CSS-like selector string (tag, id, classes) describing a DOM element for the inspector UI.",
+      "tags": [
+        "dom",
+        "utility",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:getXPath",
+      "type": "function",
+      "name": "getXPath",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        131,
+        152
+      ],
+      "summary": "Computes a unique XPath string for a DOM element by walking up its ancestor chain.",
+      "tags": [
+        "dom",
+        "xpath",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:positionOverlay",
+      "type": "function",
+      "name": "positionOverlay",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        155,
+        166
+      ],
+      "summary": "Positions and sizes a highlight/selection overlay div to match a target element's bounding rect.",
+      "tags": [
+        "dom",
+        "overlay",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:positionTooltip",
+      "type": "function",
+      "name": "positionTooltip",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        174,
+        221
+      ],
+      "summary": "Positions the floating info tooltip near a hovered/selected element, keeping it within viewport bounds.",
+      "tags": [
+        "dom",
+        "overlay",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:isUndraggable",
+      "type": "function",
+      "name": "isUndraggable",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        230,
+        243
+      ],
+      "summary": "Determines whether an element should be excluded from drag-to-reorder interactions (overlays, non-draggable containers, etc.).",
+      "tags": [
+        "dom",
+        "utility",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:getElementByXPath",
+      "type": "function",
+      "name": "getElementByXPath",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "lineRange": [
+        246,
+        261
+      ],
+      "summary": "Resolves a previously computed XPath string back to its live DOM element.",
+      "tags": [
+        "dom",
+        "xpath",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-dom-tree.js",
+      "type": "file",
+      "name": "inspector-dom-tree.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-dom-tree.js",
+      "summary": "Exposes window.__ORGII_GET_DOM_TREE__, which walks light DOM, open Shadow DOM, and same-origin iframe documents to export a serializable DOM tree (with synthetic pseudo-nodes for shadow-root/iframe boundaries) for the inspector's React tree panel, plus XPath-based element lookup helpers.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "browser-devtools",
+        "xpath"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Its exported entry points are assigned as anonymous functions on `window.__ORGII_*`, so the tree-sitter extractor found no top-level named functions despite the file's real structural complexity."
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "type": "file",
+      "name": "inspector-drag.js",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "summary": "Implements drag-and-drop DOM reordering for the element inspector: hit-testing the drop target/position under the cursor, rendering a drop indicator, and moving the dragged element with mutation recording for undo.",
+      "tags": [
+        "injected-script",
+        "dom",
+        "drag-and-drop",
+        "browser-devtools"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:getDropPosition",
+      "type": "function",
+      "name": "getDropPosition",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        5,
+        33
+      ],
+      "summary": "Determines the drop target element and before/after position under the cursor, temporarily hiding overlays for accurate hit-testing.",
+      "tags": [
+        "dom",
+        "drag-and-drop",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:showDropIndicator",
+      "type": "function",
+      "name": "showDropIndicator",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        36,
+        52
+      ],
+      "summary": "Renders the drop-indicator line at a target element's edge during drag-to-reorder.",
+      "tags": [
+        "dom",
+        "overlay",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:moveElement",
+      "type": "function",
+      "name": "moveElement",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        60,
+        84
+      ],
+      "summary": "Moves a dragged DOM element before or after a target element and records the mutation for undo.",
+      "tags": [
+        "dom",
+        "mutation",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleMouseMove",
+      "type": "function",
+      "name": "handleMouseMove",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        87,
+        129
+      ],
+      "summary": "Tracks cursor movement to update hover highlighting and detect when a drag should start.",
+      "tags": [
+        "dom",
+        "event-handling",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleMouseDown",
+      "type": "function",
+      "name": "handleMouseDown",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        132,
+        150
+      ],
+      "summary": "Begins a potential drag or selection interaction when the user presses on an element.",
+      "tags": [
+        "dom",
+        "event-handling",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleMouseUp",
+      "type": "function",
+      "name": "handleMouseUp",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        153,
+        171
+      ],
+      "summary": "Finalizes a drag-to-reorder operation on mouse release, or treats the interaction as a click/selection.",
+      "tags": [
+        "dom",
+        "event-handling",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleKeyDown",
+      "type": "function",
+      "name": "handleKeyDown",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        179,
+        197
+      ],
+      "summary": "Handles keyboard shortcuts (e.g., escape/undo) while inspect or drag mode is active.",
+      "tags": [
+        "dom",
+        "event-handling",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:updatePositions",
+      "type": "function",
+      "name": "updatePositions",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "lineRange": [
+        200,
+        221
+      ],
+      "summary": "Refreshes overlay positions to track the currently hovered, selected, or dragged elements.",
+      "tags": [
+        "dom",
+        "overlay",
+        "injected-script"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/app-platform/src/objc_bridge/objc_catch.m",
+      "target": "function:src-tauri/crates/app-platform/src/objc_bridge/objc_catch.m:orgii_objc_catch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "class:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:Cli",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "class:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:TranscriptBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:run_interactive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:run_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:parse_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:collect_replies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "target": "function:src-tauri/crates/bin-gateway-chat-cli/src/main.rs:parse_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "target": "function:src-tauri/crates/bin-provider-key-check/src/main.rs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "target": "function:src-tauri/crates/bin-provider-key-check/src/main.rs:resolve_config_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "target": "function:src-tauri/crates/bin-telegram-smoke/src/main.rs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "target": "function:src-tauri/crates/bin-telegram-smoke/src/main.rs:load_allow_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "config:src-tauri/crates/bin-gateway-chat-cli/Cargo.toml",
+      "target": "file:src-tauri/crates/bin-gateway-chat-cli/src/main.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/bin-provider-key-check/Cargo.toml",
+      "target": "file:src-tauri/crates/bin-provider-key-check/src/main.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/bin-telegram-smoke/Cargo.toml",
+      "target": "file:src-tauri/crates/bin-telegram-smoke/src/main.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:suppressInspectEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:appendOverlays",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:getElementSelector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:getXPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:positionOverlay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:positionTooltip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:isUndraggable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-core.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-core.js:getElementByXPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:getDropPosition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:showDropIndicator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:moveElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleMouseMove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleMouseDown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleMouseUp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:handleKeyDown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/scripts/js/inspector-drag.js",
+      "target": "function:src-tauri/crates/browser/src/scripts/js/inspector-drag.js:updatePositions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

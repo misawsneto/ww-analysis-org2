@@ -1,0 +1,1603 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/src/cli_managed_proxy.rs",
+      "type": "file",
+      "name": "cli_managed_proxy.rs",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "summary": "Runs a local Axum-based HTTP proxy server that CLI coding agents talk to, resolving each agent's configured provider/model/API-key, rewriting requests, and forwarding them to the correct upstream (Anthropic or OpenAI-compatible) API.",
+      "tags": [
+        "proxy",
+        "http-server",
+        "middleware",
+        "cli-integration"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses Axum routing plus per-agent proxy tokens to multiplex several external CLI tools through one local HTTP endpoint."
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:start_cli_managed_proxy_thread",
+      "type": "function",
+      "name": "start_cli_managed_proxy_thread",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        75,
+        99
+      ],
+      "summary": "Spawns the background thread that supervises and restarts the local CLI-managed proxy server.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:supervise_proxy_server",
+      "type": "function",
+      "name": "supervise_proxy_server",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        101,
+        120
+      ],
+      "summary": "Supervises the proxy server task, restarting it with backoff after failures.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:proxy_unavailable_message",
+      "type": "function",
+      "name": "proxy_unavailable_message",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        143,
+        155
+      ],
+      "summary": "Builds the human-readable error message shown when the managed proxy is unavailable.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:run_proxy_server",
+      "type": "function",
+      "name": "run_proxy_server",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        157,
+        189
+      ],
+      "summary": "Builds and serves the Axum router exposing the health, v1, Claude, and per-CLI-agent proxy endpoints.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:health_handler",
+      "type": "function",
+      "name": "health_handler",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        191,
+        202
+      ],
+      "summary": "Axum handler returning the proxy server's health-check response.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:proxy_claude_root_handler",
+      "type": "function",
+      "name": "proxy_claude_root_handler",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        218,
+        227
+      ],
+      "summary": "Axum handler forwarding root-path Claude-protocol requests through the managed proxy.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:proxy_claude_handler",
+      "type": "function",
+      "name": "proxy_claude_handler",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        229,
+        238
+      ],
+      "summary": "Axum handler forwarding path-scoped Claude-protocol requests through the managed proxy.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:proxy_agent_handler",
+      "type": "function",
+      "name": "proxy_agent_handler",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        274,
+        326
+      ],
+      "summary": "Core Axum handler that authenticates a proxy token, resolves the agent's upstream context, and forwards the request to the correct provider.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:empty_ok_response",
+      "type": "function",
+      "name": "empty_ok_response",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        328,
+        338
+      ],
+      "summary": "Builds an empty 200 OK Axum response.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:authenticated_empty_ok_response",
+      "type": "function",
+      "name": "authenticated_empty_ok_response",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        340,
+        352
+      ],
+      "summary": "Validates the proxy token for an agent and returns an empty OK response, or an auth error.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:forward_request",
+      "type": "function",
+      "name": "forward_request",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        354,
+        423
+      ],
+      "summary": "Forwards an incoming request to the resolved upstream provider, rewriting headers, auth, and the model field before returning the upstream response.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:proxy_token_matches",
+      "type": "function",
+      "name": "proxy_token_matches",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        425,
+        435
+      ],
+      "summary": "Compares a supplied proxy token against the expected token.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:rewrite_model_field",
+      "type": "function",
+      "name": "rewrite_model_field",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        449,
+        469
+      ],
+      "summary": "Rewrites the `model` field of an outgoing JSON request body to the agent's selected model.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:build_upstream_url",
+      "type": "function",
+      "name": "build_upstream_url",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        471,
+        494
+      ],
+      "summary": "Builds the full upstream URL for a generic OpenAI-compatible provider request.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:build_anthropic_upstream_url",
+      "type": "function",
+      "name": "build_anthropic_upstream_url",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        506,
+        518
+      ],
+      "summary": "Builds the full upstream URL for an Anthropic-protocol provider request.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:should_forward_header",
+      "type": "function",
+      "name": "should_forward_header",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        520,
+        539
+      ],
+      "summary": "Decides whether a given request header should be forwarded upstream.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:should_forward_response_header",
+      "type": "function",
+      "name": "should_forward_response_header",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        541,
+        555
+      ],
+      "summary": "Decides whether a given upstream response header should be forwarded back to the client.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:apply_auth_header",
+      "type": "function",
+      "name": "apply_auth_header",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        557,
+        573
+      ],
+      "summary": "Applies the correct provider-specific authorization header (API key) to the outgoing request builder.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:protocol_for_agent",
+      "type": "function",
+      "name": "protocol_for_agent",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        575,
+        599
+      ],
+      "summary": "Resolves which proxy protocol (OpenAI- or Anthropic-compatible) an agent uses.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:resolve_proxy_context_for_selection",
+      "type": "function",
+      "name": "resolve_proxy_context_for_selection",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        601,
+        728
+      ],
+      "summary": "Resolves the full proxy context (provider, model, API key, upstream URL, protocol) for a given agent/key/model selection, generating a fresh proxy token.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:resolve_proxy_context",
+      "type": "function",
+      "name": "resolve_proxy_context",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        730,
+        747
+      ],
+      "summary": "Resolves the proxy context for an agent using its currently configured key/model selection.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:compatible_key_ids_for_agent",
+      "type": "function",
+      "name": "compatible_key_ids_for_agent",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        749,
+        759
+      ],
+      "summary": "Lists the configured API key IDs compatible with a given agent's provider protocol.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:cli_config_enable_orgii_managed",
+      "type": "function",
+      "name": "cli_config_enable_orgii_managed",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        762,
+        789
+      ],
+      "summary": "Tauri command that switches a CLI agent's configuration to use the Orgii-managed proxy for the given key/model.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:cli_managed_proxy_status",
+      "type": "function",
+      "name": "cli_managed_proxy_status",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        792,
+        864
+      ],
+      "summary": "Tauri command returning the current managed-proxy status (running, ready, URL, selected key/model) for an agent.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/cli_managed_proxy.rs:json_error",
+      "type": "function",
+      "name": "json_error",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        866,
+        879
+      ],
+      "summary": "Builds a JSON error response body with the given HTTP status and message.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/cli_managed_proxy.rs:CliManagedProxyStatus",
+      "type": "class",
+      "name": "CliManagedProxyStatus",
+      "filePath": "src-tauri/src/cli_managed_proxy.rs",
+      "lineRange": [
+        36,
+        48
+      ],
+      "summary": "DTO reporting the CLI-managed proxy's current status and selection for an agent, returned to the frontend.",
+      "tags": [
+        "proxy",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/archive.rs",
+      "type": "file",
+      "name": "archive.rs",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "summary": "Creates zip archives of a folder (with exclusion rules and progress events) and reports folder size/file-count info, used for exporting or backing up project folders.",
+      "tags": [
+        "archive",
+        "filesystem",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/archive.rs:should_exclude",
+      "type": "function",
+      "name": "should_exclude",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        77,
+        90
+      ],
+      "summary": "Decides whether a file path should be excluded from a folder archive (build artifacts, VCS dirs, etc.).",
+      "tags": [
+        "archive",
+        "api-handler",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/archive.rs:collect_files_recursive",
+      "type": "function",
+      "name": "collect_files_recursive",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        100,
+        116
+      ],
+      "summary": "Recursively walks a directory collecting file paths to include in an archive.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/archive.rs:get_relative_path",
+      "type": "function",
+      "name": "get_relative_path",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        119,
+        127
+      ],
+      "summary": "Computes a file's path relative to the archive root for use as a zip entry name.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/archive.rs:create_folder_archive",
+      "type": "function",
+      "name": "create_folder_archive",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        141,
+        252
+      ],
+      "summary": "Tauri command that zips a folder into an in-memory archive, emitting progress events to the window as it goes.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "factory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/archive.rs:get_folder_info",
+      "type": "function",
+      "name": "get_folder_info",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        257,
+        287
+      ],
+      "summary": "Tauri command reporting a folder's file count and estimated archive size before archiving.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/archive.rs:ArchiveResult",
+      "type": "class",
+      "name": "ArchiveResult",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        20,
+        29
+      ],
+      "summary": "DTO carrying the produced archive bytes, size, file count, and folder name back to the frontend.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/archive.rs:ArchiveProgress",
+      "type": "class",
+      "name": "ArchiveProgress",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        33,
+        37
+      ],
+      "summary": "Progress event payload emitted to the frontend while archiving a folder.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/archive.rs:FolderInfo",
+      "type": "class",
+      "name": "FolderInfo",
+      "filePath": "src-tauri/src/infrastructure/archive.rs",
+      "lineRange": [
+        291,
+        296
+      ],
+      "summary": "DTO summarizing a folder's file count, total size, and estimated archive size.",
+      "tags": [
+        "archive",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/frontend_log.rs",
+      "type": "file",
+      "name": "frontend_log.rs",
+      "filePath": "src-tauri/src/infrastructure/frontend_log.rs",
+      "summary": "Bridges frontend console logs into the backend's log files via a small Tauri command surface.",
+      "tags": [
+        "logging",
+        "api-handler",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/frontend_log.rs:write_frontend_log",
+      "type": "function",
+      "name": "write_frontend_log",
+      "filePath": "src-tauri/src/infrastructure/frontend_log.rs",
+      "lineRange": [
+        21,
+        34
+      ],
+      "summary": "Tauri command that writes a frontend console log line into the backend's log files.",
+      "tags": [
+        "logging",
+        "api-handler",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/frontend_log.rs:get_logs_directory",
+      "type": "function",
+      "name": "get_logs_directory",
+      "filePath": "src-tauri/src/infrastructure/frontend_log.rs",
+      "lineRange": [
+        37,
+        39
+      ],
+      "summary": "Tauri command returning the on-disk directory where logs are stored.",
+      "tags": [
+        "logging",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/housekeeping.rs",
+      "type": "file",
+      "name": "housekeeping.rs",
+      "filePath": "src-tauri/src/infrastructure/housekeeping.rs",
+      "summary": "Performs deferred startup disk cleanup, capping and evicting old sessions, manifests, blobs, screenshots and caches, returning aggregate before/after housekeeping stats.",
+      "tags": [
+        "cleanup",
+        "maintenance",
+        "storage"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping.rs:run_deferred_cleanup",
+      "type": "function",
+      "name": "run_deferred_cleanup",
+      "filePath": "src-tauri/src/infrastructure/housekeeping.rs",
+      "lineRange": [
+        133,
+        278
+      ],
+      "summary": "Runs the app's deferred startup cleanup pass, capping/evicting old sessions, manifests, blobs, screenshots, and other caches, and returns aggregate stats.",
+      "tags": [
+        "cleanup",
+        "maintenance",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/housekeeping.rs:HousekeepingStats",
+      "type": "class",
+      "name": "HousekeepingStats",
+      "filePath": "src-tauri/src/infrastructure/housekeeping.rs",
+      "lineRange": [
+        83,
+        125
+      ],
+      "summary": "Aggregate counters reporting how many items of each category were evicted or capped by a housekeeping run.",
+      "tags": [
+        "cleanup",
+        "maintenance",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "type": "file",
+      "name": "index_manager.rs",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "summary": "Manages the lifecycle of per-repo code-search indexes (create/reuse/release with reference counting) and reports indexing progress/state to the frontend.",
+      "tags": [
+        "indexing",
+        "state-management",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        97,
+        101
+      ],
+      "summary": "Constructs an empty IndexManager with no active indexes.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:get_or_index",
+      "type": "function",
+      "name": "get_or_index",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        106,
+        155
+      ],
+      "summary": "Returns the existing index handle for a repo path or kicks off background indexing if none exists.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:update_progress",
+      "type": "function",
+      "name": "update_progress",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        158,
+        176
+      ],
+      "summary": "Updates the state and progress of an in-flight index build for a repo.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:release_index",
+      "type": "function",
+      "name": "release_index",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        180,
+        191
+      ],
+      "summary": "Tauri command / internal method that releases a repo's index reference, decrementing its reference count and evicting it when unused.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:get_all_indexes",
+      "type": "function",
+      "name": "get_all_indexes",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        194,
+        197
+      ],
+      "summary": "Tauri command / internal method returning snapshots of all currently tracked repo indexes.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:get_index",
+      "type": "function",
+      "name": "get_index",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        200,
+        205
+      ],
+      "summary": "Looks up the index handle for a given repo path.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:start_background_indexing",
+      "type": "function",
+      "name": "start_background_indexing",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        208,
+        287
+      ],
+      "summary": "Spawns a background task that performs the actual code indexing work for a repo and updates its progress.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:normalize_repo_path",
+      "type": "function",
+      "name": "normalize_repo_path",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        289,
+        304
+      ],
+      "summary": "Canonicalizes a repo path for use as an index cache key.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:hash_repo_path",
+      "type": "function",
+      "name": "hash_repo_path",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        307,
+        314
+      ],
+      "summary": "Hashes a normalized repo path to a stable short index identifier.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:get_index_status",
+      "type": "function",
+      "name": "get_index_status",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        337,
+        343
+      ],
+      "summary": "Tauri command returning the indexing status/progress for a repo path.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/index_manager.rs:start_indexing",
+      "type": "function",
+      "name": "start_indexing",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        354,
+        361
+      ],
+      "summary": "Tauri command that starts (or resumes) indexing for a repo path.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/index_manager.rs:IndexHandle",
+      "type": "class",
+      "name": "IndexHandle",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        23,
+        30
+      ],
+      "summary": "Handle describing a repo's index build (state, progress, timestamps, reference count).",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/index_manager.rs:IndexState",
+      "type": "class",
+      "name": "IndexState",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        34,
+        45
+      ],
+      "summary": "Enum of index lifecycle states (Pending, Indexing, Ready, Error, Updating).",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/index_manager.rs:IndexProgress",
+      "type": "class",
+      "name": "IndexProgress",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        48,
+        56
+      ],
+      "summary": "Progress payload reporting indexing phase, files/symbols indexed, and completion percentage.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/index_manager.rs:IndexPhase",
+      "type": "class",
+      "name": "IndexPhase",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        60,
+        73
+      ],
+      "summary": "Enum of indexing phases (Scanning, FileIndex, SymbolIndex, SemanticIndex, Complete, Idle).",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/index_manager.rs:IndexEntry",
+      "type": "class",
+      "name": "IndexEntry",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        76,
+        79
+      ],
+      "summary": "Internal registry entry pairing an index handle with its reference count.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/infrastructure/index_manager.rs:IndexManager",
+      "type": "class",
+      "name": "IndexManager",
+      "filePath": "src-tauri/src/infrastructure/index_manager.rs",
+      "lineRange": [
+        85,
+        88
+      ],
+      "summary": "In-memory registry of all active repo code-search indexes, managing lifecycle, reference counting, and progress reporting.",
+      "tags": [
+        "indexing",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:start_cli_managed_proxy_thread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:start_cli_managed_proxy_thread",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:supervise_proxy_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:proxy_unavailable_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:run_proxy_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:health_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:proxy_claude_root_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:proxy_claude_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:proxy_agent_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:empty_ok_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:authenticated_empty_ok_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:forward_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:proxy_token_matches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:rewrite_model_field",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:build_upstream_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:build_anthropic_upstream_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:should_forward_header",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:should_forward_response_header",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:apply_auth_header",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:protocol_for_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:resolve_proxy_context_for_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:resolve_proxy_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:compatible_key_ids_for_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:cli_config_enable_orgii_managed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:cli_config_enable_orgii_managed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:cli_managed_proxy_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:cli_managed_proxy_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "function:src-tauri/src/cli_managed_proxy.rs:json_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "class:src-tauri/src/cli_managed_proxy.rs:CliManagedProxyStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/cli_managed_proxy.rs",
+      "target": "class:src-tauri/src/cli_managed_proxy.rs:CliManagedProxyStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:should_exclude",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:should_exclude",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:collect_files_recursive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:get_relative_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:get_relative_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:create_folder_archive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:create_folder_archive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:get_folder_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "function:src-tauri/src/infrastructure/archive.rs:get_folder_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "class:src-tauri/src/infrastructure/archive.rs:ArchiveResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "class:src-tauri/src/infrastructure/archive.rs:ArchiveResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "class:src-tauri/src/infrastructure/archive.rs:ArchiveProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "class:src-tauri/src/infrastructure/archive.rs:ArchiveProgress",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "class:src-tauri/src/infrastructure/archive.rs:FolderInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/archive.rs",
+      "target": "class:src-tauri/src/infrastructure/archive.rs:FolderInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/frontend_log.rs",
+      "target": "function:src-tauri/src/infrastructure/frontend_log.rs:write_frontend_log",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/frontend_log.rs",
+      "target": "function:src-tauri/src/infrastructure/frontend_log.rs:write_frontend_log",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/frontend_log.rs",
+      "target": "function:src-tauri/src/infrastructure/frontend_log.rs:get_logs_directory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/frontend_log.rs",
+      "target": "function:src-tauri/src/infrastructure/frontend_log.rs:get_logs_directory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping.rs:run_deferred_cleanup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping.rs:run_deferred_cleanup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping.rs",
+      "target": "class:src-tauri/src/infrastructure/housekeeping.rs:HousekeepingStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping.rs",
+      "target": "class:src-tauri/src/infrastructure/housekeeping.rs:HousekeepingStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_or_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_or_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:update_progress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:update_progress",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:release_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:release_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_all_indexes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_all_indexes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:start_background_indexing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:normalize_repo_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:hash_repo_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:hash_repo_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_index_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:get_index_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:start_indexing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "function:src-tauri/src/infrastructure/index_manager.rs:start_indexing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexHandle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexHandle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexProgress",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexPhase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexPhase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/index_manager.rs",
+      "target": "class:src-tauri/src/infrastructure/index_manager.rs:IndexManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

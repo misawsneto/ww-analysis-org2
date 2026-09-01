@@ -1,0 +1,2432 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "type": "file",
+      "name": "pagination.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "summary": "Cursor-based, filterable pagination over events stored in the EventStore, avoiding full-list transfer to the frontend; supports forward/backward cursors and combinable source/variant/text filters.",
+      "tags": [
+        "pagination",
+        "query-engine",
+        "event-pipeline",
+        "filtering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:paginate_events",
+      "type": "function",
+      "name": "paginate_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [
+        99,
+        181
+      ],
+      "summary": "Returns a cursor-paginated, filtered slice of events from the store along with next/prev cursors and the total match count.",
+      "tags": [
+        "pagination",
+        "query-engine",
+        "event-pipeline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:count_matching_events",
+      "type": "function",
+      "name": "count_matching_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [
+        184,
+        189
+      ],
+      "summary": "Counts how many stored events match a given filter set without materializing them.",
+      "tags": [
+        "pagination",
+        "query-engine",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:get_distinct_functions",
+      "type": "function",
+      "name": "get_distinct_functions",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [
+        192,
+        208
+      ],
+      "summary": "Computes the distinct set of function names present in the event store along with usage counts, for filter UI population.",
+      "tags": [
+        "pagination",
+        "query-engine",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:matches_filters",
+      "type": "function",
+      "name": "matches_filters",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [
+        222,
+        276
+      ],
+      "summary": "Evaluates whether a single event matches the combined set of active EventFilters (source, variant, function, path, text, time range).",
+      "tags": [
+        "pagination",
+        "query-engine",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "type": "file",
+      "name": "payload_compaction.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "summary": "Compacts oversized event payload fields (message/tool bodies exceeding a size threshold) into a truncated preview plus a lazily-loadable body reference, keeping snapshot/IPC payloads small while preserving reload-on-demand access.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline",
+        "snapshotting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_event_for_snapshot",
+      "type": "function",
+      "name": "compact_event_for_snapshot",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        58,
+        74
+      ],
+      "summary": "Compacts a single event's oversized payload fields for inclusion in a lightweight snapshot, replacing full bodies with size-bounded previews.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:load_event_payload_body",
+      "type": "function",
+      "name": "load_event_payload_body",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        76,
+        86
+      ],
+      "summary": "Loads back the full-size body of a previously compacted payload field on demand.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_display_text",
+      "type": "function",
+      "name": "compact_display_text",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        92,
+        105
+      ],
+      "summary": "Truncates an event's display text to the preview size threshold if it exceeds the compaction limit.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_json_string_field",
+      "type": "function",
+      "name": "compact_json_string_field",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        107,
+        118
+      ],
+      "summary": "Compacts an embedded JSON-string field's value if it exceeds the size threshold, preserving JSON validity.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_string_value",
+      "type": "function",
+      "name": "compact_string_value",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        128,
+        146
+      ],
+      "summary": "Truncates a raw string value to the preview byte budget, cutting on a valid character boundary.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_extracted",
+      "type": "function",
+      "name": "compact_extracted",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        148,
+        233
+      ],
+      "summary": "Walks an ExtractedData variant's fields, compacting any oversized text/content fields in place for snapshot storage.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_optional_string",
+      "type": "function",
+      "name": "compact_optional_string",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        235,
+        245
+      ],
+      "summary": "Compacts an Option<String> field, replacing it with a preview if it exceeds the threshold.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:payload_string",
+      "type": "function",
+      "name": "payload_string",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        247,
+        263
+      ],
+      "summary": "Reads a payload's original field value as a string for size measurement and compaction.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:camel_to_snake",
+      "type": "function",
+      "name": "camel_to_snake",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "lineRange": [
+        288,
+        299
+      ],
+      "summary": "Converts a camelCase field-path segment to snake_case for payload field lookups.",
+      "tags": [
+        "payload-compaction",
+        "performance",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "type": "file",
+      "name": "search.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "summary": "In-memory full-text search across session chat events (plain, case-sensitive, regex, whole-word modes), replacing a TypeScript linear-scan search hook to avoid IPC-serializing the full event list.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline",
+        "performance"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:extract_strings_from_value",
+      "type": "function",
+      "name": "extract_strings_from_value",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        53,
+        78
+      ],
+      "summary": "Recursively collects all string leaves from a JSON value into a flat searchable text buffer.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:build_searchable_text",
+      "type": "function",
+      "name": "build_searchable_text",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        81,
+        99
+      ],
+      "summary": "Builds the combined searchable text blob for a single event from its display text and extracted-data fields.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:floor_char",
+      "type": "function",
+      "name": "floor_char",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        106,
+        115
+      ],
+      "summary": "Rounds a byte offset down to the nearest valid UTF-8 character boundary.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:ceil_char",
+      "type": "function",
+      "name": "ceil_char",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        118,
+        127
+      ],
+      "summary": "Rounds a byte offset up to the nearest valid UTF-8 character boundary.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:create_snippet",
+      "type": "function",
+      "name": "create_snippet",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        129,
+        165
+      ],
+      "summary": "Builds a bounded-length text snippet around a match position, with ellipsis truncation at character boundaries.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:find",
+      "type": "function",
+      "name": "find",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        180,
+        194
+      ],
+      "summary": "Matches a Matcher::Plain or Matcher::Regex variant against a byte offset in the searchable text, returning the start/end/score of a match.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:build_matcher",
+      "type": "function",
+      "name": "build_matcher",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        197,
+        235
+      ],
+      "summary": "Constructs a Matcher (plain substring or compiled regex) from the search query and case/regex/whole-word options.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:search_chat_events",
+      "type": "function",
+      "name": "search_chat_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [
+        238,
+        275
+      ],
+      "summary": "Runs the configured search over a session's chat-visible events, returning ranked, snippeted results up to a max-results cap.",
+      "tags": [
+        "search",
+        "full-text-search",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "type": "file",
+      "name": "session_manager.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "summary": "Pure policy layer tracking the active session, a pin set protecting long-running agent sessions from eviction, and an LRU order enforcing a max cached-session limit, decoupled from the per-session EventStore instances themselves.",
+      "tags": [
+        "session-management",
+        "lru-cache",
+        "state-management",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:set_active",
+      "type": "function",
+      "name": "set_active",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "lineRange": [
+        67,
+        78
+      ],
+      "summary": "Marks a session as the active target for commands that omit an explicit session id.",
+      "tags": [
+        "session-management",
+        "lru-cache",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "lineRange": [
+        81,
+        94
+      ],
+      "summary": "Registers a newly-seen session with the manager, initializing its LRU/touch state.",
+      "tags": [
+        "session-management",
+        "lru-cache",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:touch_lru",
+      "type": "function",
+      "name": "touch_lru",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "lineRange": [
+        159,
+        168
+      ],
+      "summary": "Moves a session to the most-recently-used end of the LRU order.",
+      "tags": [
+        "session-management",
+        "lru-cache",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:enforce_limits",
+      "type": "function",
+      "name": "enforce_limits",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "lineRange": [
+        175,
+        198
+      ],
+      "summary": "Evicts least-recently-used, unpinned sessions once the known-session count exceeds the configured cache limit.",
+      "tags": [
+        "session-management",
+        "lru-cache",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:SessionStoreManager",
+      "type": "class",
+      "name": "SessionStoreManager",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "lineRange": [
+        31,
+        42
+      ],
+      "summary": "Manages the set of known/pinned/active sessions and an LRU eviction order across per-session EventStore instances, enforcing a maximum cache size.",
+      "tags": [
+        "session-management",
+        "lru-cache",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "type": "file",
+      "name": "session_providers.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "summary": "Defines the SessionProvider trait and its Cursor-IDE and managed-CLI implementations, abstracting per-source differences in session-id matching, cache-save behavior, and history loading for imported/external sessions.",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction",
+        "external-integration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:load_history_events",
+      "type": "function",
+      "name": "load_history_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "lineRange": [
+        73,
+        85
+      ],
+      "summary": "Loads prior history events for a session from whichever external CLI adapter matches its imported session id.",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:subagent_prompt",
+      "type": "function",
+      "name": "subagent_prompt",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "lineRange": [
+        87,
+        96
+      ],
+      "summary": "Resolves a subagent's delegation prompt via the matching external CLI adapter.",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:imported_parent_session_ids",
+      "type": "function",
+      "name": "imported_parent_session_ids",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "lineRange": [
+        98,
+        111
+      ],
+      "summary": "Collects the set of imported parent session ids across all registered external CLI adapters.",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:SessionProvider",
+      "type": "class",
+      "name": "SessionProvider",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "lineRange": [
+        7,
+        28
+      ],
+      "summary": "Trait describing source-specific behavior (session-id matching, cache-save skipping, history loading, subagent prompt resolution) implemented per session origin (native, Cursor IDE, external CLI).",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:CursorIdeProvider",
+      "type": "class",
+      "name": "CursorIdeProvider",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "lineRange": [
+        30,
+        30
+      ],
+      "summary": "Provider implementation matching Cursor-IDE-imported session ids and skipping event-cache persistence for them.",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:ManagedCliProvider",
+      "type": "class",
+      "name": "ManagedCliProvider",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "lineRange": [
+        52,
+        52
+      ],
+      "summary": "Provider implementation for internally-managed CLI agent sessions (Claude Code, Codex, etc.), which participate in normal event-cache persistence.",
+      "tags": [
+        "provider-pattern",
+        "session-management",
+        "abstraction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "type": "file",
+      "name": "statistics.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "summary": "Aggregates statistics across session records (counts by status/type, file-change totals, per-repo and per-model activity, daily activity buckets, most-impactful sessions) without loading full event data.",
+      "tags": [
+        "statistics",
+        "aggregation",
+        "analytics",
+        "session-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:compute_session_statistics",
+      "type": "function",
+      "name": "compute_session_statistics",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "lineRange": [
+        103,
+        260
+      ],
+      "summary": "Computes the full SessionStatistics aggregate (status/type breakdowns, per-repo/model activity, daily timeline, top impactful sessions) from a list of session records.",
+      "tags": [
+        "statistics",
+        "aggregation",
+        "analytics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:empty_statistics",
+      "type": "function",
+      "name": "empty_statistics",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "lineRange": [
+        282,
+        295
+      ],
+      "summary": "Returns a zeroed/empty SessionStatistics value for when there are no sessions to aggregate.",
+      "tags": [
+        "statistics",
+        "aggregation",
+        "analytics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:SessionStatistics",
+      "type": "class",
+      "name": "SessionStatistics",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "lineRange": [
+        19,
+        40
+      ],
+      "summary": "Aggregate statistics result: totals by status/type, file-change sums, per-repo and per-model activity breakdowns, daily activity timeline, and most-impactful sessions.",
+      "tags": [
+        "statistics",
+        "aggregation",
+        "analytics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "type": "file",
+      "name": "event_ops.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "summary": "Single-event and batch mutation operations on EventStore: get/update/upsert, streaming finalization, transcript deduplication, stream-placeholder replacement, shell output/process stamping, and bulk removal/clear.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation",
+        "event-pipeline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_by_id",
+      "type": "function",
+      "name": "update_by_id",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        24,
+        33
+      ],
+      "summary": "Updates an event in place by id, refreshing store indexes.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:upsert",
+      "type": "function",
+      "name": "upsert",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        36,
+        73
+      ],
+      "summary": "Inserts a new event or updates an existing one by id, maintaining id/call-id indexes and streaming/version bookkeeping.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:complete_last_running",
+      "type": "function",
+      "name": "complete_last_running",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        88,
+        99
+      ],
+      "summary": "Marks the most recent running tool/task event as completed.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:finalize_streaming_events",
+      "type": "function",
+      "name": "finalize_streaming_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        109,
+        128
+      ],
+      "summary": "Finalizes any events still marked as streaming when a session's live stream ends, converting them to their terminal display state.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:patch_by_ids",
+      "type": "function",
+      "name": "patch_by_ids",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        132,
+        147
+      ],
+      "summary": "Applies a set of field patches to multiple events identified by id.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:truncate_before_id",
+      "type": "function",
+      "name": "truncate_before_id",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        158,
+        175
+      ],
+      "summary": "Removes all events preceding a given event id, used to trim history before a resumption point.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_by_id_prefix",
+      "type": "function",
+      "name": "remove_by_id_prefix",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        179,
+        196
+      ],
+      "summary": "Removes all events whose id starts with a given prefix.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_by_ids",
+      "type": "function",
+      "name": "remove_by_ids",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        200,
+        208
+      ],
+      "summary": "Removes a set of events identified by exact id.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_synthetic_user_inputs",
+      "type": "function",
+      "name": "remove_synthetic_user_inputs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        210,
+        231
+      ],
+      "summary": "Removes synthetic/placeholder user-input events matching given criteria from the store.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_and_remove",
+      "type": "function",
+      "name": "replace_and_remove",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        235,
+        283
+      ],
+      "summary": "Atomically replaces a set of events with new ones while removing others, reconciling indexes in a single pass.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_shell_output",
+      "type": "function",
+      "name": "update_last_shell_output",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        287,
+        314
+      ],
+      "summary": "Appends incremental output to the most recent matching shell command event during live streaming.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_shell_process",
+      "type": "function",
+      "name": "update_last_shell_process",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        324,
+        386
+      ],
+      "summary": "Updates process metadata (pid, status, exit code) on the most recent matching shell command event.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_matching_args",
+      "type": "function",
+      "name": "update_last_matching_args",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        391,
+        417
+      ],
+      "summary": "Updates the args payload of the most recent event matching given function-name criteria.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:clear",
+      "type": "function",
+      "name": "clear",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        420,
+        429
+      ],
+      "summary": "Removes all events and resets store indexes.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_matching_synthetic_transcript_placeholders",
+      "type": "function",
+      "name": "remove_matching_synthetic_transcript_placeholders",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        443,
+        453
+      ],
+      "summary": "Removes synthetic stream-transcript placeholder events matching given predicate criteria.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:matching_synthetic_transcript_placeholder_ids",
+      "type": "function",
+      "name": "matching_synthetic_transcript_placeholder_ids",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        455,
+        467
+      ],
+      "summary": "Collects the ids of synthetic stream-transcript placeholder events matching given criteria.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_events_by_ids",
+      "type": "function",
+      "name": "remove_events_by_ids",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        469,
+        484
+      ],
+      "summary": "Removes a batch of events identified by an explicit id list.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_duplicate_stream_transcript_in_current_turn",
+      "type": "function",
+      "name": "replace_duplicate_stream_transcript_in_current_turn",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        486,
+        529
+      ],
+      "summary": "Replaces a duplicate/superseded streaming transcript event within the current turn with its authoritative counterpart.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_matching_stream_placeholder",
+      "type": "function",
+      "name": "replace_matching_stream_placeholder",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        531,
+        586
+      ],
+      "summary": "Replaces a matching streaming placeholder event with finalized content once the authoritative event arrives.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:would_downgrade_terminal_tool_call",
+      "type": "function",
+      "name": "would_downgrade_terminal_tool_call",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "lineRange": [
+        588,
+        604
+      ],
+      "summary": "Checks whether applying an incoming update would downgrade an already-terminal tool-call event's status.",
+      "tags": [
+        "event-store",
+        "crud",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "type": "file",
+      "name": "helpers.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "summary": "Pure, store-state-free helper functions for EventStore internals: synthetic/placeholder detection, transcript text/key extraction, and turn-id bookkeeping, kept separate for easy unit testing.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions",
+        "testability"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_synthetic_transcript_placeholder",
+      "type": "function",
+      "name": "is_synthetic_transcript_placeholder",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        20,
+        26
+      ],
+      "summary": "Determines whether an event is a synthetic (not-yet-authoritative) streaming transcript placeholder.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:transcript_text",
+      "type": "function",
+      "name": "transcript_text",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        28,
+        49
+      ],
+      "summary": "Extracts the display transcript text used for deduplication/matching from a session event.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:transcript_message_key",
+      "type": "function",
+      "name": "transcript_message_key",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        51,
+        58
+      ],
+      "summary": "Builds a dedup key from a transcript message's source and text for matching duplicate events.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:normalized_event_text",
+      "type": "function",
+      "name": "normalized_event_text",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        60,
+        66
+      ],
+      "summary": "Returns a whitespace-normalized version of an event's display text for comparison.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_completed_authoritative_stream_transcript",
+      "type": "function",
+      "name": "is_completed_authoritative_stream_transcript",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        68,
+        80
+      ],
+      "summary": "Determines whether an event is a completed, authoritative (non-placeholder) streaming transcript message.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_authoritative_transcript_message",
+      "type": "function",
+      "name": "is_authoritative_transcript_message",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        82,
+        84
+      ],
+      "summary": "Determines whether an event's source/variant marks it as an authoritative transcript message.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:reconcile_loaded_synthetic_transcript_placeholders",
+      "type": "function",
+      "name": "reconcile_loaded_synthetic_transcript_placeholders",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        90,
+        115
+      ],
+      "summary": "Reconciles freshly loaded events against previously known synthetic transcript placeholders, dropping stale placeholders superseded by authoritative content.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_turn_placeholder",
+      "type": "function",
+      "name": "is_turn_placeholder",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        117,
+        120
+      ],
+      "summary": "Determines whether an event is a turn-body placeholder used by round-window pagination.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:placeholder_turn_id",
+      "type": "function",
+      "name": "placeholder_turn_id",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        122,
+        128
+      ],
+      "summary": "Extracts the turn id a placeholder event stands in for.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:placeholder_next_turn_id",
+      "type": "function",
+      "name": "placeholder_next_turn_id",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        130,
+        136
+      ],
+      "summary": "Extracts the id of the turn following a placeholder, for ordering.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:loaded_turn_ids_from_events",
+      "type": "function",
+      "name": "loaded_turn_ids_from_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        138,
+        144
+      ],
+      "summary": "Collects the set of turn ids that have full event bodies currently loaded.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:timeline_source_order",
+      "type": "function",
+      "name": "timeline_source_order",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        150,
+        156
+      ],
+      "summary": "Returns a stable ordering key for an event's source, used to order concurrent timeline entries deterministically.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:stream_placeholder_prefix_for_authoritative",
+      "type": "function",
+      "name": "stream_placeholder_prefix_for_authoritative",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "lineRange": [
+        162,
+        170
+      ],
+      "summary": "Derives the placeholder id prefix that should be reconciled once an authoritative streaming message with a given key arrives.",
+      "tags": [
+        "helpers",
+        "event-store",
+        "pure-functions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "type": "file",
+      "name": "hydration.rs",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "summary": "Bulk event loading and merge operations for EventStore: full/round-window hydration, incremental appends, and the two-phase merge path used when paginating a round window of turns.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging",
+        "pagination"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_round_window",
+      "type": "function",
+      "name": "set_round_window",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        22,
+        35
+      ],
+      "summary": "Replaces the store's events with a round-window slice and marks the store as round-window hydrated.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_with_hydration",
+      "type": "function",
+      "name": "set_with_hydration",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        37,
+        51
+      ],
+      "summary": "Replaces the store's events with a caller-specified hydration mode (full, round-window, or live-partial).",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:append",
+      "type": "function",
+      "name": "append",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        55,
+        84
+      ],
+      "summary": "Appends new events to the end of the store, updating indexes and version/change tracking.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events",
+      "type": "function",
+      "name": "merge_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        95,
+        100
+      ],
+      "summary": "Merges a batch of events into the store using the default (non-round-window) merge path.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_round_window_events",
+      "type": "function",
+      "name": "merge_round_window_events",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        102,
+        110
+      ],
+      "summary": "Merges a batch of events into the store using the round-window-aware merge path.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events_with_hydration",
+      "type": "function",
+      "name": "merge_events_with_hydration",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        112,
+        249
+      ],
+      "summary": "Merges a batch of newly-loaded events into the existing store contents according to the current hydration mode, reconciling placeholders and ordering.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:remove_turn_placeholders_for_turns",
+      "type": "function",
+      "name": "remove_turn_placeholders_for_turns",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        251,
+        277
+      ],
+      "summary": "Removes turn-preview placeholder events for a given set of turn ids once their full bodies are loaded.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:sort_round_window_events_by_timeline",
+      "type": "function",
+      "name": "sort_round_window_events_by_timeline",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "lineRange": [
+        279,
+        289
+      ],
+      "summary": "Sorts a round-window's events into correct timeline order after a partial merge.",
+      "tags": [
+        "hydration",
+        "event-store",
+        "merging"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:paginate_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:paginate_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:count_matching_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:count_matching_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:get_distinct_functions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:get_distinct_functions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/pagination.rs:matches_filters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_event_for_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_event_for_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:load_event_payload_body",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:load_event_payload_body",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_display_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_json_string_field",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_string_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_extracted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:compact_optional_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:payload_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs:camel_to_snake",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/payload_compaction.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:extract_strings_from_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:build_searchable_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:floor_char",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:ceil_char",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:create_snippet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:create_snippet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:find",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:build_matcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:search_chat_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/search.rs:search_chat_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:set_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:set_active",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:touch_lru",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:enforce_limits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:SessionStoreManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/session_manager.rs:SessionStoreManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:load_history_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:load_history_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:subagent_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:subagent_prompt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:imported_parent_session_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:imported_parent_session_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:SessionProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:CursorIdeProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs:ManagedCliProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/session_providers.rs",
+      "target": "file:src-tauri/src/agent_sessions/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:compute_session_statistics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:compute_session_statistics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:empty_statistics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:SessionStatistics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "target": "class:src-tauri/src/agent_sessions/event_pipeline/statistics.rs:SessionStatistics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/history.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_by_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_by_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:upsert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:upsert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:complete_last_running",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:complete_last_running",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:finalize_streaming_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:finalize_streaming_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:patch_by_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:patch_by_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:truncate_before_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:truncate_before_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_by_id_prefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_by_id_prefix",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_by_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_by_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_synthetic_user_inputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_synthetic_user_inputs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_and_remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_and_remove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_shell_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_shell_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_shell_process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_shell_process",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_matching_args",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:update_last_matching_args",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:clear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_matching_synthetic_transcript_placeholders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_matching_synthetic_transcript_placeholders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:matching_synthetic_transcript_placeholder_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_events_by_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:remove_events_by_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_duplicate_stream_transcript_in_current_turn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_duplicate_stream_transcript_in_current_turn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_matching_stream_placeholder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_matching_stream_placeholder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:would_downgrade_terminal_tool_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:would_downgrade_terminal_tool_call",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_synthetic_transcript_placeholder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_synthetic_transcript_placeholder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:transcript_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:transcript_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:transcript_message_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:transcript_message_key",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:normalized_event_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:normalized_event_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_completed_authoritative_stream_transcript",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_completed_authoritative_stream_transcript",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_authoritative_transcript_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_authoritative_transcript_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:reconcile_loaded_synthetic_transcript_placeholders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:reconcile_loaded_synthetic_transcript_placeholders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_turn_placeholder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_turn_placeholder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:placeholder_turn_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:placeholder_turn_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:placeholder_next_turn_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:placeholder_next_turn_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:loaded_turn_ids_from_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:loaded_turn_ids_from_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:timeline_source_order",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:timeline_source_order",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:stream_placeholder_prefix_for_authoritative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:stream_placeholder_prefix_for_authoritative",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_round_window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_round_window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_with_hydration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_with_hydration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:append",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:append",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_round_window_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_round_window_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events_with_hydration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events_with_hydration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:remove_turn_placeholders_for_turns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:remove_turn_placeholders_for_turns",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:sort_round_window_events_by_timeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:sort_round_window_events_by_timeline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/store/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs",
+      "target": "file:src-tauri/src/agent_sessions/event_pipeline/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:replace_duplicate_stream_transcript_in_current_turn",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:is_completed_authoritative_stream_transcript",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:set_with_hydration",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/helpers.rs:reconcile_loaded_synthetic_transcript_placeholders",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/src/agent_sessions/event_pipeline/store/hydration.rs:merge_events_with_hydration",
+      "target": "function:src-tauri/src/agent_sessions/event_pipeline/store/event_ops.rs:would_downgrade_terminal_tool_call",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

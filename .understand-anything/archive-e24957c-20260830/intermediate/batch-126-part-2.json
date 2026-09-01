@@ -1,0 +1,894 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/system-services/src/power.rs",
+      "type": "file",
+      "name": "power.rs",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "summary": "Manages system sleep-inhibitor assertions (via macOS IOKit FFI, or a no-op fallback elsewhere) so long-running workspace tasks can prevent the machine from sleeping, exposed as idempotent Tauri commands backed by shared state.",
+      "tags": [
+        "macos",
+        "ffi",
+        "power-management",
+        "tauri-command",
+        "state-management"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses raw extern \"C\" FFI bindings to IOKit's IOPMAssertionCreateWithName/IOPMAssertionRelease on macOS."
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/power.rs:decide_acquire",
+      "type": "function",
+      "name": "decide_acquire",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        130,
+        136
+      ],
+      "summary": "Pure state-transition helper deciding whether acquiring a sleep inhibitor should actually perform the acquire, given whether one is already held.",
+      "tags": [
+        "state-machine",
+        "power-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/power.rs:decide_release",
+      "type": "function",
+      "name": "decide_release",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        139,
+        145
+      ],
+      "summary": "Pure state-transition helper deciding whether releasing a sleep inhibitor should actually perform the release, given whether one is currently held.",
+      "tags": [
+        "state-machine",
+        "power-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/power.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        155,
+        159
+      ],
+      "summary": "Constructs a fresh PowerState with no sleep inhibitor currently held.",
+      "tags": [
+        "constructor",
+        "power-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/power.rs:system_power_acquire_sleep_inhibitor",
+      "type": "function",
+      "name": "system_power_acquire_sleep_inhibitor",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        165,
+        203
+      ],
+      "summary": "Tauri command that acquires a system sleep-inhibitor assertion (macOS IOKit or no-op elsewhere), idempotently tracked via shared PowerState.",
+      "tags": [
+        "tauri-command",
+        "power-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/power.rs:system_power_release_sleep_inhibitor",
+      "type": "function",
+      "name": "system_power_release_sleep_inhibitor",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        208,
+        246
+      ],
+      "summary": "Tauri command that releases a previously acquired sleep-inhibitor assertion, idempotently tracked via shared PowerState.",
+      "tags": [
+        "tauri-command",
+        "power-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/power.rs:Transition",
+      "type": "class",
+      "name": "Transition",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        122,
+        127
+      ],
+      "summary": "Enum of possible sleep-inhibitor state transitions (Acquire, Release, NoOp) returned by decide_acquire/decide_release.",
+      "tags": [
+        "data-model",
+        "enum",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/power.rs:PowerState",
+      "type": "class",
+      "name": "PowerState",
+      "filePath": "src-tauri/crates/system-services/src/power.rs",
+      "lineRange": [
+        150,
+        152
+      ],
+      "summary": "Tauri-managed shared state tracking whether a sleep inhibitor is currently held, guarding the underlying platform assertion handle.",
+      "tags": [
+        "data-model",
+        "state-management",
+        "tauri"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/system_recents.rs",
+      "type": "file",
+      "name": "system_recents.rs",
+      "filePath": "src-tauri/crates/system-services/src/system_recents.rs",
+      "summary": "Clears macOS's system-wide Recent Documents list via NSDocumentController Objective-C interop; no-op on other platforms.",
+      "tags": [
+        "macos",
+        "objective-c-interop",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/system_recents.rs:clear_system_recent_documents",
+      "type": "function",
+      "name": "clear_system_recent_documents",
+      "filePath": "src-tauri/crates/system-services/src/system_recents.rs",
+      "lineRange": [
+        7,
+        21
+      ],
+      "summary": "Clears macOS's system-wide Recent Documents list via NSDocumentController; compiled to a no-op stub on non-macOS platforms.",
+      "tags": [
+        "macos",
+        "objective-c-interop",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/tray.rs",
+      "type": "file",
+      "name": "tray.rs",
+      "filePath": "src-tauri/crates/system-services/src/tray.rs",
+      "summary": "Builds the system tray icon and its context menu (Show/Hide, Quit) and wires up tray click/menu event handling for the Tauri app.",
+      "tags": [
+        "tray",
+        "menu",
+        "tauri",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/tray.rs:create_tray_menu",
+      "type": "function",
+      "name": "create_tray_menu",
+      "filePath": "src-tauri/crates/system-services/src/tray.rs",
+      "lineRange": [
+        22,
+        56
+      ],
+      "summary": "Builds the system tray context menu (Show/Hide window, Quit) shown when the tray icon is right-clicked.",
+      "tags": [
+        "tray",
+        "menu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/tray.rs:setup_tray",
+      "type": "function",
+      "name": "setup_tray",
+      "filePath": "src-tauri/crates/system-services/src/tray.rs",
+      "lineRange": [
+        59,
+        92
+      ],
+      "summary": "Creates the tray icon with its menu and registers click/menu-event handlers to show/hide the main window or quit the app.",
+      "tags": [
+        "tray",
+        "event-handler",
+        "tauri"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "type": "file",
+      "name": "advertised_urls.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "summary": "In-memory cache that ingests dev-server URLs announced in terminal output (e.g. 'Local: http://localhost:3000') and associates them with workspace folders and ports for the WorkStation status bar.",
+      "tags": [
+        "caching",
+        "url-parsing",
+        "workspace-ports",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:ingest",
+      "type": "function",
+      "name": "ingest",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "lineRange": [
+        40,
+        67
+      ],
+      "summary": "Parses and stores a newly advertised dev-server origin for a workspace folder, returning whether it's new plus the detected port (AdvertisedUrlCache method).",
+      "tags": [
+        "caching",
+        "url-parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:parse_advertised_origin",
+      "type": "function",
+      "name": "parse_advertised_origin",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "lineRange": [
+        76,
+        97
+      ],
+      "summary": "Parses a raw terminal-output string (e.g. 'Local: http://localhost:3000') into a structured host/port origin.",
+      "tags": [
+        "parsing",
+        "url-parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:lookup_advertised_url",
+      "type": "function",
+      "name": "lookup_advertised_url",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "lineRange": [
+        104,
+        109
+      ],
+      "summary": "Looks up the most recently advertised URL entry for a given workspace folder and port from the shared cache.",
+      "tags": [
+        "caching",
+        "lookup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:ingest_advertised_url",
+      "type": "function",
+      "name": "ingest_advertised_url",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "lineRange": [
+        112,
+        115
+      ],
+      "summary": "Public entry point that ingests an advertised URL string into the shared AdvertisedUrlCache for a workspace folder.",
+      "tags": [
+        "caching",
+        "url-parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:AdvertisedUrlEntry",
+      "type": "class",
+      "name": "AdvertisedUrlEntry",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "lineRange": [
+        14,
+        18
+      ],
+      "summary": "A cached advertised-URL record (origin, port, timestamp) for a workspace folder.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:AdvertisedUrlCache",
+      "type": "class",
+      "name": "AdvertisedUrlCache",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "lineRange": [
+        20,
+        22
+      ],
+      "summary": "In-process cache keyed by folder and port, storing the most recently advertised dev-server URLs.",
+      "tags": [
+        "caching",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "type": "file",
+      "name": "attribution.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "summary": "Attributes a listening port's owning process to a specific workspace folder by matching the process's working directory or command line against normalized workspace paths.",
+      "tags": [
+        "path-matching",
+        "workspace-ports",
+        "process-attribution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_workspace_port_probes",
+      "type": "function",
+      "name": "normalize_workspace_port_probes",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        11,
+        21
+      ],
+      "summary": "Normalizes raw workspace-port probe requests (folder id + path) into a comparable form used for attribution matching.",
+      "tags": [
+        "normalization",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:attribute_port_to_workspaces",
+      "type": "function",
+      "name": "attribute_port_to_workspaces",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        23,
+        49
+      ],
+      "summary": "Attributes a listening port's process (by cwd and command line) to the best-matching workspace folder, preferring the deepest matching path.",
+      "tags": [
+        "process-attribution",
+        "workspace-ports"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:to_owner",
+      "type": "function",
+      "name": "to_owner",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        51,
+        62
+      ],
+      "summary": "Builds a WorkspacePortOwner record for a matched probe and confidence level.",
+      "tags": [
+        "data-model",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:pick_deepest_matching",
+      "type": "function",
+      "name": "pick_deepest_matching",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        64,
+        84
+      ],
+      "summary": "Generic helper selecting the deepest (most specific) matching candidate folder from a list using a caller-supplied predicate.",
+      "tags": [
+        "utility",
+        "path-matching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:includes_path_boundary",
+      "type": "function",
+      "name": "includes_path_boundary",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        90,
+        112
+      ],
+      "summary": "Checks whether a command-line string contains a given normalized path at a proper path boundary rather than a raw substring match.",
+      "tags": [
+        "path-matching",
+        "string-utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_comparable_path",
+      "type": "function",
+      "name": "normalize_comparable_path",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        114,
+        123
+      ],
+      "summary": "Normalizes a filesystem path (case, separators) into a canonical form for comparison.",
+      "tags": [
+        "normalization",
+        "path-matching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_comparable_text",
+      "type": "function",
+      "name": "normalize_comparable_text",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        125,
+        136
+      ],
+      "summary": "Normalizes arbitrary text (e.g. command lines) into a canonical form for path-boundary comparisons.",
+      "tags": [
+        "normalization",
+        "string-utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:collapse_slashes",
+      "type": "function",
+      "name": "collapse_slashes",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        138,
+        153
+      ],
+      "summary": "Collapses repeated path separators into a single slash for consistent path comparison.",
+      "tags": [
+        "utility",
+        "path-matching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:NormalizedWorkspacePortProbe",
+      "type": "class",
+      "name": "NormalizedWorkspacePortProbe",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "lineRange": [
+        6,
+        9
+      ],
+      "summary": "A workspace-port probe request with its folder path pre-normalized for attribution matching.",
+      "tags": [
+        "data-model",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "type": "file",
+      "name": "attribution_tests.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "summary": "Unit tests validating workspace-port-to-folder attribution logic: cwd matching, command-line path boundaries, and deepest-match preference.",
+      "tags": [
+        "test",
+        "unit-test",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:attributes_by_cwd_descendant",
+      "type": "function",
+      "name": "attributes_by_cwd_descendant",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "lineRange": [
+        5,
+        16
+      ],
+      "summary": "Test verifying a port is attributed to a workspace folder when the owning process's cwd is a descendant of the folder path.",
+      "tags": [
+        "test",
+        "unit-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:attributes_by_command_line_path_boundary",
+      "type": "function",
+      "name": "attributes_by_command_line_path_boundary",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "lineRange": [
+        19,
+        36
+      ],
+      "summary": "Test verifying command-line-based attribution respects path boundaries rather than raw substring matches.",
+      "tags": [
+        "test",
+        "unit-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:prefers_deepest_matching_folder",
+      "type": "function",
+      "name": "prefers_deepest_matching_folder",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "lineRange": [
+        39,
+        58
+      ],
+      "summary": "Test verifying attribution prefers the deepest (most specific) matching workspace folder when multiple candidates match.",
+      "tags": [
+        "test",
+        "unit-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:rejects_partial_path_prefix_without_boundary",
+      "type": "function",
+      "name": "rejects_partial_path_prefix_without_boundary",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "lineRange": [
+        61,
+        71
+      ],
+      "summary": "Test verifying a path that merely shares a string prefix (without a proper boundary) is not falsely attributed.",
+      "tags": [
+        "test",
+        "unit-test"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:decide_acquire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:decide_acquire",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:decide_release",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:decide_release",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:system_power_acquire_sleep_inhibitor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:system_power_acquire_sleep_inhibitor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:system_power_release_sleep_inhibitor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "function:src-tauri/crates/system-services/src/power.rs:system_power_release_sleep_inhibitor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "class:src-tauri/crates/system-services/src/power.rs:Transition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "class:src-tauri/crates/system-services/src/power.rs:Transition",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "class:src-tauri/crates/system-services/src/power.rs:PowerState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/power.rs",
+      "target": "class:src-tauri/crates/system-services/src/power.rs:PowerState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/system_recents.rs",
+      "target": "function:src-tauri/crates/system-services/src/system_recents.rs:clear_system_recent_documents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/system_recents.rs",
+      "target": "function:src-tauri/crates/system-services/src/system_recents.rs:clear_system_recent_documents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/tray.rs",
+      "target": "function:src-tauri/crates/system-services/src/tray.rs:create_tray_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/tray.rs",
+      "target": "function:src-tauri/crates/system-services/src/tray.rs:create_tray_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/tray.rs",
+      "target": "function:src-tauri/crates/system-services/src/tray.rs:setup_tray",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/tray.rs",
+      "target": "function:src-tauri/crates/system-services/src/tray.rs:setup_tray",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:ingest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:parse_advertised_origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:lookup_advertised_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:lookup_advertised_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:ingest_advertised_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:ingest_advertised_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:AdvertisedUrlEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:AdvertisedUrlEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:AdvertisedUrlCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_workspace_port_probes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_workspace_port_probes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:attribute_port_to_workspaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:attribute_port_to_workspaces",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:to_owner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:pick_deepest_matching",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:includes_path_boundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_comparable_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_comparable_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_comparable_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:normalize_comparable_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:collapse_slashes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:NormalizedWorkspacePortProbe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/attribution.rs:NormalizedWorkspacePortProbe",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:attributes_by_cwd_descendant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:attributes_by_command_line_path_boundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:prefers_deepest_matching_folder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs:rejects_partial_path_prefix_without_boundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/attribution_tests.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/database/src/db/connection.rs",
+      "type": "file",
+      "name": "connection.rs",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "summary": "Implements SQLite connection pooling and lifecycle management for orgii's two physical databases (sessions.db and projects.db), including WAL PRAGMA configuration, DB path resolution/legacy-file migration, and a registration-based schema-init dispatcher.",
+      "tags": ["database", "sqlite", "connection-pool", "utility", "singleton"],
+      "complexity": "complex",
+      "languageNotes": "Uses OnceLock-based function-pointer dispatchers so this leaf crate can trigger schema init in the app crate without a direct dependency."
+    },
+    {
+      "id": "file:src-tauri/crates/database/src/db/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/database/src/db/mod.rs",
+      "summary": "Module barrel for the db submodule that declares the connection and writer submodules and re-exports their public API (connection getters and writer-serialization helpers) for use by the crate root.",
+      "tags": ["barrel", "module", "database", "re-export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/database/src/db/writer.rs",
+      "type": "file",
+      "name": "writer.rs",
+      "filePath": "src-tauri/crates/database/src/db/writer.rs",
+      "summary": "Provides process-wide SQLite writer serialization via a reentrant parking_lot mutex guard, preventing SQLITE_BUSY contention and busy_timeout exhaustion when multiple write transactions target sessions.db concurrently.",
+      "tags": ["database", "sqlite", "concurrency", "mutex", "writer"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a thread-local depth counter so nested with_sessions_writer closures on the same thread reuse the outer lock instead of deadlocking."
+    },
+    {
+      "id": "file:src-tauri/crates/database/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/database/src/lib.rs",
+      "summary": "Crate root for the database crate; declares the db module and re-exports connection pooling and writer-serialization APIs as the crate's public surface for downstream workspace crates.",
+      "tags": ["entry-point", "barrel", "database", "crate-root"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:configure_connection",
+      "type": "function",
+      "name": "configure_connection",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [40, 64],
+      "summary": "Applies per-connection SQLite PRAGMA tuning (WAL journal mode, synchronous, foreign keys, busy timeout) to a freshly opened connection.",
+      "tags": ["database", "sqlite", "configuration", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:get_db_path",
+      "type": "function",
+      "name": "get_db_path",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [72, 125],
+      "summary": "Resolves the on-disk path for a named SQLite database file, creating parent directories and migrating a legacy database file (plus its extra sidecar file) from an old location if the new path does not yet exist.",
+      "tags": ["database", "filesystem", "migration", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:register_sessions_init",
+      "type": "function",
+      "name": "register_sessions_init",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [148, 150],
+      "summary": "Registers the one-time schema-initialization function pointer invoked to create tables in sessions.db on first connection open.",
+      "tags": ["database", "initialization", "registration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:register_projects_init",
+      "type": "function",
+      "name": "register_projects_init",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [155, 157],
+      "summary": "Registers the one-time schema-initialization function pointer invoked to create tables in projects.db on first connection open.",
+      "tags": ["database", "initialization", "registration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:open_with_init",
+      "type": "function",
+      "name": "open_with_init",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [182, 212],
+      "summary": "Opens a SQLite connection at the given path, applies PRAGMA configuration, and invokes the registered schema-init callback exactly once per physical path using a mutex-guarded initialized-paths set.",
+      "tags": ["database", "initialization", "connection-pool"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:get_connection",
+      "type": "function",
+      "name": "get_connection",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [230, 232],
+      "summary": "Entry point that returns a configured, schema-initialized connection to the shared sessions.db database used for session, agent, and orchestrator persistence.",
+      "tags": ["database", "entry-point", "connection-pool"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/connection.rs:get_projects_connection",
+      "type": "function",
+      "name": "get_projects_connection",
+      "filePath": "src-tauri/crates/database/src/db/connection.rs",
+      "lineRange": [248, 261],
+      "summary": "Entry point that returns a configured, schema-initialized connection to the centralized projects.db database used for projects, work items, labels, and milestones.",
+      "tags": ["database", "entry-point", "connection-pool"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/database/src/db/writer.rs:SessionsWriterGuard",
+      "type": "class",
+      "name": "SessionsWriterGuard",
+      "filePath": "src-tauri/crates/database/src/db/writer.rs",
+      "lineRange": [97, 99],
+      "summary": "Thread-local reentrant guard that tracks nesting depth and holds the process-wide sessions-writer mutex only on the outermost acquisition, letting nested with_sessions_writer calls on the same thread avoid self-deadlock.",
+      "tags": ["concurrency", "mutex", "guard", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/writer.rs:sessions_writer_guard",
+      "type": "function",
+      "name": "sessions_writer_guard",
+      "filePath": "src-tauri/crates/database/src/db/writer.rs",
+      "lineRange": [133, 135],
+      "summary": "Public constructor that acquires the SessionsWriterGuard for the current thread; used internally by with_sessions_writer.",
+      "tags": ["concurrency", "database", "guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/writer.rs:with_sessions_writer",
+      "type": "function",
+      "name": "with_sessions_writer",
+      "filePath": "src-tauri/crates/database/src/db/writer.rs",
+      "lineRange": [142, 148],
+      "summary": "Runs a supplied closure while holding the process-wide sessions-writer mutex via a reentrant guard, serializing all write transactions against sessions.db.",
+      "tags": ["concurrency", "database", "writer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/database/src/db/writer.rs:begin_immediate",
+      "type": "function",
+      "name": "begin_immediate",
+      "filePath": "src-tauri/crates/database/src/db/writer.rs",
+      "lineRange": [159, 175],
+      "summary": "Starts a SQLite BEGIN IMMEDIATE transaction that acquires the writer lock upfront, avoiding the SQLITE_BUSY race inherent to BEGIN DEFERRED under concurrent writers.",
+      "tags": ["database", "transaction", "sqlite"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:configure_connection", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:get_db_path", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:register_sessions_init", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:register_projects_init", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:open_with_init", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:get_connection", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:get_projects_connection", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "class:src-tauri/crates/database/src/db/writer.rs:SessionsWriterGuard", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "function:src-tauri/crates/database/src/db/writer.rs:sessions_writer_guard", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "function:src-tauri/crates/database/src/db/writer.rs:with_sessions_writer", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "function:src-tauri/crates/database/src/db/writer.rs:begin_immediate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:configure_connection", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:get_db_path", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:register_sessions_init", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:register_projects_init", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:get_connection", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/connection.rs", "target": "function:src-tauri/crates/database/src/db/connection.rs:get_projects_connection", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "class:src-tauri/crates/database/src/db/writer.rs:SessionsWriterGuard", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "function:src-tauri/crates/database/src/db/writer.rs:sessions_writer_guard", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "function:src-tauri/crates/database/src/db/writer.rs:with_sessions_writer", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/writer.rs", "target": "function:src-tauri/crates/database/src/db/writer.rs:begin_immediate", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/database/src/db/mod.rs", "target": "file:src-tauri/crates/database/src/db/connection.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/database/src/db/mod.rs", "target": "file:src-tauri/crates/database/src/db/writer.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/database/src/lib.rs", "target": "file:src-tauri/crates/database/src/db/mod.rs", "type": "imports", "direction": "forward", "weight": 0.7 }
+  ]
+}

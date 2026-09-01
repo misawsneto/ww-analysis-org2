@@ -1,0 +1,361 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docs/audit-cleanup-2026-06-11/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 154,
+      "nonEmptyLines": 116,
+      "sections": [
+        {
+          "heading": "ORGII 死代码 + 重复实现审计（2026-06-11）",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "TL;DR",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Baseline 漂移",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "执行状态（2026-06-11 21:30 更新）",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "✅ 已完成",
+          "level": 3,
+          "line": 43
+        },
+        {
+          "heading": "⛔ 已停下：Phase 5-8 需要先做现状 e2e（不能盲推）",
+          "level": 3,
+          "line": 60
+        },
+        {
+          "heading": "通用",
+          "level": 3,
+          "line": 77
+        },
+        {
+          "heading": "Phase 2（前端 dead code）",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "Phase 3（ChatPanel engine 搬家）",
+          "level": 3,
+          "line": 90
+        },
+        {
+          "heading": "Phase 4（后端 dead code）",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "Phase 5（后端 config 拆域 + resolver 脱钩）",
+          "level": 3,
+          "line": 101
+        },
+        {
+          "heading": "Phase 6（同名冲突重命名）",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "Phase 7（队列/取消语义清理 — Anti-pattern #51/#54）",
+          "level": 3,
+          "line": 113
+        },
+        {
+          "heading": "Phase 8（发送路径统一 — Anti-pattern #21/#36/#53）",
+          "level": 3,
+          "line": 118
+        },
+        {
+          "heading": "文件索引",
+          "level": 2,
+          "line": 123
+        },
+        {
+          "heading": "不在范围",
+          "level": 2,
+          "line": 129
+        },
+        {
+          "heading": "审计置信度",
+          "level": 2,
+          "line": 137
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "docs/audit-cleanup-2026-06-11/backend-findings.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 181,
+      "nonEmptyLines": 130,
+      "sections": [
+        {
+          "heading": "后端死代码 + 重复实现 findings（Rust / Tauri）",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "TL;DR",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "1. Tauri command 注册矩阵",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "2. 跨模块同名 struct / enum",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "3. Config 结构跨域",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "4. 背景子系统误调 `ResolvedAgent::resolve()`",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "5. 僵尸类型（Layer 2 call-chain trace）",
+          "level": 2,
+          "line": 67
+        },
+        {
+          "heading": "6. Relay struct（anti-pattern #25）",
+          "level": 2,
+          "line": 75
+        },
+        {
+          "heading": "7. `.expect()` on fallback path（anti-pattern #33）",
+          "level": 2,
+          "line": 86
+        },
+        {
+          "heading": "8. Wire protocol bloat（Layer 8）",
+          "level": 2,
+          "line": 102
+        },
+        {
+          "heading": "9. Init parity（Layer 9）",
+          "level": 2,
+          "line": 111
+        },
+        {
+          "heading": "10. Resolver 不对称（Layer 10）",
+          "level": 2,
+          "line": 127
+        },
+        {
+          "heading": "11. DEPRECATED 项",
+          "level": 2,
+          "line": 131
+        },
+        {
+          "heading": "12. Backward-compat shim",
+          "level": 2,
+          "line": 141
+        },
+        {
+          "heading": "13. 命名语义重叠（同名 enum variant 多义）",
+          "level": 2,
+          "line": 153
+        },
+        {
+          "heading": "14. 其他偶然发现",
+          "level": 2,
+          "line": 159
+        },
+        {
+          "heading": "OPEN questions",
+          "level": 2,
+          "line": 166
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "docs/audit-cleanup-2026-06-11/cross-layer-findings.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 93,
+      "nonEmptyLines": 54,
+      "sections": [
+        {
+          "heading": "跨层重复 findings（前后端协同）",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. AgentExecMode 字符串：picker 子集 vs wire union",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "2. Tauri command 字符串：~915 处硬编码",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "3. mode / tab key / model 字符串散落",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "4. Chat 输入 surface maxHeight 重复",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "5. Context-pill prefix list",
+          "level": 2,
+          "line": 56
+        },
+        {
+          "heading": "6. Sync 模块的 `Local` / `Remote` 命名",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "7. tab 系统跨层",
+          "level": 2,
+          "line": 76
+        },
+        {
+          "heading": "OPEN questions",
+          "level": 2,
+          "line": 85
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/audit-cleanup-2026-06-11/frontend-findings.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 140,
+      "nonEmptyLines": 96,
+      "sections": [
+        {
+          "heading": "前端死代码 + 重复实现 findings",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Dead modules（高置信度可删）",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "2. Dead `export default` 关键字（保留 named 导出，只删 default）",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "3. ChatPanel engine 错放（PanelView bloat）",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "4. Tab 系统残余重复",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "5. 发送路径重复（anti-pattern #21/#36/#53）",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "6. 多源真相 atom / shadow boolean（anti-pattern #51/#54）",
+          "level": 2,
+          "line": 85
+        },
+        {
+          "heading": "6.1 `holdSessionQueueForStopAtom` — 仍活，是 shadow boolean",
+          "level": 3,
+          "line": 89
+        },
+        {
+          "heading": "6.2 `userInitiatedCancelAtom` — 仍活，是 multi-purpose atom",
+          "level": 3,
+          "line": 99
+        },
+        {
+          "heading": "6.3 `forceSendPendingQueueAtom` — 已死（确认）",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "7. Legacy mode / 死分支",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "8. 空目录 / 单文件目录",
+          "level": 2,
+          "line": 118
+        },
+        {
+          "heading": "9. Markdown / chat-block-content 缺失",
+          "level": 2,
+          "line": 122
+        },
+        {
+          "heading": "10. 其他偶然发现",
+          "level": 2,
+          "line": 128
+        },
+        {
+          "heading": "OPEN questions（需要用户决策的）",
+          "level": 2,
+          "line": 134
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    }
+  ]
+}

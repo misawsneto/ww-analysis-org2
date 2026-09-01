@@ -1,0 +1,309 @@
+{
+  "nodes": [
+    {
+      "id": "config:src-tauri/crates/orgtrack-core/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/orgtrack-core/Cargo.toml",
+      "summary": "Cargo manifest for the publishable orgtrack_core crate covering developer-activity collection, canonical orgtrack records, SQLite storage, replay/stat projections, and repo sync, with per-source feature flags (sqlite, repo-sync, git, source-cursor, source-claude-code, ...).",
+      "tags": ["configuration", "build-system", "database", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/orgtrack-core/src/model_pricing_catalog.json",
+      "type": "config",
+      "name": "model_pricing_catalog.json",
+      "filePath": "src-tauri/crates/orgtrack-core/src/model_pricing_catalog.json",
+      "summary": "Bundled reference catalog of per-million-token LLM pricing (input/output/cache_write/cache_read rates) across Anthropic, OpenAI, Cursor, DeepSeek, MiniMax, Zhipu and other providers, compiled into the binary via include_str! for cost estimation in orgtrack.",
+      "tags": ["reference-data", "pricing", "static-data", "configuration"],
+      "complexity": "complex",
+      "languageNotes": "Flat provider/model-keyed JSON with a _comment field documenting pricing sources and effective dates instead of a separate changelog."
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history_tests.rs",
+      "summary": "Unit tests for the Claude Code history source: project-directory discovery, JSONL session parsing into replay chunks, session metadata extraction, title preference logic, and diff-stat counting from structured patches.",
+      "tags": ["test", "unit-test", "claude-code", "history-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history_tests.rs",
+      "summary": "Unit tests for the Cline history source covering user-input unwrapping, value-to-text flattening, session indexing, subagent impact import, and transcript-to-chunk conversion including batched tool-call expansion.",
+      "tags": ["test", "unit-test", "cline", "history-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "type": "file",
+      "name": "desktop_exec.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "summary": "Parses Codex Desktop's custom exec tool call — a generated JavaScript wrapper — into real tools.<name>(...) operations without evaluating JavaScript, splits multi-statement shell scripts, then routes each through the Codex tool canonicalizer; also extracts exec output text, exit code, and failure status.",
+      "tags": ["parser", "codex", "tool-normalization", "utility"],
+      "complexity": "complex",
+      "languageNotes": "Hand-rolled balanced-parenthesis/string scanner used to extract JS-like tool-call expressions and literals without embedding a JS engine."
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app_tests.rs",
+      "type": "file",
+      "name": "app_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app_tests.rs",
+      "summary": "Large unit-test suite for the Codex activity source covering session-directory discovery, JSONL parsing into replay chunks, and the Codex Desktop exec-wrapper decomposition (exploration chains, failed shell status/exit codes, background-wait completion, and parallel shell command unwrapping).",
+      "tags": ["test", "unit-test", "codex", "history-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs",
+      "summary": "Unit tests for the Cursor CLI history source using an in-memory SQLite fixture (with hand-rolled protobuf-style manifest bytes) to validate store-meta/manifest parsing, message-to-replay-chunk conversion, and cursor_cli-prefixed ID handling.",
+      "tags": ["test", "unit-test", "cursor-cli", "history-parsing", "sqlite"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history_tests.rs",
+      "summary": "Extensive unit-test suite for the Cursor IDE composer-bubble parser, covering user/assistant/tool bubble-to-chunk conversion, canonical tool-name mapping (read_file, edit_file, grep, task_v2 subagent routing, ask_question, etc.), and content-blob loading, backed by anonymized real bubble JSON fixtures.",
+      "tags": ["test", "unit-test", "cursor-ide", "history-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/opencode/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/opencode/history_tests.rs",
+      "summary": "Unit tests for the OpenCode history source covering candidate DB path discovery, session metadata mapping, recent-session ordering, part-to-replay-chunk parsing, exec-mode-bridge/IDE-context stripping, impact derivation, and parent-session ID linkage including cycle handling.",
+      "tags": ["test", "unit-test", "opencode", "history-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/qoder/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/qoder/history_tests.rs",
+      "summary": "Unit tests for the Qoder history source covering user-query extraction/reminder stripping, quest-snapshot task parsing, snapshot-task ID matching, transcript-to-chunk conversion, and composite-ID/snapshot-metadata discovery from fixtures.",
+      "tags": ["test", "unit-test", "qoder", "history-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/trae/history_tests.rs",
+      "type": "file",
+      "name": "history_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/trae/history_tests.rs",
+      "summary": "Unit tests for the Trae history source covering local wall-clock time parsing, turn-body composition from outcome/actions/learned fields, and home-anchored project-path decoding.",
+      "tags": ["test", "unit-test", "trae", "history-parsing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-core/src/sources/trae/index_tests.rs",
+      "type": "file",
+      "name": "index_tests.rs",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/trae/index_tests.rs",
+      "summary": "Unit tests for the Trae index covering agent-map parsing with blank-entry dropping, memento-list ordering, agent/memento merge behavior, and conditional field serialization.",
+      "tags": ["test", "unit-test", "trae", "indexing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:normalize_codex_exec_tool_calls",
+      "type": "function",
+      "name": "normalize_codex_exec_tool_calls",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [9, 40],
+      "summary": "Extracts real tools.<name>(...) operations from Codex Desktop's generated JavaScript exec wrapper without evaluating JS, splitting multi-statement shell commands and routing each through the Codex tool canonicalizer.",
+      "tags": ["parser", "codex", "tool-normalization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:split_multiline_shell_script",
+      "type": "function",
+      "name": "split_multiline_shell_script",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [42, 83],
+      "summary": "Splits a multi-line shell script string into individual top-level statements so each can be normalized as a separate tool call.",
+      "tags": ["utility", "shell", "parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:tool_args",
+      "type": "function",
+      "name": "tool_args",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [85, 113],
+      "summary": "Extracts and parses the argument object for a given tool-call expression from the raw exec input.",
+      "tags": ["parser", "codex"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:tool_invocations",
+      "type": "function",
+      "name": "tool_invocations",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [116, 171],
+      "summary": "Scans the exec wrapper source for tools.<name>(...) call sites and returns their names and argument expressions.",
+      "tags": ["parser", "codex"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:balanced_call_end",
+      "type": "function",
+      "name": "balanced_call_end",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [173, 200],
+      "summary": "Finds the matching closing parenthesis for a call expression, accounting for nested parens and string literals.",
+      "tags": ["utility", "parsing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:object_value",
+      "type": "function",
+      "name": "object_value",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [215, 235],
+      "summary": "Parses a JS-like object literal value (string, number, or nested object) into a serde_json Value.",
+      "tags": ["parser", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:resolve_string_expression",
+      "type": "function",
+      "name": "resolve_string_expression",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [242, 264],
+      "summary": "Resolves a JS-like string expression, including simple concatenation, to its literal string value.",
+      "tags": ["parser", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:parse_string",
+      "type": "function",
+      "name": "parse_string",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [266, 302],
+      "summary": "Parses a single- or double-quoted JS-like string literal, handling escape sequences.",
+      "tags": ["parser", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_output_text",
+      "type": "function",
+      "name": "codex_tool_output_text",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [304, 319],
+      "summary": "Extracts the textual output of a Codex tool result payload.",
+      "tags": ["utility", "codex"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_exit_code",
+      "type": "function",
+      "name": "codex_tool_exit_code",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [321, 326],
+      "summary": "Extracts the exit code from a Codex tool result payload.",
+      "tags": ["utility", "codex"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_output_failed",
+      "type": "function",
+      "name": "codex_tool_output_failed",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs",
+      "lineRange": [328, 336],
+      "summary": "Determines whether a Codex tool result payload represents a failed execution.",
+      "tags": ["utility", "codex"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:push_varint",
+      "type": "function",
+      "name": "push_varint",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs",
+      "lineRange": [12, 22],
+      "summary": "Encodes a u64 as a protobuf-style varint appended to a byte buffer, for constructing Cursor CLI test fixture blobs.",
+      "tags": ["test-helper", "encoding"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:manifest_bytes",
+      "type": "function",
+      "name": "manifest_bytes",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs",
+      "lineRange": [26, 45],
+      "summary": "Builds a fake Cursor CLI manifest byte blob (message IDs, context tokens, workspace URI) for use in fixtures.",
+      "tags": ["test-helper", "fixture"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:fixture_conn",
+      "type": "function",
+      "name": "fixture_conn",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs",
+      "lineRange": [65, 133],
+      "summary": "Builds an in-memory SQLite connection pre-populated with Cursor CLI store/session fixture rows for tests.",
+      "tags": ["test-helper", "fixture", "sqlite"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:fixture_record",
+      "type": "function",
+      "name": "fixture_record",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs",
+      "lineRange": [135, 145],
+      "summary": "Builds a sample ImportedHistoryDiscoveredRecord fixture for Cursor CLI tests.",
+      "tags": ["test-helper", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history_tests.rs:make_tool_bubble_with_additional",
+      "type": "function",
+      "name": "make_tool_bubble_with_additional",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history_tests.rs",
+      "lineRange": [413, 437],
+      "summary": "Builds a Cursor IDE tool-call bubble fixture with additional tool-specific data fields for test cases.",
+      "tags": ["test-helper", "fixture"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-core/src/sources/opencode/history_tests.rs:fixture_conn",
+      "type": "function",
+      "name": "fixture_conn",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/opencode/history_tests.rs",
+      "lineRange": [6, 134],
+      "summary": "Builds an in-memory SQLite connection pre-populated with OpenCode session/part fixture rows for tests.",
+      "tags": ["test-helper", "fixture", "sqlite"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:normalize_codex_exec_tool_calls", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:split_multiline_shell_script", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:tool_args", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:tool_invocations", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:balanced_call_end", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:object_value", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:resolve_string_expression", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:parse_string", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_output_text", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_exit_code", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_output_failed", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:push_varint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:manifest_bytes", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:fixture_conn", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history_tests.rs:fixture_record", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history_tests.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history_tests.rs:make_tool_bubble_with_additional", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/opencode/history_tests.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/opencode/history_tests.rs:fixture_conn", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:normalize_codex_exec_tool_calls", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_output_text", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_exit_code", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs:codex_tool_output_failed", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "config:src-tauri/crates/orgtrack-core/Cargo.toml", "target": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "type": "configures", "direction": "forward", "weight": 0.6 },
+    { "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app/desktop_exec.rs", "target": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app_tests.rs", "type": "tested_by", "direction": "forward", "weight": 0.5 }
+  ]
+}

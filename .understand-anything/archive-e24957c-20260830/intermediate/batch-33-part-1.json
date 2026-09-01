@@ -1,0 +1,1755 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "type": "file",
+   "name": "hooks_dispatch.rs",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "summary": "Bridges the turn event handler to the lifecycle hooks system, running PreToolUse/Stop/PostToolUse hooks during an agent turn and translating hook results into tool-blocking decisions, stop-check overrides, and LSP diagnostics context.",
+   "tags": [
+    "event-handler",
+    "hooks",
+    "middleware",
+    "lifecycle"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Uses exit-code-2 as a blocking-feedback contract for PreToolUse hooks, mirroring common hook ecosystem conventions."
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_pre_tool",
+   "type": "function",
+   "name": "dispatch_pre_tool",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "lineRange": [
+    29,
+    70
+   ],
+   "summary": "Runs PreToolUse hooks before a tool executes and converts an exit-code-2 or JSON-decision hook result into a tool-blocking intervention with feedback text.",
+   "tags": [
+    "hooks",
+    "middleware",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_stop_check",
+   "type": "function",
+   "name": "dispatch_stop_check",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "lineRange": [
+    83,
+    120
+   ],
+   "summary": "Runs Stop-event hooks after a turn completes and inspects their output to decide whether the agent loop should be blocked from stopping.",
+   "tags": [
+    "hooks",
+    "lifecycle",
+    "control-flow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:parse_stop_block",
+   "type": "function",
+   "name": "parse_stop_block",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "lineRange": [
+    123,
+    136
+   ],
+   "summary": "Parses a Stop hook's stderr as either a raw string or a `{\"block\": bool, \"reason\": string}` JSON object to extract a block decision and reason.",
+   "tags": [
+    "parsing",
+    "hooks"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_post_tool",
+   "type": "function",
+   "name": "dispatch_post_tool",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "lineRange": [
+    143,
+    174
+   ],
+   "summary": "Runs PostToolUseFailure/PostToolUse hooks after a tool call finishes and, for edit-like tools, triggers LSP diagnostics collection on the modified file.",
+   "tags": [
+    "hooks",
+    "event-handler"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:lsp_post_edit_diagnostics",
+   "type": "function",
+   "name": "lsp_post_edit_diagnostics",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "lineRange": [
+    188,
+    210
+   ],
+   "summary": "Fetches LSP diagnostics for a file modified by an Edit/Write-style tool call and formats them as hook context for downstream consumption.",
+   "tags": [
+    "lsp",
+    "diagnostics",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:extract_modified_file_path",
+   "type": "function",
+   "name": "extract_modified_file_path",
+   "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "lineRange": [
+    212,
+    225
+   ],
+   "summary": "Extracts the target file path from a tool call's JSON arguments for Edit/Write/MultiEdit-style tools.",
+   "tags": [
+    "parsing",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "type": "file",
+   "name": "commands.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "summary": "Tauri commands and orchestration logic for detecting and applying external agent artifacts (rules, skills, MCP servers, agent definitions) from other coding tools into ORGII's own Policy/Skill/MCP/AgentDefinition primitives.",
+   "tags": [
+    "api-handler",
+    "orchestration",
+    "external-import"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_detect",
+   "type": "function",
+   "name": "external_import_detect",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    27,
+    36
+   ],
+   "summary": "Tauri command that runs detection across all supported external tools and returns the list of importable items found on disk.",
+   "tags": [
+    "api-handler",
+    "tauri-command"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_apply",
+   "type": "function",
+   "name": "external_import_apply",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    48,
+    53
+   ],
+   "summary": "Tauri command that applies a user's selected import items, delegating to `apply_selections`.",
+   "tags": [
+    "api-handler",
+    "tauri-command"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_selections",
+   "type": "function",
+   "name": "apply_selections",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    58,
+    76
+   ],
+   "summary": "Applies a batch of import selections one at a time, collecting a per-item report for each.",
+   "tags": [
+    "orchestration"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "type": "function",
+   "name": "apply_single",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    78,
+    164
+   ],
+   "summary": "Dispatches a single import selection to the appropriate handler based on its `ItemKind` (Policy, Skill, Mcp, AgentDefinition) and builds a result report.",
+   "tags": [
+    "orchestration",
+    "dispatch"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_policy_import",
+   "type": "function",
+   "name": "apply_policy_import",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    166,
+    206
+   ],
+   "summary": "Imports a rule-flavored external artifact as an ORGII Policy, writing the policy config file into the workspace.",
+   "tags": [
+    "import",
+    "policy"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:write_imported_policy_config",
+   "type": "function",
+   "name": "write_imported_policy_config",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    208,
+    229
+   ],
+   "summary": "Writes a newly imported policy's config entry to the workspace policy store.",
+   "tags": [
+    "persistence",
+    "policy"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_skill_import",
+   "type": "function",
+   "name": "apply_skill_import",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    274,
+    339
+   ],
+   "summary": "Copies an external skill directory (SKILL.md plus assets) into ORGII's skills directory, recursively duplicating its contents.",
+   "tags": [
+    "import",
+    "skill",
+    "filesystem"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:copy_dir_recursive",
+   "type": "function",
+   "name": "copy_dir_recursive",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    348,
+    365
+   ],
+   "summary": "Recursively copies a directory tree from one filesystem path to another, used when importing external skill bundles.",
+   "tags": [
+    "filesystem",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:load_external_mcp_config",
+   "type": "function",
+   "name": "load_external_mcp_config",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    371,
+    413
+   ],
+   "summary": "Loads and parses an external tool's MCP server config file (e.g. Claude Desktop's mcp-servers.json) prior to import.",
+   "tags": [
+    "mcp",
+    "parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_mcp_import",
+   "type": "function",
+   "name": "apply_mcp_import",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    415,
+    458
+   ],
+   "summary": "Imports a single MCP server entry detected from an external tool's config into ORGII's own MCP server config file.",
+   "tags": [
+    "import",
+    "mcp"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_agent_definition_import",
+   "type": "function",
+   "name": "apply_agent_definition_import",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    475,
+    551
+   ],
+   "summary": "Imports an external agent-definition markdown file (with YAML frontmatter) into ORGII's AgentDefinitionsStore, splitting frontmatter from body content.",
+   "tags": [
+    "import",
+    "agent-definition"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:split_frontmatter_for_apply",
+   "type": "function",
+   "name": "split_frontmatter_for_apply",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "lineRange": [
+    558,
+    596
+   ],
+   "summary": "Splits a markdown document's YAML frontmatter key/value pairs from its body text for agent-definition import.",
+   "tags": [
+    "parsing",
+    "frontmatter"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "type": "file",
+   "name": "claude_code.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "summary": "Detects Claude Code artifacts on the user's machine \u2014 CLAUDE.md memory files, agents, skills (~/.claude/skills), and slash commands (~/.claude/commands) \u2014 as candidates for import into ORGII.",
+   "tags": [
+    "detection",
+    "external-import",
+    "claude-code"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_memory",
+   "type": "function",
+   "name": "detect_claude_code_memory",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    25,
+    54
+   ],
+   "summary": "Scans for CLAUDE.md memory files (global and per-repo) and builds detected-item previews for them.",
+   "tags": [
+    "detection",
+    "filesystem"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_memory_item",
+   "type": "function",
+   "name": "build_claude_memory_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    56,
+    95
+   ],
+   "summary": "Builds a `DetectedItem` preview for a discovered CLAUDE.md file, including a first-line summary and fidelity warnings.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_agents",
+   "type": "function",
+   "name": "detect_claude_code_agents",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    101,
+    103
+   ],
+   "summary": "Detects Claude Code agent-definition markdown files under ~/.claude/agents.",
+   "tags": [
+    "detection",
+    "agent-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_skills",
+   "type": "function",
+   "name": "detect_claude_code_skills",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    113,
+    154
+   ],
+   "summary": "Detects Claude Code skills and slash-commands by scanning both the skills and commands directories.",
+   "tags": [
+    "detection",
+    "skill"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_skills_dir",
+   "type": "function",
+   "name": "scan_claude_skills_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    156,
+    196
+   ],
+   "summary": "Walks ~/.claude/skills for SKILL.md files and builds detected-item previews for each.",
+   "tags": [
+    "filesystem",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_commands_dir",
+   "type": "function",
+   "name": "scan_claude_commands_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    198,
+    234
+   ],
+   "summary": "Walks ~/.claude/commands for markdown slash-command files and builds detected-item previews for each.",
+   "tags": [
+    "filesystem",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_skill_item",
+   "type": "function",
+   "name": "build_claude_skill_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "lineRange": [
+    236,
+    285
+   ],
+   "summary": "Builds a `DetectedItem` preview for a discovered Claude Code skill or command file, including fidelity warnings for unsupported features.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "type": "file",
+   "name": "codex.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "summary": "Detects OpenAI Codex CLI artifacts (AGENTS.md files) on the user's machine as import candidates.",
+   "tags": [
+    "detection",
+    "external-import",
+    "codex"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents_md",
+   "type": "function",
+   "name": "detect_codex_agents_md",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "lineRange": [
+    27,
+    56
+   ],
+   "summary": "Scans for Codex AGENTS.md files (global and per-repo) and builds detected-item previews for them.",
+   "tags": [
+    "detection",
+    "filesystem"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:build_codex_agents_item",
+   "type": "function",
+   "name": "build_codex_agents_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "lineRange": [
+    58,
+    97
+   ],
+   "summary": "Builds a `DetectedItem` preview for a discovered Codex AGENTS.md file.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents",
+   "type": "function",
+   "name": "detect_codex_agents",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "lineRange": [
+    103,
+    105
+   ],
+   "summary": "Entry point that aggregates detection of Codex AGENTS.md artifacts.",
+   "tags": [
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "type": "file",
+   "name": "copilot.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "summary": "Detects GitHub Copilot artifacts \u2014 repo-level and scoped copilot-instructions.md files, plus custom agent/chatmode files \u2014 as import candidates.",
+   "tags": [
+    "detection",
+    "external-import",
+    "copilot"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_instructions",
+   "type": "function",
+   "name": "detect_copilot_instructions",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "lineRange": [
+    28,
+    64
+   ],
+   "summary": "Detects both single-file and path-scoped Copilot instructions files and builds preview items for each.",
+   "tags": [
+    "detection",
+    "filesystem"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_single_item",
+   "type": "function",
+   "name": "build_copilot_single_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "lineRange": [
+    66,
+    93
+   ],
+   "summary": "Builds a `DetectedItem` preview for the repo-root copilot-instructions.md file.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_scoped_item",
+   "type": "function",
+   "name": "build_copilot_scoped_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "lineRange": [
+    95,
+    140
+   ],
+   "summary": "Builds a `DetectedItem` preview for a path-scoped `.github/instructions/*.instructions.md` file, including its glob scope.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_agents",
+   "type": "function",
+   "name": "detect_copilot_agents",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "lineRange": [
+    149,
+    173
+   ],
+   "summary": "Detects Copilot custom agent/chatmode files by scanning the relevant directory.",
+   "tags": [
+    "detection",
+    "agent-definition"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:scan_copilot_dir",
+   "type": "function",
+   "name": "scan_copilot_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "lineRange": [
+    175,
+    213
+   ],
+   "summary": "Walks a Copilot agents directory for chatmode markdown files and builds detected-item previews for each.",
+   "tags": [
+    "filesystem",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_agent_item",
+   "type": "function",
+   "name": "build_copilot_agent_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "lineRange": [
+    215,
+    262
+   ],
+   "summary": "Builds a `DetectedItem` preview for a discovered Copilot agent/chatmode file.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "type": "file",
+   "name": "cursor.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "summary": "Detects Cursor IDE artifacts \u2014 `.mdc` rule files and skills (repo-local and global) \u2014 as import candidates.",
+   "tags": [
+    "detection",
+    "external-import",
+    "cursor"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_rules",
+   "type": "function",
+   "name": "detect_cursor_rules",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    26,
+    56
+   ],
+   "summary": "Detects Cursor `.cursor/rules/*.mdc` rule files in the current repository and builds preview items for them.",
+   "tags": [
+    "detection",
+    "filesystem"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_rule_dir",
+   "type": "function",
+   "name": "scan_cursor_rule_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    58,
+    101
+   ],
+   "summary": "Walks a Cursor rules directory for `.mdc` files and builds detected-item previews for each.",
+   "tags": [
+    "filesystem",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:build_cursor_rule_item",
+   "type": "function",
+   "name": "build_cursor_rule_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    103,
+    146
+   ],
+   "summary": "Builds a `DetectedItem` preview for a discovered Cursor `.mdc` rule file, parsing its frontmatter metadata.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_agents",
+   "type": "function",
+   "name": "detect_cursor_agents",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    152,
+    154
+   ],
+   "summary": "Placeholder/entry point for Cursor agent-definition detection (Cursor has no native agent-definition concept).",
+   "tags": [
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_skills",
+   "type": "function",
+   "name": "detect_cursor_skills",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    164,
+    191
+   ],
+   "summary": "Detects Cursor skills from both repo-local and global skills directories.",
+   "tags": [
+    "detection",
+    "skill"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_skills_dir",
+   "type": "function",
+   "name": "scan_cursor_skills_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    193,
+    230
+   ],
+   "summary": "Walks a Cursor skills directory for SKILL.md files and builds detected-item previews for each.",
+   "tags": [
+    "filesystem",
+    "detection"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:build_cursor_skill_item",
+   "type": "function",
+   "name": "build_cursor_skill_item",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "lineRange": [
+    232,
+    274
+   ],
+   "summary": "Builds a `DetectedItem` preview for a discovered Cursor skill file.",
+   "tags": [
+    "detection",
+    "preview"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "type": "file",
+   "name": "helpers.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "summary": "Shared filesystem and frontmatter-parsing helpers used by every per-tool detector module, plus already-imported checks against ORGII's own Policy/Skill/MCP/AgentDefinition stores.",
+   "tags": [
+    "utility",
+    "detection",
+    "frontmatter"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:split_frontmatter",
+   "type": "function",
+   "name": "split_frontmatter",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    23,
+    60
+   ],
+   "summary": "Splits a markdown document's leading `---` YAML frontmatter block from its body text, returning both parts.",
+   "tags": [
+    "parsing",
+    "frontmatter"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:first_body_line",
+   "type": "function",
+   "name": "first_body_line",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    62,
+    70
+   ],
+   "summary": "Extracts the first non-empty line of a document body, used to build a short content preview.",
+   "tags": [
+    "parsing",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:path_has_denied_ancestor",
+   "type": "function",
+   "name": "path_has_denied_ancestor",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    72,
+    80
+   ],
+   "summary": "Checks whether a candidate path lives under a denylisted ancestor directory (e.g. node_modules, .git) that should be excluded from scanning.",
+   "tags": [
+    "filesystem",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_target_exists",
+   "type": "function",
+   "name": "orgii_target_exists",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    82,
+    91
+   ],
+   "summary": "Checks whether an ORGII Policy with a given name already exists, used to flag already-imported items.",
+   "tags": [
+    "policy",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_skill_exists",
+   "type": "function",
+   "name": "orgii_skill_exists",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    93,
+    99
+   ],
+   "summary": "Checks whether an ORGII Skill with a given name already exists, used to flag already-imported items.",
+   "tags": [
+    "skill",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_mcp_exists",
+   "type": "function",
+   "name": "orgii_mcp_exists",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    101,
+    110
+   ],
+   "summary": "Checks whether an MCP server with a given name is already configured in ORGII's merged MCP config.",
+   "tags": [
+    "mcp",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_agent_definition_exists",
+   "type": "function",
+   "name": "orgii_agent_definition_exists",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    114,
+    127
+   ],
+   "summary": "Checks whether an ORGII AgentDefinition with a given name already exists, used to flag already-imported items.",
+   "tags": [
+    "agent-definition",
+    "detection"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:home_dir",
+   "type": "function",
+   "name": "home_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    129,
+    131
+   ],
+   "summary": "Resolves the current user's home directory, used as the base for scanning global tool config locations.",
+   "tags": [
+    "filesystem",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:codex_home_dir",
+   "type": "function",
+   "name": "codex_home_dir",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "lineRange": [
+    136,
+    141
+   ],
+   "summary": "Resolves the Codex CLI home directory (respecting the CODEX_HOME override), used by the Codex detector.",
+   "tags": [
+    "filesystem",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs",
+   "type": "file",
+   "name": "kiro.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs",
+   "summary": "Detects Kiro steering documents (rule-flavored artifacts) as import candidates.",
+   "tags": [
+    "detection",
+    "external-import",
+    "kiro"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs:detect_kiro_steering",
+   "type": "function",
+   "name": "detect_kiro_steering",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs",
+   "lineRange": [
+    14,
+    75
+   ],
+   "summary": "Scans the Kiro steering directory for markdown documents and builds detected-item previews for each as Policy import candidates.",
+   "tags": [
+    "detection",
+    "filesystem"
+   ],
+   "complexity": "complex"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_pre_tool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_pre_tool",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_stop_check",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_stop_check",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:parse_stop_block",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_post_tool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:dispatch_post_tool",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:lsp_post_edit_diagnostics",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:lsp_post_edit_diagnostics",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs:extract_modified_file_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_detect",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_detect",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_apply",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_apply",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_selections",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_selections",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_policy_import",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:write_imported_policy_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_skill_import",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:copy_dir_recursive",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:load_external_mcp_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_mcp_import",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_agent_definition_import",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:split_frontmatter_for_apply",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_memory",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_memory",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_memory_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_agents",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_agents",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_skills",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_skills",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_skills_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_commands_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_skill_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents_md",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents_md",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:build_codex_agents_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_instructions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_instructions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_single_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_scoped_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_agents",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_agents",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:scan_copilot_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_agent_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_rules",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_rules",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_rule_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:build_cursor_rule_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_agents",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_agents",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_skills",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_skills",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_skills_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:build_cursor_skill_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:split_frontmatter",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:split_frontmatter",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:first_body_line",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:first_body_line",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:path_has_denied_ancestor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:path_has_denied_ancestor",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_target_exists",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_target_exists",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_skill_exists",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_skill_exists",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_mcp_exists",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_mcp_exists",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_agent_definition_exists",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:orgii_agent_definition_exists",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:home_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:home_dir",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:codex_home_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs:codex_home_dir",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs:detect_kiro_steering",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs:detect_kiro_steering",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/events.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/hooks_dispatch.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "file:src-tauri/crates/agent-core/src/core/definitions/schema.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "file:src-tauri/crates/agent-core/src/core/definitions/store.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/helpers.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/external_import/detect/kiro.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/policies/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_detect",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/mod.rs:detect_all",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:external_import_apply",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_selections",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_selections",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_policy_import",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_skill_import",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_mcp_import",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_single",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_agent_definition_import",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_policy_import",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:write_imported_policy_config",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_skill_import",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:copy_dir_recursive",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_mcp_import",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:load_external_mcp_config",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:apply_agent_definition_import",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/commands.rs:split_frontmatter_for_apply",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_memory",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_memory_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_skills",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_skills_dir",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:detect_claude_code_skills",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_commands_dir",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_skills_dir",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_skill_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:scan_claude_commands_dir",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/claude_code.rs:build_claude_skill_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:detect_codex_agents_md",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/codex.rs:build_codex_agents_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_instructions",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_single_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_instructions",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_scoped_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:detect_copilot_agents",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:scan_copilot_dir",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:scan_copilot_dir",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/copilot.rs:build_copilot_agent_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_rules",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_rule_dir",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_rule_dir",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:build_cursor_rule_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:detect_cursor_skills",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_skills_dir",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:scan_cursor_skills_dir",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/external_import/detect/cursor.rs:build_cursor_skill_item",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

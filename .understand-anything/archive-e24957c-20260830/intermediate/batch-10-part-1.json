@@ -1,0 +1,1362 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "type": "file",
+      "name": "batch.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "summary": "Runs the per-account inner loop of L3 memory consolidation: for each pending learning it short-circuits on hash-reinforcement, recalls candidate learnings (embedding or manifest mode), asks the LLM for an ADD/UPDATE/DELETE/NONE decision, and applies the resulting state transition.",
+      "tags": [
+        "service",
+        "llm-orchestration",
+        "memory",
+        "batch-processing"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Resolves embedding vs manifest recall mode once per batch by probing the embedding provider, so all rows in a batch share one candidate-shortlisting strategy."
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "type": "file",
+      "name": "decision.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "summary": "Builds the mem0-style LLM prompt used to decide whether a new learning should be added, merged into an existing one, deleted, or ignored, then parses and fuzzy-corrects the JSON response against the candidate ID set.",
+      "tags": [
+        "llm-orchestration",
+        "prompt-engineering",
+        "memory",
+        "parsing"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a capped Levenshtein distance to fuzzy-match a hallucinated candidate ID back to a real one, guarding against LLM ID drift."
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "type": "file",
+      "name": "entry.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "summary": "Public entry point for the consolidation engine: loads pending learnings for a scope, groups them by billing account, resolves a provider/embedding mode per group, and drives consolidate_batch while recording a consolidation_runs ledger row.",
+      "tags": [
+        "entry-point",
+        "service",
+        "memory",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "type": "file",
+      "name": "events.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "summary": "State-machine that applies a resolved consolidation decision (Add/Update/Delete/None) to the learnings store and tallies EventCounts for the run summary.",
+      "tags": [
+        "state-machine",
+        "memory",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "summary": "Barrel module for the L3 consolidation engine that documents the drain-and-decide flow and re-exports the public surface (consolidate, EventCounts, spawn_consolidation_tick, ConsolidationTrigger) from its private submodules.",
+      "tags": [
+        "barrel",
+        "memory",
+        "module-root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "type": "file",
+      "name": "recall.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "summary": "Implements the two candidate-recall strategies used before an LLM decision: embedding similarity search (Mode A) and manifest/salience-ranked keyword shortlisting (Mode B).",
+      "tags": [
+        "memory",
+        "search",
+        "embeddings"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "type": "file",
+      "name": "tests_support.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "summary": "Test-only helpers that spin up an in-memory SQLite connection with the learnings/session schema and construct PendingLearning fixtures for consolidation unit tests.",
+      "tags": [
+        "test",
+        "test-fixture",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "type": "file",
+      "name": "tick.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "summary": "Spawns a dedicated background thread with its own single-threaded Tokio runtime that periodically evaluates consolidation triggers across scopes and runs consolidation ticks.",
+      "tags": [
+        "scheduler",
+        "background-job",
+        "concurrency",
+        "memory"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a process-wide AtomicBool guard to ensure spawn_consolidation_tick only starts the background thread once."
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "type": "file",
+      "name": "triggers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "summary": "Policy functions deciding whether a consolidation run should fire: lazy (pending-count + time threshold), forced (manual/any pending), and idle (session gap heuristics), plus an e2e-test scope guard.",
+      "tags": [
+        "policy",
+        "memory",
+        "scheduler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:abandon_after_consolidation_failure",
+      "type": "function",
+      "name": "abandon_after_consolidation_failure",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        40,
+        62
+      ],
+      "summary": "Marks a pending learning as abandoned and records the failure reason when a batch aborts due to a capacity error.",
+      "tags": [
+        "error-handling",
+        "memory",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "type": "function",
+      "name": "consolidate_batch",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        67,
+        273
+      ],
+      "summary": "Iterates every pending learning in a batch, recalling candidates, requesting an LLM decision via side_query_typed, and applying the resulting event, aborting early on capacity errors.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "batch-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_batch_provider_info",
+      "type": "function",
+      "name": "resolve_batch_provider_info",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        294,
+        340
+      ],
+      "summary": "Determines the LLM provider and model to use for a consolidation batch, falling back to the account default when not explicitly overridden.",
+      "tags": [
+        "configuration",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_provider",
+      "type": "function",
+      "name": "resolve_provider",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        344,
+        351
+      ],
+      "summary": "Maps a resolved model/account_id pair to a concrete LLM provider instance.",
+      "tags": [
+        "provider",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_embed_mode",
+      "type": "function",
+      "name": "resolve_embed_mode",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        355,
+        371
+      ],
+      "summary": "Probes the embedding provider once per batch to decide whether candidate recall should use embedding similarity (Mode A) or manifest ranking (Mode B).",
+      "tags": [
+        "embeddings",
+        "memory",
+        "configuration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:BatchContext",
+      "type": "class",
+      "name": "BatchContext",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        24,
+        30
+      ],
+      "summary": "Groups the resolved scope, provider, model, candidate mode, and embedding provider shared across every row processed in one consolidation batch.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:BatchProviderInfo",
+      "type": "class",
+      "name": "BatchProviderInfo",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "lineRange": [
+        276,
+        279
+      ],
+      "summary": "Holds the model and account_id resolved for a consolidation batch's LLM calls.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:build_decision_prompt",
+      "type": "function",
+      "name": "build_decision_prompt",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        60,
+        115
+      ],
+      "summary": "Constructs the mem0-style LLM prompt presenting a new fact and its candidate learnings, asking for an ADD/UPDATE/DELETE/NONE decision as JSON.",
+      "tags": [
+        "prompt-engineering",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:levenshtein_capped",
+      "type": "function",
+      "name": "levenshtein_capped",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        131,
+        159
+      ],
+      "summary": "Computes Levenshtein edit distance between two strings, short-circuiting once it exceeds a given cap for performance.",
+      "tags": [
+        "algorithm",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:fuzzy_correct_id",
+      "type": "function",
+      "name": "fuzzy_correct_id",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        167,
+        179
+      ],
+      "summary": "Corrects a possibly-hallucinated candidate ID returned by the LLM to the nearest real candidate ID using capped edit distance.",
+      "tags": [
+        "algorithm",
+        "llm-orchestration",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:parse_decision",
+      "type": "function",
+      "name": "parse_decision",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        184,
+        233
+      ],
+      "summary": "Parses the LLM's JSON decision response into a ResolvedDecision, applying fuzzy ID correction against the known candidate set.",
+      "tags": [
+        "parsing",
+        "memory",
+        "llm-orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:DecisionEvent",
+      "type": "class",
+      "name": "DecisionEvent",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        23,
+        32
+      ],
+      "summary": "Enum of the four possible mem0 consolidation decisions: Add, Update, Delete, or None.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:RawDecision",
+      "type": "class",
+      "name": "RawDecision",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        36,
+        44
+      ],
+      "summary": "Deserialized shape of the raw JSON decision returned by the LLM before candidate-ID fuzzy correction.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:ResolvedDecision",
+      "type": "class",
+      "name": "ResolvedDecision",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "lineRange": [
+        48,
+        55
+      ],
+      "summary": "Final decision after fuzzy ID correction, pairing a DecisionEvent with its resolved target learning ID and text.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "type": "function",
+      "name": "consolidate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "lineRange": [
+        32,
+        186
+      ],
+      "summary": "Top-level consolidation entry point: loads pending learnings for a scope, groups them per billing account, resolves provider/embedding mode per group, drives consolidate_batch, and records a consolidation_runs row.",
+      "tags": [
+        "entry-point",
+        "memory",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "type": "function",
+      "name": "apply_event",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "lineRange": [
+        35,
+        108
+      ],
+      "summary": "Applies a resolved consolidation decision to the learnings store: promotes/adds on Add, merges on Update, deprecates on Delete, or abandons on None, tallying EventCounts.",
+      "tags": [
+        "state-machine",
+        "memory",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:EventCounts",
+      "type": "class",
+      "name": "EventCounts",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "lineRange": [
+        18,
+        24
+      ],
+      "summary": "Tallies of how many learnings were added, updated, deleted, left unchanged, or abandoned during a consolidation batch.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_embedding",
+      "type": "function",
+      "name": "recall_mode_embedding",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "lineRange": [
+        23,
+        39
+      ],
+      "summary": "Embeds the new fact and runs a vector similarity search over active learnings to shortlist consolidation candidates (Mode A).",
+      "tags": [
+        "embeddings",
+        "search",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_manifest",
+      "type": "function",
+      "name": "recall_mode_manifest",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "lineRange": [
+        55,
+        78
+      ],
+      "summary": "Shortlists consolidation candidates without embeddings by loading active learnings and ranking them by salience score (Mode B).",
+      "tags": [
+        "memory",
+        "ranking-algorithm"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:setup_conn",
+      "type": "function",
+      "name": "setup_conn",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "lineRange": [
+        11,
+        25
+      ],
+      "summary": "Creates an in-memory SQLite connection with the session/learnings schema initialized for use in consolidation unit tests.",
+      "tags": [
+        "test",
+        "test-fixture",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:pending",
+      "type": "function",
+      "name": "pending",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "lineRange": [
+        27,
+        51
+      ],
+      "summary": "Builds a PendingLearning test fixture with a computed content hash for a given scope and content string.",
+      "tags": [
+        "test",
+        "test-fixture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:spawn_consolidation_tick",
+      "type": "function",
+      "name": "spawn_consolidation_tick",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "lineRange": [
+        28,
+        60
+      ],
+      "summary": "Starts the background consolidation thread exactly once (guarded by an AtomicBool), giving it its own single-threaded Tokio runtime.",
+      "tags": [
+        "scheduler",
+        "concurrency",
+        "background-job"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:run_tick",
+      "type": "function",
+      "name": "run_tick",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "lineRange": [
+        64,
+        113
+      ],
+      "summary": "Evaluates forced/idle triggers and drives consolidation across all eligible scopes for a single scheduler tick.",
+      "tags": [
+        "scheduler",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:select_trigger",
+      "type": "function",
+      "name": "select_trigger",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "lineRange": [
+        115,
+        125
+      ],
+      "summary": "Picks which ConsolidationTrigger applies for a scope given forced/idle/lazy-ready flags.",
+      "tags": [
+        "policy",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:drive_scopes",
+      "type": "function",
+      "name": "drive_scopes",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "lineRange": [
+        127,
+        144
+      ],
+      "summary": "Iterates all known scopes, checking lazy trigger readiness (or forced/idle overrides) and invoking consolidate() for each eligible one.",
+      "tags": [
+        "scheduler",
+        "memory",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:lazy_trigger_ready",
+      "type": "function",
+      "name": "lazy_trigger_ready",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "lineRange": [
+        21,
+        52
+      ],
+      "summary": "Returns true when a scope has enough pending learnings and enough elapsed time since the last consolidation to justify a lazy trigger.",
+      "tags": [
+        "policy",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:forced_trigger_ready",
+      "type": "function",
+      "name": "forced_trigger_ready",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "lineRange": [
+        56,
+        60
+      ],
+      "summary": "Returns true whenever there is at least one pending learning anywhere, used for manually forced consolidation.",
+      "tags": [
+        "policy",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:idle_trigger_ready",
+      "type": "function",
+      "name": "idle_trigger_ready",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "lineRange": [
+        65,
+        98
+      ],
+      "summary": "Returns true when the system has been idle long enough (no recent session activity) to justify running consolidation in the background.",
+      "tags": [
+        "policy",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:is_e2e_learnings_test_scope",
+      "type": "function",
+      "name": "is_e2e_learnings_test_scope",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "lineRange": [
+        107,
+        109
+      ],
+      "summary": "Identifies scopes reserved for end-to-end learnings tests so production trigger policy can special-case them.",
+      "tags": [
+        "test",
+        "policy"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:abandon_after_consolidation_failure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_batch_provider_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_batch_provider_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_provider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_provider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_embed_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_embed_mode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:BatchContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:BatchContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:BatchProviderInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:BatchProviderInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:build_decision_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:build_decision_prompt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:levenshtein_capped",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:fuzzy_correct_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:parse_decision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:parse_decision",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:DecisionEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:DecisionEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:RawDecision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:RawDecision",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:ResolvedDecision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:ResolvedDecision",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:EventCounts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:EventCounts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_embedding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_embedding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_manifest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:setup_conn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:setup_conn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:spawn_consolidation_tick",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:spawn_consolidation_tick",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:run_tick",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:select_trigger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:drive_scopes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:lazy_trigger_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:lazy_trigger_ready",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:forced_trigger_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:forced_trigger_ready",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:idle_trigger_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:idle_trigger_ready",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:is_e2e_learnings_test_scope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:is_e2e_learnings_test_scope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/embeddings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/definitions/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/embeddings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:abandon_after_consolidation_failure",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:abandon_pending",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:mark_merged",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_manifest",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_embedding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:build_decision_prompt",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:parse_decision",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:levenshtein_capped",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/decision.rs:fuzzy_correct_id",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:load_pending_learnings",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_embed_mode",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_batch_provider_info",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:record_consolidation_run",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:resolve_provider",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:promote_pending_to_active",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:compute_content_hash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/crud.rs:insert_learning",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:mark_merged",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/events.rs:apply_event",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:deprecate_learning",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_embedding",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_manifest",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:load_active_candidates",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/recall.rs:recall_mode_manifest",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:salience_score",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:setup_conn",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:init_learnings_table",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tests_support.rs:pending",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:compute_content_hash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:run_tick",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:forced_trigger_ready",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:run_tick",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:idle_trigger_ready",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:run_tick",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:is_e2e_learnings_test_scope",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:drive_scopes",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:lazy_trigger_ready",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/tick.rs:drive_scopes",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/entry.rs:consolidate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:lazy_trigger_ready",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:count_pending_for_scope",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:lazy_trigger_ready",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:last_consolidation_at",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/triggers.rs:forced_trigger_ready",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:count_pending_learnings",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/consolidation/batch.rs:consolidate_batch",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query_typed",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

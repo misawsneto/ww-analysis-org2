@@ -1,0 +1,1667 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "file",
+   "name": "canonical.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "summary": "Defines the canonical domain record types (sessions, activity, file changes, edit artifacts, diff chunks, checkpoints) that form the shared data model persisted and consumed across the orgtrack-core crate.",
+   "tags": [
+    "data-model",
+    "type-definition",
+    "domain-model",
+    "canonical"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Rust structs/enums annotated with serde for JSON/SQLite (de)serialization; imports the privacy module for redaction-aware fields."
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "type": "file",
+   "name": "development_artifact.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "summary": "Parses git-related development artifacts (PR links, commit URLs, push/commit tool output) out of agent tool-call payloads to attach provenance metadata to sessions.",
+   "tags": [
+    "parsing",
+    "git",
+    "artifact-extraction",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "type": "file",
+   "name": "edit_extraction.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "summary": "Normalizes raw edit-tool events into unified diff artifacts, merging overlapping hunks and computing final net diffs/numstat for a session's file edits.",
+   "tags": [
+    "diffing",
+    "edit-extraction",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "type": "file",
+   "name": "edit_extraction_tests.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "summary": "Unit tests for edit_extraction.rs covering hunk merging, net-diff computation, and edge cases like reverted or repeated overlapping edits.",
+   "tags": [
+    "test",
+    "diffing",
+    "unit-test"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "type": "file",
+   "name": "hook_adapter.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "summary": "Normalizes agent hook payloads from multiple IDE/CLI sources (Windsurf, Cursor, Codex, etc.) into a canonical session/lifecycle event shape, deriving canonical session IDs and resource actions from tool calls.",
+   "tags": [
+    "adapter",
+    "normalization",
+    "hooks",
+    "multi-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "type": "file",
+   "name": "lib.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/lib.rs",
+   "summary": "Crate root for orgtrack-core that declares and re-exports all public modules (canonical types, adapters, projectors, sources, sync) forming the crate's public API surface.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "crate-root"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "type": "file",
+   "name": "policy.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/policy.rs",
+   "summary": "Defines per-source tier capture policy (which sources orgii owns vs. treats as external, and their default capture tiers) used to gate how much detail is recorded per data source.",
+   "tags": [
+    "policy",
+    "configuration",
+    "privacy"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "type": "file",
+   "name": "pricing.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "summary": "Loads a model pricing catalog and resolves per-model token rates, normalizing provider-specific model IDs to canonical pricing keys for cost calculation.",
+   "tags": [
+    "pricing",
+    "cost-calculation",
+    "catalog"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "summary": "Defines the orgtrack privacy tier model (none/metadata/details/trajectory) and redaction policy config controlling how much session content is captured or stored.",
+   "tags": [
+    "privacy",
+    "configuration",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "summary": "Barrel module re-exporting the projector submodules (replay, session_blame, stats, turn_metadata) that derive read-model views from canonical records.",
+   "tags": [
+    "barrel",
+    "projectors",
+    "entry-point"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "type": "file",
+   "name": "replay.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "summary": "Projects a session's file-change records into a replay view for reconstructing the sequence of edits made during a session.",
+   "tags": [
+    "projector",
+    "replay",
+    "read-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "type": "file",
+   "name": "session_blame.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "summary": "Builds a repo-level commit/session blame index from file-change records, tracking committed-vs-uncommitted rates and per-file/session summaries for repo_sync export.",
+   "tags": [
+    "projector",
+    "blame",
+    "aggregation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "type": "file",
+   "name": "stats.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "summary": "Projects raw file-change records into per-session summary statistics (files touched, line counts) used for dashboard/reporting views.",
+   "tags": [
+    "projector",
+    "stats",
+    "aggregation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "type": "file",
+   "name": "turn_metadata.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "summary": "Accumulates per-turn resource interactions, modified files, and git artifacts from provider-neutral tool events into a projected turn metadata record used by review UI and activity chunk rendering.",
+   "tags": [
+    "projector",
+    "turn-metadata",
+    "core-logic",
+    "aggregation"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "summary": "Barrel/orchestration module that syncs the repo-shareable `.orgtrack` index by pulling file-change records from the store and delegating to the session_blame projector.",
+   "tags": [
+    "barrel",
+    "orchestration",
+    "repo-sync"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionRecord",
+   "type": "class",
+   "name": "SessionRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    67,
+    84
+   ],
+   "summary": "Canonical record describing a single coding-agent session (id, source, timestamps, repo context, status) that anchors all other per-session records.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "session"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:ActivityRecord",
+   "type": "class",
+   "name": "ActivityRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    88,
+    103
+   ],
+   "summary": "Canonical record for a single activity chunk (user message, assistant message, tool call) emitted during a session, used to build the activity timeline.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "activity"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:FileChangeRecord",
+   "type": "class",
+   "name": "FileChangeRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    107,
+    123
+   ],
+   "summary": "Canonical record capturing a single file modification within a session, including path, action, and line-count deltas.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "file-change"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionEditArtifactRecord",
+   "type": "class",
+   "name": "SessionEditArtifactRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    170,
+    192
+   ],
+   "summary": "Canonical record describing a normalized edit artifact (a file edit's diff/quality/kind) extracted from a session's tool events.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "edit-artifact"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionDiffChunkRecord",
+   "type": "class",
+   "name": "SessionDiffChunkRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    196,
+    215
+   ],
+   "summary": "Canonical record for an individual diff hunk/chunk contributing to a session's edit history for a file.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "diff"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionFinalDiffRecord",
+   "type": "class",
+   "name": "SessionFinalDiffRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    219,
+    237
+   ],
+   "summary": "Canonical record holding the final merged net diff for a file across an entire session, after reconciling overlapping edits.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "diff"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionCheckpointRecord",
+   "type": "class",
+   "name": "SessionCheckpointRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "lineRange": [
+    241,
+    257
+   ],
+   "summary": "Canonical record for a session checkpoint snapshot, used to reconstruct file state at a point in time during replay.",
+   "tags": [
+    "data-model",
+    "domain-entity",
+    "checkpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts",
+   "type": "function",
+   "name": "parse_git_artifacts",
+   "filePath": "src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "lineRange": [
+    42,
+    59
+   ],
+   "summary": "Parses commit and PR URL artifacts out of raw git command output collected during a session.",
+   "tags": [
+    "parsing",
+    "git",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts_from_tool_payload",
+   "type": "function",
+   "name": "parse_git_artifacts_from_tool_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "lineRange": [
+    67,
+    107
+   ],
+   "summary": "Extracts git development artifacts (commits, pushes, PR links) from a tool call's JSON arguments and result payload.",
+   "tags": [
+    "parsing",
+    "git",
+    "tool-payload"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:artifacts_from_extracted_edit",
+   "type": "function",
+   "name": "artifacts_from_extracted_edit",
+   "filePath": "src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "lineRange": [
+    30,
+    116
+   ],
+   "summary": "Builds normalized edit artifacts (quality, kind, diff chunks) from a raw extracted-edit event and its accumulated diff context.",
+   "tags": [
+    "diffing",
+    "edit-extraction",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:final_diff_from_chunks",
+   "type": "function",
+   "name": "final_diff_from_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "lineRange": [
+    118,
+    261
+   ],
+   "summary": "Merges a sequence of per-edit diff chunks for a file into a single net final diff, reconciling overlapping and reverted changes.",
+   "tags": [
+    "diffing",
+    "merge-algorithm",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:merge_unified_diff_hunks",
+   "type": "function",
+   "name": "merge_unified_diff_hunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "lineRange": [
+    294,
+    361
+   ],
+   "summary": "Merges overlapping unified-diff hunks into a minimal consolidated hunk set for final diff computation.",
+   "tags": [
+    "diffing",
+    "merge-algorithm"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs:final_diff_sums_disjoint_fragment_edits_instead_of_stitching",
+   "type": "function",
+   "name": "final_diff_sums_disjoint_fragment_edits_instead_of_stitching",
+   "filePath": "src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "lineRange": [
+    182,
+    228
+   ],
+   "summary": "Regression test verifying that disjoint fragment edits within a file are summed independently rather than incorrectly stitched into one hunk.",
+   "tags": [
+    "test",
+    "diffing",
+    "regression"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:parse",
+   "type": "function",
+   "name": "parse",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    54,
+    73
+   ],
+   "summary": "Parses a raw hook-source string identifier into the strongly-typed HookSource enum variant.",
+   "tags": [
+    "parsing",
+    "hooks"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:as_source_str",
+   "type": "function",
+   "name": "as_source_str",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    75,
+    89
+   ],
+   "summary": "Converts a HookSource enum variant back into its canonical source string identifier.",
+   "tags": [
+    "serialization",
+    "hooks"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:canonical_session_id",
+   "type": "function",
+   "name": "canonical_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    91,
+    116
+   ],
+   "summary": "Derives the canonical, source-prefixed session ID for a hook-originated session based on its HookSource.",
+   "tags": [
+    "normalization",
+    "hooks",
+    "session"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:canonical_lifecycle_session_id",
+   "type": "function",
+   "name": "canonical_lifecycle_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    118,
+    136
+   ],
+   "summary": "Derives the canonical session ID for a hook lifecycle event (start/end signal), mirroring canonical_session_id for lifecycle payloads.",
+   "tags": [
+    "normalization",
+    "hooks",
+    "session"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_hook_payload",
+   "type": "function",
+   "name": "normalize_hook_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    139,
+    228
+   ],
+   "summary": "Normalizes a raw agent hook payload (varying shapes per IDE/CLI source) into the canonical hook event structure consumed downstream.",
+   "tags": [
+    "normalization",
+    "hooks",
+    "adapter"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_windsurf_payload",
+   "type": "function",
+   "name": "normalize_windsurf_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    235,
+    283
+   ],
+   "summary": "Normalizes Windsurf-specific hook payload fields into the canonical hook event shape.",
+   "tags": [
+    "normalization",
+    "hooks",
+    "windsurf"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_actor_lifecycle_payload",
+   "type": "function",
+   "name": "normalize_actor_lifecycle_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    288,
+    334
+   ],
+   "summary": "Normalizes an actor lifecycle (session start/end) hook payload into the canonical lifecycle event shape.",
+   "tags": [
+    "normalization",
+    "hooks",
+    "lifecycle"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:source_session_id",
+   "type": "function",
+   "name": "source_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    358,
+    382
+   ],
+   "summary": "Extracts the source-specific raw session ID field from a hook payload prior to canonicalization.",
+   "tags": [
+    "parsing",
+    "hooks",
+    "session"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:string_field",
+   "type": "function",
+   "name": "string_field",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    464,
+    473
+   ],
+   "summary": "Utility that extracts a named string field from a JSON payload value, returning None when absent or non-string.",
+   "tags": [
+    "utility",
+    "json-parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:HookSource",
+   "type": "class",
+   "name": "HookSource",
+   "filePath": "src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "lineRange": [
+    39,
+    51
+   ],
+   "summary": "Enum of supported agent hook sources (Windsurf, Cursor, Codex, etc.) with parsing and canonical session-ID derivation methods.",
+   "tags": [
+    "data-model",
+    "hooks",
+    "enum"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/policy.rs:source_tier_policy",
+   "type": "function",
+   "name": "source_tier_policy",
+   "filePath": "src-tauri/crates/orgtrack-core/src/policy.rs",
+   "lineRange": [
+    45,
+    61
+   ],
+   "summary": "Looks up the default capture-tier policy (owned vs. external, tier support) for a given source identifier.",
+   "tags": [
+    "policy",
+    "configuration"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/policy.rs:SourceTierPolicy",
+   "type": "class",
+   "name": "SourceTierPolicy",
+   "filePath": "src-tauri/crates/orgtrack-core/src/policy.rs",
+   "lineRange": [
+    21,
+    25
+   ],
+   "summary": "Struct describing a data source's tier capture policy, with constructors for orgii-owned and external-default sources.",
+   "tags": [
+    "policy",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/pricing.rs:resolve_pricing",
+   "type": "function",
+   "name": "resolve_pricing",
+   "filePath": "src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "lineRange": [
+    132,
+    170
+   ],
+   "summary": "Resolves a model ID to its ModelPricing rates by looking up the normalized model ID in the loaded pricing catalog.",
+   "tags": [
+    "pricing",
+    "lookup",
+    "cost-calculation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/pricing.rs:normalize_model_id",
+   "type": "function",
+   "name": "normalize_model_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "lineRange": [
+    216,
+    250
+   ],
+   "summary": "Normalizes provider-specific model ID strings (stripping date suffixes and provider prefixes) into canonical pricing catalog keys.",
+   "tags": [
+    "normalization",
+    "pricing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/pricing.rs:ModelPricing",
+   "type": "class",
+   "name": "ModelPricing",
+   "filePath": "src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "lineRange": [
+    31,
+    36
+   ],
+   "summary": "Struct holding per-token input/output/cache pricing rates for a model, with default and catalog-entry conversion constructors.",
+   "tags": [
+    "pricing",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/privacy/mod.rs:OrgtrackTier",
+   "type": "class",
+   "name": "OrgtrackTier",
+   "filePath": "src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "lineRange": [
+    8,
+    12
+   ],
+   "summary": "Enum of orgtrack privacy tiers (none/metadata/details/trajectory) with helpers to parse from config strings and check what level of detail each tier includes.",
+   "tags": [
+    "privacy",
+    "data-model",
+    "enum"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/replay.rs:project_replay",
+   "type": "function",
+   "name": "project_replay",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "lineRange": [
+    12,
+    21
+   ],
+   "summary": "Projects a session's ordered file-change records into a ReplayProjection used to reconstruct the session's edit sequence.",
+   "tags": [
+    "projector",
+    "replay"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs:build_orgtrack_index_from_file_changes",
+   "type": "function",
+   "name": "build_orgtrack_index_from_file_changes",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "lineRange": [
+    13,
+    99
+   ],
+   "summary": "Aggregates a repo's file-change records into per-session and per-file accumulators, producing the OrgtrackIndex used for repo-level blame/commit-rate reporting.",
+   "tags": [
+    "projector",
+    "aggregation",
+    "blame"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/stats.rs:session_summaries",
+   "type": "function",
+   "name": "session_summaries",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "lineRange": [
+    29,
+    76
+   ],
+   "summary": "Projects file-change records grouped by session into CoreSessionSummary rows summarizing files touched and lines changed per session.",
+   "tags": [
+    "projector",
+    "stats",
+    "aggregation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:add_event_at",
+   "type": "function",
+   "name": "add_event_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "lineRange": [
+    98,
+    130
+   ],
+   "summary": "Feeds a single tool event (with explicit timestamp) into the turn accumulator, merging derived file interactions and git artifacts from the event's tool call.",
+   "tags": [
+    "aggregation",
+    "turn-metadata",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:project_activity_chunks",
+   "type": "function",
+   "name": "project_activity_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "lineRange": [
+    253,
+    306
+   ],
+   "summary": "Projects a turn's accumulated events into a list of rendered activity chunk texts for display in the review UI.",
+   "tags": [
+    "projector",
+    "activity",
+    "rendering"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:extract_patch_files",
+   "type": "function",
+   "name": "extract_patch_files",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "lineRange": [
+    424,
+    501
+   ],
+   "summary": "Extracts the set of files touched by a unified-diff patch tool event, used to populate turn-level modified-file metadata.",
+   "tags": [
+    "parsing",
+    "diffing",
+    "file-tracking"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:extract_files_from_patch_text",
+   "type": "function",
+   "name": "extract_files_from_patch_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "lineRange": [
+    503,
+    548
+   ],
+   "summary": "Parses raw unified-diff patch text to enumerate the file paths it modifies.",
+   "tags": [
+    "parsing",
+    "diffing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:TurnMetadataAccumulator",
+   "type": "class",
+   "name": "TurnMetadataAccumulator",
+   "filePath": "src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "lineRange": [
+    79,
+    85
+   ],
+   "summary": "Stateful accumulator that collects modified files, resource interactions, and git artifacts across a turn's events, exposing accessors for the projected results.",
+   "tags": [
+    "accumulator",
+    "turn-metadata",
+    "data-model"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs:sync_repo_from_store",
+   "type": "function",
+   "name": "sync_repo_from_store",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "lineRange": [
+    8,
+    14
+   ],
+   "summary": "Orchestrates repo-shareable `.orgtrack` sync by pulling file-change records from the RecordStore and building the repo index via the session_blame projector.",
+   "tags": [
+    "orchestration",
+    "repo-sync"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:ActivityRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:ActivityRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:FileChangeRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:FileChangeRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionEditArtifactRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionEditArtifactRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionDiffChunkRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionDiffChunkRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionFinalDiffRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionFinalDiffRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionCheckpointRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/canonical.rs:SessionCheckpointRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts_from_tool_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts_from_tool_payload",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:artifacts_from_extracted_edit",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:artifacts_from_extracted_edit",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:final_diff_from_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:final_diff_from_chunks",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/edit_extraction.rs:merge_unified_diff_hunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs:final_diff_sums_disjoint_fragment_edits_instead_of_stitching",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:parse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:parse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:as_source_str",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:as_source_str",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:canonical_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:canonical_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:canonical_lifecycle_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:canonical_lifecycle_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_hook_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_hook_payload",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_windsurf_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_actor_lifecycle_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:normalize_actor_lifecycle_payload",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:source_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:source_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:string_field",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:string_field",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:HookSource",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/hook_adapter.rs:HookSource",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/policy.rs:source_tier_policy",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/policy.rs:source_tier_policy",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/policy.rs:SourceTierPolicy",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/policy.rs:SourceTierPolicy",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/pricing.rs:resolve_pricing",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/pricing.rs:resolve_pricing",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/pricing.rs:normalize_model_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/pricing.rs:normalize_model_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/pricing.rs:ModelPricing",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/pricing.rs:ModelPricing",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/privacy/mod.rs:OrgtrackTier",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/privacy/mod.rs:OrgtrackTier",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/replay.rs:project_replay",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/replay.rs:project_replay",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs:build_orgtrack_index_from_file_changes",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs:build_orgtrack_index_from_file_changes",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/stats.rs:session_summaries",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/stats.rs:session_summaries",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:add_event_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:add_event_at",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:project_activity_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:project_activity_chunks",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:extract_patch_files",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:extract_files_from_patch_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:TurnMetadataAccumulator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:TurnMetadataAccumulator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs:sync_repo_from_store",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs:sync_repo_from_store",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/lib.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/policy.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/metadata.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/development_artifact.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:add_event_at",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_tool",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/projectors/turn_metadata.rs:add_event_at",
+   "target": "function:src-tauri/crates/orgtrack-core/src/development_artifact.rs:parse_git_artifacts_from_tool_payload",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/repo_sync/mod.rs:sync_repo_from_store",
+   "target": "function:src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs:build_orgtrack_index_from_file_changes",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/edit_extraction.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/edit_extraction_tests.rs",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  }
+ ]
+}

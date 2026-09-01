@@ -1,0 +1,267 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "type": "file",
+      "name": "shell_integration.rs",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "summary": "Sets up per-shell integration scripts (bash/zsh/fish/PowerShell env hooks) in a temp directory and returns the environment variables and argument prepends needed to inject them when spawning a shell.",
+      "tags": ["shell-integration", "pty", "configuration", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:IntegrationConfig",
+      "type": "class",
+      "name": "IntegrationConfig",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "lineRange": [22, 30],
+      "summary": "Holds the environment variables, prepended shell args, and login-arg-stripping flag needed to inject shell integration when launching a given shell kind.",
+      "tags": ["data-model", "shell-integration", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:get_integration_dir",
+      "type": "function",
+      "name": "get_integration_dir",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "lineRange": [38, 48],
+      "summary": "Lazily initializes and returns the path to the shell-integration scripts directory, setting it up on first access.",
+      "tags": ["shell-integration", "lazy-init", "filesystem"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:setup_integration_dir",
+      "type": "function",
+      "name": "setup_integration_dir",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "lineRange": [50, 63],
+      "summary": "Creates the shell-integration directory and writes the bash/zsh/fish integration scripts plus a zsh ZDOTDIR shim into it.",
+      "tags": ["shell-integration", "filesystem", "setup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:setup_zsh_zdotdir",
+      "type": "function",
+      "name": "setup_zsh_zdotdir",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "lineRange": [79, 112],
+      "summary": "Creates a dedicated ZDOTDIR for zsh integration and writes .zshenv/.zshrc shims that source the user's original config after loading integration hooks.",
+      "tags": ["shell-integration", "zsh", "filesystem"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:integration_config",
+      "type": "function",
+      "name": "integration_config",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shell_integration.rs",
+      "lineRange": [120, 173],
+      "summary": "Builds the IntegrationConfig (env vars, prepended args) for a given shell kind, pointing at the appropriate integration script for bash, zsh, fish, or PowerShell.",
+      "tags": ["shell-integration", "configuration", "dispatch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "type": "file",
+      "name": "shells.rs",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "summary": "Detects available shells and REPLs on the host system, classifying them by kind and category, and provides shell-argument/display-name resolution used when spawning PTY sessions.",
+      "tags": ["shell-detection", "pty", "platform-detection", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:ShellKind",
+      "type": "class",
+      "name": "ShellKind",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [15, 30],
+      "summary": "Enum of recognized shell/REPL executables (zsh, bash, fish, pwsh, python, node, etc.) with methods to resolve default args and category from a shell path.",
+      "tags": ["enum", "shell-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:ShellCategory",
+      "type": "class",
+      "name": "ShellCategory",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [80, 83],
+      "summary": "Enum distinguishing plain shells from REPL-style interpreters, with ordering used to prioritize shells in the detected list.",
+      "tags": ["enum", "shell-detection", "ordering"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:DetectedShell",
+      "type": "class",
+      "name": "DetectedShell",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [87, 100],
+      "summary": "Data model describing a detected shell/REPL: its display name, executable path, kind, category, default args, and whether it is the user's default.",
+      "tags": ["data-model", "shell-detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:from_shell_path",
+      "type": "function",
+      "name": "from_shell_path",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [34, 37],
+      "summary": "Classifies a ShellKind from an executable path by inspecting its basename.",
+      "tags": ["shell-detection", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:default_args",
+      "type": "function",
+      "name": "default_args",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [40, 56],
+      "summary": "Returns the default invocation arguments for a given shell kind (e.g. login/interactive flags).",
+      "tags": ["shell-detection", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:category",
+      "type": "function",
+      "name": "category",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [59, 74],
+      "summary": "Maps a ShellKind to its ShellCategory (shell vs. REPL).",
+      "tags": ["shell-detection", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:detect_shells",
+      "type": "function",
+      "name": "detect_shells",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [110, 218],
+      "summary": "Enumerates available shells by reading /etc/shells (or COMSPEC on Windows), probing well-known executables via which, and building deduplicated, sorted DetectedShell entries with the user's default shell first.",
+      "tags": ["shell-detection", "platform-detection", "filesystem"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:detect_available_shells",
+      "type": "function",
+      "name": "detect_available_shells",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [226, 230],
+      "summary": "Async wrapper that runs shell detection on a blocking thread pool to avoid stalling the async runtime.",
+      "tags": ["shell-detection", "async", "tauri-command"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:parse_etc_shells",
+      "type": "function",
+      "name": "parse_etc_shells",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [248, 256],
+      "summary": "Parses the contents of /etc/shells into a list of shell executable paths, skipping comments and blank lines.",
+      "tags": ["parsing", "shell-detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:classify_shell_name",
+      "type": "function",
+      "name": "classify_shell_name",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [259, 280],
+      "summary": "Maps a shell executable's basename to its ShellKind via known name patterns.",
+      "tags": ["shell-detection", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:which_executable",
+      "type": "function",
+      "name": "which_executable",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [283, 309],
+      "summary": "Locates an executable on PATH, mimicking the which command, to check whether a shell binary is installed.",
+      "tags": ["shell-detection", "filesystem", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:display_name_for_kind",
+      "type": "function",
+      "name": "display_name_for_kind",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/shells.rs",
+      "lineRange": [312, 329],
+      "summary": "Returns a human-readable display name for a given ShellKind, used when presenting detected shells to the user.",
+      "tags": ["shell-detection", "display", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/terminal/src/redaction.rs",
+      "type": "file",
+      "name": "redaction.rs",
+      "filePath": "src-tauri/crates/terminal/src/redaction.rs",
+      "summary": "Provides regex-based redaction of secrets (API keys, tokens, bearer auth, private keys) from PTY output text, plus bounded buffer appending that trims old content while avoiding truncation mid-escape-sequence.",
+      "tags": ["security", "redaction", "pty", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/redaction.rs:redaction_patterns",
+      "type": "function",
+      "name": "redaction_patterns",
+      "filePath": "src-tauri/crates/terminal/src/redaction.rs",
+      "lineRange": [6, 23],
+      "summary": "Lazily compiles and caches the set of regex patterns used to detect secrets such as API keys, bearer tokens, GitHub/OpenAI/AWS tokens, JWTs, and PEM private keys.",
+      "tags": ["security", "redaction", "regex", "lazy-init"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/redaction.rs:redact_terminal_text",
+      "type": "function",
+      "name": "redact_terminal_text",
+      "filePath": "src-tauri/crates/terminal/src/redaction.rs",
+      "lineRange": [25, 39],
+      "summary": "Applies all redaction patterns to a text string, replacing matched secret values with a placeholder while preserving any captured prefix.",
+      "tags": ["security", "redaction", "text-processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/redaction.rs:append_redacted_bounded",
+      "type": "function",
+      "name": "append_redacted_bounded",
+      "filePath": "src-tauri/crates/terminal/src/redaction.rs",
+      "lineRange": [44, 74],
+      "summary": "Appends redacted text to a growing buffer and trims it from the front once it exceeds a max character bound, cutting at a line boundary (or char boundary) to avoid corrupting escape sequences.",
+      "tags": ["security", "redaction", "buffer-management"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:IntegrationConfig", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:get_integration_dir", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:setup_integration_dir", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:setup_zsh_zdotdir", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:integration_config", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:IntegrationConfig", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shell_integration.rs:integration_config", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:ShellKind", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:ShellCategory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:DetectedShell", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:from_shell_path", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:default_args", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:category", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:detect_shells", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:detect_available_shells", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:parse_etc_shells", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:classify_shell_name", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:which_executable", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:display_name_for_kind", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:ShellKind", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:ShellCategory", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "class:src-tauri/crates/terminal/src/pty_commands/shells.rs:DetectedShell", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:from_shell_path", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:default_args", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:category", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:detect_shells", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:detect_available_shells", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:parse_etc_shells", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/pty_commands/shells.rs", "target": "function:src-tauri/crates/terminal/src/pty_commands/shells.rs:classify_shell_name", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/redaction.rs", "target": "function:src-tauri/crates/terminal/src/redaction.rs:redaction_patterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/redaction.rs", "target": "function:src-tauri/crates/terminal/src/redaction.rs:redact_terminal_text", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/redaction.rs", "target": "function:src-tauri/crates/terminal/src/redaction.rs:append_redacted_bounded", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src-tauri/crates/terminal/src/redaction.rs", "target": "function:src-tauri/crates/terminal/src/redaction.rs:redact_terminal_text", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src-tauri/crates/terminal/src/redaction.rs", "target": "function:src-tauri/crates/terminal/src/redaction.rs:append_redacted_bounded", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

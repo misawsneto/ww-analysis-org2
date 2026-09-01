@@ -1,0 +1,1583 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "type": "file",
+   "name": "agent_env_builder.rs",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "summary": "Builds the environment variable maps injected into spawned CLI coding agents (Claude Code, Codex, Copilot, Cursor, Kiro, OpenCode, etc.), translating a stored ModelKey and agent type into provider-specific API key, base URL, and proxy env vars.",
+   "tags": [
+    "utility",
+    "service",
+    "key-vault",
+    "process-launch"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "summary": "Module barrel for the key_store submodule, wiring together agent_env_builder, service, store and types and re-exporting the public key storage API.",
+   "tags": [
+    "barrel",
+    "module-root",
+    "key-vault"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "type": "file",
+   "name": "service.rs",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "summary": "Implements KeyService, the central thread-safe service for loading, saving and mutating the on-disk credentials store, including Claude Code and Codex OAuth token refresh, upstream health tracking, and quota/model metadata updates.",
+   "tags": [
+    "service",
+    "key-vault",
+    "oauth",
+    "persistence"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:InvalidStoredCredential",
+   "type": "class",
+   "name": "InvalidStoredCredential",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    34,
+    38
+   ],
+   "summary": "A single credential entry that failed to deserialize from the store file, retaining its raw JSON and the parse error for diagnostics.",
+   "tags": [
+    "data-model",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:LoadedKeyStore",
+   "type": "class",
+   "name": "LoadedKeyStore",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    41,
+    45
+   ],
+   "summary": "Result of loading the credentials file: the parsed KeyStore plus any invalid/retired credential entries encountered, with helpers to log diagnostics and surface load errors.",
+   "tags": [
+    "data-model",
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CliOAuthTokenSync",
+   "type": "class",
+   "name": "CliOAuthTokenSync",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    92,
+    96
+   ],
+   "summary": "Snapshot of OAuth tokens (access/refresh/id) received from a launched CLI agent, used to reconcile with what's stored in the key vault.",
+   "tags": [
+    "data-model",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CliOAuthTokenSyncOutcome",
+   "type": "class",
+   "name": "CliOAuthTokenSyncOutcome",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    99,
+    103
+   ],
+   "summary": "Outcome enum describing whether a CLI-observed OAuth token was written back to the key vault, skipped because the vault held a newer token, or not applicable.",
+   "tags": [
+    "data-model",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:ClaudeCodeRefreshRequest",
+   "type": "class",
+   "name": "ClaudeCodeRefreshRequest",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    115,
+    119
+   ],
+   "summary": "Request body for Claude Code's OAuth refresh-token grant.",
+   "tags": [
+    "data-model",
+    "oauth",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:ClaudeCodeRefreshResponse",
+   "type": "class",
+   "name": "ClaudeCodeRefreshResponse",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    122,
+    126
+   ],
+   "summary": "Response body returned by Claude Code's OAuth token endpoint on a successful refresh.",
+   "tags": [
+    "data-model",
+    "oauth",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:ClaudeCodeRefreshErrorResponse",
+   "type": "class",
+   "name": "ClaudeCodeRefreshErrorResponse",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    129,
+    133
+   ],
+   "summary": "Error response shape returned by Claude Code's OAuth token endpoint on a failed refresh.",
+   "tags": [
+    "data-model",
+    "oauth",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CodexRefreshRequest",
+   "type": "class",
+   "name": "CodexRefreshRequest",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    136,
+    140
+   ],
+   "summary": "Request body for Codex's OAuth refresh-token grant.",
+   "tags": [
+    "data-model",
+    "oauth",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CodexRefreshResponse",
+   "type": "class",
+   "name": "CodexRefreshResponse",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    143,
+    147
+   ],
+   "summary": "Response body returned by Codex's OAuth token endpoint on a successful refresh.",
+   "tags": [
+    "data-model",
+    "oauth",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CodexRefreshErrorResponse",
+   "type": "class",
+   "name": "CodexRefreshErrorResponse",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    150,
+    155
+   ],
+   "summary": "Error response shape returned by Codex's OAuth token endpoint on a failed refresh.",
+   "tags": [
+    "data-model",
+    "oauth",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/service.rs:KeyService",
+   "type": "class",
+   "name": "KeyService",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    158,
+    163
+   ],
+   "summary": "Thread-safe service wrapping the credentials file: loads/saves the KeyStore under a file lock, refreshes Claude Code and Codex OAuth tokens, tracks upstream health/failure state per key, and exposes CRUD operations used by Tauri commands.",
+   "tags": [
+    "service",
+    "oauth",
+    "persistence",
+    "singleton"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs:get_env_for_agent",
+   "type": "function",
+   "name": "get_env_for_agent",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "lineRange": [
+    16,
+    443
+   ],
+   "summary": "Looks up the ModelKey for an agent type (or explicit key id), and builds the map of environment variables (API key, base URL, auth headers) needed to launch that CLI agent with the right credentials; returns an empty map if the key is missing or disabled.",
+   "tags": [
+    "utility",
+    "process-launch"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs:get_proxy_env_for_agent",
+   "type": "function",
+   "name": "get_proxy_env_for_agent",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "lineRange": [
+    450,
+    602
+   ],
+   "summary": "Builds the environment variables needed to run a CLI agent through the Orgii proxy, substituting a proxy token/URL for the direct provider credentials, matching the env var patterns used by the market worker's proxy path.",
+   "tags": [
+    "utility",
+    "process-launch",
+    "proxy"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:log_diagnostics",
+   "type": "function",
+   "name": "log_diagnostics",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    48,
+    64
+   ],
+   "summary": "Logs a warning with details about credential entries that failed to load, for troubleshooting store corruption.",
+   "tags": [
+    "logging",
+    "diagnostics"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:invalid_credential_error",
+   "type": "function",
+   "name": "invalid_credential_error",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    66,
+    76
+   ],
+   "summary": "Builds a ValidationResult describing why a specific key id could not be loaded from the store.",
+   "tags": [
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_any_valid_credentials",
+   "type": "function",
+   "name": "ensure_any_valid_credentials",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    78,
+    88
+   ],
+   "summary": "Returns an error if the loaded store contains no valid credentials at all, distinguishing a fully-empty store from one where every entry failed to parse.",
+   "tags": [
+    "validation",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    173,
+    197
+   ],
+   "summary": "Constructs a KeyService rooted at a given storage directory, ensuring the directory exists.",
+   "tags": [
+    "service",
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:load_store_checked",
+   "type": "function",
+   "name": "load_store_checked",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    206,
+    220
+   ],
+   "summary": "Loads and parses the credentials file, returning a LoadedKeyStore that separates successfully-parsed keys from entries that failed to deserialize.",
+   "tags": [
+    "persistence",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:save_store",
+   "type": "function",
+   "name": "save_store",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    236,
+    254
+   ],
+   "summary": "Serializes and writes the KeyStore back to the credentials file under the service's file lock.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:update_store",
+   "type": "function",
+   "name": "update_store",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    258,
+    272
+   ],
+   "summary": "Loads the store, applies a caller-supplied mutation closure, and saves the result, all under a single lock acquisition.",
+   "tags": [
+    "persistence",
+    "concurrency"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:list_keys",
+   "type": "function",
+   "name": "list_keys",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    275,
+    278
+   ],
+   "summary": "Returns all stored keys, silently dropping entries that fail to load.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:list_keys_checked",
+   "type": "function",
+   "name": "list_keys_checked",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    283,
+    290
+   ],
+   "summary": "Returns all stored keys along with diagnostics about any entries that failed to load.",
+   "tags": [
+    "persistence",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_checked",
+   "type": "function",
+   "name": "get_key_checked",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    294,
+    313
+   ],
+   "summary": "Looks up a key by agent type and optional id, returning a descriptive error if the store fails to load or the key isn't found.",
+   "tags": [
+    "persistence",
+    "error-handling"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_by_id_checked",
+   "type": "function",
+   "name": "get_key_by_id_checked",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    317,
+    330
+   ],
+   "summary": "Looks up a key by id only, returning a descriptive error if the store fails to load or the key isn't found.",
+   "tags": [
+    "persistence",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key",
+   "type": "function",
+   "name": "get_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    333,
+    336
+   ],
+   "summary": "Convenience wrapper over get_key_checked that discards the error and returns an Option.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_by_id",
+   "type": "function",
+   "name": "get_key_by_id",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    339,
+    342
+   ],
+   "summary": "Convenience wrapper over get_key_by_id_checked that discards the error and returns an Option.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_all_keys_for_agent",
+   "type": "function",
+   "name": "get_all_keys_for_agent",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    345,
+    348
+   ],
+   "summary": "Returns every stored key configured for a given agent type.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:save_key",
+   "type": "function",
+   "name": "save_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    351,
+    357
+   ],
+   "summary": "Inserts or updates a ModelKey in the store and persists the change.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:record_observed_reasoning",
+   "type": "function",
+   "name": "record_observed_reasoning",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    368,
+    406
+   ],
+   "summary": "Updates a key's stored reasoning/model metadata based on values observed live from a CLI agent session, and persists the change.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:sync_cli_oauth_tokens_if_current",
+   "type": "function",
+   "name": "sync_cli_oauth_tokens_if_current",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    408,
+    473
+   ],
+   "summary": "Reconciles OAuth tokens observed from a launched CLI session with the stored key, only overwriting when the CLI's token is newer than what's already stored, to avoid clobbering a concurrent refresh.",
+   "tags": [
+    "oauth",
+    "persistence",
+    "concurrency"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:reset_oauth_refresh_failures",
+   "type": "function",
+   "name": "reset_oauth_refresh_failures",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    475,
+    483
+   ],
+   "summary": "Clears the recorded OAuth refresh failure count/timestamp for a key after a successful refresh.",
+   "tags": [
+    "oauth",
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:record_oauth_refresh_failure",
+   "type": "function",
+   "name": "record_oauth_refresh_failure",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    485,
+    527
+   ],
+   "summary": "Increments and persists a key's OAuth refresh failure count and last error message.",
+   "tags": [
+    "oauth",
+    "persistence",
+    "error-handling"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:mark_claude_oauth_upstream_health",
+   "type": "function",
+   "name": "mark_claude_oauth_upstream_health",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    529,
+    578
+   ],
+   "summary": "Records the latest upstream health status (rate-limited, error type, retry-after) reported by Claude Code's OAuth-backed API for a key.",
+   "tags": [
+    "oauth",
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:clear_claude_oauth_upstream_health",
+   "type": "function",
+   "name": "clear_claude_oauth_upstream_health",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    580,
+    615
+   ],
+   "summary": "Clears any recorded upstream health degradation for a Claude Code OAuth key once it recovers.",
+   "tags": [
+    "oauth",
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:is_key_temporarily_unavailable",
+   "type": "function",
+   "name": "is_key_temporarily_unavailable",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    617,
+    620
+   ],
+   "summary": "Checks whether a key is currently within a temporary-unavailable window set by a prior upstream failure.",
+   "tags": [
+    "oauth",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:temporary_unavailable_message",
+   "type": "function",
+   "name": "temporary_unavailable_message",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    622,
+    637
+   ],
+   "summary": "Builds a human-readable message describing why and until when a key is temporarily unavailable.",
+   "tags": [
+    "oauth",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:reset_oauth_refresh_failure_state",
+   "type": "function",
+   "name": "reset_oauth_refresh_failure_state",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    639,
+    651
+   ],
+   "summary": "Clears the OAuth refresh failure fields on a key entry in place.",
+   "tags": [
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:oauth_refresh_lock_for_key",
+   "type": "function",
+   "name": "oauth_refresh_lock_for_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    653,
+    665
+   ],
+   "summary": "Returns (creating if needed) a per-key async mutex used to serialize concurrent OAuth refresh attempts for the same key.",
+   "tags": [
+    "oauth",
+    "concurrency"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:claude_code_oauth_key_needs_refresh",
+   "type": "function",
+   "name": "claude_code_oauth_key_needs_refresh",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    667,
+    669
+   ],
+   "summary": "Checks whether a Claude Code OAuth key's access token is expired or near-expiry and needs refreshing.",
+   "tags": [
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:claude_code_oauth_key_needs_refresh_inner",
+   "type": "function",
+   "name": "claude_code_oauth_key_needs_refresh_inner",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    677,
+    694
+   ],
+   "summary": "Core expiry-comparison logic shared by the public needs-refresh check, given an explicit expiry and current time.",
+   "tags": [
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_claude_code_oauth_key_fresh",
+   "type": "function",
+   "name": "ensure_claude_code_oauth_key_fresh",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    696,
+    727
+   ],
+   "summary": "Refreshes a Claude Code OAuth key's access token if it is expired or near-expiry, under the per-key refresh lock.",
+   "tags": [
+    "oauth",
+    "concurrency"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:refresh_claude_code_oauth_key",
+   "type": "function",
+   "name": "refresh_claude_code_oauth_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    730,
+    944
+   ],
+   "summary": "Performs the actual Claude Code OAuth refresh-token exchange against Anthropic's token endpoint, updates the stored key with the new tokens, and records success/failure health state.",
+   "tags": [
+    "oauth",
+    "http-client",
+    "persistence"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:jwt_expires_at",
+   "type": "function",
+   "name": "jwt_expires_at",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    946,
+    955
+   ],
+   "summary": "Decodes a JWT's payload (without verifying the signature) to extract its `exp` claim as an expiry timestamp.",
+   "tags": [
+    "oauth",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:codex_oauth_key_needs_refresh",
+   "type": "function",
+   "name": "codex_oauth_key_needs_refresh",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    957,
+    985
+   ],
+   "summary": "Checks whether a Codex OAuth key's id token is expired or near-expiry and needs refreshing.",
+   "tags": [
+    "oauth"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_codex_oauth_key_fresh",
+   "type": "function",
+   "name": "ensure_codex_oauth_key_fresh",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    987,
+    999
+   ],
+   "summary": "Refreshes a Codex OAuth key's tokens if needed, under the per-key refresh lock.",
+   "tags": [
+    "oauth",
+    "concurrency"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:refresh_codex_oauth_key",
+   "type": "function",
+   "name": "refresh_codex_oauth_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1001,
+    1129
+   ],
+   "summary": "Performs the Codex OAuth refresh-token exchange, updates the stored key with the new tokens, and records success/failure health state, parsing structured error responses when the refresh is rejected.",
+   "tags": [
+    "oauth",
+    "http-client",
+    "persistence"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:merge_key_account_metadata",
+   "type": "function",
+   "name": "merge_key_account_metadata",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1132,
+    1155
+   ],
+   "summary": "Merges freshly-fetched account metadata (e.g. plan/org info) into a key's stored metadata and persists the change.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:update_key_health",
+   "type": "function",
+   "name": "update_key_health",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1158,
+    1234
+   ],
+   "summary": "Updates a key's health status, error message, available/enabled models, quota info and model context lengths after a validation or live usage check, and persists the change.",
+   "tags": [
+    "persistence",
+    "validation"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:delete_key",
+   "type": "function",
+   "name": "delete_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1237,
+    1239
+   ],
+   "summary": "Removes a key from the store by agent type and id and persists the change.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:delete_key_by_id",
+   "type": "function",
+   "name": "delete_key_by_id",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1242,
+    1244
+   ],
+   "summary": "Removes a key from the store by id alone and persists the change.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_storage_dir",
+   "type": "function",
+   "name": "get_storage_dir",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1247,
+    1249
+   ],
+   "summary": "Returns the directory the credentials file is stored in.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_storage_file",
+   "type": "function",
+   "name": "get_storage_file",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1252,
+    1254
+   ],
+   "summary": "Returns the full path to the credentials file.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:deserialize_key_store",
+   "type": "function",
+   "name": "deserialize_key_store",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1257,
+    1295
+   ],
+   "summary": "Parses the raw contents of the credentials file into a KeyStore plus a list of invalid entries that failed to deserialize, tolerating partial corruption.",
+   "tags": [
+    "persistence",
+    "error-handling",
+    "serialization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:serialize_key_store",
+   "type": "function",
+   "name": "serialize_key_store",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1297,
+    1315
+   ],
+   "summary": "Serializes a KeyStore back to JSON for writing to disk, re-merging any retired/invalid credential entries so they aren't silently dropped.",
+   "tags": [
+    "persistence",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/service.rs:parse_codex_refresh_error",
+   "type": "function",
+   "name": "parse_codex_refresh_error",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/service.rs",
+   "lineRange": [
+    1317,
+    1328
+   ],
+   "summary": "Parses a Codex OAuth refresh error response body into a structured CodexRefreshErrorResponse.",
+   "tags": [
+    "oauth",
+    "error-handling",
+    "serialization"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:InvalidStoredCredential",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:LoadedKeyStore",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CliOAuthTokenSync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CliOAuthTokenSyncOutcome",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:ClaudeCodeRefreshRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:ClaudeCodeRefreshResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:ClaudeCodeRefreshErrorResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CodexRefreshRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CodexRefreshResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CodexRefreshErrorResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:KeyService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs:get_env_for_agent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs:get_env_for_agent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs:get_proxy_env_for_agent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs:get_proxy_env_for_agent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:log_diagnostics",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:invalid_credential_error",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_any_valid_credentials",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:load_store_checked",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:save_store",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:update_store",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:list_keys",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:list_keys",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:list_keys_checked",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:list_keys_checked",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_checked",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_checked",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_by_id_checked",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_by_id_checked",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_by_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_key_by_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_all_keys_for_agent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_all_keys_for_agent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:save_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:save_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:record_observed_reasoning",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:record_observed_reasoning",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:sync_cli_oauth_tokens_if_current",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:sync_cli_oauth_tokens_if_current",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:reset_oauth_refresh_failures",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:reset_oauth_refresh_failures",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:record_oauth_refresh_failure",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:record_oauth_refresh_failure",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:mark_claude_oauth_upstream_health",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:mark_claude_oauth_upstream_health",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:clear_claude_oauth_upstream_health",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:clear_claude_oauth_upstream_health",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:is_key_temporarily_unavailable",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:is_key_temporarily_unavailable",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:temporary_unavailable_message",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:temporary_unavailable_message",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:reset_oauth_refresh_failure_state",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:oauth_refresh_lock_for_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:claude_code_oauth_key_needs_refresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:claude_code_oauth_key_needs_refresh",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:claude_code_oauth_key_needs_refresh_inner",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_claude_code_oauth_key_fresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_claude_code_oauth_key_fresh",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:refresh_claude_code_oauth_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:refresh_claude_code_oauth_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:jwt_expires_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:codex_oauth_key_needs_refresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_codex_oauth_key_fresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:ensure_codex_oauth_key_fresh",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:refresh_codex_oauth_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:refresh_codex_oauth_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:merge_key_account_metadata",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:merge_key_account_metadata",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:update_key_health",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:update_key_health",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:delete_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:delete_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:delete_key_by_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:delete_key_by_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_storage_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_storage_dir",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_storage_file",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:get_storage_file",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:deserialize_key_store",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:serialize_key_store",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/service.rs:parse_codex_refresh_error",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CliOAuthTokenSync",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:CliOAuthTokenSyncOutcome",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/service.rs:KeyService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_store/agent_env_builder.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/service.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  }
+ ]
+}

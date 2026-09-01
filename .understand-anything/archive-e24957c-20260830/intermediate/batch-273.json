@@ -1,0 +1,218 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/app-utils/src/json.rs",
+      "type": "file",
+      "name": "json.rs",
+      "filePath": "src-tauri/crates/app-utils/src/json.rs",
+      "summary": "Shared JSON file I/O helpers for reading, writing, and recursively merging JSON, plus an atomic-write sensitive key-value store used for auth tokens and secrets.",
+      "tags": ["utility", "serialization", "file-io", "config-store"],
+      "complexity": "moderate",
+      "languageNotes": "save_json_store uses a write-to-temp-then-rename pattern for atomicity and restricts file permissions on the temp file before the rename."
+    },
+    {
+      "id": "file:src-tauri/crates/app-utils/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/app-utils/src/lib.rs",
+      "summary": "Crate root for app-utils, a leaf utility crate shared across the workspace; declares the json and (feature-gated) testing modules and hosts a small serde default_true helper.",
+      "tags": ["entry-point", "barrel", "utility"],
+      "complexity": "simple",
+      "languageNotes": "Crate is intentionally kept as a dependency-free leaf (only depends on app_paths) so it can be reused by any other workspace crate without cycle risk."
+    },
+    {
+      "id": "file:src-tauri/crates/app-utils/src/testing.rs",
+      "type": "file",
+      "name": "testing.rs",
+      "filePath": "src-tauri/crates/app-utils/src/testing.rs",
+      "summary": "Feature-gated (\"testing\") helper that materializes a temporary directory populated with given file contents, for use in unit/integration tests across the workspace.",
+      "tags": ["test", "utility", "test-helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/json.rs:read_json_file",
+      "type": "function",
+      "name": "read_json_file",
+      "filePath": "src-tauri/crates/app-utils/src/json.rs",
+      "lineRange": [9, 18],
+      "summary": "Reads and parses a JSON file at the given path, returning an empty JSON object if the file does not exist.",
+      "tags": ["utility", "file-io", "json"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/json.rs:write_json_file",
+      "type": "function",
+      "name": "write_json_file",
+      "filePath": "src-tauri/crates/app-utils/src/json.rs",
+      "lineRange": [22, 32],
+      "summary": "Serializes a serde_json::Value as pretty-printed JSON and writes it to disk, creating parent directories as needed.",
+      "tags": ["utility", "file-io", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/json.rs:merge_json",
+      "type": "function",
+      "name": "merge_json",
+      "filePath": "src-tauri/crates/app-utils/src/json.rs",
+      "lineRange": [36, 50],
+      "summary": "Recursively merges a partial JSON object into a base JSON object, merging nested objects and overwriting other value types.",
+      "tags": ["utility", "json", "recursion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/json.rs:save_json_store",
+      "type": "function",
+      "name": "save_json_store",
+      "filePath": "src-tauri/crates/app-utils/src/json.rs",
+      "lineRange": [56, 76],
+      "summary": "Atomically writes a HashMap<String, String> as JSON with restricted file permissions, used for sensitive key-value stores such as auth tokens and secrets.",
+      "tags": ["utility", "security", "file-io"],
+      "complexity": "moderate",
+      "languageNotes": "Writes to a .tmp file, applies restrictive permissions, then renames over the target for crash-safe atomic replacement."
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/json.rs:load_json_store",
+      "type": "function",
+      "name": "load_json_store",
+      "filePath": "src-tauri/crates/app-utils/src/json.rs",
+      "lineRange": [88, 113],
+      "summary": "Loads a HashMap<String, String> from a JSON file, returning an empty map if the file is missing, and logging distinct warnings on read failure vs. parse failure so a corrupt store isn't silently wiped by the next save.",
+      "tags": ["utility", "file-io", "error-handling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/lib.rs:default_true",
+      "type": "function",
+      "name": "default_true",
+      "filePath": "src-tauri/crates/app-utils/src/lib.rs",
+      "lineRange": [22, 24],
+      "summary": "Serde default-value helper that returns true, intended for use with #[serde(default = \"app_utils::default_true\")] on bool fields treated as enabled-by-default.",
+      "tags": ["utility", "serde", "helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/app-utils/src/testing.rs:temp_dir_with_files",
+      "type": "function",
+      "name": "temp_dir_with_files",
+      "filePath": "src-tauri/crates/app-utils/src/testing.rs",
+      "lineRange": [17, 28],
+      "summary": "Creates a temporary directory and populates it with the given relative-path/content file entries, returning the directory path for use in tests.",
+      "tags": ["test", "utility", "test-helper"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:read_json_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:write_json_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:merge_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:save_json_store",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:load_json_store",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/lib.rs",
+      "target": "function:src-tauri/crates/app-utils/src/lib.rs:default_true",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/testing.rs",
+      "target": "function:src-tauri/crates/app-utils/src/testing.rs:temp_dir_with_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:read_json_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:write_json_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:merge_json",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:save_json_store",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/json.rs",
+      "target": "function:src-tauri/crates/app-utils/src/json.rs:load_json_store",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/lib.rs",
+      "target": "function:src-tauri/crates/app-utils/src/lib.rs:default_true",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/testing.rs",
+      "target": "function:src-tauri/crates/app-utils/src/testing.rs:temp_dir_with_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/lib.rs",
+      "target": "file:src-tauri/crates/app-utils/src/json.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/app-utils/src/lib.rs",
+      "target": "file:src-tauri/crates/app-utils/src/testing.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

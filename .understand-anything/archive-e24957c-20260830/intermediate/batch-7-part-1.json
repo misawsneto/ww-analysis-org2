@@ -1,0 +1,1362 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "summary": "Defines the core type and trait surface for turn execution: permission verdicts/providers, turn configuration and results, tool-hook interventions, and the TurnEventHandler trait consumers implement to observe streaming deltas, tool calls, and context usage during a turn.",
+      "tags": [
+        "type-definition",
+        "trait",
+        "turn-execution",
+        "agent-loop"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:PermissionVerdict",
+      "type": "class",
+      "name": "PermissionVerdict",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        23,
+        27
+      ],
+      "summary": "Enum expressing the outcome of a tool-permission check: allow, deny, or allow-and-remember.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:PermissionProvider",
+      "type": "class",
+      "name": "PermissionProvider",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        35,
+        48
+      ],
+      "summary": "Trait abstracting permission checking so the turn executor can request approval before running a tool without depending on a concrete implementation.",
+      "tags": [
+        "trait",
+        "permissions",
+        "dependency-injection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnIterationHook",
+      "type": "class",
+      "name": "TurnIterationHook",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        57,
+        64
+      ],
+      "summary": "Trait hook invoked before each LLM iteration within a turn, letting callers inject steering or side effects.",
+      "tags": [
+        "trait",
+        "hook",
+        "turn-execution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:SteeringInjection",
+      "type": "class",
+      "name": "SteeringInjection",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        77,
+        82
+      ],
+      "summary": "Represents a mid-turn steering message to inject into the LLM conversation, tagged with its originating turn intent.",
+      "tags": [
+        "data-model",
+        "steering",
+        "turn-execution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnConfig",
+      "type": "class",
+      "name": "TurnConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        95,
+        138
+      ],
+      "summary": "Configuration bag controlling a single turn's execution: model selection, iteration/token limits, concurrency, and optional hooks/queues.",
+      "tags": [
+        "config",
+        "data-model",
+        "turn-execution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnResult",
+      "type": "class",
+      "name": "TurnResult",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        145,
+        185
+      ],
+      "summary": "Aggregate result returned by turn execution, carrying final content, message history, and token/usage telemetry.",
+      "tags": [
+        "data-model",
+        "turn-execution",
+        "telemetry"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:ToolHookIntervention",
+      "type": "class",
+      "name": "ToolHookIntervention",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        192,
+        199
+      ],
+      "summary": "Represents a hook's decision to block or modify a tool call before it executes.",
+      "tags": [
+        "data-model",
+        "hook",
+        "tool-execution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnEventHandler",
+      "type": "class",
+      "name": "TurnEventHandler",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "lineRange": [
+        207,
+        396
+      ],
+      "summary": "Central event-callback trait implemented by turn-execution consumers to observe/react to streaming deltas, tool calls, file changes, and context-usage updates during a turn.",
+      "tags": [
+        "trait",
+        "event-handler",
+        "turn-execution",
+        "streaming"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs",
+      "type": "file",
+      "name": "usage_accumulator.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs",
+      "summary": "Accumulates running token-usage totals (prompt/completion/cache) across a turn's LLM calls.",
+      "tags": [
+        "utility",
+        "telemetry",
+        "token-usage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs:UsageTotals",
+      "type": "class",
+      "name": "UsageTotals",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs",
+      "lineRange": [
+        18,
+        27
+      ],
+      "summary": "Running totals of prompt/completion/cache token usage accumulated across a turn's LLM calls.",
+      "tags": [
+        "data-model",
+        "telemetry",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "type": "file",
+      "name": "usage_telemetry.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "summary": "Defines telemetry spans and per-tool-call token attribution used to build a detailed usage report for a turn, including how completion tokens are split across concurrent tool calls.",
+      "tags": [
+        "telemetry",
+        "token-usage",
+        "data-model",
+        "observability"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:AttributionMethod",
+      "type": "class",
+      "name": "AttributionMethod",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        12,
+        19
+      ],
+      "summary": "Enum identifying how completion tokens were attributed to a specific tool call when usage cannot be measured directly.",
+      "tags": [
+        "enum",
+        "telemetry",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:LlmUsageSpan",
+      "type": "class",
+      "name": "LlmUsageSpan",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        35,
+        45
+      ],
+      "summary": "Snapshot of token usage and context stats for one LLM call iteration within a turn.",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:ToolExecutionUsage",
+      "type": "class",
+      "name": "ToolExecutionUsage",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        48,
+        53
+      ],
+      "summary": "Byte-size record of a single tool call's input/output payload used for usage attribution.",
+      "tags": [
+        "data-model",
+        "telemetry",
+        "tool-execution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:ToolUsageAttribution",
+      "type": "class",
+      "name": "ToolUsageAttribution",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        56,
+        67
+      ],
+      "summary": "Attributes decision and follow-up completion tokens to a specific tool call, recording the attribution method used.",
+      "tags": [
+        "data-model",
+        "telemetry",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:UsageTelemetry",
+      "type": "class",
+      "name": "UsageTelemetry",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        70,
+        73
+      ],
+      "summary": "Container aggregating all LLM usage spans and tool usage attributions collected for a turn.",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:PendingDecisionAttribution",
+      "type": "class",
+      "name": "PendingDecisionAttribution",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        76,
+        79
+      ],
+      "summary": "Holds an in-flight decision's completion-token count and attribution method pending association with tool results.",
+      "tags": [
+        "data-model",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:UsageTelemetryCollector",
+      "type": "class",
+      "name": "UsageTelemetryCollector",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "lineRange": [
+        82,
+        86
+      ],
+      "summary": "Stateful collector that records LLM spans and attributes completion tokens across concurrent tool calls to build the turn's UsageTelemetry.",
+      "tags": [
+        "state-management",
+        "telemetry",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "type": "file",
+      "name": "debug.rs",
+      "filePath": "src-tauri/crates/agent-core/src/debug.rs",
+      "summary": "Curated `#[doc(hidden)]` re-export barrel exposing internal session/orchestration/command helpers to the app crate's debug/test HTTP routes without widening agent-core's documented public API.",
+      "tags": [
+        "barrel",
+        "debug",
+        "re-export",
+        "internal-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "type": "file",
+      "name": "event_pipeline_bridge.rs",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "summary": "Dependency-injection bridge that registers pluggable callback implementations (event push/persist, streaming finalize, session pin/unpin, tool-arg merging) so the foundation event bus can dispatch into the concrete session layer without a direct crate dependency.",
+      "tags": [
+        "event-bus",
+        "dependency-injection",
+        "messaging",
+        "bridge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:PersistedUserMessageSource",
+      "type": "class",
+      "name": "PersistedUserMessageSource",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        116,
+        119
+      ],
+      "summary": "Enum tagging whether a persisted user message originated from a direct user submission or an agent-org inbox transcript replay.",
+      "tags": [
+        "enum",
+        "messaging",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        175,
+        209
+      ],
+      "summary": "Registers the full set of callback implementations (event persistence, streaming finalize, session pin/unpin, tool-arg updates) that the event bus bridge dispatches to.",
+      "tags": [
+        "dependency-injection",
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:push_events",
+      "type": "function",
+      "name": "push_events",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        220,
+        230
+      ],
+      "summary": "Invokes the registered callback to push a batch of events onto a session's event stream.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:schedule_notify",
+      "type": "function",
+      "name": "schedule_notify",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        232,
+        241
+      ],
+      "summary": "Invokes the registered callback to schedule a frontend notification for session updates.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:update_spawning_tool_args",
+      "type": "function",
+      "name": "update_spawning_tool_args",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        243,
+        259
+      ],
+      "summary": "Invokes the registered callback to merge additional arguments into pending tool calls matching given function names.",
+      "tags": [
+        "event-bus",
+        "bridge",
+        "tool-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:update_tool_args_by_call_id",
+      "type": "function",
+      "name": "update_tool_args_by_call_id",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        261,
+        277
+      ],
+      "summary": "Invokes the registered callback to merge arguments into a specific tool call identified by call_id.",
+      "tags": [
+        "event-bus",
+        "bridge",
+        "tool-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:complete_tool_call_by_call_id",
+      "type": "function",
+      "name": "complete_tool_call_by_call_id",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        279,
+        293
+      ],
+      "summary": "Invokes the registered callback to mark a tool call as completed (success/failure) by its call id.",
+      "tags": [
+        "event-bus",
+        "bridge",
+        "tool-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:finalize_streaming",
+      "type": "function",
+      "name": "finalize_streaming",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        295,
+        304
+      ],
+      "summary": "Invokes the registered callback to finalize any in-progress streaming buffers for a session.",
+      "tags": [
+        "event-bus",
+        "bridge",
+        "streaming"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:set_session_streaming",
+      "type": "function",
+      "name": "set_session_streaming",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        306,
+        315
+      ],
+      "summary": "Invokes the registered callback to toggle a session's streaming flag.",
+      "tags": [
+        "event-bus",
+        "bridge",
+        "streaming"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:replace_streaming_event",
+      "type": "function",
+      "name": "replace_streaming_event",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        317,
+        331
+      ],
+      "summary": "Invokes the registered callback to swap a placeholder streaming event with its finalized event.",
+      "tags": [
+        "event-bus",
+        "bridge",
+        "streaming"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:remove_events_by_ids",
+      "type": "function",
+      "name": "remove_events_by_ids",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        333,
+        343
+      ],
+      "summary": "Invokes the registered callback to remove a set of events from a session's event stream by id.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:pin_session",
+      "type": "function",
+      "name": "pin_session",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        345,
+        354
+      ],
+      "summary": "Invokes the registered callback to pin a session so its events remain visible/prioritized in the UI.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:unpin_session",
+      "type": "function",
+      "name": "unpin_session",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        356,
+        365
+      ],
+      "summary": "Invokes the registered callback to unpin a previously pinned session.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:read_session_events",
+      "type": "function",
+      "name": "read_session_events",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        367,
+        378
+      ],
+      "summary": "Invokes the registered callback to read the current event list for a session.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:finalize_plan_revision_events",
+      "type": "function",
+      "name": "finalize_plan_revision_events",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        380,
+        389
+      ],
+      "summary": "Invokes the registered callback to finalize events tied to a specific plan revision.",
+      "tags": [
+        "event-bus",
+        "bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_events",
+      "type": "function",
+      "name": "persist_events",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        391,
+        406
+      ],
+      "summary": "Persists a batch of events synchronously with retry, logging under the given label on failure.",
+      "tags": [
+        "event-bus",
+        "persistence",
+        "retry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_events_async",
+      "type": "function",
+      "name": "persist_events_async",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        408,
+        423
+      ],
+      "summary": "Persists a batch of events asynchronously with retry, logging under the given label on failure.",
+      "tags": [
+        "event-bus",
+        "persistence",
+        "retry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_user_message_event",
+      "type": "function",
+      "name": "persist_user_message_event",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "lineRange": [
+        426,
+        453
+      ],
+      "summary": "Invokes the registered callback to persist a new user message event, tagging its source and originating turn intent.",
+      "tags": [
+        "event-bus",
+        "persistence",
+        "messaging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "type": "file",
+      "name": "events.rs",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "summary": "Defines InboundMessage and OutboundMessage structs for the message bus, carrying channel/content/media metadata with session-key derivation for routing.",
+      "tags": [
+        "data-model",
+        "messaging",
+        "event-bus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/foundation/bus/events.rs:InboundMessage",
+      "type": "class",
+      "name": "InboundMessage",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "lineRange": [
+        16,
+        39
+      ],
+      "summary": "Represents an inbound message arriving on the message bus from an external channel, deriving a session key for routing.",
+      "tags": [
+        "data-model",
+        "messaging",
+        "event-bus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/foundation/bus/events.rs:OutboundMessage",
+      "type": "class",
+      "name": "OutboundMessage",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "lineRange": [
+        73,
+        88
+      ],
+      "summary": "Represents an outbound message to be published to an external channel via the message bus.",
+      "tags": [
+        "data-model",
+        "messaging",
+        "event-bus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "summary": "Defines the MessageBus wrapping tokio mpsc/broadcast channels for routing inbound and outbound messages, and wires the bus submodules (event_pipeline_bridge, events).",
+      "tags": [
+        "event-bus",
+        "messaging",
+        "barrel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:MessageBus",
+      "type": "class",
+      "name": "MessageBus",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "lineRange": [
+        65,
+        76
+      ],
+      "summary": "Central pub/sub message bus wrapping tokio mpsc/broadcast channels for routing inbound and outbound messages between the bus and session handlers.",
+      "tags": [
+        "event-bus",
+        "messaging",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "lineRange": [
+        84,
+        93
+      ],
+      "summary": "Constructs a new MessageBus with fresh inbound and outbound channels.",
+      "tags": [
+        "constructor",
+        "event-bus"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:broadcast_event",
+      "type": "function",
+      "name": "broadcast_event",
+      "filePath": "src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "lineRange": [
+        132,
+        148
+      ],
+      "summary": "Broadcasts a typed event with a JSON payload to all subscribed frontend listeners via the registered broadcast callback.",
+      "tags": [
+        "event-bus",
+        "broadcast"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:PermissionVerdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:PermissionVerdict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:PermissionProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:PermissionProvider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnIterationHook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnIterationHook",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:SteeringInjection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:SteeringInjection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:ToolHookIntervention",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:ToolHookIntervention",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnEventHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/types.rs:TurnEventHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs:UsageTotals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs:UsageTotals",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:AttributionMethod",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:AttributionMethod",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:LlmUsageSpan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:LlmUsageSpan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:ToolExecutionUsage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:ToolExecutionUsage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:ToolUsageAttribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:ToolUsageAttribution",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:UsageTelemetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:UsageTelemetry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:PendingDecisionAttribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:UsageTelemetryCollector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs:UsageTelemetryCollector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/turn/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/debug.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/session/message.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:PersistedUserMessageSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:PersistedUserMessageSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:push_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:push_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:schedule_notify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:schedule_notify",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:update_spawning_tool_args",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:update_spawning_tool_args",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:update_tool_args_by_call_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:update_tool_args_by_call_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:complete_tool_call_by_call_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:complete_tool_call_by_call_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:finalize_streaming",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:finalize_streaming",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:set_session_streaming",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:set_session_streaming",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:replace_streaming_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:replace_streaming_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:remove_events_by_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:remove_events_by_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:pin_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:pin_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:unpin_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:unpin_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:read_session_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:read_session_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:finalize_plan_revision_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:finalize_plan_revision_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_events_async",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_events_async",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_user_message_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs:persist_user_message_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/events.rs:InboundMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/events.rs:InboundMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/events.rs:OutboundMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/events.rs:OutboundMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:MessageBus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:MessageBus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:broadcast_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/foundation/bus/mod.rs:broadcast_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/bus/event_pipeline_bridge.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/foundation/bus/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/bus/events.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

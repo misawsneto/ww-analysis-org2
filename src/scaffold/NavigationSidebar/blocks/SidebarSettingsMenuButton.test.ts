@@ -1,0 +1,176 @@
+// @vitest-environment jsdom
+import { Provider, createStore } from "jotai";
+import React, { act } from "react";
+import { type Root, createRoot } from "react-dom/client";
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
+
+import { devModeEnabledAtom } from "@src/store/platform/devModeAtom";
+
+import SidebarSettingsMenuButton from "./SidebarSettingsMenuButton";
+
+const mocks = vi.hoisted(() => ({
+  closeDropdown: vi.fn(),
+  goToSettings: vi.fn(),
+  navigateTo: vi.fn(),
+}));
+
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
+
+vi.mock("@src/hooks/navigation", () => ({
+  useAppNavigation: () => ({
+    goToSettings: mocks.goToSettings,
+    navigateTo: mocks.navigateTo,
+  }),
+}));
+
+vi.mock("@src/hooks/dropdown", () => ({
+  useDropdownEngine: () => ({
+    isOpen: true,
+    isPositioned: true,
+    toggle: vi.fn(),
+    close: mocks.closeDropdown,
+    triggerRef: { current: null },
+    panelRef: { current: null },
+    panelPosition: { top: 0, left: 0, width: 220 },
+  }),
+}));
+
+vi.mock("@src/modules/MainApp/Settings/sections/useAppearanceState", () => ({
+  useAppearanceState: () => ({
+    appearanceMode: "system",
+    appearanceModeOptions: [],
+    globalThemeId: "system",
+    themeOptions: [],
+    handleAppearanceModeChange: vi.fn(),
+    handleThemeChange: vi.fn(),
+  }),
+}));
+
+vi.mock("@src/modules/WorkStation/shared", () => ({
+  ToolbarTooltip: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+const reactActEnvironment = globalThis as typeof globalThis & {
+  IS_REACT_ACT_ENVIRONMENT?: boolean;
+};
+
+describe("SidebarSettingsMenuButton", () => {
+  let container: HTMLDivElement;
+  let root: Root;
+  let store: ReturnType<typeof createStore>;
+
+  beforeAll(() => {
+    reactActEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
+  });
+
+  beforeEach(async () => {
+    store = createStore();
+    store.set(devModeEnabledAtom, true);
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    root = createRoot(container);
+
+    await act(async () => {
+      root.render(
+        React.createElement(
+          Provider,
+          { store },
+          React.createElement(SidebarSettingsMenuButton)
+        )
+      );
+    });
+  });
+
+  afterEach(() => {
+    act(() => root.unmount());
+    container.remove();
+    vi.clearAllMocks();
+  });
+
+  afterAll(() => {
+    Reflect.deleteProperty(reactActEnvironment, "IS_REACT_ACT_ENVIRONMENT");
+  });
+
+  it("keeps the Changelog placeholder hidden while Tutorials remains available", () => {
+    const buttons = Array.from(document.body.querySelectorAll("button"));
+    const changelogButton = buttons.find(
+      (button) => button.textContent === "routes.changelog"
+    );
+    const tutorialButton = buttons.find(
+      (button) => button.textContent === "sidebar.settingsMenu.tutorials"
+    );
+
+    expect(changelogButton).toBeUndefined();
+    expect(tutorialButton).toBeDefined();
+  });
+
+  it("does not expose the retired setup walkthrough", () => {
+    const setupButton = Array.from(
+      document.body.querySelectorAll("button")
+    ).find(
+      (button) => button.textContent === "sidebar.settingsMenu.setupChecklist"
+    );
+
+    expect(setupButton).toBeUndefined();
+  });
+
+  it("supports an account trigger with a signed-out login action", async () => {
+    const onSignIn = vi.fn();
+
+    await act(async () => {
+      root.render(
+        React.createElement(
+          Provider,
+          { store },
+          React.createElement(SidebarSettingsMenuButton, {
+            onSignIn,
+            renderTrigger: ({ isOpen, onClick }) =>
+              React.createElement(
+                "button",
+                {
+                  type: "button",
+                  onClick,
+                  "aria-expanded": isOpen,
+                  "data-testid": "account-menu-trigger",
+                },
+                "Account"
+              ),
+          })
+        )
+      );
+    });
+
+    const trigger = document.querySelector<HTMLButtonElement>(
+      '[data-testid="account-menu-trigger"]'
+    );
+    expect(trigger?.getAttribute("aria-expanded")).toBe("true");
+
+    const signIn = document.querySelector<HTMLButtonElement>(
+      '[data-testid="sidebar-menu-sign-in"]'
+    );
+    expect(signIn?.textContent).toBe("cloud.signIn");
+
+    act(() => signIn?.click());
+    expect(mocks.closeDropdown).toHaveBeenCalledOnce();
+    expect(onSignIn).toHaveBeenCalledOnce();
+  });
+
+  it("does not expose onboarding development simulations", () => {
+    expect(
+      document.querySelector(
+        '[data-testid="sidebar-open-developer-test-panel"]'
+      )
+    ).toBeNull();
+  });
+});

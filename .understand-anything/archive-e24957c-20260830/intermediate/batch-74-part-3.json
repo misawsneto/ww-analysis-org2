@@ -1,0 +1,1484 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "type": "file",
+      "name": "github.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "summary": "Implements the GitHub OAuth Device Authorization Grant (RFC 8628): requests a device/user code pair, then polls the token endpoint until the user approves or a terminal error occurs, using JSON Accept headers to avoid GitHub's URL-encoded response default.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "github",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "type": "file",
+      "name": "linear.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "summary": "Implements Linear OAuth Authorization Code grant with PKCE and a fixed loopback redirect (localhost:45445/callback), including the local axum callback listener, code/verifier generation, code exchange, and refresh-token flow.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear",
+        "pkce"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "summary": "Unifies the GitHub device-flow and Linear PKCE OAuth flows behind a single OAuthFlowStart wire enum for the frontend's Connect-with UI, and provides ensure_fresh_connection_token to transparently refresh a Linear access token before use.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "sync",
+        "barrel"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "summary": "Wire types for the outbox + sync layer: typed enums (OutboxOp, OutboxStatus, ImportState, EntityType) with as_db_str/from_db_str round-trip helpers so raw SQL string literals never appear outside this module, plus the OutboxEntry and SyncError domain types.",
+      "tags": [
+        "type-definition",
+        "data-model",
+        "sync",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "type": "file",
+      "name": "webhook_listener.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "summary": "Inbound webhook HTTP listener mounted on the shared IDE axum server at POST /sync/webhook/:adapter_id/:slug; resolves the adapter and HMAC secret, verifies the signature, and persists parsed external changes as merge_external outbox rows.",
+      "tags": [
+        "api-handler",
+        "webhook",
+        "sync",
+        "axum"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "type": "file",
+      "name": "webhook_secrets.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "summary": "Per-(project_slug, adapter_id) HMAC secret store backing inbound webhook signature verification, providing CSPRNG secret generation, upsert/get/rotate/delete against the webhook_secrets table.",
+      "tags": [
+        "database",
+        "webhook",
+        "security",
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:configured_client_id",
+      "type": "function",
+      "name": "configured_client_id",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        84,
+        89
+      ],
+      "summary": "Returns the compile-time configured GitHub OAuth client id, if any.",
+      "tags": [
+        "authentication",
+        "github",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:set_test_client_id",
+      "type": "function",
+      "name": "set_test_client_id",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        106,
+        110
+      ],
+      "summary": "Test-only override for the GitHub OAuth client id.",
+      "tags": [
+        "authentication",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:effective_client_id",
+      "type": "function",
+      "name": "effective_client_id",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        117,
+        127
+      ],
+      "summary": "Resolves the client id to use, preferring the test override over the configured default.",
+      "tags": [
+        "authentication",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:http_client",
+      "type": "function",
+      "name": "http_client",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        129,
+        138
+      ],
+      "summary": "Builds the reqwest HTTP client used for GitHub OAuth requests with a bounded timeout.",
+      "tags": [
+        "authentication",
+        "github",
+        "http"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:start_device_flow",
+      "type": "function",
+      "name": "start_device_flow",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        143,
+        145
+      ],
+      "summary": "Starts the GitHub device authorization flow against the real GitHub endpoints.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:start_device_flow_with_endpoints",
+      "type": "function",
+      "name": "start_device_flow_with_endpoints",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        147,
+        190
+      ],
+      "summary": "Requests a device/user code pair from GitHub's device-code endpoint, requesting JSON to avoid the URL-encoded response default.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:poll_for_token",
+      "type": "function",
+      "name": "poll_for_token",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        197,
+        211
+      ],
+      "summary": "Polls GitHub's real token endpoint for device-flow completion.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:poll_for_token_with_endpoints",
+      "type": "function",
+      "name": "poll_for_token_with_endpoints",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "lineRange": [
+        215,
+        298
+      ],
+      "summary": "Polls the given token endpoint at the RFC 8628 interval until the user approves, denies, the code expires, or the caller cancels.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "github",
+        "polling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/oauth/linear.rs:RedirectFlowDescriptor",
+      "type": "class",
+      "name": "RedirectFlowDescriptor",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        173,
+        180
+      ],
+      "summary": "Internal state for one in-progress Linear PKCE authorization flow: state, code_verifier, callback port, redirect_uri, authorize_url, expiry.",
+      "tags": [
+        "data-model",
+        "authentication",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:set_test_token_endpoint",
+      "type": "function",
+      "name": "set_test_token_endpoint",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        98,
+        102
+      ],
+      "summary": "Test-only override for the Linear token endpoint URL.",
+      "tags": [
+        "authentication",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:set_test_client_id",
+      "type": "function",
+      "name": "set_test_client_id",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        110,
+        114
+      ],
+      "summary": "Test-only override for the Linear OAuth client id.",
+      "tags": [
+        "authentication",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:effective_client_id",
+      "type": "function",
+      "name": "effective_client_id",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        120,
+        130
+      ],
+      "summary": "Resolves the Linear OAuth client id to use, preferring the test override.",
+      "tags": [
+        "authentication",
+        "linear"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:http_client",
+      "type": "function",
+      "name": "http_client",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        191,
+        200
+      ],
+      "summary": "Builds the reqwest HTTP client used for Linear OAuth token requests.",
+      "tags": [
+        "authentication",
+        "linear",
+        "http"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:start_auth_flow",
+      "type": "function",
+      "name": "start_auth_flow",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        216,
+        252
+      ],
+      "summary": "Generates a state and PKCE code_verifier/challenge, reserves the fixed loopback port, and composes the Linear authorize URL for the frontend to open.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear",
+        "pkce"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:await_callback",
+      "type": "function",
+      "name": "await_callback",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        266,
+        278
+      ],
+      "summary": "Waits for the loopback OAuth callback to deliver the authorization code, using the real system port binding.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:await_callback_with_timeout",
+      "type": "function",
+      "name": "await_callback_with_timeout",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        283,
+        335
+      ],
+      "summary": "Binds the fixed loopback port, serves the callback route until the code/state arrives or the timeout/cancel fires, then tears the listener down.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear",
+        "axum"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:callback_handler",
+      "type": "function",
+      "name": "callback_handler",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        353,
+        397
+      ],
+      "summary": "Axum handler for the loopback OAuth callback route: validates the returned state against the expected one and forwards the result through the shared channel.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:exchange_code",
+      "type": "function",
+      "name": "exchange_code",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        428,
+        436
+      ],
+      "summary": "Exchanges an authorization code for tokens against the real Linear token endpoint.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:exchange_code_with_endpoint",
+      "type": "function",
+      "name": "exchange_code_with_endpoint",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        438,
+        490
+      ],
+      "summary": "Exchanges the authorization code + PKCE verifier for an access/refresh token pair at the given token endpoint.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear",
+        "pkce"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh",
+      "type": "function",
+      "name": "refresh",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        496,
+        502
+      ],
+      "summary": "Refreshes a Linear access token using the real token endpoint.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh_with_endpoint",
+      "type": "function",
+      "name": "refresh_with_endpoint",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "lineRange": [
+        504,
+        538
+      ],
+      "summary": "Exchanges a refresh token for a new access token at the given token endpoint.",
+      "tags": [
+        "authentication",
+        "oauth",
+        "linear"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:OAuthFlowStart",
+      "type": "class",
+      "name": "OAuthFlowStart",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "lineRange": [
+        51,
+        74
+      ],
+      "summary": "Wire enum unifying the GitHub device-flow and Linear redirect-flow start responses for the frontend's Connect-with UI.",
+      "tags": [
+        "type-definition",
+        "authentication",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:PollOutcome",
+      "type": "class",
+      "name": "PollOutcome",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "lineRange": [
+        88,
+        101
+      ],
+      "summary": "Outcome of polling an in-progress OAuth flow: Token, AccessDenied, Expired, Cancelled, PollFailed.",
+      "tags": [
+        "type-definition",
+        "authentication",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:DeviceFlowDescriptor",
+      "type": "class",
+      "name": "DeviceFlowDescriptor",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "lineRange": [
+        120,
+        126
+      ],
+      "summary": "Public device-flow metadata (user code, verification URI, interval, expiry) returned to the frontend.",
+      "tags": [
+        "data-model",
+        "authentication",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/oauth/mod.rs:ensure_fresh_connection_token",
+      "type": "function",
+      "name": "ensure_fresh_connection_token",
+      "filePath": "src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "lineRange": [
+        161,
+        196
+      ],
+      "summary": "Reads a connection's stored token and, if it's a Linear OAuth token nearing expiry, refreshes it and persists the new record before returning a usable access token.",
+      "tags": [
+        "authentication",
+        "oauth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxEntry",
+      "type": "class",
+      "name": "OutboxEntry",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        16,
+        33
+      ],
+      "summary": "One row of the outbox_entries table: entity reference, operation, field path, payload JSON, retry bookkeeping, and status.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:SyncError",
+      "type": "class",
+      "name": "SyncError",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        44,
+        57
+      ],
+      "summary": "Typed sync error: Transient, Permanent, RateLimited, AuthFailed, with an is_retryable classification used by the backoff logic.",
+      "tags": [
+        "type-definition",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxOp",
+      "type": "class",
+      "name": "OutboxOp",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        96,
+        103
+      ],
+      "summary": "Enum of outbox operation kinds: Create, Update, Delete, MergeExternal.",
+      "tags": [
+        "type-definition",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxStatus",
+      "type": "class",
+      "name": "OutboxStatus",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        130,
+        136
+      ],
+      "summary": "Enum of outbox row lifecycle states: Pending, InFlight, Succeeded, Failed, Abandoned.",
+      "tags": [
+        "type-definition",
+        "database",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:ImportState",
+      "type": "class",
+      "name": "ImportState",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        180,
+        186
+      ],
+      "summary": "Enum of import_progress row states: Pending, Running, Completed, Cancelled, Failed.",
+      "tags": [
+        "type-definition",
+        "database",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:EntityType",
+      "type": "class",
+      "name": "EntityType",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        224,
+        230
+      ],
+      "summary": "Enum of syncable entity kinds: WorkItem, Project, Label, Milestone, Member.",
+      "tags": [
+        "type-definition",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxProblemRow",
+      "type": "class",
+      "name": "OutboxProblemRow",
+      "filePath": "src-tauri/crates/project-management/src/sync/types.rs",
+      "lineRange": [
+        268,
+        280
+      ],
+      "summary": "Wire shape for a failed/abandoned outbox row surfaced to the sync-problems UI.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/webhook_listener.rs:WebhookHandlerError",
+      "type": "class",
+      "name": "WebhookHandlerError",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "lineRange": [
+        148,
+        152
+      ],
+      "summary": "Typed error for the webhook handler carrying an HTTP status, a diagnostic note, and the metric outcome to record, with not_found/auth_failed/permanent/internal constructors.",
+      "tags": [
+        "type-definition",
+        "webhook",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:router",
+      "type": "function",
+      "name": "router",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "lineRange": [
+        78,
+        83
+      ],
+      "summary": "Builds the axum Router exposing the POST /sync/webhook/:adapter_id/:slug route.",
+      "tags": [
+        "webhook",
+        "axum",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:handle_webhook_request",
+      "type": "function",
+      "name": "handle_webhook_request",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "lineRange": [
+        95,
+        140
+      ],
+      "summary": "Top-level axum handler: times the request, delegates to handle_inner, records a metric, and maps errors to the appropriate HTTP response.",
+      "tags": [
+        "webhook",
+        "api-handler",
+        "axum"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:handle_inner",
+      "type": "function",
+      "name": "handle_inner",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "lineRange": [
+        188,
+        286
+      ],
+      "summary": "Core webhook processing: resolves the adapter and HMAC secret, verifies the signature, parses the payload into external changes, and persists them as merge_external outbox rows.",
+      "tags": [
+        "webhook",
+        "api-handler",
+        "security"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:persist_changes",
+      "type": "function",
+      "name": "persist_changes",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "lineRange": [
+        294,
+        337
+      ],
+      "summary": "Writes a batch of parsed external changes to the outbox as merge_external rows inside one DB connection.",
+      "tags": [
+        "webhook",
+        "database",
+        "mutation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:fold_headers",
+      "type": "function",
+      "name": "fold_headers",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "lineRange": [
+        341,
+        354
+      ],
+      "summary": "Flattens axum HeaderMap into the WebhookHeaders shape adapters use for signature verification.",
+      "tags": [
+        "webhook",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:WebhookSecret",
+      "type": "class",
+      "name": "WebhookSecret",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        150,
+        155
+      ],
+      "summary": "A project+adapter's HMAC secret and last-rotated timestamp.",
+      "tags": [
+        "data-model",
+        "webhook",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:generate_secret",
+      "type": "function",
+      "name": "generate_secret",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        60,
+        64
+      ],
+      "summary": "Generates a fresh 32-byte CSPRNG secret, hex-encoded.",
+      "tags": [
+        "webhook",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:upsert_secret",
+      "type": "function",
+      "name": "upsert_secret",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        72,
+        89
+      ],
+      "summary": "Inserts or updates the webhook secret for a project+adapter.",
+      "tags": [
+        "webhook",
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:get_secret",
+      "type": "function",
+      "name": "get_secret",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        94,
+        112
+      ],
+      "summary": "Reads the stored webhook secret for a project+adapter.",
+      "tags": [
+        "webhook",
+        "database",
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:rotate_secret",
+      "type": "function",
+      "name": "rotate_secret",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        116,
+        125
+      ],
+      "summary": "Generates and persists a new webhook secret, replacing the old one.",
+      "tags": [
+        "webhook",
+        "security",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:delete_secret",
+      "type": "function",
+      "name": "delete_secret",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        131,
+        138
+      ],
+      "summary": "Deletes the stored webhook secret for a project+adapter.",
+      "tags": [
+        "webhook",
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:read_via_pool",
+      "type": "function",
+      "name": "read_via_pool",
+      "filePath": "src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "lineRange": [
+        143,
+        146
+      ],
+      "summary": "Opens a pooled DB connection and reads the webhook secret for a project+adapter.",
+      "tags": [
+        "webhook",
+        "database",
+        "query"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/connection_token_store.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:configured_client_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:set_test_client_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:effective_client_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:http_client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:start_device_flow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:start_device_flow_with_endpoints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:poll_for_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:poll_for_token_with_endpoints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/linear.rs:RedirectFlowDescriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:set_test_token_endpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:set_test_client_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:effective_client_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:http_client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:start_auth_flow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:await_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:await_callback_with_timeout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:callback_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:exchange_code",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:exchange_code_with_endpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh_with_endpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:OAuthFlowStart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:PollOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:DeviceFlowDescriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/mod.rs:ensure_fresh_connection_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:SyncError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxOp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:ImportState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:EntityType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxProblemRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/webhook_listener.rs:WebhookHandlerError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:router",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:handle_webhook_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:handle_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:persist_changes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:fold_headers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:WebhookSecret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:generate_secret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:upsert_secret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:get_secret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:rotate_secret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:delete_secret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:read_via_pool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:configured_client_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:set_test_client_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:effective_client_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:start_device_flow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:start_device_flow_with_endpoints",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:poll_for_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/github.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/github.rs:poll_for_token_with_endpoints",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/linear.rs:RedirectFlowDescriptor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:set_test_token_endpoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:set_test_client_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:effective_client_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:http_client",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:start_auth_flow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:await_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:await_callback_with_timeout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:exchange_code",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:exchange_code_with_endpoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/linear.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh_with_endpoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:OAuthFlowStart",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:PollOutcome",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/oauth/mod.rs:DeviceFlowDescriptor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/mod.rs:ensure_fresh_connection_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:SyncError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxOp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:ImportState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:EntityType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/types.rs:OutboxProblemRow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/webhook_listener.rs:WebhookHandlerError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_listener.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_listener.rs:router",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:WebhookSecret",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:generate_secret",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:upsert_secret",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:get_secret",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:rotate_secret",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:delete_secret",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/webhook_secrets.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/webhook_secrets.rs:read_via_pool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_token_store.rs:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_token_store.rs:save",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:effective_client_id",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/oauth/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/oauth/linear.rs:refresh",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

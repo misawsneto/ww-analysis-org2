@@ -1,0 +1,318 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "type": "file",
+      "name": "TerminalOutput.tsx",
+      "filePath": "src/components/TerminalDisplay/TerminalOutput.tsx",
+      "summary": "React component that renders terminal command output with ANSI color rendering, error display, and a loading state; consolidates shared output-display logic previously duplicated across RunCommand and TerminalBlock.",
+      "tags": ["component", "terminal", "ui", "memo"],
+      "complexity": "moderate",
+      "languageNotes": "Wrapped in React.memo with an explicit displayName; delegates content extraction and ANSI cleanup to sibling utility modules rather than inlining logic."
+    },
+    {
+      "id": "class:src/components/TerminalDisplay/TerminalOutput.tsx:TerminalOutputProps",
+      "type": "class",
+      "name": "TerminalOutputProps",
+      "filePath": "src/components/TerminalDisplay/TerminalOutput.tsx",
+      "lineRange": [27, 46],
+      "summary": "Prop type definition for TerminalOutput covering raw output, error/exit-code overrides, max height, ANSI toggling, and loading behavior.",
+      "tags": ["type-definition", "props", "terminal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "type": "file",
+      "name": "ansiProcessor.ts",
+      "filePath": "src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "summary": "Utility module for cleaning and inspecting ANSI escape sequences in terminal output, including stripping cursor-control codes and detecting TUI-style output that requires a real VT100 renderer.",
+      "tags": ["utility", "terminal", "ansi", "text-processing"],
+      "complexity": "simple",
+      "languageNotes": "Extracted from RunCommand and TerminalBlock to eliminate duplicated ANSI-handling logic; uses targeted regexes for cursor movement, erase, alternate-screen, and carriage-return rewrite detection."
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:processAnsiContent",
+      "type": "function",
+      "name": "processAnsiContent",
+      "filePath": "src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "lineRange": [15, 30],
+      "summary": "Normalizes line endings and strips cursor-positioning/cursor-up ANSI codes while preserving color codes, producing content safe for ansi-to-react.",
+      "tags": ["utility", "ansi", "text-processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:stripAnsiCodes",
+      "type": "function",
+      "name": "stripAnsiCodes",
+      "filePath": "src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "lineRange": [38, 44],
+      "summary": "Removes all ANSI escape sequences from a string to produce plain text output.",
+      "tags": ["utility", "ansi", "text-processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:hasAnsiCodes",
+      "type": "function",
+      "name": "hasAnsiCodes",
+      "filePath": "src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "lineRange": [52, 57],
+      "summary": "Detects whether a string contains ANSI escape sequences.",
+      "tags": ["utility", "ansi", "detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:hasTuiSequences",
+      "type": "function",
+      "name": "hasTuiSequences",
+      "filePath": "src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "lineRange": [74, 88],
+      "summary": "Detects TUI-style terminal output (cursor movement, erase sequences, alternate screen, carriage-return rewrites) that ansi-to-react cannot render correctly, using a set of documented heuristics.",
+      "tags": ["utility", "ansi", "detection", "terminal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "type": "file",
+      "name": "outputFormatter.ts",
+      "filePath": "src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "summary": "Utility module for formatting backend terminal-command results into displayable strings, including directory-tree rendering and extraction of exit codes, stderr, and the executed command from varied backend result shapes.",
+      "tags": ["utility", "terminal", "formatting", "serialization"],
+      "complexity": "moderate",
+      "languageNotes": "Extracted from RunCommand to eliminate duplication; defensively handles multiple backend output shapes (string, object, nested success wrappers) via optional chaining and fallbacks."
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:formatDirectoryTree",
+      "type": "function",
+      "name": "formatDirectoryTree",
+      "filePath": "src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "lineRange": [15, 78],
+      "summary": "Converts a backend directoryTreeRoot structure into an ASCII tree string for terminal display, recursively formatting directories and files with box-drawing prefixes.",
+      "tags": ["utility", "formatting", "terminal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:getOutputAsString",
+      "type": "function",
+      "name": "getOutputAsString",
+      "filePath": "src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "lineRange": [87, 116],
+      "summary": "Normalizes backend command output (string, object, or directory-tree payload) into a single display-ready string, delegating to formatDirectoryTree when applicable.",
+      "tags": ["utility", "formatting", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractCommandFromResult",
+      "type": "function",
+      "name": "extractCommandFromResult",
+      "filePath": "src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "lineRange": [126, 157],
+      "summary": "Extracts the originally-executed shell command string from a backend result object or fallback args, for display purposes.",
+      "tags": ["utility", "extraction", "terminal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractExitCode",
+      "type": "function",
+      "name": "extractExitCode",
+      "filePath": "src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "lineRange": [176, 200],
+      "summary": "Extracts the numeric exit code from a backend command result object, used to determine error state.",
+      "tags": ["utility", "extraction", "error-handling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractStderr",
+      "type": "function",
+      "name": "extractStderr",
+      "filePath": "src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "lineRange": [208, 232],
+      "summary": "Extracts the stderr text from a backend command result object for display in the terminal error state.",
+      "tags": ["utility", "extraction", "error-handling"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "class:src/components/TerminalDisplay/TerminalOutput.tsx:TerminalOutputProps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:processAnsiContent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:getOutputAsString",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractExitCode",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/TerminalOutput.tsx",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractStderr",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:processAnsiContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:stripAnsiCodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:hasAnsiCodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:hasTuiSequences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:processAnsiContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:stripAnsiCodes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:hasAnsiCodes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "target": "function:src/components/TerminalDisplay/utils/ansiProcessor.ts:hasTuiSequences",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:formatDirectoryTree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:getOutputAsString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractCommandFromResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractExitCode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractStderr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:formatDirectoryTree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:getOutputAsString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractCommandFromResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractExitCode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/TerminalDisplay/utils/outputFormatter.ts",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:extractStderr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:getOutputAsString",
+      "target": "function:src/components/TerminalDisplay/utils/outputFormatter.ts:formatDirectoryTree",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

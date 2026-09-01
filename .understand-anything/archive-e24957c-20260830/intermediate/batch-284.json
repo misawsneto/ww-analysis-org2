@@ -1,0 +1,608 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "type": "file",
+      "name": "hooks.tsx",
+      "filePath": "src/engines/SessionCore/rendering/hooks.tsx",
+      "summary": "React hook and supporting components (lazy loader, error boundary) that render Simulator session events by resolving them through the unified event registry with caching, Suspense, and error handling.",
+      "tags": ["hook", "event-handler", "component", "rendering", "error-boundary"],
+      "complexity": "complex",
+      "languageNotes": "Uses a WeakMap-backed key cache and a class-based error boundary alongside functional hooks/components in the same module."
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "summary": "Central event registry mapping Rust's ui_canonical tool/event identifiers to lazily-loaded React components and per-context (chat/simulator/trajectory) rendering metadata, acting as the single source of truth for event-to-component resolution.",
+      "tags": ["registry", "lazy-loading", "component-loader", "barrel", "caching"],
+      "complexity": "complex",
+      "languageNotes": "Maintains an in-memory component cache plus a pending-loads map to deduplicate concurrent dynamic imports keyed by ui_canonical values that mirror a Rust enum."
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "type": "file",
+      "name": "registryAccessors.ts",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "summary": "Helper functions that expose the event registry's action configuration, status-line/item-index requirements, and trajectory-timeline icon resolution to other parts of the app.",
+      "tags": ["utility", "registry", "helper", "icon-resolution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/hooks.tsx:LazyEventComponent",
+      "type": "function",
+      "name": "LazyEventComponent",
+      "filePath": "src/engines/SessionCore/rendering/hooks.tsx",
+      "lineRange": [147, 208],
+      "summary": "React component that lazily resolves and renders the component for a given event type, managing loading and cached states via getEventComponentSync/loadEventComponent.",
+      "tags": ["component", "lazy-loading", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/hooks.tsx:getStableEventKey",
+      "type": "function",
+      "name": "getStableEventKey",
+      "filePath": "src/engines/SessionCore/rendering/hooks.tsx",
+      "lineRange": [239, 250],
+      "summary": "Derives a stable React list key for an event, preferring id/chunk_id fields and falling back to a WeakMap-cached generated key to avoid unnecessary remounts.",
+      "tags": ["utility", "caching", "keys"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/hooks.tsx:useUnifiedEventRenderer",
+      "type": "function",
+      "name": "useUnifiedEventRenderer",
+      "filePath": "src/engines/SessionCore/rendering/hooks.tsx",
+      "lineRange": [256, 320],
+      "summary": "Main hook returning a memoized renderEvent function that resolves an event's type, looks up its registered component and context config, and wraps rendering in an error boundary and Suspense.",
+      "tags": ["hook", "entry-point", "event-handler", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/engines/SessionCore/rendering/hooks.tsx:UnifiedErrorBoundary",
+      "type": "class",
+      "name": "UnifiedErrorBoundary",
+      "filePath": "src/engines/SessionCore/rendering/hooks.tsx",
+      "lineRange": [89, 134],
+      "summary": "React error boundary that catches rendering failures for a given event type, logs them, and displays a fallback alert instead of crashing the tree.",
+      "tags": ["error-boundary", "component", "resilience"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadComponent",
+      "type": "function",
+      "name": "loadComponent",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [400, 431],
+      "summary": "Internal loader that resolves a component via a dynamic import loader function, caching the result and deduplicating in-flight loads via a pending-promise map.",
+      "tags": ["lazy-loading", "caching", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:resolveEventType",
+      "type": "function",
+      "name": "resolveEventType",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [441, 445],
+      "summary": "Resolves a raw event/tool name to its canonical registry event type via resolveToolName.",
+      "tags": ["utility", "resolver", "registry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:isRegistered",
+      "type": "function",
+      "name": "isRegistered",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [450, 453],
+      "summary": "Checks whether a given event type has a registered component in COMPONENT_LOADERS.",
+      "tags": ["utility", "registry", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getAllEventTypes",
+      "type": "function",
+      "name": "getAllEventTypes",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [458, 472],
+      "summary": "Collects the union of all known event types from COMPONENT_LOADERS keys and CLI alias keys.",
+      "tags": ["registry", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventsByCategory",
+      "type": "function",
+      "name": "getEventsByCategory",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [477, 481],
+      "summary": "Filters registered event types down to those belonging to a given EventCategory.",
+      "tags": ["registry", "filtering", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventComponentSync",
+      "type": "function",
+      "name": "getEventComponentSync",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [493, 499],
+      "summary": "Synchronously returns an already-cached component for an event type without triggering a load, used for instant re-renders.",
+      "tags": ["caching", "registry", "component-loader"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadEventComponent",
+      "type": "function",
+      "name": "loadEventComponent",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [506, 533],
+      "summary": "Asynchronously loads (and caches) the component registered for a given event type, logging and rethrowing on failure.",
+      "tags": ["lazy-loading", "async", "registry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:supportsContext",
+      "type": "function",
+      "name": "supportsContext",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [538, 541],
+      "summary": "Reports whether an event type has any per-context (chat/simulator/trajectory) rendering configuration.",
+      "tags": ["registry", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:preloadCommonComponents",
+      "type": "function",
+      "name": "preloadCommonComponents",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [546, 556],
+      "summary": "Warms the component cache during browser idle time by preloading the components listed in PRELOAD_COMPONENTS.",
+      "tags": ["performance", "lazy-loading", "preloading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatLazyComponent",
+      "type": "function",
+      "name": "getChatLazyComponent",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [573, 604],
+      "summary": "Returns a React.lazy-wrapped component for the chat panel's given event type, backed by the same load/cache pipeline as the simulator renderer.",
+      "tags": ["lazy-loading", "component-loader", "chat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatContextConfig",
+      "type": "function",
+      "name": "getChatContextConfig",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [609, 615],
+      "summary": "Looks up the chat-context rendering configuration (status line, item index requirements) for a given event type.",
+      "tags": ["registry", "config-lookup", "chat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:chatShowsStatusLine",
+      "type": "function",
+      "name": "chatShowsStatusLine",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [620, 622],
+      "summary": "Convenience wrapper reporting whether a chat event type should display a status line, defaulting to true.",
+      "tags": ["utility", "chat", "config-lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/events/index.ts:chatRequiresItemIndex",
+      "type": "function",
+      "name": "chatRequiresItemIndex",
+      "filePath": "src/engines/SessionCore/rendering/registry/events/index.ts",
+      "lineRange": [627, 629],
+      "summary": "Convenience wrapper reporting whether a chat event type needs an itemIndex prop.",
+      "tags": ["utility", "chat", "config-lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getActionConfig",
+      "type": "function",
+      "name": "getActionConfig",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "lineRange": [30, 35],
+      "summary": "Returns the chat action configuration (status line / item index flags) for a given action type by delegating to getChatContextConfig.",
+      "tags": ["registry", "config-lookup", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:shouldShowStatusLine",
+      "type": "function",
+      "name": "shouldShowStatusLine",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "lineRange": [40, 43],
+      "summary": "Determines whether the status line should be shown for a given action type, defaulting to true when unconfigured.",
+      "tags": ["utility", "config-lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:requiresItemIndex",
+      "type": "function",
+      "name": "requiresItemIndex",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "lineRange": [48, 51],
+      "summary": "Determines whether a given action type requires an itemIndex prop, defaulting to false when unconfigured.",
+      "tags": ["utility", "config-lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getRegisteredActionTypes",
+      "type": "function",
+      "name": "getRegisteredActionTypes",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "lineRange": [56, 58],
+      "summary": "Returns all registered action/event types by delegating to the event registry's getAllEventTypes.",
+      "tags": ["registry", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:prefetchCommonComponents",
+      "type": "function",
+      "name": "prefetchCommonComponents",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "lineRange": [64, 72],
+      "summary": "Dynamically imports the event registry module and prefetches its commonly-used components, silently ignoring failures since prefetching is optional.",
+      "tags": ["performance", "lazy-loading", "preloading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getTrajectoryTimelineIcon",
+      "type": "function",
+      "name": "getTrajectoryTimelineIcon",
+      "filePath": "src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "lineRange": [98, 110],
+      "summary": "Resolves the Lucide icon to display for a trajectory timeline row, aligning with chat block icons and falling back to Rust-backed tool icons.",
+      "tags": ["icon-resolution", "utility", "rendering"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "target": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "target": "function:src/engines/SessionCore/rendering/hooks.tsx:LazyEventComponent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "target": "function:src/engines/SessionCore/rendering/hooks.tsx:getStableEventKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "target": "function:src/engines/SessionCore/rendering/hooks.tsx:useUnifiedEventRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "target": "class:src/engines/SessionCore/rendering/hooks.tsx:UnifiedErrorBoundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/hooks.tsx",
+      "target": "function:src/engines/SessionCore/rendering/hooks.tsx:useUnifiedEventRenderer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadComponent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:resolveEventType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:isRegistered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getAllEventTypes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventsByCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventComponentSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadEventComponent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:supportsContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:preloadCommonComponents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatLazyComponent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatContextConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:chatShowsStatusLine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:chatRequiresItemIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:resolveEventType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:isRegistered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getAllEventTypes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventsByCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventComponentSync",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadEventComponent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:supportsContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:preloadCommonComponents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatLazyComponent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatContextConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:chatShowsStatusLine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/events/index.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:chatRequiresItemIndex",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getActionConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:shouldShowStatusLine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:requiresItemIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getRegisteredActionTypes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:prefetchCommonComponents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getTrajectoryTimelineIcon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getActionConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:shouldShowStatusLine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:requiresItemIndex",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getRegisteredActionTypes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:prefetchCommonComponents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/registry/registryAccessors.ts",
+      "target": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getTrajectoryTimelineIcon",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/rendering/hooks.tsx:LazyEventComponent",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getEventComponentSync",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/rendering/hooks.tsx:LazyEventComponent",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadEventComponent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/rendering/hooks.tsx:useUnifiedEventRenderer",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:resolveEventType",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:getActionConfig",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:getChatContextConfig",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/rendering/registry/registryAccessors.ts:prefetchCommonComponents",
+      "target": "function:src/engines/SessionCore/rendering/registry/events/index.ts:loadEventComponent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,1667 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "type": "file",
+      "name": "background.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "summary": "Implements background subagent spawning: launches a subagent session that runs independently of the parent turn and reports back asynchronously.",
+      "tags": [
+        "orchestration",
+        "subagent",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:BackgroundSpawnArgs",
+      "type": "class",
+      "name": "BackgroundSpawnArgs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "lineRange": [
+        26,
+        47
+      ],
+      "summary": "Bundled arguments (agent id, model, prompt, worktree/session config) needed to spawn a background subagent.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "type": "file",
+      "name": "foreground.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "summary": "Implements foreground subagent execution: runs a subagent session to completion synchronously within the parent tool call and returns its result.",
+      "tags": [
+        "orchestration",
+        "subagent"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:ForegroundRunArgs",
+      "type": "class",
+      "name": "ForegroundRunArgs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "lineRange": [
+        33,
+        54
+      ],
+      "summary": "Bundled arguments needed to run a foreground subagent to completion.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "type": "file",
+      "name": "helpers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "summary": "Shared helper functions and RAII guards used by the agent orchestration tool: subagent id resolution, spawn-rejection policy checks, worktree cleanup, and result formatting.",
+      "tags": [
+        "utility",
+        "orchestration",
+        "subagent"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:FinalizeGuard",
+      "type": "class",
+      "name": "FinalizeGuard",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        40,
+        43
+      ],
+      "summary": "RAII guard that ensures a subagent job is marked finalized (via its Drop impl) even on early return or panic, unless explicitly disarmed.",
+      "tags": [
+        "guard-pattern",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:ResolvedAgentId",
+      "type": "class",
+      "name": "ResolvedAgentId",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        143,
+        146
+      ],
+      "summary": "Resolved subagent identifier plus its display label after id/lookup resolution.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:ProvisionalJobGuard",
+      "type": "class",
+      "name": "ProvisionalJobGuard",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        296,
+        302
+      ],
+      "summary": "RAII guard that announces and, via Drop, retracts a provisional job entry if the spawn does not complete successfully.",
+      "tags": [
+        "guard-pattern",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:WorktreeCleanup",
+      "type": "class",
+      "name": "WorktreeCleanup",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        476,
+        479
+      ],
+      "summary": "Describes how a subagent's git worktree should be disposed of after the run completes (delete, keep, merge).",
+      "tags": [
+        "data-model",
+        "git-worktree"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "type": "file",
+      "name": "linked_session.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "summary": "Tracks and persists \"linked session\" records that connect a parent agent turn to the subagent sessions it spawned, including instance numbering and status sync.",
+      "tags": [
+        "persistence",
+        "orchestration",
+        "subagent"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "type": "file",
+      "name": "messages.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "summary": "Builds the initial conversation message sets for subagents in each launch mode: fresh, forked from parent context, or resumed from a prior session.",
+      "tags": [
+        "prompt-engineering",
+        "orchestration",
+        "subagent"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:InitialMessageMode",
+      "type": "class",
+      "name": "InitialMessageMode",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "lineRange": [
+        20,
+        25
+      ],
+      "summary": "Enum selecting how a subagent's initial messages are constructed: fresh, forked, or resumed.",
+      "tags": [
+        "enum",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "summary": "Implements AgentTool, the central orchestration tool that spawns and manages subagents: resolves identity/policy, builds worktrees and system prompts, and dispatches to foreground or background execution.",
+      "tags": [
+        "orchestration",
+        "tool-implementation",
+        "subagent"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:DisabledOrgSendMessageTool",
+      "type": "class",
+      "name": "DisabledOrgSendMessageTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        62,
+        62
+      ],
+      "summary": "Stub tool returned in place of org_send_message when Agent Org messaging is disabled for the current context.",
+      "tags": [
+        "stub",
+        "feature-flag"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:AgentToolConfig",
+      "type": "class",
+      "name": "AgentToolConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        102,
+        173
+      ],
+      "summary": "Full configuration bundle (allowed subagents, policy, registries, worktree settings) driving a single AgentTool instance.",
+      "tags": [
+        "config",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:AgentTool",
+      "type": "class",
+      "name": "AgentTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        176,
+        203
+      ],
+      "summary": "The agent orchestration tool itself, exposing subagent spawn/run/manage capabilities to the parent LLM turn.",
+      "tags": [
+        "tool-implementation",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "type": "file",
+      "name": "policy.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "summary": "Builds tool-permission policies for subagents: which builtin tools are allowed, deny-list overlays for restricted subagent types, and fresh vs inherited policy/registry construction.",
+      "tags": [
+        "policy",
+        "security",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:spawn_background_subagent",
+      "type": "function",
+      "name": "spawn_background_subagent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "lineRange": [
+        57,
+        356
+      ],
+      "summary": "Spawns a subagent session in the background, wiring up its worktree, registry, and linked-session bookkeeping without blocking the parent turn.",
+      "tags": [
+        "orchestration",
+        "subagent",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:run_foreground_subagent",
+      "type": "function",
+      "name": "run_foreground_subagent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "lineRange": [
+        61,
+        420
+      ],
+      "summary": "Runs a subagent session synchronously to completion, waiting for and returning its final result to the calling agent tool.",
+      "tags": [
+        "orchestration",
+        "subagent",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:optional_nonempty_string_param",
+      "type": "function",
+      "name": "optional_nonempty_string_param",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        9,
+        16
+      ],
+      "summary": "Extracts an optional string parameter, treating empty strings as absent.",
+      "tags": [
+        "validation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_type_label",
+      "type": "function",
+      "name": "subagent_type_label",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        125,
+        138
+      ],
+      "summary": "Formats a human-readable label for a subagent type/id used in status messages.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_agent_id_for_execute",
+      "type": "function",
+      "name": "resolve_agent_id_for_execute",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        159,
+        176
+      ],
+      "summary": "Resolves and validates the target agent id for an execute call, applying lookup/normalization rules.",
+      "tags": [
+        "validation",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:looks_like_valid_subagent_session_id",
+      "type": "function",
+      "name": "looks_like_valid_subagent_session_id",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        187,
+        194
+      ],
+      "summary": "Heuristically validates that a string looks like a well-formed subagent session id.",
+      "tags": [
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:org_roster_spawn_rejection",
+      "type": "function",
+      "name": "org_roster_spawn_rejection",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        224,
+        260
+      ],
+      "summary": "Determines whether a subagent spawn must be rejected because the target is an org-roster member not allowed for direct spawning.",
+      "tags": [
+        "policy",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_of_subagent_rejection",
+      "type": "function",
+      "name": "subagent_of_subagent_rejection",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        270,
+        281
+      ],
+      "summary": "Rejects spawn attempts that would create a subagent-of-subagent delegation chain beyond policy limits.",
+      "tags": [
+        "policy",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:announce",
+      "type": "function",
+      "name": "announce",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        305,
+        325
+      ],
+      "summary": "Publishes a provisional-job announcement event so other parts of the system see the job as pending before it fully starts.",
+      "tags": [
+        "messaging",
+        "guard-pattern"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:append_result_trailer",
+      "type": "function",
+      "name": "append_result_trailer",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        357,
+        370
+      ],
+      "summary": "Appends a trailer (agent id, session id, token/tool-use counts) to a subagent's result text for traceability.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:count_tool_uses",
+      "type": "function",
+      "name": "count_tool_uses",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        374,
+        380
+      ],
+      "summary": "Counts the number of tool invocations recorded in a subagent's message history.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:background_launch_message",
+      "type": "function",
+      "name": "background_launch_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        392,
+        404
+      ],
+      "summary": "Builds the acknowledgement message returned to the caller when a background subagent is launched.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_subagent_model",
+      "type": "function",
+      "name": "resolve_subagent_model",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        429,
+        472
+      ],
+      "summary": "Resolves which model a subagent should use, applying explicit param, inheritance, and agent-default fallback rules.",
+      "tags": [
+        "resolution",
+        "model-selection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:dispose_worktree_after_run",
+      "type": "function",
+      "name": "dispose_worktree_after_run",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        491,
+        541
+      ],
+      "summary": "Cleans up (deletes, keeps, or merges) a subagent's git worktree once its run has finished, per WorktreeCleanup policy.",
+      "tags": [
+        "git-worktree",
+        "cleanup"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:worktree_kept_note",
+      "type": "function",
+      "name": "worktree_kept_note",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        547,
+        555
+      ],
+      "summary": "Builds the note text explaining that a worktree was intentionally kept after a subagent run.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:prepend_worktree_note",
+      "type": "function",
+      "name": "prepend_worktree_note",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        558,
+        568
+      ],
+      "summary": "Prepends a note to the subagent result explaining that its worktree was kept rather than cleaned up.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:with_full_result_pointer",
+      "type": "function",
+      "name": "with_full_result_pointer",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "lineRange": [
+        580,
+        607
+      ],
+      "summary": "Appends a pointer/reference to the full untruncated subagent result when the inline result was truncated.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:next_instance_number",
+      "type": "function",
+      "name": "next_instance_number",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "lineRange": [
+        27,
+        39
+      ],
+      "summary": "Computes the next sequential instance number for a repeatedly-spawned subagent of the same agent id.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:write_linked_session",
+      "type": "function",
+      "name": "write_linked_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "lineRange": [
+        41,
+        114
+      ],
+      "summary": "Persists a new linked-session record connecting a parent session to a freshly spawned subagent session.",
+      "tags": [
+        "persistence",
+        "mutation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:update_linked_session_sync",
+      "type": "function",
+      "name": "update_linked_session_sync",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "lineRange": [
+        119,
+        127
+      ],
+      "summary": "Synchronous wrapper that applies a linked-session update, used from non-async call sites.",
+      "tags": [
+        "persistence",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:apply_linked_session_update",
+      "type": "function",
+      "name": "apply_linked_session_update",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "lineRange": [
+        134,
+        184
+      ],
+      "summary": "Applies a status/token/preview update to an existing linked-session record.",
+      "tags": [
+        "persistence",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_initial_messages",
+      "type": "function",
+      "name": "build_initial_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "lineRange": [
+        28,
+        43
+      ],
+      "summary": "Dispatches to the appropriate message-building strategy based on InitialMessageMode.",
+      "tags": [
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_fork_messages",
+      "type": "function",
+      "name": "build_fork_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "lineRange": [
+        45,
+        99
+      ],
+      "summary": "Builds initial subagent messages by forking relevant context/history from the parent session.",
+      "tags": [
+        "prompt-engineering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_resume_messages",
+      "type": "function",
+      "name": "build_resume_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "lineRange": [
+        113,
+        156
+      ],
+      "summary": "Builds initial subagent messages by resuming and shrinking a prior subagent session's history.",
+      "tags": [
+        "prompt-engineering",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_fresh_messages",
+      "type": "function",
+      "name": "build_fresh_messages",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "lineRange": [
+        158,
+        169
+      ],
+      "summary": "Builds a minimal fresh initial message set containing only the system prompt and task prompt.",
+      "tags": [
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:shrink_oversized_resume_history",
+      "type": "function",
+      "name": "shrink_oversized_resume_history",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "lineRange": [
+        182,
+        209
+      ],
+      "summary": "Trims a resumed session's message history down to fit within budget while preserving recent context.",
+      "tags": [
+        "prompt-engineering",
+        "truncation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        86,
+        95
+      ],
+      "summary": "Main execute path for AgentTool: validates the request, resolves policy/model/messages, and dispatches to foreground or background subagent execution.",
+      "tags": [
+        "tool-implementation",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:with_registry_slot",
+      "type": "function",
+      "name": "with_registry_slot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        255,
+        272
+      ],
+      "summary": "Constructs an AgentTool wired to shared registry/policy/session-tracking slots inherited from the parent.",
+      "tags": [
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:requested_isolation",
+      "type": "function",
+      "name": "requested_isolation",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        308,
+        325
+      ],
+      "summary": "Determines the requested workspace isolation level (shared vs worktree) for a subagent spawn request.",
+      "tags": [
+        "resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:create_worktree_workspace",
+      "type": "function",
+      "name": "create_worktree_workspace",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        327,
+        361
+      ],
+      "summary": "Creates a new git worktree-backed workspace for an isolated subagent session.",
+      "tags": [
+        "git-worktree",
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:with_workspace_coding_overlay",
+      "type": "function",
+      "name": "with_workspace_coding_overlay",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        363,
+        414
+      ],
+      "summary": "Overlays coding-tool workspace bindings onto a base tool registry for a subagent's worktree.",
+      "tags": [
+        "tool-registry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:build_context",
+      "type": "function",
+      "name": "build_context",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "lineRange": [
+        418,
+        474
+      ],
+      "summary": "Builds the delegation context (policy, registry, workspace) used to construct a subagent's AgentTool instance.",
+      "tags": [
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:agent_supports_builtin_tool",
+      "type": "function",
+      "name": "agent_supports_builtin_tool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        36,
+        42
+      ],
+      "summary": "Checks whether a given agent definition supports a specific builtin tool.",
+      "tags": [
+        "policy",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:subagent_hard_deny_layer",
+      "type": "function",
+      "name": "subagent_hard_deny_layer",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        61,
+        70
+      ],
+      "summary": "Computes the hard deny-list of tools that a subagent may never use regardless of inherited policy.",
+      "tags": [
+        "policy",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:overlay_parent_exec_mode",
+      "type": "function",
+      "name": "overlay_parent_exec_mode",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        81,
+        89
+      ],
+      "summary": "Overlays the parent's execution-mode restrictions onto a subagent's policy.",
+      "tags": [
+        "policy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_inherited_policy",
+      "type": "function",
+      "name": "build_inherited_policy",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        91,
+        106
+      ],
+      "summary": "Builds a subagent tool policy that inherits and narrows the parent agent's policy.",
+      "tags": [
+        "policy",
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_explore_policy",
+      "type": "function",
+      "name": "build_explore_policy",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        108,
+        142
+      ],
+      "summary": "Builds a restricted read-only \"explore\" policy for subagents limited to investigation without mutation.",
+      "tags": [
+        "policy",
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_registry",
+      "type": "function",
+      "name": "build_fresh_registry",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        152,
+        215
+      ],
+      "summary": "Builds a brand-new tool registry for a subagent that does not inherit the parent's tool set.",
+      "tags": [
+        "tool-registry",
+        "factory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_policy",
+      "type": "function",
+      "name": "build_fresh_policy",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "lineRange": [
+        217,
+        231
+      ],
+      "summary": "Builds a brand-new (non-inherited) tool policy for a subagent based solely on its own agent definition.",
+      "tags": [
+        "policy",
+        "factory"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:BackgroundSpawnArgs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:BackgroundSpawnArgs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:spawn_background_subagent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:spawn_background_subagent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:ForegroundRunArgs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:ForegroundRunArgs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:run_foreground_subagent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:run_foreground_subagent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:FinalizeGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:FinalizeGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:ResolvedAgentId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:ResolvedAgentId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:ProvisionalJobGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:ProvisionalJobGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:WorktreeCleanup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:WorktreeCleanup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:optional_nonempty_string_param",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:optional_nonempty_string_param",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_type_label",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_type_label",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_agent_id_for_execute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_agent_id_for_execute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:looks_like_valid_subagent_session_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:looks_like_valid_subagent_session_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:org_roster_spawn_rejection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:org_roster_spawn_rejection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_of_subagent_rejection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_of_subagent_rejection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:announce",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:announce",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:append_result_trailer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:append_result_trailer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:count_tool_uses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:count_tool_uses",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:background_launch_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:background_launch_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_subagent_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_subagent_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:dispose_worktree_after_run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:dispose_worktree_after_run",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:worktree_kept_note",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:worktree_kept_note",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:prepend_worktree_note",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:prepend_worktree_note",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:with_full_result_pointer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:with_full_result_pointer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:next_instance_number",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:next_instance_number",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:write_linked_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:write_linked_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:update_linked_session_sync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:update_linked_session_sync",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:apply_linked_session_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:InitialMessageMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:InitialMessageMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_initial_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_initial_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_fork_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_resume_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_resume_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_fresh_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:shrink_oversized_resume_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:DisabledOrgSendMessageTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:AgentToolConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:AgentToolConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:AgentTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:AgentTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:with_registry_slot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:with_registry_slot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:requested_isolation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:create_worktree_workspace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:with_workspace_coding_overlay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:build_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/schema.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/system_prompt.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/tests.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:agent_supports_builtin_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:agent_supports_builtin_tool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:subagent_hard_deny_layer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:subagent_hard_deny_layer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:overlay_parent_exec_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:overlay_parent_exec_mode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_inherited_policy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_inherited_policy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_explore_policy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_explore_policy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_registry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_registry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_policy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_policy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_of_subagent_rejection",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_agent_id_for_execute",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:org_roster_spawn_rejection",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:next_instance_number",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:subagent_type_label",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:announce",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs:resolve_subagent_model",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_inherited_policy",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_explore_policy",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_registry",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/policy.rs:build_fresh_policy",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/system_prompt.rs:build_full_system_prompt",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/messages.rs:build_initial_messages",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/linked_session.rs:write_linked_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/background.rs:spawn_background_subagent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/foreground.rs:run_foreground_subagent",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/helpers.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/orchestration/agent/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

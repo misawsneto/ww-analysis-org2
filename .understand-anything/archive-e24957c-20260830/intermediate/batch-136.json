@@ -1,0 +1,422 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/modules/MainApp/Settings/SettingsListPanel.tsx",
+      "type": "file",
+      "name": "SettingsListPanel.tsx",
+      "filePath": "src/modules/MainApp/Settings/SettingsListPanel.tsx",
+      "summary": "Left sidebar panel for the Settings page, rendering app section navigation items via MenuPanel with i18n-translated labels and active-section highlighting.",
+      "tags": ["component", "navigation", "sidebar", "settings-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/SettingsSlot.tsx",
+      "type": "file",
+      "name": "SettingsSlot.tsx",
+      "filePath": "src/modules/MainApp/Settings/SettingsSlot.tsx",
+      "summary": "Chat-panel-embedded shell for the Settings UI that derives the active section/tab/route-root from the URL and swaps in the matching body (app settings, AgentOrgs, MyRole) with header actions and resize/maximize controls.",
+      "tags": ["component", "routing", "chat-panel", "settings-ui"],
+      "complexity": "complex",
+      "languageNotes": "URL is treated as the single source of truth for active section/tab; state is derived via useLocation and written back with navigate(..., { replace: true }) rather than kept in local component state."
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx",
+      "type": "file",
+      "name": "SettingsHeaderActions.tsx",
+      "filePath": "src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx",
+      "summary": "Renders the trailing header action cluster (extra buttons plus a compact '+' dropdown) for the SettingsSlot header, sourced entirely from useRouteToolbarConfig.",
+      "tags": ["component", "toolbar", "header", "settings-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/config.ts",
+      "type": "file",
+      "name": "config.ts",
+      "filePath": "src/modules/MainApp/Settings/config.ts",
+      "summary": "Defines Settings page section IDs, the sidebar section list, per-section sub-tab metadata, and shared button prop presets consumed by both the full Settings page and the chat-panel SettingsSlot.",
+      "tags": ["config", "constants", "settings-ui", "shared"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "type": "file",
+      "name": "toolbarPlusConfigs.ts",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "summary": "Pure helper functions that build per-integration-category '+' dropdown menu items (models, databases, connections, git, MCP, skills, routines, rules) consumed by useRouteToolbarConfig.",
+      "tags": ["utility", "dropdown", "toolbar", "integrations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx",
+      "type": "file",
+      "name": "useRouteToolbarConfig.tsx",
+      "filePath": "src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx",
+      "summary": "Custom hook that derives the settings/integrations header toolbar configuration (title, extra buttons, plus-dropdown items) synchronously from the current pathname, integration-category atoms, and region-notice state.",
+      "tags": ["hook", "routing", "toolbar", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx",
+      "type": "file",
+      "name": "useSettingsRegionNoticeButton.tsx",
+      "filePath": "src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx",
+      "summary": "Hook that builds an optional region-restriction notice button for the Settings header when the user's detected region is sanctioned or has AI-provider restrictions.",
+      "tags": ["hook", "compliance", "notice", "settings-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/modules/MainApp/Settings/index.tsx",
+      "summary": "Top-level Settings page component: renders the section list sidebar, the active section content or subpage, and a raw-JSON editor toggle, keeping section/tab state synced with the URL.",
+      "tags": ["component", "page", "routing", "settings-ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx",
+      "type": "file",
+      "name": "SettingsContainerRenderer.tsx",
+      "filePath": "src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx",
+      "summary": "Renders a settings container's rows, resolving each row against a custom row-slot registry or falling back to the generic SettingsFieldRenderer, with defensive error logging for malformed containers.",
+      "tags": ["component", "renderer", "settings-ui", "dynamic-rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx",
+      "type": "file",
+      "name": "SettingsFieldRenderer.tsx",
+      "filePath": "src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx",
+      "summary": "Renders the appropriate form control (switch, select, slider, number input) for an individual settings field row, wired to the live settings store via useSetting.",
+      "tags": ["component", "form-control", "renderer", "settings-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx",
+      "type": "file",
+      "name": "SettingsSectionRenderer.tsx",
+      "filePath": "src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx",
+      "summary": "Renders a settings section's content, preferring a registered custom section-slot component and otherwise iterating the section's container definitions via SettingsContainerRenderer.",
+      "tags": ["component", "renderer", "settings-ui", "dynamic-rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/renderer/slotRegistry.agent.tsx",
+      "type": "file",
+      "name": "slotRegistry.agent.tsx",
+      "filePath": "src/modules/MainApp/Settings/renderer/slotRegistry.agent.tsx",
+      "summary": "Agent-build variant of the settings custom-section-slot registry, wiring the AGENT_OS_CONFIG and AGENT_SDE_CONFIG slots to AgentBuiltinConfigSection.",
+      "tags": ["registry", "agent-variant", "settings-ui", "slot"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/renderer/slotRegistry.app.ts",
+      "type": "file",
+      "name": "slotRegistry.app.ts",
+      "filePath": "src/modules/MainApp/Settings/renderer/slotRegistry.app.ts",
+      "summary": "App-build variant of the settings custom-section-slot registry, mapping general/collaboration/appearance/editor/security/monitor slots to their respective section components.",
+      "tags": ["registry", "app-variant", "settings-ui", "slot"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/modules/MainApp/Settings/renderer/slotRegistry.ts",
+      "type": "file",
+      "name": "slotRegistry.ts",
+      "filePath": "src/modules/MainApp/Settings/renderer/slotRegistry.ts",
+      "summary": "Merges the app and agent custom-section-slot registries into a single settingsSectionSlotRegistry and re-exports the row-slot registry as the single entry point for slot lookups.",
+      "tags": ["barrel", "registry", "settings-ui", "slot"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/SettingsListPanel.tsx:SettingsListPanel",
+      "type": "function",
+      "name": "SettingsListPanel",
+      "filePath": "src/modules/MainApp/Settings/SettingsListPanel.tsx",
+      "lineRange": [18, 41],
+      "summary": "React component rendering the MenuPanel-based left navigation list for Settings app sections, translating labels via i18n.",
+      "tags": ["component", "navigation", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlotAppBody",
+      "type": "function",
+      "name": "SettingsSlotAppBody",
+      "filePath": "src/modules/MainApp/Settings/SettingsSlot.tsx",
+      "lineRange": [93, 165],
+      "summary": "Renders the inline app-settings body within SettingsSlot: derives active section/tab from the URL, builds the tab-pill bar, and mounts SettingsSectionRenderer.",
+      "tags": ["component", "routing", "settings-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlotIntegrationsBody",
+      "type": "function",
+      "name": "SettingsSlotIntegrationsBody",
+      "filePath": "src/modules/MainApp/Settings/SettingsSlot.tsx",
+      "lineRange": [171, 197],
+      "summary": "Renders the integrations sub-page body within SettingsSlot by delegating to useIntegrationsPage.",
+      "tags": ["component", "integrations", "settings-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:LazyFullPageBody",
+      "type": "function",
+      "name": "LazyFullPageBody",
+      "filePath": "src/modules/MainApp/Settings/SettingsSlot.tsx",
+      "lineRange": [203, 213],
+      "summary": "Wraps lazily-loaded full-page module bodies (AgentOrgs, MyRole) in a Suspense boundary with a placeholder fallback.",
+      "tags": ["component", "lazy-loading", "suspense"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlot",
+      "type": "function",
+      "name": "SettingsSlot",
+      "filePath": "src/modules/MainApp/Settings/SettingsSlot.tsx",
+      "lineRange": [244, 397],
+      "summary": "Main chat-panel Settings slot shell: derives the active route root and renders the matching body component, header (title, actions, maximize/collapse controls), and resize handle.",
+      "tags": ["component", "shell", "routing", "chat-panel"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:HeaderIconButton",
+      "type": "function",
+      "name": "HeaderIconButton",
+      "filePath": "src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx",
+      "lineRange": [46, 88],
+      "summary": "Renders a single tooltip-wrapped trailing header icon button (refresh, panel toggle, etc.) from a RouteToolbarButton config item.",
+      "tags": ["component", "button", "toolbar"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:CompactPlusDropdown",
+      "type": "function",
+      "name": "CompactPlusDropdown",
+      "filePath": "src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx",
+      "lineRange": [95, 163],
+      "summary": "Renders the compact '+' dropdown trigger and its filtered list of dropdown items for the settings header toolbar.",
+      "tags": ["component", "dropdown", "toolbar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:SettingsHeaderActions",
+      "type": "function",
+      "name": "SettingsHeaderActions",
+      "filePath": "src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx",
+      "lineRange": [165, 199],
+      "summary": "Composes the SettingsSlot header's trailing action cluster from useRouteToolbarConfig output: extra buttons followed by the plus-dropdown or single plus button.",
+      "tags": ["component", "toolbar", "header"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:getPlusConfigForCategory",
+      "type": "function",
+      "name": "getPlusConfigForCategory",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [30, 55],
+      "summary": "Dispatches on integration category to return the matching '+' dropdown items builder (models, databases, connections, git, external skillsets, rules, routines) for the route toolbar.",
+      "tags": ["utility", "dispatch", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildModelsDropdownItems",
+      "type": "function",
+      "name": "buildModelsDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [57, 69],
+      "summary": "Builds the '+' dropdown items for adding a new AI model provider connection.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildDatabasesDropdownItems",
+      "type": "function",
+      "name": "buildDatabasesDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [71, 83],
+      "summary": "Builds the '+' dropdown items for adding a new database connection.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildConnectionsDropdownItems",
+      "type": "function",
+      "name": "buildConnectionsDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [85, 97],
+      "summary": "Builds the '+' dropdown items for adding a new generic external connection.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildGitDropdownItems",
+      "type": "function",
+      "name": "buildGitDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [99, 111],
+      "summary": "Builds the '+' dropdown items for adding a new Git integration.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildMcpDropdownItems",
+      "type": "function",
+      "name": "buildMcpDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [123, 135],
+      "summary": "Builds the '+' dropdown items for adding a new MCP (Model Context Protocol) server connection.",
+      "tags": ["utility", "dropdown", "integrations", "mcp"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildSkillsDropdownItems",
+      "type": "function",
+      "name": "buildSkillsDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [137, 155],
+      "summary": "Builds the '+' dropdown items for adding skills, combining download and file-import actions.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildRoutinesDropdownItems",
+      "type": "function",
+      "name": "buildRoutinesDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [157, 169],
+      "summary": "Builds the '+' dropdown items for adding a new automation routine.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildRulesDropdownItems",
+      "type": "function",
+      "name": "buildRulesDropdownItems",
+      "filePath": "src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts",
+      "lineRange": [171, 183],
+      "summary": "Builds the '+' dropdown items for adding a new rule.",
+      "tags": ["utility", "dropdown", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx:useRouteToolbarConfig",
+      "type": "function",
+      "name": "useRouteToolbarConfig",
+      "filePath": "src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx",
+      "lineRange": [66, 247],
+      "summary": "Central hook computing the settings/integrations header toolbar configuration (title, extra buttons, plus-dropdown) synchronously from the current pathname and related atoms, keyed by top-level and integration-category routes.",
+      "tags": ["hook", "routing", "toolbar", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx:useSettingsRegionNoticeButton",
+      "type": "function",
+      "name": "useSettingsRegionNoticeButton",
+      "filePath": "src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx",
+      "lineRange": [11, 53],
+      "summary": "Hook returning a region-restriction notice button config (or null) when the resolved region is sanctioned or has restricted AI providers, memoized on region-check state.",
+      "tags": ["hook", "compliance", "notice"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/index.tsx:Settings",
+      "type": "function",
+      "name": "Settings",
+      "filePath": "src/modules/MainApp/Settings/index.tsx",
+      "lineRange": [60, 296],
+      "summary": "Top-level Settings page component managing section/tab derivation from the URL, JSON-vs-GUI view mode, subpage navigation, and monitor-refresh triggering.",
+      "tags": ["component", "page", "routing", "settings"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx:SettingsContainerRenderer",
+      "type": "function",
+      "name": "SettingsContainerRenderer",
+      "filePath": "src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx",
+      "lineRange": [22, 100],
+      "summary": "Renders all rows of a settings container, resolving each against the row-slot registry or the generic SettingsFieldRenderer, with defensive logging for unknown or malformed rows.",
+      "tags": ["component", "renderer", "settings-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx:SettingsFieldRenderer",
+      "type": "function",
+      "name": "SettingsFieldRenderer",
+      "filePath": "src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx",
+      "lineRange": [16, 91],
+      "summary": "Renders the appropriate form control (switch, select, slider, number input) for a settings field row and wires it to the live settings store.",
+      "tags": ["component", "form-control", "settings-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx:SettingsSectionRenderer",
+      "type": "function",
+      "name": "SettingsSectionRenderer",
+      "filePath": "src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx",
+      "lineRange": [17, 62],
+      "summary": "Renders a settings section's content, preferring a registered custom section-slot component and otherwise iterating the section's containers via SettingsContainerRenderer.",
+      "tags": ["component", "renderer", "settings-ui"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/modules/MainApp/Settings/SettingsListPanel.tsx", "target": "function:src/modules/MainApp/Settings/SettingsListPanel.tsx:SettingsListPanel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlotAppBody", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlotIntegrationsBody", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:LazyFullPageBody", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlot", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx", "target": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:HeaderIconButton", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx", "target": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:CompactPlusDropdown", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx", "target": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:SettingsHeaderActions", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:getPlusConfigForCategory", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildModelsDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildDatabasesDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildConnectionsDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildGitDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildMcpDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildSkillsDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildRoutinesDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:buildRulesDropdownItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx", "target": "function:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx:useRouteToolbarConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx", "target": "function:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx:useSettingsRegionNoticeButton", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/index.tsx", "target": "function:src/modules/MainApp/Settings/index.tsx:Settings", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx", "target": "function:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx:SettingsContainerRenderer", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx", "target": "function:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx:SettingsFieldRenderer", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx", "target": "function:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx:SettingsSectionRenderer", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/modules/MainApp/Settings/SettingsListPanel.tsx", "target": "function:src/modules/MainApp/Settings/SettingsListPanel.tsx:SettingsListPanel", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlot", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx", "target": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:SettingsHeaderActions", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:getPlusConfigForCategory", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx", "target": "function:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx:useRouteToolbarConfig", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx", "target": "function:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx:useSettingsRegionNoticeButton", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/index.tsx", "target": "function:src/modules/MainApp/Settings/index.tsx:Settings", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx", "target": "function:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx:SettingsContainerRenderer", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx", "target": "function:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx:SettingsFieldRenderer", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx", "target": "function:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx:SettingsSectionRenderer", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/modules/MainApp/Settings/SettingsListPanel.tsx", "target": "file:src/modules/MainApp/Settings/config.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "file:src/modules/MainApp/Settings/config.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/SettingsSlot.tsx", "target": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx", "target": "file:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx", "target": "file:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx", "target": "file:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/index.tsx", "target": "file:src/modules/MainApp/Settings/config.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/index.tsx", "target": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx", "target": "file:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx", "target": "file:src/modules/MainApp/Settings/renderer/slotRegistry.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx", "target": "file:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx", "target": "file:src/modules/MainApp/Settings/renderer/slotRegistry.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/slotRegistry.ts", "target": "file:src/modules/MainApp/Settings/renderer/slotRegistry.agent.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/modules/MainApp/Settings/renderer/slotRegistry.ts", "target": "file:src/modules/MainApp/Settings/renderer/slotRegistry.app.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:src/modules/MainApp/Settings/index.tsx:Settings", "target": "function:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx:SettingsSectionRenderer", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlot", "target": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:SettingsHeaderActions", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/SettingsSlot.tsx:SettingsSlotAppBody", "target": "function:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx:SettingsSectionRenderer", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/components/SettingsHeaderActions.tsx:SettingsHeaderActions", "target": "function:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx:useRouteToolbarConfig", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx:useRouteToolbarConfig", "target": "function:src/modules/MainApp/Settings/hooks/toolbarPlusConfigs.ts:getPlusConfigForCategory", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/hooks/useRouteToolbarConfig.tsx:useRouteToolbarConfig", "target": "function:src/modules/MainApp/Settings/hooks/useSettingsRegionNoticeButton.tsx:useSettingsRegionNoticeButton", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx:SettingsContainerRenderer", "target": "function:src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx:SettingsFieldRenderer", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/modules/MainApp/Settings/renderer/SettingsSectionRenderer.tsx:SettingsSectionRenderer", "target": "function:src/modules/MainApp/Settings/renderer/SettingsContainerRenderer.tsx:SettingsContainerRenderer", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

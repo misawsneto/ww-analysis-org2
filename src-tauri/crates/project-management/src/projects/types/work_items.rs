@@ -1,0 +1,618 @@
+//! Work item, schedule, history, and batch operation types.
+
+use serde::{Deserialize, Deserializer, Serialize};
+use serde_json::Value as JsonValue;
+
+use super::orchestrator::{
+    FollowUpRef, LinkedSession, OrchestratorConfig, OrchestratorState, ProofOfWork,
+    WorkItemSchedule,
+};
+use super::project::{CommentEntry, DelegationEntry, TodoEntry};
+use super::routines::WorkItemRoutineSource;
+
+// ============================================
+// Work Item History
+// ============================================
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemHistoryAction {
+    Created,
+    Updated,
+    Commented,
+    Deleted,
+    Restored,
+    Moved,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemHistoryChange {
+    pub field: String,
+    pub old_value: JsonValue,
+    pub new_value: JsonValue,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemHistoryEvent {
+    pub id: String,
+    pub action: WorkItemHistoryAction,
+    pub timestamp: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub actor_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub actor_name: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub changes: Vec<WorkItemHistoryChange>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<String>,
+}
+
+// ============================================
+// Work Item
+// ============================================
+
+/// Canonical default for `WorkItemFrontmatter::status`. Exposed at
+/// `pub(crate)` so the sync worker (and any future inbound-create
+/// path) can populate the same default instead of re-encoding the
+/// string literal — keeping a single source of truth.
+pub(crate) fn default_status() -> String {
+    "backlog".to_string()
+}
+
+/// Canonical default for `WorkItemFrontmatter::priority`. See
+/// [`default_status`] for the rationale behind the visibility.
+pub(crate) fn default_priority() -> String {
+    "none".to_string()
+}
+
+fn is_false(value: &bool) -> bool {
+    !*value
+}
+
+fn is_metadata_empty(metadata: &serde_json::Map<String, JsonValue>) -> bool {
+    metadata.is_empty()
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemAssigneeTargetKind {
+    Human,
+    Agent,
+    AgentOrg,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemAssigneeTarget {
+    pub kind: WorkItemAssigneeTargetKind,
+    pub target_id: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemExecutionLockReason {
+    ManualStart,
+    RoutineAutoStart,
+    AssignmentWakeup,
+    FollowUp,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemExecutionLock {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub active_session_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub active_agent_org_run_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_target: Option<WorkItemAssigneeTarget>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub locked_at: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lock_reason: Option<WorkItemExecutionLockReason>,
+    /// Collab execution-lock holder (design §16.6). Set by the server
+    /// (`orgii_acquire_work_item_lock`) and carried through the synced
+    /// work-item payload so every member's local row shows who holds the
+    /// lock. `None` on purely local (non-collab) locks.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub locked_by_member_id: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemCloseOutStatus {
+    None,
+    Done,
+    NeedsReview,
+    ChangesRequested,
+    Blocked,
+    FollowUpRequired,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemCloseOut {
+    pub status: WorkItemCloseOutStatus,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub session_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reviewer_target: Option<WorkItemAssigneeTarget>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub decision_reason: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub next_owner: Option<WorkItemAssigneeTarget>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created_at: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub resolved_at: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemWorkProductType {
+    Branch,
+    Commit,
+    PullRequest,
+    FileChange,
+    Validation,
+    Preview,
+    Deployment,
+    Screenshot,
+    Document,
+    RiskNote,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemWorkProductStatus {
+    Unknown,
+    Pending,
+    Passed,
+    Failed,
+    Merged,
+    Deployed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemWorkProductReviewState {
+    None,
+    Pending,
+    Approved,
+    ChangesRequested,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemWorkProduct {
+    pub id: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub session_id: Option<String>,
+    pub product_type: WorkItemWorkProductType,
+    pub title: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub provider: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub external_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<WorkItemWorkProductStatus>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub review_state: Option<WorkItemWorkProductReviewState>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub is_primary: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub summary: Option<String>,
+    #[serde(default, skip_serializing_if = "is_metadata_empty")]
+    pub metadata: serde_json::Map<String, JsonValue>,
+    pub created_at: String,
+    pub updated_at: String,
+}
+
+/// Session provenance captured when a Work Item is created from an agent turn.
+///
+/// This is intentionally separate from `linked_sessions`: the latter models
+/// sessions that execute the Work Item and feeds lifecycle/token accounting,
+/// while an origin session may already be executing a different root item.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct WorkItemOriginSession {
+    pub session_id: String,
+    pub provider: String,
+    pub actor_id: String,
+    pub session_type: String,
+    pub captured_at: String,
+}
+
+/// YAML frontmatter of a `work-items/{SHORT_ID}.md` file
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorkItemFrontmatter {
+    pub id: String,
+    pub short_id: String,
+    pub title: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project: Option<String>,
+    #[serde(default = "default_status")]
+    pub status: String,
+    #[serde(default = "default_priority")]
+    pub priority: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub assignee: Option<String>,
+    /// "member" | "agent" | "org" — defaults to "member" when absent
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub assignee_type: Option<String>,
+    #[serde(default)]
+    pub labels: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub milestone: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stage: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub start_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub target_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created_by: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub origin_session: Option<WorkItemOriginSession>,
+    pub created_at: String,
+    pub updated_at: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub deleted_at: Option<String>,
+    #[serde(default)]
+    pub starred: bool,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub todos: Vec<TodoEntry>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub comments: Vec<CommentEntry>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub history: Vec<WorkItemHistoryEvent>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub delegations: Vec<DelegationEntry>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub handoff: Option<WorkItemHandoff>,
+    // --- Agent Workflow Fields ---
+    //
+    // `linked_sessions` and `orchestrator_state` are execution state.
+    // They serialize normally (IPC reads must carry them — the detail
+    // surfaces render the Execution Log from this struct), but the
+    // git-folder `.md` export strips them at its own boundary so the
+    // synced markdown stays free of run-time state.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub linked_sessions: Vec<LinkedSession>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub proof_of_work: Option<ProofOfWork>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub orchestrator_config: Option<OrchestratorConfig>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub orchestrator_state: Option<OrchestratorState>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub follow_up_items: Vec<FollowUpRef>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schedule: Option<WorkItemSchedule>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub routine_source: Option<WorkItemRoutineSource>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub execution_lock: Option<WorkItemExecutionLock>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub close_out: Option<WorkItemCloseOut>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub work_products: Vec<WorkItemWorkProduct>,
+}
+
+/// Combined work item data returned to the frontend
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorkItemData {
+    pub frontmatter: WorkItemFrontmatter,
+    /// Markdown body (everything after the frontmatter `---`)
+    pub body: String,
+    /// Filename without extension (e.g. "AUTH-001")
+    pub filename: String,
+}
+
+/// Narrow database projection consumed by the background schedule executor.
+///
+/// Keeping this separate from [`WorkItemData`] prevents an idle scheduling
+/// pass from loading bodies, labels, history, comments, or runtime state for
+/// every work item.
+#[derive(Debug, Clone)]
+pub struct ScheduledWorkItemCandidate {
+    pub project_slug: String,
+    pub short_id: String,
+    pub title: String,
+    pub status: String,
+    pub start_date: Option<String>,
+    pub orchestrator_config: Option<OrchestratorConfig>,
+    pub schedule: Option<WorkItemSchedule>,
+}
+
+/// Optional read partition used by aggregate views that defer terminal items.
+/// GitHub `closed` and native `completed` share the completed partition.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemReadBucket {
+    Active,
+    Completed,
+}
+
+impl WorkItemReadBucket {
+    pub fn matches(self, status: &str) -> bool {
+        let is_completed = status == "completed" || status == "closed";
+        match self {
+            Self::Active => !is_completed,
+            Self::Completed => is_completed,
+        }
+    }
+}
+
+#[cfg(test)]
+mod work_item_read_bucket_tests {
+    use super::WorkItemReadBucket;
+
+    #[test]
+    fn active_and_completed_buckets_partition_native_and_github_statuses() {
+        for active_status in [
+            "open",
+            "backlog",
+            "planned",
+            "in_progress",
+            "in_review",
+            "cancelled",
+            "duplicate",
+        ] {
+            assert!(WorkItemReadBucket::Active.matches(active_status));
+            assert!(!WorkItemReadBucket::Completed.matches(active_status));
+        }
+
+        for completed_status in ["completed", "closed"] {
+            assert!(!WorkItemReadBucket::Active.matches(completed_status));
+            assert!(WorkItemReadBucket::Completed.matches(completed_status));
+        }
+    }
+
+    #[test]
+    fn read_bucket_wire_values_are_stable_snake_case() {
+        assert_eq!(
+            serde_json::to_string(&WorkItemReadBucket::Active).unwrap(),
+            "\"active\""
+        );
+        assert_eq!(
+            serde_json::to_string(&WorkItemReadBucket::Completed).unwrap(),
+            "\"completed\""
+        );
+    }
+}
+
+fn deserialize_optional_update<'de, D, T>(deserializer: D) -> Result<Option<Option<T>>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer).map(Some)
+}
+
+/// Partial update payload for work items.
+///
+/// All fields are optional — only provided fields will be updated.
+/// This enables atomic read-modify-write in Rust, eliminating
+/// multiple IPC calls and JS-side type conversions.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemMutationActor {
+    pub id: String,
+    pub name: String,
+}
+
+/// Durable state for a human-to-human Work Item handoff.
+///
+/// Read/unread remains a Team Inbox receipt; accepting is a separate,
+/// explicit collaboration decision. A returned handoff reassigns the item to
+/// the sender in the same database transaction as this state transition.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemHandoffStatus {
+    Pending,
+    Accepted,
+    Returned,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemHandoff {
+    pub id: String,
+    pub status: WorkItemHandoffStatus,
+    pub sender_member_id: String,
+    pub sender_name: String,
+    pub recipient_member_id: String,
+    pub recipient_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub note: Option<String>,
+    pub requested_at: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub responded_at: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub response_note: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum WorkItemHandoffAction {
+    Accept,
+    Return,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemHandoffTransition {
+    pub handoff_id: String,
+    pub action: WorkItemHandoffAction,
+    pub actor: WorkItemMutationActor,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub note: Option<String>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WorkItemPartialUpdate {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub title: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub body: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub priority: Option<String>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub project: Option<Option<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub starred: Option<bool>,
+    /// Assignee ID (member/agent ID)
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub assignee: Option<Option<String>>,
+    /// Assignee type: "member" | "agent" | "org"
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub assignee_type: Option<Option<String>>,
+    /// Label IDs
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub labels: Option<Vec<String>>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub milestone: Option<Option<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stage: Option<Option<u32>>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub start_date: Option<Option<String>>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub target_date: Option<Option<String>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created_by: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub todos: Option<Vec<TodoEntry>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub comments: Option<Vec<CommentEntry>>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub handoff: Option<Option<WorkItemHandoff>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub linked_sessions: Option<Vec<LinkedSession>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub orchestrator_config: Option<OrchestratorConfig>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub orchestrator_state: Option<OrchestratorState>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub schedule: Option<Option<WorkItemSchedule>>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub execution_lock: Option<Option<WorkItemExecutionLock>>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_optional_update",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub close_out: Option<Option<WorkItemCloseOut>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub work_products: Option<Vec<WorkItemWorkProduct>>,
+    /// Request metadata used to attribute the generated history event.
+    /// This is never copied into Work Item frontmatter as mutable item data.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub actor: Option<WorkItemMutationActor>,
+}
+
+// ============================================
+// Work Item History (git-based field diffs)
+// ============================================
+
+/// A single field change between two commits
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FieldChange {
+    pub field: String,
+    pub old_value: String,
+    pub new_value: String,
+}
+
+/// A history entry representing one commit's changes to a work item
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct WorkItemHistoryEntry {
+    pub sha: String,
+    pub short_sha: String,
+    pub author_name: String,
+    pub author_email: String,
+    pub timestamp: String,
+    /// "created" for the first commit, "updated" for subsequent
+    pub action: String,
+    pub changes: Vec<FieldChange>,
+}
+
+// ============================================
+// Batch Operations
+// ============================================
+
+/// Result of a batch delete operation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BatchDeleteResult {
+    /// IDs that were successfully deleted
+    pub deleted: Vec<String>,
+    /// IDs that failed to delete, with error messages
+    pub errors: Vec<BatchItemError>,
+}
+
+/// Result of a batch update operation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BatchUpdateResult {
+    /// Successfully updated items
+    pub updated: Vec<super::enriched::EnrichedWorkItem>,
+    /// IDs that failed to update, with error messages
+    pub errors: Vec<BatchItemError>,
+}
+
+/// Error details for a single item in a batch operation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BatchItemError {
+    /// The short ID of the item that failed
+    pub short_id: String,
+    /// Error message
+    pub error: String,
+}

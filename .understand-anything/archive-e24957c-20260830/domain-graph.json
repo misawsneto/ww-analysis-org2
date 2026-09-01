@@ -1,0 +1,4428 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "orgii",
+    "languages": [
+      "TypeScript",
+      "Rust"
+    ],
+    "frameworks": [
+      "React",
+      "Tauri",
+      "Axum",
+      "Tokio",
+      "Jotai",
+      "CodeMirror"
+    ],
+    "description": "ORG-2 (orgii) is an open-source, Cursor-style agent IDE: a Tauri desktop app pairing a React/TypeScript frontend with a Rust (Axum/Tokio) backend, built as a session-oriented developer workstation for orchestrating, chatting with, and reviewing multiple coding agents alongside git, code-editing, browser, and terminal tooling.",
+    "analyzedAt": "2026-07-19T19:26:44Z",
+    "gitCommitHash": "e24957ca7f3daebbbdb5db4dc88639fb2223e08c"
+  },
+  "nodes": [
+    {
+      "id": "domain:agent-chat-sessions",
+      "type": "domain",
+      "name": "Agent Chat & Live Sessions",
+      "summary": "Handles real-time conversation with AI coding agents: composing and sending messages, streaming agent responses into the transcript, and rendering interactive tool prompts (question batches, mode switches) and inline canvases/artifacts as the agent works.",
+      "tags": [
+        "chat",
+        "streaming",
+        "agent",
+        "frontend"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "ChatMessage",
+          "SessionAdapter",
+          "StreamingDelta",
+          "ToolCall",
+          "CanvasArtifact"
+        ],
+        "businessRules": [
+          "A session must be bound to exactly one live adapter (CLI, rust-agent, Cursor IDE, or external history) at a time",
+          "Streaming deltas are buffered and coalesced before committing to the event store to avoid excessive re-renders",
+          "Interactive tool prompts (ask-question, mode-switch) block further input until resolved"
+        ],
+        "crossDomainInteractions": [
+          "Delegates work-item execution and plan approvals to Agent Orgs & Automation",
+          "Persists finished sessions for later playback in Session Replay & Simulation",
+          "Reads provider credentials from the Credential & Model Provider Vault to authenticate adapters"
+        ]
+      }
+    },
+    {
+      "id": "flow:send-message-stream-response",
+      "type": "flow",
+      "name": "Send Message & Stream Agent Response",
+      "summary": "User composes a message, it is dispatched through a session adapter to the underlying agent process, and the streamed response is buffered and rendered live as chat blocks.",
+      "tags": [
+        "chat",
+        "streaming"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entryPoint": "ChatFloatingComposer submit",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:send-message-stream-response:compose-message-in-input-area",
+      "type": "step",
+      "name": "Compose message in input area",
+      "filePath": "src/engines/ChatPanel/InputArea/ChatHeader/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "User types a message and attachments in the chat input surface.",
+      "tags": [
+        "ui",
+        "input"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:send-message-stream-response:submit-via-floating-composer",
+      "type": "step",
+      "name": "Submit via floating composer",
+      "filePath": "src/engines/ChatPanel/ChatFloatingComposer.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The composed message is submitted through the floating composer / ComposerInput widget.",
+      "tags": [
+        "ui",
+        "input"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:send-message-stream-response:dispatch-to-session-adapter",
+      "type": "step",
+      "name": "Dispatch to session adapter",
+      "filePath": "src/engines/SessionCore/sync/adapters/index.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The message is routed to the adapter bound to the active session (CLI, rust-agent, Cursor IDE, external history).",
+      "tags": [
+        "adapter",
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:send-message-stream-response:open-transport-event-handler",
+      "type": "step",
+      "name": "Open transport & event handler",
+      "filePath": "src/engines/SessionCore/sync/adapters/cli/createCliEventHandler.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The adapter opens a transport/process channel and wires up an event handler for incoming agent events.",
+      "tags": [
+        "transport",
+        "backend"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:send-message-stream-response:buffer-streaming-deltas",
+      "type": "step",
+      "name": "Buffer streaming deltas",
+      "filePath": "src/engines/SessionCore/core/atoms/streamingDeltaBuffer.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Incoming text deltas are buffered and coalesced before being committed to session state.",
+      "tags": [
+        "streaming",
+        "state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:send-message-stream-response:proxy-events-into-event-store",
+      "type": "step",
+      "name": "Proxy events into event store",
+      "filePath": "src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Buffered events are written into the session's event store proxy.",
+      "tags": [
+        "state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:send-message-stream-response:render-streamed-content-as-blocks",
+      "type": "step",
+      "name": "Render streamed content as blocks",
+      "filePath": "src/engines/ChatPanel/ChatHistory/ActivityRouter.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Chat blocks (messages, tool calls, canvases) are rendered from the routed activity stream.",
+      "tags": [
+        "ui",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:interactive-tool-prompts",
+      "type": "flow",
+      "name": "Interactive Tool Prompts (Ask Question / Mode Switch)",
+      "summary": "When the agent needs user input mid-run, the chat surface renders question batches or an execution-mode switch card, captures the user's choice, and feeds it back into the running session.",
+      "tags": [
+        "chat",
+        "tool-call",
+        "ui"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Ask-question tool call detected in stream",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:interactive-tool-prompts:detect-ask-question-tool-call",
+      "type": "step",
+      "name": "Detect ask-question tool call",
+      "filePath": "src/engines/ChatPanel/InputArea/AskQuestionCard/extractQuestionBatch.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The stream is scanned for an ask-question tool invocation and its option batch is extracted.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:interactive-tool-prompts:render-question-batches",
+      "type": "step",
+      "name": "Render question batches",
+      "filePath": "src/engines/ChatPanel/InputArea/AskQuestionCard/useQuestionBatches.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Extracted question batches are rendered as selectable cards.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:interactive-tool-prompts:capture-user-selection",
+      "type": "step",
+      "name": "Capture user selection",
+      "filePath": "src/engines/ChatPanel/InputArea/AskQuestionCard/useOptionSelection.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user's option selection is tracked in local state.",
+      "tags": [
+        "ui",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:interactive-tool-prompts:submit-answer-back-to-session",
+      "type": "step",
+      "name": "Submit answer back to session",
+      "filePath": "src/engines/ChatPanel/InputArea/AskQuestionCard/useQuestionSubmission.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The chosen answer is submitted back into the live session stream.",
+      "tags": [
+        "submission"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:interactive-tool-prompts:handle-exec-mode-switch",
+      "type": "step",
+      "name": "Handle exec-mode switch",
+      "filePath": "src/engines/ChatPanel/InputArea/ModeSwitchCard/useModeSwitchActions.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A mode-switch card lets the user change the agent's execution mode mid-conversation.",
+      "tags": [
+        "ui",
+        "control"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:render-inline-canvas-artifacts",
+      "type": "flow",
+      "name": "Render Inline Canvas / Artifacts",
+      "summary": "Agent turns that produce UI artifacts (A2UI payloads or React components) are detected, built, policy-checked, and rendered inline in the chat transcript, with an option to open them full-size in the Simulator.",
+      "tags": [
+        "canvas",
+        "rendering",
+        "artifact"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Turn contains canvas payload",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:render-inline-canvas-artifacts:detect-canvas-producing-turn",
+      "type": "step",
+      "name": "Detect canvas-producing turn",
+      "filePath": "src/engines/ChatPanel/blocks/CanvasInlineCard/useCanvasForTurn.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A completed turn is checked for an associated canvas payload.",
+      "tags": [
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:render-inline-canvas-artifacts:build-canvas-payload",
+      "type": "step",
+      "name": "Build canvas payload",
+      "filePath": "src/engines/ChatPanel/blocks/CanvasInlineCard/canvasBuilder.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The raw turn data is transformed into a renderable canvas definition.",
+      "tags": [
+        "transformation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:render-inline-canvas-artifacts:apply-preview-policy",
+      "type": "step",
+      "name": "Apply preview policy",
+      "filePath": "src/engines/ChatPanel/blocks/CanvasInlineCard/canvasPreviewPolicy.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A policy check decides whether the canvas should auto-preview or require a click.",
+      "tags": [
+        "policy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:render-inline-canvas-artifacts:render-a2ui-or-react-artifact",
+      "type": "step",
+      "name": "Render A2UI or React artifact",
+      "filePath": "src/engines/ChatPanel/blocks/CanvasInlineCard/A2UIRenderer.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The canvas is rendered either via the A2UI renderer or a sandboxed React artifact runner.",
+      "tags": [
+        "rendering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:render-inline-canvas-artifacts:jump-to-full-simulator-canvas",
+      "type": "step",
+      "name": "Jump to full Simulator canvas",
+      "filePath": "src/engines/ChatPanel/blocks/CanvasInlineCard/useJumpToSimulatorCanvas.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user can expand the inline canvas into the full Simulator canvas app.",
+      "tags": [
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "domain:agent-orgs-automation",
+      "type": "domain",
+      "name": "Agent Orgs & Automation Orchestration",
+      "summary": "Defines multi-agent organizations and workflows, schedules and recovers work items assigned to agents, gates risky actions behind plan approvals, and executes lifecycle hooks and MCP tool bridges around agent runs.",
+      "tags": [
+        "orchestration",
+        "automation",
+        "backend",
+        "agents"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "AgentOrg",
+          "Workflow",
+          "WorkItem",
+          "PlanApproval",
+          "Hook",
+          "MCPServer"
+        ],
+        "businessRules": [
+          "Work items must go through the scheduler before being dispatched to an agent",
+          "A proposed plan requiring approval blocks further execution until approved or rejected",
+          "Hooks are dispatched for defined lifecycle events and can veto or modify agent behavior",
+          "Watchdog monitors org runs and can recover or restart stuck work items"
+        ],
+        "crossDomainInteractions": [
+          "Consumes chat sessions from Agent Chat & Live Sessions as the execution surface for agents",
+          "Reads/writes work items shared with Project & Work Item Management",
+          "Relays external notifications through Integrations & Cloud Collaboration channel gateway",
+          "Resolves model credentials via the Credential & Model Provider Vault"
+        ]
+      }
+    },
+    {
+      "id": "flow:define-agent-org-workflow",
+      "type": "flow",
+      "name": "Define Agent Org & Workflow",
+      "summary": "Users create and edit agent organizations, wiring together agents into branching workflow graphs with actions, branches, and end blocks.",
+      "tags": [
+        "org-definition",
+        "workflow-editor"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "AgentOrgs module (Orgs/Agents tables)",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:define-agent-org-workflow:list-orgs-and-agents",
+      "type": "step",
+      "name": "List orgs and agents",
+      "filePath": "src/modules/MainApp/AgentOrgs/Table/OrgsTable.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Browse existing agent organizations and their member agents.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:define-agent-org-workflow:edit-org-workflow-graph",
+      "type": "step",
+      "name": "Edit org workflow graph",
+      "filePath": "src/modules/MainApp/AgentOrgs/components/WorkflowEditorContent/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Open the workflow editor to arrange agent steps for an org.",
+      "tags": [
+        "ui",
+        "editor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:define-agent-org-workflow:configure-workflow-nodes-and-branches",
+      "type": "step",
+      "name": "Configure workflow nodes and branches",
+      "filePath": "src/modules/MainApp/AgentOrgs/components/WorkflowNodeItem/ActionNode.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Add action nodes, branch labels, and end blocks to the workflow graph.",
+      "tags": [
+        "editor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:define-agent-org-workflow:persist-org-workflow-definitions",
+      "type": "step",
+      "name": "Persist org/workflow definitions",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/orgs.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Save the org and workflow definition to backend storage.",
+      "tags": [
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:define-agent-org-workflow:resolve-capability-and-command-lookups",
+      "type": "step",
+      "name": "Resolve capability and command lookups",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/capabilities.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Resolve which capabilities and commands are available to each agent in the org.",
+      "tags": [
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:schedule-run-work-items",
+      "type": "flow",
+      "name": "Schedule & Run Work Items",
+      "summary": "Work items are queued and scheduled for agent execution, monitored by a watchdog, and recovered automatically if a run is interrupted.",
+      "tags": [
+        "scheduling",
+        "execution"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entryPoint": "work_item_scheduler dispatch",
+        "entryType": "cron"
+      }
+    },
+    {
+      "id": "step:schedule-run-work-items:schedule-routine-work",
+      "type": "step",
+      "name": "Schedule routine work",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/routine_scheduler.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Cron-like routines are scheduled for recurring agent execution.",
+      "tags": [
+        "scheduling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:schedule-run-work-items:queue-work-item-for-agent",
+      "type": "step",
+      "name": "Queue work item for agent",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/work_item_scheduler.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A work item is enqueued and matched to an available agent.",
+      "tags": [
+        "scheduling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:schedule-run-work-items:watchdog-monitors-run-health",
+      "type": "step",
+      "name": "Watchdog monitors run health",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_watchdog.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A background watchdog checks org runs for stalls or failures.",
+      "tags": [
+        "monitoring"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:schedule-run-work-items:recover-interrupted-work-items",
+      "type": "step",
+      "name": "Recover interrupted work items",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Work items left in an inconsistent state after a crash/restart are recovered.",
+      "tags": [
+        "recovery"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:schedule-run-work-items:emit-run-events",
+      "type": "step",
+      "name": "Emit run events",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "State transitions of an org run are emitted as events for the UI and history.",
+      "tags": [
+        "events"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:plan-approval-gate",
+      "type": "flow",
+      "name": "Plan Approval Gate",
+      "summary": "Before executing a sensitive or high-impact plan, the agent's proposed plan is routed to an inbox for human or supervising-agent review and approval.",
+      "tags": [
+        "approval",
+        "safety"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Agent proposes a plan requiring approval",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:plan-approval-gate:agent-proposes-plan",
+      "type": "step",
+      "name": "Agent proposes plan",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The running agent produces a plan that requires explicit approval before continuing.",
+      "tags": [
+        "proposal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:plan-approval-gate:route-to-member-inbox",
+      "type": "step",
+      "name": "Route to member inbox",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The plan is placed in the relevant org member's inbox for review.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:plan-approval-gate:handle-member-intervention",
+      "type": "step",
+      "name": "Handle member intervention",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A human or supervising agent can intervene, comment, or redirect the plan.",
+      "tags": [
+        "intervention"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:plan-approval-gate:approve-or-reject-and-resume",
+      "type": "step",
+      "name": "Approve or reject and resume",
+      "summary": "Once approved or rejected, the org run resumes or halts accordingly.",
+      "tags": [
+        "decision"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:hook-mcp-tool-execution",
+      "type": "flow",
+      "name": "Hook & MCP Tool Execution",
+      "summary": "Lifecycle hooks fire on agent events and MCP servers are bridged in to expose external tools, with authentication handled transparently for the agent.",
+      "tags": [
+        "hooks",
+        "mcp",
+        "tools"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entryPoint": "Agent lifecycle event fires",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:hook-mcp-tool-execution:load-hook-configuration",
+      "type": "step",
+      "name": "Load hook configuration",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/config.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Hook definitions for the workspace/org are loaded.",
+      "tags": [
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:hook-mcp-tool-execution:dispatch-lifecycle-event-to-hooks",
+      "type": "step",
+      "name": "Dispatch lifecycle event to hooks",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/dispatch.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A lifecycle event (e.g. pre-tool-call) is dispatched to matching hooks.",
+      "tags": [
+        "dispatch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:hook-mcp-tool-execution:execute-hook-command",
+      "type": "step",
+      "name": "Execute hook command",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The matched hook command is executed and its result observed.",
+      "tags": [
+        "execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:hook-mcp-tool-execution:bridge-mcp-server-connection",
+      "type": "step",
+      "name": "Bridge MCP server connection",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "An MCP server connection is bridged into the agent's tool set.",
+      "tags": [
+        "mcp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:hook-mcp-tool-execution:handle-mcp-auth-flow",
+      "type": "step",
+      "name": "Handle MCP auth flow",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/auth_tool.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "OAuth/auth requirements for an MCP tool are surfaced and cached.",
+      "tags": [
+        "auth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:hook-mcp-tool-execution:route-mcp-responses-to-agent",
+      "type": "step",
+      "name": "Route MCP responses to agent",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/handler.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Responses from the MCP server are routed back to the requesting agent turn.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "domain:session-replay-simulation",
+      "type": "domain",
+      "name": "Session Replay & Simulation",
+      "summary": "Lets users play back a previously recorded agent session step by step, reconstructing code diffs and browser activity per turn, and hosts simulator apps (canvas, background tasks) that render agent-produced artifacts outside the live chat.",
+      "tags": [
+        "replay",
+        "simulation",
+        "frontend"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entities": [
+          "ReplaySession",
+          "ReplayTurn",
+          "SimulatorApp"
+        ],
+        "businessRules": [
+          "Replay is read-only and reconstructs state purely from recorded events, never re-executes the agent",
+          "Each simulator app declares a config used to match which events it can render"
+        ],
+        "crossDomainInteractions": [
+          "Consumes recorded sessions produced by Agent Chat & Live Sessions",
+          "Uses cross-tool projections from Cross-Tool Activity Tracking to reconstruct blame/diff timelines",
+          "Renders diffs alongside data from Git Workflow & Version Control"
+        ]
+      }
+    },
+    {
+      "id": "flow:replay-recorded-session",
+      "type": "flow",
+      "name": "Replay a Recorded Session",
+      "summary": "A finished session is loaded and stepped through turn by turn, reconstructing the code diff and browser state at each point in time.",
+      "tags": [
+        "replay"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Open session in replay mode",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:replay-recorded-session:select-session-to-replay",
+      "type": "step",
+      "name": "Select session to replay",
+      "filePath": "src/modules/WorkStation/Browser/SessionReplay/entryUtils.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user opens a completed session in the WorkStation's replay view.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:replay-recorded-session:load-replay-events",
+      "type": "step",
+      "name": "Load replay events",
+      "filePath": "src/modules/WorkStation/shared/DiffSectionList/sessionReplaySections.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Recorded events for the session are loaded and ordered.",
+      "tags": [
+        "loading"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:replay-recorded-session:reconstruct-diff-sections-per-turn",
+      "type": "step",
+      "name": "Reconstruct diff sections per turn",
+      "filePath": "src/modules/WorkStation/shared/DiffSectionList/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "File diffs are grouped and reconstructed per agent turn.",
+      "tags": [
+        "diff"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:replay-recorded-session:render-replay-in-code-panel",
+      "type": "step",
+      "name": "Render replay in code panel",
+      "filePath": "src/modules/WorkStation/CodeEditor/SessionReplay/CodePanel/SessionReplayCodeMirrorViewer.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The reconstructed diff/content is rendered in a CodeMirror-based replay viewer.",
+      "tags": [
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:replay-recorded-session:sync-browser-replay-tabs",
+      "type": "step",
+      "name": "Sync browser replay tabs",
+      "filePath": "src/modules/WorkStation/Browser/SessionReplay/useBrowserReplayTabs.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Browser activity captured during the session is replayed in sync with the timeline.",
+      "tags": [
+        "browser"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:simulated-app-rendering",
+      "type": "flow",
+      "name": "Simulated App Rendering",
+      "summary": "Agent-produced events are matched against registered simulator apps (canvas, background tasks) and rendered in a dedicated simulator surface.",
+      "tags": [
+        "simulator"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Simulator app registry match",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:simulated-app-rendering:register-simulator-app-config",
+      "type": "step",
+      "name": "Register simulator app config",
+      "filePath": "src/engines/Simulator/apps/core/configFactory.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Each simulator app registers a config describing what it renders.",
+      "tags": [
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:simulated-app-rendering:match-event-to-simulator-app",
+      "type": "step",
+      "name": "Match event to simulator app",
+      "filePath": "src/engines/Simulator/apps/core/matchers.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Incoming events are matched to the appropriate simulator app.",
+      "tags": [
+        "matching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:simulated-app-rendering:hydrate-full-event-history",
+      "type": "step",
+      "name": "Hydrate full event history",
+      "filePath": "src/engines/Simulator/apps/core/fullEventHydrationRegistry.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The full event history is hydrated so the simulator app has complete context.",
+      "tags": [
+        "hydration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:simulated-app-rendering:render-canvas-app",
+      "type": "step",
+      "name": "Render canvas app",
+      "filePath": "src/engines/Simulator/apps/canvas/CanvasApp.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Canvas-type artifacts are rendered in the dedicated Canvas simulator app.",
+      "tags": [
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:simulated-app-rendering:render-background-tasks-app",
+      "type": "step",
+      "name": "Render background tasks app",
+      "filePath": "src/engines/Simulator/apps/backgroundTasks/BackgroundTasksApp.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Long-running background task activity is rendered in its own simulator app.",
+      "tags": [
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "domain:cross-tool-activity-tracking",
+      "type": "domain",
+      "name": "Cross-Tool Activity Tracking (Orgtrack)",
+      "summary": "Ingests session history produced by other coding assistants (Claude Code, Cursor CLI/IDE, Codex, Cline) from disk, normalizes it, and projects it onto files and repos as blame, stats, and replay data so all agent activity is trackable in one place.",
+      "tags": [
+        "tracking",
+        "analytics",
+        "backend"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entities": [
+          "ExternalSession",
+          "SessionBlame",
+          "TurnMetadata",
+          "RepoActivity"
+        ],
+        "businessRules": [
+          "Ingested history must be normalized into a shared session model regardless of source tool",
+          "Privacy redaction is applied before external history is surfaced in the UI"
+        ],
+        "crossDomainInteractions": [
+          "Feeds file-level blame/timeline data into Git Workflow & Version Control",
+          "Supplies replay projections consumed by Session Replay & Simulation",
+          "Surfaces GitHub/work-item activity in Project & Work Item Management"
+        ]
+      }
+    },
+    {
+      "id": "flow:ingest-external-tool-history",
+      "type": "flow",
+      "name": "Ingest External Tool History",
+      "summary": "Detects and parses on-disk session history from other AI coding tools, normalizing each tool's format into a shared session model.",
+      "tags": [
+        "ingestion",
+        "parsing"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "packages/orgtrack CLI / background scan",
+        "entryType": "cron"
+      }
+    },
+    {
+      "id": "step:ingest-external-tool-history:detect-installed-tool-history-db-files",
+      "type": "step",
+      "name": "Detect installed tool history/DB files",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Locate on-disk history databases or files for each supported external tool.",
+      "tags": [
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:ingest-external-tool-history:parse-claude-code-history",
+      "type": "step",
+      "name": "Parse Claude Code history",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Parse Claude Code's session history format.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:ingest-external-tool-history:parse-cursor-codex-cline-history",
+      "type": "step",
+      "name": "Parse Cursor/Codex/Cline history",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Parse the corresponding history formats for Cursor CLI/IDE, Codex, and Cline.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:ingest-external-tool-history:normalize-into-shared-session-model",
+      "type": "step",
+      "name": "Normalize into shared session model",
+      "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Tool-specific records are normalized into common session/turn summaries.",
+      "tags": [
+        "normalization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:ingest-external-tool-history:apply-privacy-redaction",
+      "type": "step",
+      "name": "Apply privacy redaction",
+      "filePath": "src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Sensitive content is redacted before the ingested history is surfaced.",
+      "tags": [
+        "privacy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:project-session-onto-repo-files",
+      "type": "flow",
+      "name": "Project Session Data onto Repo & Files",
+      "summary": "Normalized session data is synced against the repo's file paths and projected into blame, turn metadata, stats, and replay views exposed to the frontend.",
+      "tags": [
+        "projection",
+        "sync"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "orgtrackHistory Tauri API",
+        "entryType": "cli"
+      }
+    },
+    {
+      "id": "step:project-session-onto-repo-files:sync-repo-activity-paths",
+      "type": "step",
+      "name": "Sync repo activity paths",
+      "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Session activity is matched against current repo file paths.",
+      "tags": [
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:project-session-onto-repo-files:project-session-blame-per-file",
+      "type": "step",
+      "name": "Project session blame per file",
+      "filePath": "src-tauri/crates/orgtrack-core/src/projectors/session_blame.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Determine which session/turn last touched each line of a file.",
+      "tags": [
+        "blame"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:project-session-onto-repo-files:compute-turn-metadata-and-stats",
+      "type": "step",
+      "name": "Compute turn metadata and stats",
+      "filePath": "src-tauri/crates/orgtrack-core/src/projectors/stats.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Aggregate per-turn metadata and overall session statistics.",
+      "tags": [
+        "stats"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:project-session-onto-repo-files:build-replay-projector-output",
+      "type": "step",
+      "name": "Build replay projector output",
+      "filePath": "src-tauri/crates/orgtrack-core/src/projectors/replay.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Assemble a replay-ready projection of the session for the frontend.",
+      "tags": [
+        "projection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:project-session-onto-repo-files:expose-via-tauri-api",
+      "type": "step",
+      "name": "Expose via Tauri API",
+      "filePath": "src/api/tauri/orgtrackHistory/index.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Projected data is exposed to the frontend through the orgtrackHistory API.",
+      "tags": [
+        "api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:project-session-onto-repo-files:surface-file-session-timeline-in-ui",
+      "type": "step",
+      "name": "Surface file session timeline in UI",
+      "filePath": "src/hooks/git/useOrgtrackFileSessionHistory.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Frontend hooks surface a file's session history and timeline in the code editor and git views.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "domain:project-work-item-management",
+      "type": "domain",
+      "name": "Project & Work Item Management",
+      "summary": "Manages the lifecycle of trackable work items — creation, agent assignment, scheduling, and review — and presents them through Kanban, Gantt, and calendar views, plus syncs with external trackers like Linear and GitHub Issues.",
+      "tags": [
+        "project-management",
+        "work-items",
+        "frontend"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "WorkItem",
+          "Project",
+          "KanbanCard",
+          "LinearIssue",
+          "GitHubIssue"
+        ],
+        "businessRules": [
+          "A work item can be scheduled to run on a cron-like recurrence",
+          "Work item state transitions are driven by replayed agent-run events, not just manual edits",
+          "External work items (Linear, GitHub) are cached locally and paginated for the UI"
+        ],
+        "crossDomainInteractions": [
+          "Assigns work items to agents managed by Agent Orgs & Automation Orchestration",
+          "Displays orgtrack-projected agent activity from Cross-Tool Activity Tracking",
+          "Pulls GitHub issues via Integrations & Cloud Collaboration's GitHub integration"
+        ]
+      }
+    },
+    {
+      "id": "flow:create-configure-work-item",
+      "type": "flow",
+      "name": "Create & Configure Work Item",
+      "summary": "A new work item is drafted, converted into a persisted record, and configured with an assigned agent, reviewer, and optional schedule.",
+      "tags": [
+        "work-item",
+        "creation"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "CreateWorkItemView",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:create-configure-work-item:draft-new-work-item",
+      "type": "step",
+      "name": "Draft new work item",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/CreateWorkItemView/InlineCreateWorkItemFields.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user fills in fields for a new work item inline.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:create-configure-work-item:build-work-item-from-draft",
+      "type": "step",
+      "name": "Build work item from draft",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/CreateWorkItemView/createWorkItemFromDraft.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The draft form state is converted into a persisted work item record.",
+      "tags": [
+        "transformation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:create-configure-work-item:configure-assigned-agent",
+      "type": "step",
+      "name": "Configure assigned agent",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/AgentSettings/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "An agent (and its settings) is assigned to execute the work item.",
+      "tags": [
+        "configuration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:create-configure-work-item:configure-reviewer",
+      "type": "step",
+      "name": "Configure reviewer",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/ReviewerConfigSection/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A reviewer is configured to gate or review the work item's output.",
+      "tags": [
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:create-configure-work-item:set-schedule",
+      "type": "step",
+      "name": "Set schedule",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/ScheduleEditor/cronUtils.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "An optional cron-like schedule is attached to the work item.",
+      "tags": [
+        "scheduling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:run-agent-on-work-item",
+      "type": "flow",
+      "name": "Run Agent on Work Item",
+      "summary": "Starting a work item kicks off an agent run whose phase, streamed output, and history are tracked and displayed against the work item.",
+      "tags": [
+        "execution",
+        "tracking"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "StartAgentButton click",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:run-agent-on-work-item:start-agent-run",
+      "type": "step",
+      "name": "Start agent run",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/StartAgentButton/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user triggers the agent run for a work item.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:run-agent-on-work-item:track-run-phase-state",
+      "type": "step",
+      "name": "Track run phase state",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/AgentWorkflow/PhaseStates.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The work item's current phase (queued, running, review, done) is tracked.",
+      "tags": [
+        "state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:run-agent-on-work-item:stream-session-output-preview",
+      "type": "step",
+      "name": "Stream session output preview",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/AgentWorkflow/SessionOutputPreview.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A live preview of the agent's session output is shown inline.",
+      "tags": [
+        "streaming"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:run-agent-on-work-item:record-run-history",
+      "type": "step",
+      "name": "Record run history",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/AgentWorkflow/SessionRunHistory.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Completed runs are recorded in the work item's run history.",
+      "tags": [
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:run-agent-on-work-item:track-todo-checklist",
+      "type": "step",
+      "name": "Track todo checklist",
+      "filePath": "src/modules/ProjectManager/WorkItems/components/TodoChecklist/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Sub-tasks surfaced by the agent are tracked as a checklist on the work item.",
+      "tags": [
+        "tracking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:kanban-timeline-views",
+      "type": "flow",
+      "name": "Kanban & Timeline Views",
+      "summary": "Work items are visualized as a Kanban board built from replayed events, plus Gantt and calendar views for scheduling context.",
+      "tags": [
+        "visualization"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "TaskKanban board",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:kanban-timeline-views:load-kanban-tasks-from-replayed-events",
+      "type": "step",
+      "name": "Load kanban tasks from replayed events",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Kanban cards are derived by replaying work-item events into current state.",
+      "tags": [
+        "replay"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:kanban-timeline-views:guard-scroll-position-on-updates",
+      "type": "step",
+      "name": "Guard scroll position on updates",
+      "filePath": "src/features/TaskKanban/utils/scrollGuard.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Scroll position is preserved when the board updates under the user.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:kanban-timeline-views:render-gantt-chart",
+      "type": "step",
+      "name": "Render Gantt chart",
+      "filePath": "src/features/GanttChart/components",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Work items are laid out on a Gantt timeline.",
+      "tags": [
+        "visualization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:kanban-timeline-views:render-calendar-view",
+      "type": "step",
+      "name": "Render calendar view",
+      "filePath": "src/features/CalendarView/components",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Scheduled work items are shown on a calendar.",
+      "tags": [
+        "visualization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:linear-github-work-item-sync",
+      "type": "flow",
+      "name": "Linear & GitHub Work Item Sync",
+      "summary": "Work items are synchronized bidirectionally with Linear projects/issues and GitHub issues, with local caching and pagination.",
+      "tags": [
+        "integration",
+        "sync"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "LinearProjects / WorkManagement views",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:linear-github-work-item-sync:load-linear-projects-and-issues",
+      "type": "step",
+      "name": "Load Linear projects and issues",
+      "filePath": "src/modules/ProjectManager/LinearProjects/useLinearProjectsData.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Fetch Linear project and issue data for the connected workspace.",
+      "tags": [
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:linear-github-work-item-sync:cache-linear-index",
+      "type": "step",
+      "name": "Cache Linear index",
+      "filePath": "src/modules/ProjectManager/LinearProjects/linearProjectsCache.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Loaded Linear data is cached locally for fast navigation.",
+      "tags": [
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:linear-github-work-item-sync:mutate-linear-issues",
+      "type": "step",
+      "name": "Mutate Linear issues",
+      "filePath": "src/modules/ProjectManager/LinearProjects/useLinearProjectsMutations.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Local edits are pushed back as mutations to Linear.",
+      "tags": [
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:linear-github-work-item-sync:load-github-work-items",
+      "type": "step",
+      "name": "Load GitHub work items",
+      "filePath": "src/modules/MainApp/WorkManagement/githubWorkItemsModel.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Fetch GitHub issues to display alongside native work items.",
+      "tags": [
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:linear-github-work-item-sync:paginate-and-cache-github-issues",
+      "type": "step",
+      "name": "Paginate and cache GitHub issues",
+      "filePath": "src/modules/MainApp/WorkManagement/githubWorkItemsPagination.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "GitHub issue lists are paginated and cached for the work management view.",
+      "tags": [
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "domain:git-workflow-version-control",
+      "type": "domain",
+      "name": "Git Workflow & Version Control",
+      "summary": "Wraps local git operations end to end: watching repo status, staging/committing/branching/merging/stashing, generating AI-assisted commit messages, reviewing diffs and blame, and managing worktrees and remotes.",
+      "tags": [
+        "git",
+        "vcs",
+        "backend"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "Repository",
+          "Branch",
+          "Commit",
+          "Diff",
+          "Worktree",
+          "Stash"
+        ],
+        "businessRules": [
+          "Repo status watching must debounce filesystem events to avoid UI thrash",
+          "AI commit suggestions are generated from staged diff content only",
+          "Worktree operations must not clobber an existing checked-out branch"
+        ],
+        "crossDomainInteractions": [
+          "Diff and blame data is enriched with orgtrack session blame from Cross-Tool Activity Tracking",
+          "File tree and diff state feed the Code Editing & Language Tooling editor surface",
+          "GitHub-specific operations delegate to Integrations & Cloud Collaboration's GitHub client"
+        ]
+      }
+    },
+    {
+      "id": "flow:track-repository-status",
+      "type": "flow",
+      "name": "Track Repository Status",
+      "summary": "A background watcher observes the working tree for changes and pushes status_updated events that keep the UI's file tree and git panels in sync.",
+      "tags": [
+        "watch",
+        "status"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Filesystem watch on repo root",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:track-repository-status:watch-filesystem-for-repo-changes",
+      "type": "step",
+      "name": "Watch filesystem for repo changes",
+      "filePath": "src-tauri/crates/git/src/watch",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The Rust watcher observes the working directory for file changes.",
+      "tags": [
+        "watch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:track-repository-status:emit-status-updated-event",
+      "type": "step",
+      "name": "Emit status_updated event",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A repo:status_updated event is emitted to the frontend.",
+      "tags": [
+        "event"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:track-repository-status:update-multi-root-file-tree",
+      "type": "step",
+      "name": "Update multi-root file tree",
+      "filePath": "src/hooks/workStation/useCodeEditor/useMultiRootFileTree.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The code editor's multi-root file tree reacts to the status update.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:stage-commit-branch",
+      "type": "flow",
+      "name": "Stage, Commit & Branch",
+      "summary": "Covers the everyday git write path: staging/unstaging files, committing (optionally with an AI-generated message), branching, merging, and stashing.",
+      "tags": [
+        "commit",
+        "branch"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "git-api commands",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "step:stage-commit-branch:stage-or-unstage-files",
+      "type": "step",
+      "name": "Stage or unstage files",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Files are staged or unstaged for the next commit.",
+      "tags": [
+        "staging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:stage-commit-branch:generate-ai-commit-message",
+      "type": "step",
+      "name": "Generate AI commit message",
+      "filePath": "src-tauri/crates/git-api/src/commands/ai.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "An AI-generated commit message is suggested from the staged diff.",
+      "tags": [
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:stage-commit-branch:commit-changes",
+      "type": "step",
+      "name": "Commit changes",
+      "filePath": "src-tauri/crates/git-api/src/commands/commit.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The staged changes are committed to the branch.",
+      "tags": [
+        "commit"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:stage-commit-branch:branch-operations",
+      "type": "step",
+      "name": "Branch operations",
+      "filePath": "src-tauri/crates/git-api/src/commands/branch.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Branches are created, switched, deleted, or renamed.",
+      "tags": [
+        "branching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:stage-commit-branch:merge-branches",
+      "type": "step",
+      "name": "Merge branches",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "One branch is merged into another, surfacing conflicts if any.",
+      "tags": [
+        "merge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:stage-commit-branch:stash-changes",
+      "type": "step",
+      "name": "Stash changes",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Uncommitted changes are stashed or popped.",
+      "tags": [
+        "stash"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:review-diffs-blame",
+      "type": "flow",
+      "name": "Review Diffs & Blame",
+      "summary": "Diff summaries and per-line blame are computed on the backend and rendered as GitHub-style diff rows with quick-action suggestions in the UI.",
+      "tags": [
+        "diff",
+        "review"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GitHubDiff component",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:review-diffs-blame:compute-diff-summary-and-numstat",
+      "type": "step",
+      "name": "Compute diff summary and numstat",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A structured diff summary and file-level numstat are computed for the selection.",
+      "tags": [
+        "diff"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:review-diffs-blame:blame-file-lines",
+      "type": "step",
+      "name": "Blame file lines",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Line-level blame is computed for a file.",
+      "tags": [
+        "blame"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:review-diffs-blame:render-github-style-diff-rows",
+      "type": "step",
+      "name": "Render GitHub-style diff rows",
+      "filePath": "src/engines/GitWorkflow/GitHubDiff/DiffRow.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The diff is rendered row by row in a GitHub-familiar layout.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:review-diffs-blame:suggest-quick-actions-on-diff",
+      "type": "step",
+      "name": "Suggest quick actions on diff",
+      "filePath": "src/engines/GitWorkflow/GitSuggestionCards/QuickActionPill.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Contextual quick-action pills (e.g. stage hunk) are offered on the diff.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:worktrees-remote-sync",
+      "type": "flow",
+      "name": "Worktrees & Remote Sync",
+      "summary": "Manages secondary worktrees for parallel branch checkouts and keeps local branches in sync with configured remotes, including resolving the base ref for a PR.",
+      "tags": [
+        "worktree",
+        "remote"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "git-api routes/worktrees",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "step:worktrees-remote-sync:manage-worktrees",
+      "type": "step",
+      "name": "Manage worktrees",
+      "filePath": "src-tauri/crates/git/src/worktree.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Additional worktrees are created, listed, or removed for parallel checkouts.",
+      "tags": [
+        "worktree"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:worktrees-remote-sync:sync-with-remote",
+      "type": "step",
+      "name": "Sync with remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Local branches are fetched/pushed against their configured remotes.",
+      "tags": [
+        "remote"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:worktrees-remote-sync:resolve-pr-base-ref",
+      "type": "step",
+      "name": "Resolve PR base ref",
+      "filePath": "src-tauri/crates/git/src/pr_base.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The correct base ref for a pull request comparison is resolved.",
+      "tags": [
+        "pr"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "domain:code-editing-language-tooling",
+      "type": "domain",
+      "name": "Code Editing & Language Tooling",
+      "summary": "Provides the in-app code editor surface (CodeMirror-based panes, sidebar, bottom panel), manages the lifecycle of language servers for diagnostics/autocomplete, and powers regex/symbol search across the open workspace.",
+      "tags": [
+        "editor",
+        "lsp",
+        "search",
+        "frontend"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "EditorPane",
+          "LanguageServer",
+          "SearchQuery",
+          "SymbolIndex"
+        ],
+        "businessRules": [
+          "A language server must be installed before it can be started for a workspace root",
+          "Workspace root detection determines which project config drives LSP behavior"
+        ],
+        "crossDomainInteractions": [
+          "Shares file/diff state with Git Workflow & Version Control",
+          "Hosts the diff/replay viewer used by Session Replay & Simulation",
+          "Editor actions are invoked as tool calls from Agent Chat & Live Sessions"
+        ]
+      }
+    },
+    {
+      "id": "flow:open-edit-file",
+      "type": "flow",
+      "name": "Open & Edit File",
+      "summary": "Opens a file into the CodeMirror-based editor pane alongside a primary sidebar (file tree) and bottom panel (problems/output).",
+      "tags": [
+        "editor"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "EditorMainPane mount",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:open-edit-file:render-editor-main-pane",
+      "type": "step",
+      "name": "Render editor main pane",
+      "filePath": "src/modules/WorkStation/CodeEditor/Panels/EditorMainPane/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The main editing surface is mounted for the selected file.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:open-edit-file:load-codemirror-instance",
+      "type": "step",
+      "name": "Load CodeMirror instance",
+      "filePath": "src/features/CodeMirror/Editor",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A CodeMirror instance with the appropriate language extension is created.",
+      "tags": [
+        "editor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:open-edit-file:show-primary-sidebar-file-tree",
+      "type": "step",
+      "name": "Show primary sidebar / file tree",
+      "filePath": "src/modules/WorkStation/CodeEditor/Panels/EditorPrimarySidebar/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The primary sidebar renders the workspace file tree.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:open-edit-file:show-bottom-panel",
+      "type": "step",
+      "name": "Show bottom panel",
+      "filePath": "src/modules/WorkStation/CodeEditor/Panels/EditorBottomPanel/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Problems/output panels are shown beneath the editor.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:lsp-server-lifecycle",
+      "type": "flow",
+      "name": "LSP Server Lifecycle",
+      "summary": "Detects the workspace root and project type, discovers and installs the matching language server, then starts and manages its process for diagnostics/autocomplete.",
+      "tags": [
+        "lsp",
+        "lifecycle"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entryPoint": "Workspace opened / LSP prompt",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:lsp-server-lifecycle:detect-workspace-root",
+      "type": "step",
+      "name": "Detect workspace root",
+      "filePath": "src-tauri/crates/lsp/src/root_detection.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The project root for LSP purposes is detected from the open folder.",
+      "tags": [
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:lsp-server-lifecycle:scan-workspace-for-project-type",
+      "type": "step",
+      "name": "Scan workspace for project type",
+      "filePath": "src-tauri/crates/lsp/src/workspace_scan",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The workspace is scanned to infer which language servers are relevant.",
+      "tags": [
+        "scanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:lsp-server-lifecycle:discover-available-servers",
+      "type": "step",
+      "name": "Discover available servers",
+      "filePath": "src-tauri/crates/lsp/src/commands/discovery.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Candidate language servers for the detected project type are discovered.",
+      "tags": [
+        "discovery"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:lsp-server-lifecycle:install-language-server",
+      "type": "step",
+      "name": "Install language server",
+      "filePath": "src-tauri/crates/lsp/src/commands/install.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The selected language server is installed via its package manager pipeline.",
+      "tags": [
+        "install"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:lsp-server-lifecycle:start-and-manage-server-process",
+      "type": "step",
+      "name": "Start and manage server process",
+      "filePath": "src-tauri/crates/lsp/src/manager.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The installed server is started and its lifecycle managed.",
+      "tags": [
+        "process"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:lsp-server-lifecycle:prompt-user-to-install-missing-lsp",
+      "type": "step",
+      "name": "Prompt user to install missing LSP",
+      "filePath": "src/modules/WorkStation/CodeEditor/LspInstallPrompt/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "If no server is installed, the user is prompted inline to install one.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:search-across-workspace",
+      "type": "flow",
+      "name": "Search Across Workspace",
+      "summary": "Runs regex or symbol-aware search across the open workspace and displays matching results inline in the editor's search panel.",
+      "tags": [
+        "search"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Search panel query submit",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:search-across-workspace:enter-search-query-and-filters",
+      "type": "step",
+      "name": "Enter search query and filters",
+      "filePath": "src/modules/WorkStation/CodeEditor/Panels/shared/SearchFilters.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user enters a query and configures search filters/mode.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:search-across-workspace:run-regex-search",
+      "type": "step",
+      "name": "Run regex search",
+      "filePath": "src/api/tauri/rpc/procedures/searchRegex.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A regex search is executed against workspace files.",
+      "tags": [
+        "search"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:search-across-workspace:run-symbol-search",
+      "type": "step",
+      "name": "Run symbol search",
+      "filePath": "src/api/tauri/rpc/procedures/searchSymbol.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A symbol-aware search is executed using language server indices.",
+      "tags": [
+        "search"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:search-across-workspace:display-search-results",
+      "type": "step",
+      "name": "Display search results",
+      "filePath": "src/modules/WorkStation/CodeEditor/SessionReplay/CodePanel/SearchResultsContent.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Matches are displayed in the results content panel.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "domain:browser-terminal-engines",
+      "type": "domain",
+      "name": "Browser & Terminal Engines",
+      "summary": "Embeds a controllable browser (navigation, DOM inspection/editing, screenshot capture, automation scripts) and an interactive terminal inside the workstation, both of which agents can drive as tools.",
+      "tags": [
+        "browser",
+        "terminal",
+        "automation"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "BrowserTab",
+          "DomElement",
+          "TerminalSession",
+          "AutomationScript"
+        ],
+        "businessRules": [
+          "Browser automation scripts run in an injected page context and must be sandboxed from the host app",
+          "Terminal output is ANSI-processed before being handed to the agent as tool output"
+        ],
+        "crossDomainInteractions": [
+          "Driven as tool calls from Agent Chat & Live Sessions during an agent run",
+          "Browser session activity is captured for playback in Session Replay & Simulation"
+        ]
+      }
+    },
+    {
+      "id": "flow:navigate-automate-browser",
+      "type": "flow",
+      "name": "Navigate & Automate Embedded Browser",
+      "summary": "Loads the embedded browser layout, navigates pages, and runs automation scripts/actions against the loaded page.",
+      "tags": [
+        "browser",
+        "automation"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "BrowserLayout mount",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:navigate-automate-browser:load-browser-layout",
+      "type": "step",
+      "name": "Load browser layout",
+      "filePath": "src/modules/WorkStation/Browser/BrowserLayout/index.tsx",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The embedded browser layout and its panels are mounted.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:navigate-automate-browser:sync-browser-tab-state",
+      "type": "step",
+      "name": "Sync browser tab state",
+      "filePath": "src/modules/WorkStation/Browser/BrowserLayout/useBrowserTabSync.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Open browser tabs are synced with workstation tab state.",
+      "tags": [
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:navigate-automate-browser:navigate-page",
+      "type": "step",
+      "name": "Navigate page",
+      "filePath": "src-tauri/crates/browser/src/scripts/navigation.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A page navigation is executed in the embedded browser engine.",
+      "tags": [
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:navigate-automate-browser:run-automation-action",
+      "type": "step",
+      "name": "Run automation action",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A scripted automation action (click, type, etc.) is executed against the page.",
+      "tags": [
+        "automation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:navigate-automate-browser:update-status-bar",
+      "type": "step",
+      "name": "Update status bar",
+      "filePath": "src/modules/WorkStation/Browser/BrowserLayout/useBrowserStatusBar.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The browser status bar reflects load state and current URL.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:inspect-capture-page",
+      "type": "flow",
+      "name": "Inspect & Capture Page",
+      "summary": "Enters an inline DOM inspector mode to select and edit elements, and captures screenshots of the page for the agent or user.",
+      "tags": [
+        "inspector",
+        "capture"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Inspector mode toggle",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:inspect-capture-page:enter-inspector-mode",
+      "type": "step",
+      "name": "Enter inspector mode",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-mode.js",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The injected inspector script activates hover/select mode on the page.",
+      "tags": [
+        "inspector"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:inspect-capture-page:build-dom-tree",
+      "type": "step",
+      "name": "Build DOM tree",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-dom-tree.js",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A DOM tree of the page is built for the inspector panel.",
+      "tags": [
+        "inspector"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:inspect-capture-page:select-element-info",
+      "type": "step",
+      "name": "Select element info",
+      "filePath": "src-tauri/crates/browser/src/scripts/js/inspector-element-info.js",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Details of the selected element are extracted and shown.",
+      "tags": [
+        "inspector"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:inspect-capture-page:edit-dom-inline",
+      "type": "step",
+      "name": "Edit DOM inline",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The selected element's attributes/content can be edited in place.",
+      "tags": [
+        "editing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:inspect-capture-page:capture-screenshot",
+      "type": "step",
+      "name": "Capture screenshot",
+      "filePath": "src-tauri/crates/browser/src/capture.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A screenshot of the current page state is captured and stored.",
+      "tags": [
+        "capture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:interactive-terminal-session",
+      "type": "flow",
+      "name": "Interactive Terminal Session",
+      "summary": "Renders an interactive terminal, processes raw ANSI output for display, and forwards processed output as tool results back to the agent.",
+      "tags": [
+        "terminal"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "TerminalInteractive mount",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:interactive-terminal-session:render-terminal-display",
+      "type": "step",
+      "name": "Render terminal display",
+      "filePath": "src/components/TerminalDisplay",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The xterm-based terminal display is mounted in the workstation.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:interactive-terminal-session:process-ansi-content",
+      "type": "step",
+      "name": "Process ANSI content",
+      "filePath": "src/components/TerminalDisplay/utils/ansiProcessor.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Raw ANSI escape sequences from the shell are processed for rendering.",
+      "tags": [
+        "processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:interactive-terminal-session:process-terminal-output-for-agent",
+      "type": "step",
+      "name": "Process terminal output for agent",
+      "filePath": "src/modules/WorkStation/CodeEditor/util/terminalOutput.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Terminal output is normalized into a form usable as an agent tool result.",
+      "tags": [
+        "processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:interactive-terminal-session:handle-interactive-input",
+      "type": "step",
+      "name": "Handle interactive input",
+      "filePath": "src/components/TerminalInteractive",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "User keystrokes are forwarded to the underlying shell process.",
+      "tags": [
+        "input"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "domain:credential-model-provider-vault",
+      "type": "domain",
+      "name": "Credential & Model Provider Vault",
+      "summary": "Auto-detects installed AI CLI tools, securely stores and retrieves API keys/credentials for each supported model provider, and validates keys and tracks usage quotas.",
+      "tags": [
+        "credentials",
+        "security",
+        "backend"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entities": [
+          "ProviderCredential",
+          "KeyVaultEntry",
+          "QuotaWindow"
+        ],
+        "businessRules": [
+          "Keys are never stored in plaintext outside the platform key store",
+          "A provider must be auto-detected or manually configured before it can be used by a session adapter"
+        ],
+        "crossDomainInteractions": [
+          "Supplies credentials used by Agent Chat & Live Sessions' adapters and Agent Orgs & Automation's model resolution",
+          "Quota/validation state is surfaced in provider configuration UI under MainApp Integrations"
+        ]
+      }
+    },
+    {
+      "id": "flow:auto-detect-installed-providers",
+      "type": "flow",
+      "name": "Auto-Detect Installed Providers",
+      "summary": "Scans the local machine for installed AI CLI tools and matches them against known provider configs to register them automatically.",
+      "tags": [
+        "detection"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "App startup provider scan",
+        "entryType": "cli"
+      }
+    },
+    {
+      "id": "step:auto-detect-installed-providers:scan-for-cli-tool-installs",
+      "type": "step",
+      "name": "Scan for CLI tool installs",
+      "filePath": "src-tauri/crates/key-vault/src/auto_detect",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The local filesystem/PATH is scanned for known AI CLI tool binaries.",
+      "tags": [
+        "scanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:auto-detect-installed-providers:match-provider-config",
+      "type": "step",
+      "name": "Match provider config",
+      "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Detected binaries are matched to known provider configuration entries.",
+      "tags": [
+        "matching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:auto-detect-installed-providers:register-detected-provider",
+      "type": "step",
+      "name": "Register detected provider",
+      "filePath": "src-tauri/crates/key-vault/src/providers/mod.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A matched provider is registered as available in the vault.",
+      "tags": [
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:store-retrieve-api-keys",
+      "type": "flow",
+      "name": "Store & Retrieve API Keys",
+      "summary": "Extracts credentials from a provider, stores them in the platform's secure key store, and retrieves them for use by session adapters.",
+      "tags": [
+        "storage"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Key Vault settings UI",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:store-retrieve-api-keys:extract-key-from-provider",
+      "type": "step",
+      "name": "Extract key from provider",
+      "filePath": "src-tauri/crates/key-vault/src/key_extractor.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A raw API key/token is extracted from the provider's local config or OAuth flow.",
+      "tags": [
+        "extraction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:store-retrieve-api-keys:store-key-securely",
+      "type": "step",
+      "name": "Store key securely",
+      "filePath": "src-tauri/crates/key-vault/src/key_store",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The key is written to the OS-native secure key store.",
+      "tags": [
+        "storage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:store-retrieve-api-keys:expose-key-vault-ui",
+      "type": "step",
+      "name": "Expose key vault UI",
+      "filePath": "src/modules/shared/keyVault",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Stored provider keys are listed and managed in settings.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:validate-keys-track-quota",
+      "type": "flow",
+      "name": "Validate Keys & Track Quota",
+      "summary": "Validates a stored key against the provider API and tracks rate-limit/usage quota windows so the app can warn before exhausting a plan.",
+      "tags": [
+        "validation",
+        "quota"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "Key validation service call",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:validate-keys-track-quota:validate-provider-key",
+      "type": "step",
+      "name": "Validate provider key",
+      "filePath": "src/api/services/keyValidation.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A stored key is checked against the provider's API for validity.",
+      "tags": [
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:validate-keys-track-quota:check-quota-windows",
+      "type": "step",
+      "name": "Check quota windows",
+      "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Usage against the provider's rate-limit windows is checked.",
+      "tags": [
+        "quota"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:validate-keys-track-quota:handle-provider-specific-quota",
+      "type": "step",
+      "name": "Handle provider-specific quota",
+      "filePath": "src-tauri/crates/key-vault/src/providers/cursor/quota.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Provider-specific quota logic (e.g. Cursor's quota model) is applied.",
+      "tags": [
+        "quota"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "domain:integrations-cloud-collaboration",
+      "type": "domain",
+      "name": "Integrations & Cloud Collaboration",
+      "summary": "Connects the app to external services: GitHub (issues/PRs/repos), external IDEs, chat notification channels (Discord/Telegram/Weixin), and Org2Cloud for sharing, commenting on, forking, and billing sessions across a team.",
+      "tags": [
+        "integrations",
+        "collaboration",
+        "cloud"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": [
+          "GitHubRepo",
+          "NotificationChannel",
+          "SharedSession",
+          "TeamOrg"
+        ],
+        "businessRules": [
+          "Session sharing to Org2Cloud respects a configurable sync level (what data leaves the machine)",
+          "Notification channels must be bound to a specific agent/org before relaying messages"
+        ],
+        "crossDomainInteractions": [
+          "Feeds GitHub issues into Project & Work Item Management's WorkManagement view",
+          "Relays messages to/from Agent Orgs & Automation's channel gateway",
+          "Shares sessions originating from Agent Chat & Live Sessions"
+        ]
+      }
+    },
+    {
+      "id": "flow:github-integration",
+      "type": "flow",
+      "name": "GitHub Integration",
+      "summary": "Authenticates with GitHub, detects the current repo's GitHub remote, and fetches issues, pull requests, and repo/profile data for use elsewhere in the app.",
+      "tags": [
+        "github"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GitHub commands (Tauri)",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:github-integration:authenticate-github-credentials",
+      "type": "step",
+      "name": "Authenticate GitHub credentials",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "GitHub credentials/tokens are validated for the connected account.",
+      "tags": [
+        "auth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:github-integration:detect-repo-github-remote",
+      "type": "step",
+      "name": "Detect repo GitHub remote",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The current repo's GitHub remote is detected from its git config.",
+      "tags": [
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:github-integration:fetch-issues",
+      "type": "step",
+      "name": "Fetch issues",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Issues for the connected repo are fetched from the GitHub API.",
+      "tags": [
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:github-integration:fetch-pull-requests",
+      "type": "step",
+      "name": "Fetch pull requests",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Pull requests for the connected repo are fetched from the GitHub API.",
+      "tags": [
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:github-integration:fetch-repos-and-profile",
+      "type": "step",
+      "name": "Fetch repos and profile",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Available repos and the authenticated user's profile are fetched.",
+      "tags": [
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:notification-channel-gateway",
+      "type": "flow",
+      "name": "Notification Channel Gateway",
+      "summary": "Binds agent orgs to external chat channels (Discord, Telegram, Weixin), merges inbound messages from each channel, and applies a reset policy to avoid runaway conversations.",
+      "tags": [
+        "channels",
+        "gateway"
+      ],
+      "complexity": "complex",
+      "domainMeta": {
+        "entryPoint": "Channel binding configured in Connections",
+        "entryType": "event"
+      }
+    },
+    {
+      "id": "step:notification-channel-gateway:configure-channel-binding",
+      "type": "step",
+      "name": "Configure channel binding",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "An org/agent is bound to a specific external channel.",
+      "tags": [
+        "configuration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:notification-channel-gateway:manage-channel-connections",
+      "type": "step",
+      "name": "Manage channel connections",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/manager.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Discord/Telegram/Weixin client connections are established and managed.",
+      "tags": [
+        "connection"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "step:notification-channel-gateway:merge-inbound-messages",
+      "type": "step",
+      "name": "Merge inbound messages",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Messages arriving from a channel are merged into the bound agent's inbox.",
+      "tags": [
+        "merging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:notification-channel-gateway:apply-reset-policy",
+      "type": "step",
+      "name": "Apply reset policy",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A reset policy decides when to start a fresh conversation context on the channel.",
+      "tags": [
+        "policy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:share-session-org2cloud",
+      "type": "flow",
+      "name": "Share Session to Org2Cloud",
+      "summary": "Shares a local session to Org2Cloud at a configurable sync level, supports commenting on shared sessions, and completes the associated auth/billing flow.",
+      "tags": [
+        "cloud",
+        "sharing"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "CloudSessionShareDialog",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:share-session-org2cloud:open-share-dialog",
+      "type": "step",
+      "name": "Open share dialog",
+      "filePath": "src/features/Org2Cloud/CloudSessionShareDialog",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user opens the dialog to share a session to Org2Cloud.",
+      "tags": [
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:share-session-org2cloud:set-cloud-sync-level",
+      "type": "step",
+      "name": "Set cloud sync level",
+      "filePath": "src/features/Org2Cloud/CloudSyncLevelDialog",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The user picks how much session data is synced to the cloud.",
+      "tags": [
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:share-session-org2cloud:address-session-comments",
+      "type": "step",
+      "name": "Address session comments",
+      "filePath": "src/features/Org2Cloud/addressComments.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Comments left on a shared session are addressed by the agent.",
+      "tags": [
+        "collaboration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:share-session-org2cloud:handle-auth-callback",
+      "type": "step",
+      "name": "Handle auth callback",
+      "filePath": "src/features/Org2Cloud/authCallback.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The OAuth callback from Org2Cloud sign-in is handled.",
+      "tags": [
+        "auth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:share-session-org2cloud:complete-billing-flow",
+      "type": "step",
+      "name": "Complete billing flow",
+      "filePath": "src/features/Org2Cloud/billingComplete.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A billing/subscription flow initiated in the cloud is completed and confirmed.",
+      "tags": [
+        "billing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "flow:team-session-collaboration",
+      "type": "flow",
+      "name": "Team Session Collaboration",
+      "summary": "Lets a teammate fork a shared session with a sensible model fallback, auto-tags new sessions, syncs collaboration state, and filters visibility by org/repo scope.",
+      "tags": [
+        "collaboration",
+        "team"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "TeamCollaboration forkSession",
+        "entryType": "manual"
+      }
+    },
+    {
+      "id": "step:team-session-collaboration:fork-session-for-teammate",
+      "type": "step",
+      "name": "Fork session for teammate",
+      "filePath": "src/features/TeamCollaboration/forkSession.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "A shared session is forked into a new session owned by the current user.",
+      "tags": [
+        "fork"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:team-session-collaboration:apply-model-fallback-on-fork",
+      "type": "step",
+      "name": "Apply model fallback on fork",
+      "filePath": "src/features/TeamCollaboration/forkModelFallback.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "If the original model is unavailable, a fallback model is chosen for the fork.",
+      "tags": [
+        "fallback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:team-session-collaboration:auto-tag-new-session",
+      "type": "step",
+      "name": "Auto-tag new session",
+      "filePath": "src/features/TeamCollaboration/autoTagNewSession.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "The forked/new session is automatically tagged for discoverability.",
+      "tags": [
+        "tagging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:team-session-collaboration:sync-collaboration-state",
+      "type": "step",
+      "name": "Sync collaboration state",
+      "filePath": "src/features/TeamCollaboration/collabSyncUtils.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Collaboration state (presence, comments) is kept in sync across teammates.",
+      "tags": [
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "step:team-session-collaboration:filter-by-org-repo-scope",
+      "type": "step",
+      "name": "Filter by org/repo scope",
+      "filePath": "src/features/TeamCollaboration/orgScopeRepoFilter.ts",
+      "lineRange": [
+        0,
+        0
+      ],
+      "summary": "Visible sessions are filtered by the current org and repo scope.",
+      "tags": [
+        "filtering"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "flow:send-message-stream-response",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:compose-message-in-input-area",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:submit-via-floating-composer",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:dispatch-to-session-adapter",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:open-transport-event-handler",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:buffer-streaming-deltas",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:proxy-events-into-event-store",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:send-message-stream-response",
+      "target": "step:send-message-stream-response:render-streamed-content-as-blocks",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "flow:interactive-tool-prompts",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:interactive-tool-prompts",
+      "target": "step:interactive-tool-prompts:detect-ask-question-tool-call",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:interactive-tool-prompts",
+      "target": "step:interactive-tool-prompts:render-question-batches",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:interactive-tool-prompts",
+      "target": "step:interactive-tool-prompts:capture-user-selection",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:interactive-tool-prompts",
+      "target": "step:interactive-tool-prompts:submit-answer-back-to-session",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:interactive-tool-prompts",
+      "target": "step:interactive-tool-prompts:handle-exec-mode-switch",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "flow:render-inline-canvas-artifacts",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:render-inline-canvas-artifacts",
+      "target": "step:render-inline-canvas-artifacts:detect-canvas-producing-turn",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:render-inline-canvas-artifacts",
+      "target": "step:render-inline-canvas-artifacts:build-canvas-payload",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:render-inline-canvas-artifacts",
+      "target": "step:render-inline-canvas-artifacts:apply-preview-policy",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:render-inline-canvas-artifacts",
+      "target": "step:render-inline-canvas-artifacts:render-a2ui-or-react-artifact",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:render-inline-canvas-artifacts",
+      "target": "step:render-inline-canvas-artifacts:jump-to-full-simulator-canvas",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "flow:define-agent-org-workflow",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:define-agent-org-workflow",
+      "target": "step:define-agent-org-workflow:list-orgs-and-agents",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:define-agent-org-workflow",
+      "target": "step:define-agent-org-workflow:edit-org-workflow-graph",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:define-agent-org-workflow",
+      "target": "step:define-agent-org-workflow:configure-workflow-nodes-and-branches",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:define-agent-org-workflow",
+      "target": "step:define-agent-org-workflow:persist-org-workflow-definitions",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:define-agent-org-workflow",
+      "target": "step:define-agent-org-workflow:resolve-capability-and-command-lookups",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "flow:schedule-run-work-items",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:schedule-run-work-items",
+      "target": "step:schedule-run-work-items:schedule-routine-work",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:schedule-run-work-items",
+      "target": "step:schedule-run-work-items:queue-work-item-for-agent",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:schedule-run-work-items",
+      "target": "step:schedule-run-work-items:watchdog-monitors-run-health",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:schedule-run-work-items",
+      "target": "step:schedule-run-work-items:recover-interrupted-work-items",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:schedule-run-work-items",
+      "target": "step:schedule-run-work-items:emit-run-events",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "flow:plan-approval-gate",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:plan-approval-gate",
+      "target": "step:plan-approval-gate:agent-proposes-plan",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:plan-approval-gate",
+      "target": "step:plan-approval-gate:route-to-member-inbox",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:plan-approval-gate",
+      "target": "step:plan-approval-gate:handle-member-intervention",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:plan-approval-gate",
+      "target": "step:plan-approval-gate:approve-or-reject-and-resume",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "flow:hook-mcp-tool-execution",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:hook-mcp-tool-execution",
+      "target": "step:hook-mcp-tool-execution:load-hook-configuration",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:hook-mcp-tool-execution",
+      "target": "step:hook-mcp-tool-execution:dispatch-lifecycle-event-to-hooks",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:hook-mcp-tool-execution",
+      "target": "step:hook-mcp-tool-execution:execute-hook-command",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:hook-mcp-tool-execution",
+      "target": "step:hook-mcp-tool-execution:bridge-mcp-server-connection",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:hook-mcp-tool-execution",
+      "target": "step:hook-mcp-tool-execution:handle-mcp-auth-flow",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:hook-mcp-tool-execution",
+      "target": "step:hook-mcp-tool-execution:route-mcp-responses-to-agent",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:session-replay-simulation",
+      "target": "flow:replay-recorded-session",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:replay-recorded-session",
+      "target": "step:replay-recorded-session:select-session-to-replay",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:replay-recorded-session",
+      "target": "step:replay-recorded-session:load-replay-events",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:replay-recorded-session",
+      "target": "step:replay-recorded-session:reconstruct-diff-sections-per-turn",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:replay-recorded-session",
+      "target": "step:replay-recorded-session:render-replay-in-code-panel",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:replay-recorded-session",
+      "target": "step:replay-recorded-session:sync-browser-replay-tabs",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:session-replay-simulation",
+      "target": "flow:simulated-app-rendering",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:simulated-app-rendering",
+      "target": "step:simulated-app-rendering:register-simulator-app-config",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:simulated-app-rendering",
+      "target": "step:simulated-app-rendering:match-event-to-simulator-app",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:simulated-app-rendering",
+      "target": "step:simulated-app-rendering:hydrate-full-event-history",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:simulated-app-rendering",
+      "target": "step:simulated-app-rendering:render-canvas-app",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:simulated-app-rendering",
+      "target": "step:simulated-app-rendering:render-background-tasks-app",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:cross-tool-activity-tracking",
+      "target": "flow:ingest-external-tool-history",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:ingest-external-tool-history",
+      "target": "step:ingest-external-tool-history:detect-installed-tool-history-db-files",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:ingest-external-tool-history",
+      "target": "step:ingest-external-tool-history:parse-claude-code-history",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:ingest-external-tool-history",
+      "target": "step:ingest-external-tool-history:parse-cursor-codex-cline-history",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:ingest-external-tool-history",
+      "target": "step:ingest-external-tool-history:normalize-into-shared-session-model",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:ingest-external-tool-history",
+      "target": "step:ingest-external-tool-history:apply-privacy-redaction",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:cross-tool-activity-tracking",
+      "target": "flow:project-session-onto-repo-files",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:project-session-onto-repo-files",
+      "target": "step:project-session-onto-repo-files:sync-repo-activity-paths",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:project-session-onto-repo-files",
+      "target": "step:project-session-onto-repo-files:project-session-blame-per-file",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:project-session-onto-repo-files",
+      "target": "step:project-session-onto-repo-files:compute-turn-metadata-and-stats",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:project-session-onto-repo-files",
+      "target": "step:project-session-onto-repo-files:build-replay-projector-output",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:project-session-onto-repo-files",
+      "target": "step:project-session-onto-repo-files:expose-via-tauri-api",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:project-session-onto-repo-files",
+      "target": "step:project-session-onto-repo-files:surface-file-session-timeline-in-ui",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:project-work-item-management",
+      "target": "flow:create-configure-work-item",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:create-configure-work-item",
+      "target": "step:create-configure-work-item:draft-new-work-item",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:create-configure-work-item",
+      "target": "step:create-configure-work-item:build-work-item-from-draft",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:create-configure-work-item",
+      "target": "step:create-configure-work-item:configure-assigned-agent",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:create-configure-work-item",
+      "target": "step:create-configure-work-item:configure-reviewer",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:create-configure-work-item",
+      "target": "step:create-configure-work-item:set-schedule",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:project-work-item-management",
+      "target": "flow:run-agent-on-work-item",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:run-agent-on-work-item",
+      "target": "step:run-agent-on-work-item:start-agent-run",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:run-agent-on-work-item",
+      "target": "step:run-agent-on-work-item:track-run-phase-state",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:run-agent-on-work-item",
+      "target": "step:run-agent-on-work-item:stream-session-output-preview",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:run-agent-on-work-item",
+      "target": "step:run-agent-on-work-item:record-run-history",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:run-agent-on-work-item",
+      "target": "step:run-agent-on-work-item:track-todo-checklist",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:project-work-item-management",
+      "target": "flow:kanban-timeline-views",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:kanban-timeline-views",
+      "target": "step:kanban-timeline-views:load-kanban-tasks-from-replayed-events",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:kanban-timeline-views",
+      "target": "step:kanban-timeline-views:guard-scroll-position-on-updates",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:kanban-timeline-views",
+      "target": "step:kanban-timeline-views:render-gantt-chart",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:kanban-timeline-views",
+      "target": "step:kanban-timeline-views:render-calendar-view",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:project-work-item-management",
+      "target": "flow:linear-github-work-item-sync",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:linear-github-work-item-sync",
+      "target": "step:linear-github-work-item-sync:load-linear-projects-and-issues",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:linear-github-work-item-sync",
+      "target": "step:linear-github-work-item-sync:cache-linear-index",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:linear-github-work-item-sync",
+      "target": "step:linear-github-work-item-sync:mutate-linear-issues",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:linear-github-work-item-sync",
+      "target": "step:linear-github-work-item-sync:load-github-work-items",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:linear-github-work-item-sync",
+      "target": "step:linear-github-work-item-sync:paginate-and-cache-github-issues",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:git-workflow-version-control",
+      "target": "flow:track-repository-status",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:track-repository-status",
+      "target": "step:track-repository-status:watch-filesystem-for-repo-changes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:track-repository-status",
+      "target": "step:track-repository-status:emit-status-updated-event",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:track-repository-status",
+      "target": "step:track-repository-status:update-multi-root-file-tree",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:git-workflow-version-control",
+      "target": "flow:stage-commit-branch",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:stage-commit-branch",
+      "target": "step:stage-commit-branch:stage-or-unstage-files",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:stage-commit-branch",
+      "target": "step:stage-commit-branch:generate-ai-commit-message",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:stage-commit-branch",
+      "target": "step:stage-commit-branch:commit-changes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:stage-commit-branch",
+      "target": "step:stage-commit-branch:branch-operations",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:stage-commit-branch",
+      "target": "step:stage-commit-branch:merge-branches",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:stage-commit-branch",
+      "target": "step:stage-commit-branch:stash-changes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:git-workflow-version-control",
+      "target": "flow:review-diffs-blame",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:review-diffs-blame",
+      "target": "step:review-diffs-blame:compute-diff-summary-and-numstat",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:review-diffs-blame",
+      "target": "step:review-diffs-blame:blame-file-lines",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:review-diffs-blame",
+      "target": "step:review-diffs-blame:render-github-style-diff-rows",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:review-diffs-blame",
+      "target": "step:review-diffs-blame:suggest-quick-actions-on-diff",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:git-workflow-version-control",
+      "target": "flow:worktrees-remote-sync",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:worktrees-remote-sync",
+      "target": "step:worktrees-remote-sync:manage-worktrees",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:worktrees-remote-sync",
+      "target": "step:worktrees-remote-sync:sync-with-remote",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:worktrees-remote-sync",
+      "target": "step:worktrees-remote-sync:resolve-pr-base-ref",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:code-editing-language-tooling",
+      "target": "flow:open-edit-file",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:open-edit-file",
+      "target": "step:open-edit-file:render-editor-main-pane",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:open-edit-file",
+      "target": "step:open-edit-file:load-codemirror-instance",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:open-edit-file",
+      "target": "step:open-edit-file:show-primary-sidebar-file-tree",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:open-edit-file",
+      "target": "step:open-edit-file:show-bottom-panel",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:code-editing-language-tooling",
+      "target": "flow:lsp-server-lifecycle",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:lsp-server-lifecycle",
+      "target": "step:lsp-server-lifecycle:detect-workspace-root",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:lsp-server-lifecycle",
+      "target": "step:lsp-server-lifecycle:scan-workspace-for-project-type",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:lsp-server-lifecycle",
+      "target": "step:lsp-server-lifecycle:discover-available-servers",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:lsp-server-lifecycle",
+      "target": "step:lsp-server-lifecycle:install-language-server",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:lsp-server-lifecycle",
+      "target": "step:lsp-server-lifecycle:start-and-manage-server-process",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:lsp-server-lifecycle",
+      "target": "step:lsp-server-lifecycle:prompt-user-to-install-missing-lsp",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:code-editing-language-tooling",
+      "target": "flow:search-across-workspace",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:search-across-workspace",
+      "target": "step:search-across-workspace:enter-search-query-and-filters",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:search-across-workspace",
+      "target": "step:search-across-workspace:run-regex-search",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:search-across-workspace",
+      "target": "step:search-across-workspace:run-symbol-search",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:search-across-workspace",
+      "target": "step:search-across-workspace:display-search-results",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:browser-terminal-engines",
+      "target": "flow:navigate-automate-browser",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:navigate-automate-browser",
+      "target": "step:navigate-automate-browser:load-browser-layout",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:navigate-automate-browser",
+      "target": "step:navigate-automate-browser:sync-browser-tab-state",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:navigate-automate-browser",
+      "target": "step:navigate-automate-browser:navigate-page",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:navigate-automate-browser",
+      "target": "step:navigate-automate-browser:run-automation-action",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:navigate-automate-browser",
+      "target": "step:navigate-automate-browser:update-status-bar",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:browser-terminal-engines",
+      "target": "flow:inspect-capture-page",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:inspect-capture-page",
+      "target": "step:inspect-capture-page:enter-inspector-mode",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:inspect-capture-page",
+      "target": "step:inspect-capture-page:build-dom-tree",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:inspect-capture-page",
+      "target": "step:inspect-capture-page:select-element-info",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:inspect-capture-page",
+      "target": "step:inspect-capture-page:edit-dom-inline",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:inspect-capture-page",
+      "target": "step:inspect-capture-page:capture-screenshot",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:browser-terminal-engines",
+      "target": "flow:interactive-terminal-session",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:interactive-terminal-session",
+      "target": "step:interactive-terminal-session:render-terminal-display",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:interactive-terminal-session",
+      "target": "step:interactive-terminal-session:process-ansi-content",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:interactive-terminal-session",
+      "target": "step:interactive-terminal-session:process-terminal-output-for-agent",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:interactive-terminal-session",
+      "target": "step:interactive-terminal-session:handle-interactive-input",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:credential-model-provider-vault",
+      "target": "flow:auto-detect-installed-providers",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:auto-detect-installed-providers",
+      "target": "step:auto-detect-installed-providers:scan-for-cli-tool-installs",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:auto-detect-installed-providers",
+      "target": "step:auto-detect-installed-providers:match-provider-config",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:auto-detect-installed-providers",
+      "target": "step:auto-detect-installed-providers:register-detected-provider",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:credential-model-provider-vault",
+      "target": "flow:store-retrieve-api-keys",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:store-retrieve-api-keys",
+      "target": "step:store-retrieve-api-keys:extract-key-from-provider",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:store-retrieve-api-keys",
+      "target": "step:store-retrieve-api-keys:store-key-securely",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:store-retrieve-api-keys",
+      "target": "step:store-retrieve-api-keys:expose-key-vault-ui",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:credential-model-provider-vault",
+      "target": "flow:validate-keys-track-quota",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:validate-keys-track-quota",
+      "target": "step:validate-keys-track-quota:validate-provider-key",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:validate-keys-track-quota",
+      "target": "step:validate-keys-track-quota:check-quota-windows",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:validate-keys-track-quota",
+      "target": "step:validate-keys-track-quota:handle-provider-specific-quota",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:integrations-cloud-collaboration",
+      "target": "flow:github-integration",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:github-integration",
+      "target": "step:github-integration:authenticate-github-credentials",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:github-integration",
+      "target": "step:github-integration:detect-repo-github-remote",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:github-integration",
+      "target": "step:github-integration:fetch-issues",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:github-integration",
+      "target": "step:github-integration:fetch-pull-requests",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:github-integration",
+      "target": "step:github-integration:fetch-repos-and-profile",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:integrations-cloud-collaboration",
+      "target": "flow:notification-channel-gateway",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:notification-channel-gateway",
+      "target": "step:notification-channel-gateway:configure-channel-binding",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:notification-channel-gateway",
+      "target": "step:notification-channel-gateway:manage-channel-connections",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:notification-channel-gateway",
+      "target": "step:notification-channel-gateway:merge-inbound-messages",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:notification-channel-gateway",
+      "target": "step:notification-channel-gateway:apply-reset-policy",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:integrations-cloud-collaboration",
+      "target": "flow:share-session-org2cloud",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:share-session-org2cloud",
+      "target": "step:share-session-org2cloud:open-share-dialog",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:share-session-org2cloud",
+      "target": "step:share-session-org2cloud:set-cloud-sync-level",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:share-session-org2cloud",
+      "target": "step:share-session-org2cloud:address-session-comments",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:share-session-org2cloud",
+      "target": "step:share-session-org2cloud:handle-auth-callback",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:share-session-org2cloud",
+      "target": "step:share-session-org2cloud:complete-billing-flow",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:integrations-cloud-collaboration",
+      "target": "flow:team-session-collaboration",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "flow:team-session-collaboration",
+      "target": "step:team-session-collaboration:fork-session-for-teammate",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:team-session-collaboration",
+      "target": "step:team-session-collaboration:apply-model-fallback-on-fork",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:team-session-collaboration",
+      "target": "step:team-session-collaboration:auto-tag-new-session",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:team-session-collaboration",
+      "target": "step:team-session-collaboration:sync-collaboration-state",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:team-session-collaboration",
+      "target": "step:team-session-collaboration:filter-by-org-repo-scope",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "domain:agent-orgs-automation",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Live chat sessions execute within org-defined workflows; plan approvals and hooks gate agent actions taken in chat.",
+      "weight": 0.7
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "domain:session-replay-simulation",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Finished live sessions become recordings that can be replayed turn by turn.",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "domain:browser-terminal-engines",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Agent tool calls in chat drive the embedded browser and terminal engines.",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "domain:credential-model-provider-vault",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Session adapters resolve model credentials from the vault before connecting.",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:agent-chat-sessions",
+      "target": "domain:code-editing-language-tooling",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Agent tool calls open, edit, and diff files in the code editor.",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:session-replay-simulation",
+      "target": "domain:cross-tool-activity-tracking",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Replay reconstructs diffs and blame using orgtrack's session projections.",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:cross-tool-activity-tracking",
+      "target": "domain:git-workflow-version-control",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Orgtrack projects per-file session blame alongside native git blame and history.",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:cross-tool-activity-tracking",
+      "target": "domain:project-work-item-management",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Orgtrack-derived session artifacts and stats are surfaced in WorkManagement views.",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "domain:project-work-item-management",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Scheduled work items are dispatched to org-defined agents for execution.",
+      "weight": 0.7
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "domain:credential-model-provider-vault",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Org/agent model selection resolves provider credentials from the vault.",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:agent-orgs-automation",
+      "target": "domain:integrations-cloud-collaboration",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "The notification channel gateway relays external chat messages into org agent inboxes.",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:code-editing-language-tooling",
+      "target": "domain:git-workflow-version-control",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "The editor's file tree and diff panes react to live git status and diff data.",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:project-work-item-management",
+      "target": "domain:integrations-cloud-collaboration",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "GitHub issues are imported as work items via the GitHub integration.",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:git-workflow-version-control",
+      "target": "domain:integrations-cloud-collaboration",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "PR base-ref resolution and remote sync interoperate with the GitHub integration client.",
+      "weight": 0.4
+    },
+    {
+      "source": "domain:browser-terminal-engines",
+      "target": "domain:session-replay-simulation",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Captured browser sessions are replayed alongside code diffs in Session Replay.",
+      "weight": 0.5
+    }
+  ],
+  "layers": [],
+  "tour": []
+}

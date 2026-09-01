@@ -1,0 +1,781 @@
+{
+  "nodes": [
+    {
+      "id": "file:public/error.html",
+      "type": "file",
+      "name": "error.html",
+      "filePath": "public/error.html",
+      "summary": "Standalone HTML error window shown by the Tauri shell when the app hits an unexpected/unrecoverable error, rendering a styled title bar, error icon, and a retry/close button outside the normal React app.",
+      "tags": [
+        "error-page",
+        "markup",
+        "tauri",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:public/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "public/index.html",
+      "summary": "Main HTML shell for the ORG2 Tauri window; sets up base styles/splash markup and mounts the React application into a #root div loaded via bundled scripts.",
+      "tags": [
+        "entry-point",
+        "markup",
+        "tauri",
+        "ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/cleanup-e2e-leakage.py",
+      "type": "file",
+      "name": "cleanup-e2e-leakage.py",
+      "filePath": "scripts/cleanup-e2e-leakage.py",
+      "summary": "Dev/CI maintenance script that scans a JSON registry file for leaked E2E test entries (by name prefix) and rewrites the file with them removed, keeping a timestamped backup.",
+      "tags": [
+        "maintenance",
+        "e2e",
+        "cleanup",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/cleanup-e2e-leakage.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/cleanup-e2e-leakage.py",
+      "lineRange": [
+        31,
+        63
+      ],
+      "summary": "Loads a JSON registry, filters out leaked E2E entries via is_leaked, backs up the original file, and writes the cleaned registry back to disk.",
+      "tags": [
+        "cleanup",
+        "e2e",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/dev/clean-cache-if-large.js",
+      "type": "file",
+      "name": "clean-cache-if-large.js",
+      "filePath": "scripts/dev/clean-cache-if-large.js",
+      "summary": "Dev helper that measures the size of build/cache directories (e.g. Cargo target dir) and wipes them if they exceed a size threshold, skipping cleanup while a cargo build is active.",
+      "tags": [
+        "maintenance",
+        "cache",
+        "disk-cleanup",
+        "dev-tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/clean-cache-if-large.js:getDirectorySizeBytes",
+      "type": "function",
+      "name": "getDirectorySizeBytes",
+      "filePath": "scripts/dev/clean-cache-if-large.js",
+      "lineRange": [
+        26,
+        39
+      ],
+      "summary": "Computes the total size in bytes of a directory using a du/PowerShell shell-out, returning 0 if the path does not exist.",
+      "tags": [
+        "filesystem",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/clean-cache-if-large.js:cleanDirectoryIfLarge",
+      "type": "function",
+      "name": "cleanDirectoryIfLarge",
+      "filePath": "scripts/dev/clean-cache-if-large.js",
+      "lineRange": [
+        45,
+        57
+      ],
+      "summary": "Checks a directory's size against a max byte threshold and removes it (recursively) if it is over the limit, logging the freed space.",
+      "tags": [
+        "disk-cleanup",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/clean-cache-if-large.js:readCargoTargetPath",
+      "type": "function",
+      "name": "readCargoTargetPath",
+      "filePath": "scripts/dev/clean-cache-if-large.js",
+      "lineRange": [
+        59,
+        72
+      ],
+      "summary": "Reads the Cargo config file to resolve a custom target-dir override, expanding a leading `~` to the user's home directory.",
+      "tags": [
+        "cargo",
+        "config-parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/dev/cleanup-orphans.cjs",
+      "type": "file",
+      "name": "cleanup-orphans.cjs",
+      "filePath": "scripts/dev/cleanup-orphans.cjs",
+      "summary": "Windows/cross-platform helper that finds and force-kills orphaned dev processes (build watchers, esbuild, cargo) left over from previous `tauri dev` sessions, including freeing a stuck dev-server port.",
+      "tags": [
+        "maintenance",
+        "process-cleanup",
+        "windows",
+        "dev-tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/cleanup-orphans.cjs:runWindowsCleanup",
+      "type": "function",
+      "name": "runWindowsCleanup",
+      "filePath": "scripts/dev/cleanup-orphans.cjs",
+      "lineRange": [
+        16,
+        54
+      ],
+      "summary": "Orchestrates Windows-specific orphan cleanup: kills processes matching known fragments and frees the dev server port via getListenerPid/killPid.",
+      "tags": [
+        "windows",
+        "process-cleanup",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/cleanup-orphans.cjs:killProcessesMatching",
+      "type": "function",
+      "name": "killProcessesMatching",
+      "filePath": "scripts/dev/cleanup-orphans.cjs",
+      "lineRange": [
+        56,
+        79
+      ],
+      "summary": "Uses a PowerShell one-liner via Get-CimInstance to find and force-stop processes whose command line matches a given text fragment, returning the count killed.",
+      "tags": [
+        "windows",
+        "powershell",
+        "process-cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/cleanup-orphans.cjs:getListenerPid",
+      "type": "function",
+      "name": "getListenerPid",
+      "filePath": "scripts/dev/cleanup-orphans.cjs",
+      "lineRange": [
+        81,
+        98
+      ],
+      "summary": "Uses PowerShell's Get-NetTCPConnection to find the PID currently listening on a given TCP port on Windows.",
+      "tags": [
+        "windows",
+        "powershell",
+        "networking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/dev/cleanup-orphans.sh",
+      "type": "file",
+      "name": "cleanup-orphans.sh",
+      "filePath": "scripts/dev/cleanup-orphans.sh",
+      "summary": "POSIX shell counterpart to cleanup-orphans.cjs: finds and pkills orphaned build watcher, esbuild, and cargo processes from previous `npm run tauri:dev` sessions and frees port 1998, with a --quiet mode.",
+      "tags": [
+        "maintenance",
+        "process-cleanup",
+        "shell",
+        "dev-tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/dev/cpu-monitor.sh",
+      "type": "file",
+      "name": "cpu-monitor.sh",
+      "filePath": "scripts/dev/cpu-monitor.sh",
+      "summary": "Dev diagnostics script that samples CPU usage of ORG2-related processes live or over a fixed sampling window, printing a summary table to help debug performance issues.",
+      "tags": [
+        "diagnostics",
+        "cpu-monitoring",
+        "shell",
+        "dev-tooling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/cpu-monitor.sh:print_sample_summary",
+      "type": "function",
+      "name": "print_sample_summary",
+      "filePath": "scripts/dev/cpu-monitor.sh",
+      "lineRange": [
+        85,
+        127
+      ],
+      "summary": "Aggregates collected CPU samples per process group and prints a formatted summary table of average/peak usage.",
+      "tags": [
+        "diagnostics",
+        "reporting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/cpu-monitor.sh:run_sample",
+      "type": "function",
+      "name": "run_sample",
+      "filePath": "scripts/dev/cpu-monitor.sh",
+      "lineRange": [
+        129,
+        174
+      ],
+      "summary": "Runs a fixed-duration CPU sampling loop, collecting snapshots at intervals and feeding them into print_sample_summary.",
+      "tags": [
+        "diagnostics",
+        "sampling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/cpu-monitor.sh:run_live",
+      "type": "function",
+      "name": "run_live",
+      "filePath": "scripts/dev/cpu-monitor.sh",
+      "lineRange": [
+        69,
+        82
+      ],
+      "summary": "Continuously refreshes and displays a live CPU snapshot until interrupted, for real-time monitoring during development.",
+      "tags": [
+        "diagnostics",
+        "live-monitoring"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/cpu-monitor.sh:show_help",
+      "type": "function",
+      "name": "show_help",
+      "filePath": "scripts/dev/cpu-monitor.sh",
+      "lineRange": [
+        32,
+        55
+      ],
+      "summary": "Prints CLI usage instructions and available flags for the cpu-monitor script.",
+      "tags": [
+        "cli",
+        "help-text"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/dev/tauri-launcher.cjs",
+      "type": "file",
+      "name": "tauri-launcher.cjs",
+      "filePath": "scripts/dev/tauri-launcher.cjs",
+      "summary": "Thin process wrapper that launches the Tauri CLI as a child process and forwards termination signals to it so dev-server shutdowns propagate cleanly.",
+      "tags": [
+        "process-management",
+        "dev-tooling",
+        "signal-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri-launcher.cjs:forwardSignal",
+      "type": "function",
+      "name": "forwardSignal",
+      "filePath": "scripts/dev/tauri-launcher.cjs",
+      "lineRange": [
+        27,
+        37
+      ],
+      "summary": "Relays an OS signal (e.g. SIGINT/SIGTERM) received by the launcher process to the spawned Tauri child process.",
+      "tags": [
+        "signal-handling",
+        "process-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/dev/terminal-stream-smoke.cjs",
+      "type": "file",
+      "name": "terminal-stream-smoke.cjs",
+      "filePath": "scripts/dev/terminal-stream-smoke.cjs",
+      "summary": "Manual smoke-test script that writes a sequence of animated lines to stdout to visually verify terminal streaming/redraw behavior used elsewhere in the app.",
+      "tags": [
+        "smoke-test",
+        "terminal",
+        "dev-tooling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/terminal-stream-smoke.cjs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/dev/terminal-stream-smoke.cjs",
+      "lineRange": [
+        22,
+        46
+      ],
+      "summary": "Drives the smoke test: writes labeled lines with delays, then overwrites a line in place to exercise terminal cursor/clear-line behavior.",
+      "tags": [
+        "smoke-test",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/dev/webpack-server.js",
+      "type": "file",
+      "name": "webpack-server.js",
+      "filePath": "scripts/dev/webpack-server.js",
+      "summary": "Custom webpack-dev-server wrapper used during `tauri dev`; sets a branded process title, disables proxy env vars, filters noisy request logging, and handles graceful shutdown on signals.",
+      "tags": [
+        "dev-server",
+        "webpack",
+        "dev-tooling",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dev/webpack-server.js:runServer",
+      "type": "function",
+      "name": "runServer",
+      "filePath": "scripts/dev/webpack-server.js",
+      "lineRange": [
+        260,
+        286
+      ],
+      "summary": "Starts the webpack dev server instance, logging readiness and exiting the process with an error code if startup fails.",
+      "tags": [
+        "dev-server",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/webpack-server.js:shutdown",
+      "type": "function",
+      "name": "shutdown",
+      "filePath": "scripts/dev/webpack-server.js",
+      "lineRange": [
+        242,
+        252
+      ],
+      "summary": "Handles graceful shutdown of the dev server on receipt of a termination signal, stopping the server before exiting the process.",
+      "tags": [
+        "signal-handling",
+        "graceful-shutdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/webpack-server.js:shouldLogDevRequest",
+      "type": "function",
+      "name": "shouldLogDevRequest",
+      "filePath": "scripts/dev/webpack-server.js",
+      "lineRange": [
+        174,
+        187
+      ],
+      "summary": "Filters which dev-server HTTP requests are noisy enough to skip logging (e.g. HMR polling, static asset requests).",
+      "tags": [
+        "logging",
+        "filtering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/git/commit-stats-background.mjs",
+      "type": "file",
+      "name": "commit-stats-background.mjs",
+      "filePath": "scripts/git/commit-stats-background.mjs",
+      "summary": "Background worker invoked by the pre-commit flow that runs ESLint and a circular-dependency check in parallel and writes their result counts to a stats JSON file for later reporting.",
+      "tags": [
+        "git-hooks",
+        "linting",
+        "background-job",
+        "ci"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/git/commit-stats-background.mjs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/git/commit-stats-background.mjs",
+      "lineRange": [
+        59,
+        85
+      ],
+      "summary": "Runs the eslint and circular-dependency checks concurrently via run(), aggregates counts with countEslint/countCircular, and persists them to a stats JSON file.",
+      "tags": [
+        "entry-point",
+        "linting",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/git/commit-stats-background.mjs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "scripts/git/commit-stats-background.mjs",
+      "lineRange": [
+        15,
+        29
+      ],
+      "summary": "Spawns a child process, collects its stdout, and resolves with the captured output once the process exits.",
+      "tags": [
+        "process-management",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/git/commit-stats-background.mjs:countEslint",
+      "type": "function",
+      "name": "countEslint",
+      "filePath": "scripts/git/commit-stats-background.mjs",
+      "lineRange": [
+        31,
+        48
+      ],
+      "summary": "Parses ESLint's JSON output and counts non-trivial lint messages, ignoring benign informational entries.",
+      "tags": [
+        "linting",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/git/commit-stats.mjs",
+      "type": "file",
+      "name": "commit-stats.mjs",
+      "filePath": "scripts/git/commit-stats.mjs",
+      "summary": "Git pre-commit hook script that lints staged source files and checks for circular dependencies, printing results and optionally kicking off the background stats collector for the full codebase.",
+      "tags": [
+        "git-hooks",
+        "linting",
+        "pre-commit",
+        "ci"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/git/commit-stats.mjs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/git/commit-stats.mjs",
+      "lineRange": [
+        90,
+        138
+      ],
+      "summary": "Entry point that gathers staged files, runs ESLint against them, reports failures, and spawns the detached background stats job for the whole repo.",
+      "tags": [
+        "entry-point",
+        "git-hooks",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/git/commit-stats.mjs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "scripts/git/commit-stats.mjs",
+      "lineRange": [
+        20,
+        38
+      ],
+      "summary": "Spawns a child process, captures stdout/stderr, and resolves with the output once the process exits.",
+      "tags": [
+        "process-management",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/git/commit-stats.mjs:countEslint",
+      "type": "function",
+      "name": "countEslint",
+      "filePath": "scripts/git/commit-stats.mjs",
+      "lineRange": [
+        40,
+        63
+      ],
+      "summary": "Parses ESLint JSON output and counts actionable lint messages, filtering out informational-only entries.",
+      "tags": [
+        "linting",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/git/commit-stats.mjs:getStagedSourceFiles",
+      "type": "function",
+      "name": "getStagedSourceFiles",
+      "filePath": "scripts/git/commit-stats.mjs",
+      "lineRange": [
+        75,
+        88
+      ],
+      "summary": "Runs `git diff --cached` to list currently staged source files for linting.",
+      "tags": [
+        "git",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/git/json-merge-driver.mjs",
+      "type": "file",
+      "name": "json-merge-driver.mjs",
+      "filePath": "scripts/git/json-merge-driver.mjs",
+      "summary": "Custom git merge driver for JSON files that performs a recursive three-way deep merge (base/ours/theirs) to reduce manual conflict resolution on JSON config files.",
+      "tags": [
+        "git-hooks",
+        "json",
+        "merge-driver",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/git/json-merge-driver.mjs:deepMerge",
+      "type": "function",
+      "name": "deepMerge",
+      "filePath": "scripts/git/json-merge-driver.mjs",
+      "lineRange": [
+        18,
+        65
+      ],
+      "summary": "Recursively three-way merges base/ours/theirs JSON values, preferring non-conflicting changes and falling back to `ours` on true conflicts.",
+      "tags": [
+        "merge-algorithm",
+        "json",
+        "recursion"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/cleanup-e2e-leakage.py",
+      "target": "function:scripts/cleanup-e2e-leakage.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/cleanup-e2e-leakage.py",
+      "target": "function:scripts/cleanup-e2e-leakage.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/dev/clean-cache-if-large.js",
+      "target": "function:scripts/dev/clean-cache-if-large.js:getDirectorySizeBytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/clean-cache-if-large.js",
+      "target": "function:scripts/dev/clean-cache-if-large.js:cleanDirectoryIfLarge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/clean-cache-if-large.js",
+      "target": "function:scripts/dev/clean-cache-if-large.js:readCargoTargetPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cleanup-orphans.cjs",
+      "target": "function:scripts/dev/cleanup-orphans.cjs:runWindowsCleanup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cleanup-orphans.cjs",
+      "target": "function:scripts/dev/cleanup-orphans.cjs:killProcessesMatching",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cleanup-orphans.cjs",
+      "target": "function:scripts/dev/cleanup-orphans.cjs:getListenerPid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cleanup-orphans.cjs",
+      "target": "file:scripts/dev/cleanup-orphans.sh",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:scripts/dev/cpu-monitor.sh",
+      "target": "function:scripts/dev/cpu-monitor.sh:show_help",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cpu-monitor.sh",
+      "target": "function:scripts/dev/cpu-monitor.sh:run_live",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cpu-monitor.sh",
+      "target": "function:scripts/dev/cpu-monitor.sh:print_sample_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/cpu-monitor.sh",
+      "target": "function:scripts/dev/cpu-monitor.sh:run_sample",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/tauri-launcher.cjs",
+      "target": "function:scripts/dev/tauri-launcher.cjs:forwardSignal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/terminal-stream-smoke.cjs",
+      "target": "function:scripts/dev/terminal-stream-smoke.cjs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/webpack-server.js",
+      "target": "function:scripts/dev/webpack-server.js:shouldLogDevRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/webpack-server.js",
+      "target": "function:scripts/dev/webpack-server.js:shutdown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dev/webpack-server.js",
+      "target": "function:scripts/dev/webpack-server.js:runServer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats-background.mjs",
+      "target": "function:scripts/git/commit-stats-background.mjs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats-background.mjs",
+      "target": "function:scripts/git/commit-stats-background.mjs:countEslint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats-background.mjs",
+      "target": "function:scripts/git/commit-stats-background.mjs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats-background.mjs",
+      "target": "file:scripts/git/commit-stats.mjs",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:scripts/git/commit-stats.mjs",
+      "target": "function:scripts/git/commit-stats.mjs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats.mjs",
+      "target": "function:scripts/git/commit-stats.mjs:countEslint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats.mjs",
+      "target": "function:scripts/git/commit-stats.mjs:getStagedSourceFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats.mjs",
+      "target": "function:scripts/git/commit-stats.mjs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/git/commit-stats.mjs",
+      "target": "file:scripts/git/commit-stats-background.mjs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:scripts/git/json-merge-driver.mjs",
+      "target": "function:scripts/git/json-merge-driver.mjs:deepMerge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:public/index.html",
+      "target": "file:public/error.html",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

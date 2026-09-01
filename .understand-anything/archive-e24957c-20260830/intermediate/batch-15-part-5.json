@@ -1,0 +1,1214 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/api/agent/test/core.rs",
+   "type": "file",
+   "name": "core.rs",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "summary": "Dev-only 'core' test endpoints covering miscellaneous debug probes (message injection, recovery counters, cancel flags, event store completion, tier-1 escalation, background jobs, work-item scheduling) that didn't fit a dedicated theme module.",
+   "tags": [
+    "debug-only",
+    "api-handler",
+    "e2e-testing"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_send_message",
+   "type": "function",
+   "name": "test_send_message",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    37,
+    236
+   ],
+   "summary": "Implements `test_send_message(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_recovery_counters_get",
+   "type": "function",
+   "name": "test_recovery_counters_get",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    245,
+    254
+   ],
+   "summary": "E2E: read & reset in-memory counters that record which recovery path executed (filter_unresolved_tool_uses vs repair_interrupted_history).  Both paths modify an in-memory Vec<Value> mid-turn and never write the shape change back to the SQLite transcript (the transcript is...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_recovery_counters_reset",
+   "type": "function",
+   "name": "test_recovery_counters_reset",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    256,
+    259
+   ],
+   "summary": "Implements `test_recovery_counters_reset()` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_get",
+   "type": "function",
+   "name": "test_cancel_flag_get",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    270,
+    291
+   ],
+   "summary": "Read the last_turn_cancelled flag for a session without consuming it.  Returns { \"ok\": true, \"cancelled\": true/false }. Used by E2E to confirm that mark_turn_cancelled was called after a cancel event without running a full LLM turn.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_take",
+   "type": "function",
+   "name": "test_cancel_flag_take",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    300,
+    311
+   ],
+   "summary": "Atomically read-and-clear the last_turn_cancelled flag (consume it).  Mirrors the exact logic that processor.rs step 4b executes so E2E can drive the \"next-turn interrupt injection\" path deterministically without running a full LLM turn.  Returns { \"ok\": true, \"was_cancelled\":...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_seed",
+   "type": "function",
+   "name": "test_cancel_flag_seed",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    319,
+    330
+   ],
+   "summary": "Seed last_turn_cancelled = 1 for a session without running a turn.  Used by E2E to deterministically exercise the cancel-interrupt flag path. Mirrors what turn_executor does at every cancel exit point.  Returns { \"ok\": true }.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_last_assistant_text",
+   "type": "function",
+   "name": "test_last_assistant_text",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    345,
+    362
+   ],
+   "summary": "Direct E2E probe for the last_assistant_text fallback helper.  Accepts a { \"messages\": ... } body in OpenAI-compat format and returns the result of the helper \u2014 identical to what turn_executor would use when the terminal LLM iteration produces no text content.  This endpoint is...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_finalize_agent_result",
+   "type": "function",
+   "name": "test_finalize_agent_result",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    381,
+    416
+   ],
+   "summary": "Direct E2E probe for the agent.rs finalize path.  Accepts: { \"content\": <string|null>, \"messages\": ... }  Mirrors exactly what agent.rs does after execute_turn returns: content.or_else(|| last_assistant_text(&messages))  Returns: { \"ok\": true, \"result\": <string|null>, \"source\":...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_tier1_escalation_check",
+   "type": "function",
+   "name": "test_tier1_escalation_check",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    436,
+    458
+   ],
+   "summary": "Expose the Tier-1 escalation decision table so E2E tests can assert it deterministically without triggering a real max_tokens truncation.  Input: { \"effective_max_tokens\": u32, \"tier1_escalated\": bool }  Output: { \"ok\": true, \"would_escalate\": bool,        // true \u2192 silent...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_event_store_complete_last_running",
+   "type": "function",
+   "name": "test_event_store_complete_last_running",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    494,
+    597
+   ],
+   "summary": "Exercise EventStore::complete_last_running() against a caller-supplied event sequence. The production bug was: agent:complete unconditionally called complete_last_running(), which flipped an in-flight ask_user_questions tool call from AwaitingUser to Completed, causing the...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_subagent_dispatch_check",
+   "type": "function",
+   "name": "test_subagent_dispatch_check",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    626,
+    682
+   ],
+   "summary": "Pure check of AgentTool::execute()'s pre-launch parameter resolution.  Does NOT spawn a subagent or touch any session state \u2014 the endpoint exists so e2e can pin the runtime contract:  - agent_id fallback (delegate/shadow) from Error 1 fix. - resume_session_id shape pre-check...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_prefetch_zero_wait",
+   "type": "function",
+   "name": "test_prefetch_zero_wait",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    689,
+    694
+   ],
+   "summary": "Implements `test_prefetch_zero_wait(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_prompt_cache_benchmark",
+   "type": "function",
+   "name": "test_prompt_cache_benchmark",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    704,
+    807
+   ],
+   "summary": "Implements `test_prompt_cache_benchmark(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_resolve_agent",
+   "type": "function",
+   "name": "test_resolve_agent",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    822,
+    878
+   ],
+   "summary": "Implements `test_resolve_agent(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_project_seed",
+   "type": "function",
+   "name": "test_work_item_project_seed",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    886,
+    933
+   ],
+   "summary": "Implements `test_work_item_project_seed(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_project_delete",
+   "type": "function",
+   "name": "test_work_item_project_delete",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    940,
+    957
+   ],
+   "summary": "Implements `test_work_item_project_delete(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_schedule_lookup",
+   "type": "function",
+   "name": "test_work_item_schedule_lookup",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    965,
+    1004
+   ],
+   "summary": "Implements `test_work_item_schedule_lookup(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_runtime_launch",
+   "type": "function",
+   "name": "test_work_item_runtime_launch",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1014,
+    1028
+   ],
+   "summary": "Implements `test_work_item_runtime_launch(Json(request))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_runtime_launch",
+   "type": "function",
+   "name": "debug_work_item_runtime_launch",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1031,
+    1046
+   ],
+   "summary": "Implements `debug_work_item_runtime_launch(request)` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_runtime_launch_impl",
+   "type": "function",
+   "name": "debug_work_item_runtime_launch_impl",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1048,
+    1197
+   ],
+   "summary": "Implements `debug_work_item_runtime_launch_impl(handle, request)` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_scheduler_run_once",
+   "type": "function",
+   "name": "test_work_item_scheduler_run_once",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1199,
+    1204
+   ],
+   "summary": "Implements `test_work_item_scheduler_run_once()` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_scheduler_run_once",
+   "type": "function",
+   "name": "debug_work_item_scheduler_run_once",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1207,
+    1212
+   ],
+   "summary": "Implements `debug_work_item_scheduler_run_once()` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:debug_routine_scheduler_run_once",
+   "type": "function",
+   "name": "debug_routine_scheduler_run_once",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1215,
+    1220
+   ],
+   "summary": "Implements `debug_routine_scheduler_run_once()` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_launch_parse",
+   "type": "function",
+   "name": "test_work_item_launch_parse",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1222,
+    1246
+   ],
+   "summary": "Implements `test_work_item_launch_parse(Json(body))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_background_jobs",
+   "type": "function",
+   "name": "test_background_jobs",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1248,
+    1287
+   ],
+   "summary": "Implements `test_background_jobs(axum::extract::Path(session_id))` in core.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_events_recent",
+   "type": "function",
+   "name": "test_events_recent",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1298,
+    1304
+   ],
+   "summary": "GET /agent/test/events/recent: return a snapshot of the debug-only recent-events ring buffer populated by websocket_handler::broadcast. Entries are the exact JSON strings that would have been pushed to IPC channels / the debug WS, in insertion order (oldest first).  Used by the...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/core.rs:test_events_reset",
+   "type": "function",
+   "name": "test_events_reset",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1309,
+    1312
+   ],
+   "summary": "POST /agent/test/events/reset: clear the debug-only recent-events ring buffer. Required baseline for scenarios that assert \"exactly N events of type X were broadcast since reset\".",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:TestMessageRequest",
+   "type": "class",
+   "name": "TestMessageRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    29,
+    35
+   ],
+   "summary": "Data structure `TestMessageRequest` with fields content, session_id, model, account_id, native_harness_type in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:PrefetchZeroWaitRequest",
+   "type": "class",
+   "name": "PrefetchZeroWaitRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    685,
+    687
+   ],
+   "summary": "Data structure `PrefetchZeroWaitRequest` with fields delay_ms in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:PromptCacheBenchmarkRequest",
+   "type": "class",
+   "name": "PromptCacheBenchmarkRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    697,
+    702
+   ],
+   "summary": "Data structure `PromptCacheBenchmarkRequest` with fields session_id, workspace_path, model, account_id in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:ResolveAgentRequest",
+   "type": "class",
+   "name": "ResolveAgentRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    813,
+    820
+   ],
+   "summary": "Debug probe for the agent-config resolver. Runs the same ResolvedAgent::resolve path the session pipeline uses, then returns the memory-related flags the E2E caller asserts on.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemProjectSeedRequest",
+   "type": "class",
+   "name": "TestWorkItemProjectSeedRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    881,
+    884
+   ],
+   "summary": "Data structure `TestWorkItemProjectSeedRequest` with fields slug, name in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemProjectDeleteRequest",
+   "type": "class",
+   "name": "TestWorkItemProjectDeleteRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    936,
+    938
+   ],
+   "summary": "Data structure `TestWorkItemProjectDeleteRequest` with fields slug in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemScheduleLookupRequest",
+   "type": "class",
+   "name": "TestWorkItemScheduleLookupRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    960,
+    963
+   ],
+   "summary": "Data structure `TestWorkItemScheduleLookupRequest` with fields project_name, title in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemRuntimeLaunchRequest",
+   "type": "class",
+   "name": "TestWorkItemRuntimeLaunchRequest",
+   "filePath": "src-tauri/src/api/agent/test/core.rs",
+   "lineRange": [
+    1007,
+    1012
+   ],
+   "summary": "Data structure `TestWorkItemRuntimeLaunchRequest` with fields account_id, model, repo_path, sub_agent_ids in core.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/api/agent/test/desktop.rs",
+   "type": "file",
+   "name": "desktop.rs",
+   "filePath": "src-tauri/src/api/agent/test/desktop.rs",
+   "summary": "Debug-only `/agent/test/desktop/*` endpoint providing a deterministic probe for parsing app-owned desktop automation config.",
+   "tags": [
+    "debug-only",
+    "api-handler",
+    "e2e-testing",
+    "desktop-automation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/desktop.rs:test_desktop_config_parse",
+   "type": "function",
+   "name": "test_desktop_config_parse",
+   "filePath": "src-tauri/src/api/agent/test/desktop.rs",
+   "lineRange": [
+    10,
+    31
+   ],
+   "summary": "Implements `test_desktop_config_parse(Json(body))` in desktop.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/api/agent/test/file_history.rs",
+   "type": "file",
+   "name": "file_history.rs",
+   "filePath": "src-tauri/src/api/agent/test/file_history.rs",
+   "summary": "Debug-only file-history/restore-checkpoint endpoint that drives the same backend truncate path used by the production restore-checkpoint and edit-resend flows, letting E2E tests assert deterministic file/message rewind without a live provider resend.",
+   "tags": [
+    "debug-only",
+    "api-handler",
+    "e2e-testing",
+    "file-history"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/file_history.rs:test_restore_checkpoint",
+   "type": "function",
+   "name": "test_restore_checkpoint",
+   "filePath": "src-tauri/src/api/agent/test/file_history.rs",
+   "lineRange": [
+    36,
+    92
+   ],
+   "summary": "Implements `test_restore_checkpoint(Json(req))` in file_history.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/file_history.rs:RestoreCheckpointRequest",
+   "type": "class",
+   "name": "RestoreCheckpointRequest",
+   "filePath": "src-tauri/src/api/agent/test/file_history.rs",
+   "lineRange": [
+    23,
+    34
+   ],
+   "summary": "Restore the session to the checkpoint at created_at: revert files (optional) and hard-delete all messages/chunks at or after that point. Mirrors the production restore path; no message is re-sent.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_send_message",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_send_message",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_recovery_counters_get",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_recovery_counters_get",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_recovery_counters_reset",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_recovery_counters_reset",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_get",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_get",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_take",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_take",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_seed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_cancel_flag_seed",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_last_assistant_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_last_assistant_text",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_finalize_agent_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_finalize_agent_result",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_tier1_escalation_check",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_tier1_escalation_check",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_event_store_complete_last_running",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_event_store_complete_last_running",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_subagent_dispatch_check",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_subagent_dispatch_check",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_prefetch_zero_wait",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_prefetch_zero_wait",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_prompt_cache_benchmark",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_prompt_cache_benchmark",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_resolve_agent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_resolve_agent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_project_seed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_project_seed",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_project_delete",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_project_delete",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_schedule_lookup",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_schedule_lookup",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_runtime_launch",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_runtime_launch",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_runtime_launch",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_runtime_launch",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_runtime_launch_impl",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_scheduler_run_once",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_scheduler_run_once",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_scheduler_run_once",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_work_item_scheduler_run_once",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_routine_scheduler_run_once",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:debug_routine_scheduler_run_once",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_launch_parse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_work_item_launch_parse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_background_jobs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_background_jobs",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_events_recent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_events_recent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_events_reset",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "function:src-tauri/src/api/agent/test/core.rs:test_events_reset",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestMessageRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestMessageRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:PrefetchZeroWaitRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:PrefetchZeroWaitRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:PromptCacheBenchmarkRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:PromptCacheBenchmarkRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:ResolveAgentRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:ResolveAgentRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemProjectSeedRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemProjectSeedRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemProjectDeleteRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemProjectDeleteRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemScheduleLookupRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemScheduleLookupRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemRuntimeLaunchRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/core.rs",
+   "target": "class:src-tauri/src/api/agent/test/core.rs:TestWorkItemRuntimeLaunchRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/desktop.rs",
+   "target": "function:src-tauri/src/api/agent/test/desktop.rs:test_desktop_config_parse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/desktop.rs",
+   "target": "function:src-tauri/src/api/agent/test/desktop.rs:test_desktop_config_parse",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/file_history.rs",
+   "target": "function:src-tauri/src/api/agent/test/file_history.rs:test_restore_checkpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/file_history.rs",
+   "target": "function:src-tauri/src/api/agent/test/file_history.rs:test_restore_checkpoint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/file_history.rs",
+   "target": "class:src-tauri/src/api/agent/test/file_history.rs:RestoreCheckpointRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/file_history.rs",
+   "target": "class:src-tauri/src/api/agent/test/file_history.rs:RestoreCheckpointRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

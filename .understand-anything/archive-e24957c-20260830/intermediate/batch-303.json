@@ -1,0 +1,646 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/shared/dnd/dragSideChannel.ts",
+      "type": "file",
+      "name": "dragSideChannel.ts",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "summary": "Window-scoped side-channel store for drag-and-drop state (internal file-tree drags, workstation tab drags, and time-limited PR/issue reference stashes) that lets React drag handlers communicate outside the standard HTML5 DataTransfer API.",
+      "tags": ["drag-and-drop", "utility", "state-management", "shared"],
+      "complexity": "moderate",
+      "languageNotes": "Uses ad-hoc window globals as a same-window side channel to work around HTML5 DataTransfer's synchronous, read-restricted-during-dragover behavior; PR/issue stashes are TTL-guarded (30s) to avoid stale reference data leaking into unrelated drops."
+    },
+    {
+      "id": "file:src/shared/dnd/referenceDragData.ts",
+      "type": "file",
+      "name": "referenceDragData.ts",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "summary": "Parses and normalizes PR/issue reference drag payloads from DataTransfer objects (or the side-channel stash) into typed pill data used to render reference chips during drag-and-drop.",
+      "tags": ["drag-and-drop", "data-parsing", "validation", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/shared/dnd/useReferencePillDrag.ts",
+      "type": "file",
+      "name": "useReferencePillDrag.ts",
+      "filePath": "src/shared/dnd/useReferencePillDrag.ts",
+      "summary": "React hook implementing pointer-based drag initiation for workstation tab \"reference pills\" (PR/issue pills), tracking a movement threshold, updating the side-channel drag state, dispatching custom tab-drag-start/tab-drag-end DOM events, and suppressing the trailing click after a completed drag.",
+      "tags": ["react-hook", "drag-and-drop", "event-handling", "ui"],
+      "complexity": "moderate",
+      "languageNotes": "Generic hook parameterized over TElement extends HTMLElement so it can be reused across different pointer-down element types."
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:setInternalFileTreeDrag",
+      "type": "function",
+      "name": "setInternalFileTreeDrag",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [22, 27],
+      "summary": "Marks an internal file-tree drag as active and stashes its JSON-serialized payload on the window object.",
+      "tags": ["drag-and-drop", "setter", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:isInternalFileTreeDragActive",
+      "type": "function",
+      "name": "isInternalFileTreeDragActive",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [29, 31],
+      "summary": "Reports whether an internal file-tree drag is currently active.",
+      "tags": ["drag-and-drop", "getter", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:clearInternalFileTreeDrag",
+      "type": "function",
+      "name": "clearInternalFileTreeDrag",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [33, 36],
+      "summary": "Clears the internal file-tree drag flag and its stashed payload.",
+      "tags": ["drag-and-drop", "cleanup", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:consumeInternalFileTreeDragData",
+      "type": "function",
+      "name": "consumeInternalFileTreeDragData",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [38, 42],
+      "summary": "Reads and clears the stashed internal file-tree drag JSON payload in one atomic consume operation.",
+      "tags": ["drag-and-drop", "getter", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:setWorkstationTabDrag",
+      "type": "function",
+      "name": "setWorkstationTabDrag",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [44, 49],
+      "summary": "Marks a workstation tab drag as active and stashes its JSON-serialized payload on the window object.",
+      "tags": ["drag-and-drop", "setter", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:isWorkstationTabDragActive",
+      "type": "function",
+      "name": "isWorkstationTabDragActive",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [51, 53],
+      "summary": "Reports whether a workstation tab drag is currently active.",
+      "tags": ["drag-and-drop", "getter", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:clearWorkstationTabDrag",
+      "type": "function",
+      "name": "clearWorkstationTabDrag",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [55, 58],
+      "summary": "Clears the workstation tab drag flag and its stashed payload.",
+      "tags": ["drag-and-drop", "cleanup", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:consumeWorkstationTabDragData",
+      "type": "function",
+      "name": "consumeWorkstationTabDragData",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [60, 64],
+      "summary": "Reads the stashed workstation tab drag payload and clears it via clearWorkstationTabDrag.",
+      "tags": ["drag-and-drop", "getter", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:hasFreshReferenceDragStash",
+      "type": "function",
+      "name": "hasFreshReferenceDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [66, 68],
+      "summary": "Reports whether a non-expired PR or issue reference drag stash currently exists.",
+      "tags": ["drag-and-drop", "getter", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:getFreshPrDragStash",
+      "type": "function",
+      "name": "getFreshPrDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [70, 72],
+      "summary": "Returns the stashed PR reference drag payload if it has not exceeded the TTL, otherwise undefined.",
+      "tags": ["drag-and-drop", "getter", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:getFreshIssueDragStash",
+      "type": "function",
+      "name": "getFreshIssueDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [74, 76],
+      "summary": "Returns the stashed issue reference drag payload if it has not exceeded the TTL, otherwise undefined.",
+      "tags": ["drag-and-drop", "getter", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:setPrDragStash",
+      "type": "function",
+      "name": "setPrDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [78, 80],
+      "summary": "Stashes a PR reference drag payload with a timestamp so it can be retrieved by a later drop handler.",
+      "tags": ["drag-and-drop", "setter", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:setIssueDragStash",
+      "type": "function",
+      "name": "setIssueDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [82, 84],
+      "summary": "Stashes an issue reference drag payload with a timestamp so it can be retrieved by a later drop handler.",
+      "tags": ["drag-and-drop", "setter", "ttl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:clearPrDragStash",
+      "type": "function",
+      "name": "clearPrDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [86, 88],
+      "summary": "Clears the stashed PR reference drag payload.",
+      "tags": ["drag-and-drop", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/dragSideChannel.ts:clearIssueDragStash",
+      "type": "function",
+      "name": "clearIssueDragStash",
+      "filePath": "src/shared/dnd/dragSideChannel.ts",
+      "lineRange": [90, 92],
+      "summary": "Clears the stashed issue reference drag payload.",
+      "tags": ["drag-and-drop", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:hasReferenceDragData",
+      "type": "function",
+      "name": "hasReferenceDragData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [48, 56],
+      "summary": "Determines whether PR or issue reference drag data is available, checking the live side-channel stash and the reported DataTransfer MIME types.",
+      "tags": ["drag-and-drop", "getter", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragData",
+      "type": "function",
+      "name": "getReferenceDragData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [58, 70],
+      "summary": "Extracts raw reference drag data for a given type from DataTransfer, falling back to the plain-text encoding and then to the fresh side-channel stash.",
+      "tags": ["drag-and-drop", "data-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragPillData",
+      "type": "function",
+      "name": "getReferenceDragPillData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [72, 82],
+      "summary": "Resolves a dropped DataTransfer into typed PR or issue reference pill data, trying the PR MIME type first and falling back to the issue type.",
+      "tags": ["drag-and-drop", "factory", "data-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:clearReferenceDragData",
+      "type": "function",
+      "name": "clearReferenceDragData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [84, 90],
+      "summary": "Clears the stashed reference drag data for the given type by delegating to the PR or issue stash cleaner.",
+      "tags": ["drag-and-drop", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:parseReferenceDragPillData",
+      "type": "function",
+      "name": "parseReferenceDragPillData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [101, 113],
+      "summary": "Parses raw JSON reference-drag data and dispatches to the PR or issue pill builder, swallowing malformed JSON by returning null.",
+      "tags": ["data-parsing", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:buildPrReferencePillData",
+      "type": "function",
+      "name": "buildPrReferencePillData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [115, 152],
+      "summary": "Normalizes a raw PR drag payload into a strongly-typed PrReferencePayload and wraps it with pill display metadata (path, display name, icon type), returning null when required fields are missing.",
+      "tags": ["data-parsing", "validation", "factory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/shared/dnd/referenceDragData.ts:buildIssueReferencePillData",
+      "type": "function",
+      "name": "buildIssueReferencePillData",
+      "filePath": "src/shared/dnd/referenceDragData.ts",
+      "lineRange": [154, 183],
+      "summary": "Normalizes a raw issue drag payload into a strongly-typed IssueReferencePayload, including labels/assignees arrays, and wraps it with pill display metadata, returning null when required fields are missing.",
+      "tags": ["data-parsing", "validation", "factory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/shared/dnd/useReferencePillDrag.ts:suppressClickAfterCompletedDrag",
+      "type": "function",
+      "name": "suppressClickAfterCompletedDrag",
+      "filePath": "src/shared/dnd/useReferencePillDrag.ts",
+      "lineRange": [23, 35],
+      "summary": "Installs a one-time, capturing click suppressor on the window to swallow the synthetic click event that follows a completed pointer drag.",
+      "tags": ["event-handling", "drag-and-drop", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/shared/dnd/useReferencePillDrag.ts:useReferencePillDrag",
+      "type": "function",
+      "name": "useReferencePillDrag",
+      "filePath": "src/shared/dnd/useReferencePillDrag.ts",
+      "lineRange": [52, 192],
+      "summary": "React hook that wires pointerdown/move/up listeners to implement threshold-based drag detection for reference pills, updates the workstation tab drag side channel, dispatches tab-drag-start/tab-drag-end custom DOM events, and manages local drag visual state (position and label).",
+      "tags": ["react-hook", "drag-and-drop", "event-handling", "state-management"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setInternalFileTreeDrag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:isInternalFileTreeDragActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearInternalFileTreeDrag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:consumeInternalFileTreeDragData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setWorkstationTabDrag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:isWorkstationTabDragActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearWorkstationTabDrag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:consumeWorkstationTabDragData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:hasFreshReferenceDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:getFreshPrDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:getFreshIssueDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setPrDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setIssueDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearPrDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearIssueDragStash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:hasReferenceDragData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragPillData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:clearReferenceDragData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:parseReferenceDragPillData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:buildPrReferencePillData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:buildIssueReferencePillData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/useReferencePillDrag.ts",
+      "target": "function:src/shared/dnd/useReferencePillDrag.ts:suppressClickAfterCompletedDrag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/useReferencePillDrag.ts",
+      "target": "function:src/shared/dnd/useReferencePillDrag.ts:useReferencePillDrag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setInternalFileTreeDrag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:isInternalFileTreeDragActive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearInternalFileTreeDrag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:consumeInternalFileTreeDragData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setWorkstationTabDrag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:isWorkstationTabDragActive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearWorkstationTabDrag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:consumeWorkstationTabDragData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:hasFreshReferenceDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:getFreshPrDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:getFreshIssueDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setPrDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setIssueDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearPrDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/dragSideChannel.ts",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearIssueDragStash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:hasReferenceDragData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragPillData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "function:src/shared/dnd/referenceDragData.ts:clearReferenceDragData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/useReferencePillDrag.ts",
+      "target": "function:src/shared/dnd/useReferencePillDrag.ts:useReferencePillDrag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/shared/dnd/referenceDragData.ts",
+      "target": "file:src/shared/dnd/dragSideChannel.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/shared/dnd/useReferencePillDrag.ts",
+      "target": "file:src/shared/dnd/dragSideChannel.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/shared/dnd/referenceDragData.ts:hasReferenceDragData",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:hasFreshReferenceDragStash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragData",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:getFreshPrDragStash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/dnd/referenceDragData.ts:getReferenceDragData",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:getFreshIssueDragStash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/dnd/referenceDragData.ts:clearReferenceDragData",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearPrDragStash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/dnd/referenceDragData.ts:clearReferenceDragData",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearIssueDragStash",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/dnd/useReferencePillDrag.ts:useReferencePillDrag",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:setWorkstationTabDrag",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/shared/dnd/useReferencePillDrag.ts:useReferencePillDrag",
+      "target": "function:src/shared/dnd/dragSideChannel.ts:clearWorkstationTabDrag",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

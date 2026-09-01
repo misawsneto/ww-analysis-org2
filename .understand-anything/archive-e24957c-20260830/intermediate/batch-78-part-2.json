@@ -1,0 +1,1700 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "type": "file",
+   "name": "store.rs",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "summary": "Defines KeyStore, the serializable root model persisted to credentials.json, with CRUD accessors for looking up, inserting, and deleting stored ModelKey entries by agent type or id.",
+   "tags": [
+    "data-model",
+    "persistence",
+    "key-vault"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "type": "file",
+   "name": "types.rs",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "summary": "Defines ModelType (the enum of every supported AI coding agent and API provider) plus AuthMethod, ProviderProtocol, HealthStatus, and the core ModelKey/ModelAlias/ModelVariant structs used throughout the key store.",
+   "tags": [
+    "type-definition",
+    "data-model",
+    "key-vault"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "type": "file",
+   "name": "lib.rs",
+   "filePath": "src-tauri/crates/key-vault/src/lib.rs",
+   "summary": "Crate root for key-vault: declares its modules (auto_detect, commands, key_store, provider_config, providers, types, etc.) and re-exports the crate's public API surface for consumption by the Tauri app.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "key-vault"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "type": "file",
+   "name": "provider_config.rs",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "summary": "Static registry mapping each ModelType to a ProviderConfig describing its env var names, default base URL, supported protocols, and (for multi-region providers) alternate endpoints.",
+   "tags": [
+    "config",
+    "data-model",
+    "key-vault"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "summary": "AnthropicValidator validates a direct Anthropic API key by listing models and sending a minimal test message, used for the AnthropicApi provider type.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client",
+    "anthropic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "summary": "AzureOpenAIValidator validates Azure OpenAI credentials by probing the deployments/models endpoint of the configured Azure resource.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client",
+    "azure"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/store.rs:KeyStore",
+   "type": "class",
+   "name": "KeyStore",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    13,
+    24
+   ],
+   "summary": "Root model persisted as credentials.json: a versioned collection of ModelKey entries with lookup, insertion and deletion helpers keyed by agent type and/or key id.",
+   "tags": [
+    "data-model",
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelType",
+   "type": "class",
+   "name": "ModelType",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    78,
+    142
+   ],
+   "summary": "Enum of every supported CLI coding agent and direct API provider (Claude Code, Codex, Cursor, Kiro, OpenAI-compatible APIs, Anthropic, Bedrock, Azure, etc.), with helpers to classify a variant as an API-key provider, CLI agent, ACP agent, or marketplace-native provider.",
+   "tags": [
+    "data-model",
+    "type-definition",
+    "enum"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:AuthMethod",
+   "type": "class",
+   "name": "AuthMethod",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    337,
+    341
+   ],
+   "summary": "Enum distinguishing API-key authentication from OAuth authentication for a stored credential.",
+   "tags": [
+    "data-model",
+    "enum"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ProviderProtocol",
+   "type": "class",
+   "name": "ProviderProtocol",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    345,
+    348
+   ],
+   "summary": "Enum of the wire protocol a provider speaks (OpenAI-style or Anthropic-style), used to pick the right request/response shape.",
+   "tags": [
+    "data-model",
+    "enum"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:HealthStatus",
+   "type": "class",
+   "name": "HealthStatus",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    363,
+    369
+   ],
+   "summary": "Enum tracking a key's last-known health (Valid, Degraded, Invalid, Unknown) as reported by validation or live usage.",
+   "tags": [
+    "data-model",
+    "enum"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelKey",
+   "type": "class",
+   "name": "ModelKey",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    390,
+    462
+   ],
+   "summary": "The core stored credential record: id, name, provider type, API key/session token, base URL, protocol, auth method, quota info, health status, OAuth refresh-failure tracking, and configured model aliases/variants.",
+   "tags": [
+    "data-model",
+    "key-vault"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelAlias",
+   "type": "class",
+   "name": "ModelAlias",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    469,
+    478
+   ],
+   "summary": "A user-facing display alias (name + icon) mapped to an underlying model id.",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelVariant",
+   "type": "class",
+   "name": "ModelVariant",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    481,
+    493
+   ],
+   "summary": "A model variant definition (e.g. reasoning/fast mode) mapping a display model to a concrete base model and context window.",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/key_store/types.rs:DefaultVariant",
+   "type": "class",
+   "name": "DefaultVariant",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    499,
+    502
+   ],
+   "summary": "Records which model variant is the default for a given base model.",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderEndpointSpec",
+   "type": "class",
+   "name": "ProviderEndpointSpec",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    23,
+    36
+   ],
+   "summary": "Static spec for an alternate regional/vendor endpoint of a provider (id, label, base URL, optional Anthropic-compatible base URL).",
+   "tags": [
+    "data-model",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderEndpoint",
+   "type": "class",
+   "name": "ProviderEndpoint",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    40,
+    45
+   ],
+   "summary": "Runtime endpoint descriptor derived from a ProviderEndpointSpec via a `From` conversion.",
+   "tags": [
+    "data-model",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderConfig",
+   "type": "class",
+   "name": "ProviderConfig",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    239,
+    253
+   ],
+   "summary": "Describes how to configure a given provider: its API key/base-URL env var names, default base URL, supported protocols, default protocol, and any alternate endpoints.",
+   "tags": [
+    "config",
+    "data-model"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:ModelsResponse",
+   "type": "class",
+   "name": "ModelsResponse",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    29,
+    31
+   ],
+   "summary": "Deserialization target for Anthropic's list-models API response.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:ModelInfo",
+   "type": "class",
+   "name": "ModelInfo",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    34,
+    40
+   ],
+   "summary": "A single model entry (id, context length) from Anthropic's models list.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:MessagesRequest",
+   "type": "class",
+   "name": "MessagesRequest",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    44,
+    48
+   ],
+   "summary": "Request body for Anthropic's Messages API, used to send a minimal test message.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:Message",
+   "type": "class",
+   "name": "Message",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    51,
+    54
+   ],
+   "summary": "A single chat message (role + content) in an Anthropic Messages API request.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:AnthropicValidator",
+   "type": "class",
+   "name": "AnthropicValidator",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    57,
+    60
+   ],
+   "summary": "HTTP-client-backed validator for direct Anthropic API keys: lists models, sends a minimal test message, and does local format validation.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:ModelsResponse",
+   "type": "class",
+   "name": "ModelsResponse",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    17,
+    19
+   ],
+   "summary": "Deserialization target for Azure OpenAI's deployments/models list response.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:ModelInfo",
+   "type": "class",
+   "name": "ModelInfo",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    22,
+    26
+   ],
+   "summary": "A single model/deployment entry (id, context length) from Azure OpenAI.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:AzureOpenAIValidator",
+   "type": "class",
+   "name": "AzureOpenAIValidator",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    28,
+    31
+   ],
+   "summary": "HTTP-client-backed validator for Azure OpenAI resources: probes the deployments endpoint to confirm the API key and endpoint are valid.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get",
+   "type": "function",
+   "name": "get",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    38,
+    52
+   ],
+   "summary": "Finds a key matching the given agent type and optional key id, falling back to any key of that agent type if no id is given.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get_by_id",
+   "type": "function",
+   "name": "get_by_id",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    55,
+    57
+   ],
+   "summary": "Finds a key by its id alone, regardless of agent type.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get_all",
+   "type": "function",
+   "name": "get_all",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    60,
+    65
+   ],
+   "summary": "Returns all keys configured for a given agent type.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/store.rs:set",
+   "type": "function",
+   "name": "set",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    68,
+    72
+   ],
+   "summary": "Inserts a new key or replaces an existing one with the same id.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/store.rs:delete",
+   "type": "function",
+   "name": "delete",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    75,
+    101
+   ],
+   "summary": "Removes a key matching the given agent type and optional id.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/store.rs:delete_by_id",
+   "type": "function",
+   "name": "delete_by_id",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/store.rs",
+   "lineRange": [
+    104,
+    111
+   ],
+   "summary": "Removes a key by id alone, regardless of agent type.",
+   "tags": [
+    "persistence"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:as_str",
+   "type": "function",
+   "name": "as_str",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    145,
+    203
+   ],
+   "summary": "Returns the canonical string identifier for a ModelType variant, used as the on-disk/API representation.",
+   "tags": [
+    "serialization",
+    "enum"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:from_str",
+   "type": "function",
+   "name": "from_str",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    206,
+    265
+   ],
+   "summary": "Parses a canonical string identifier back into a ModelType variant.",
+   "tags": [
+    "serialization",
+    "enum"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_api_key_provider",
+   "type": "function",
+   "name": "is_api_key_provider",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    268,
+    270
+   ],
+   "summary": "Returns whether this ModelType represents a direct API-key provider (as opposed to a CLI agent).",
+   "tags": [
+    "enum",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_cli_agent",
+   "type": "function",
+   "name": "is_cli_agent",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    273,
+    307
+   ],
+   "summary": "Returns whether this ModelType represents a CLI coding agent (Claude Code, Codex, Cursor, etc.) rather than a raw API provider.",
+   "tags": [
+    "enum",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:needs_mitm_proxy",
+   "type": "function",
+   "name": "needs_mitm_proxy",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    313,
+    318
+   ],
+   "summary": "Returns whether this agent type requires the local MITM proxy to inject credentials rather than plain env vars.",
+   "tags": [
+    "enum",
+    "utility",
+    "proxy"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_acp",
+   "type": "function",
+   "name": "is_acp",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    320,
+    325
+   ],
+   "summary": "Returns whether this ModelType is an ACP (Agent Client Protocol) agent.",
+   "tags": [
+    "enum",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_market_native",
+   "type": "function",
+   "name": "is_market_native",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    328,
+    330
+   ],
+   "summary": "Returns whether this ModelType is natively supported by the Orgii market/orchestrator.",
+   "tags": [
+    "enum",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    506,
+    542
+   ],
+   "summary": "Constructs a new ModelKey for a given model type with sensible defaults for all other fields.",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:mask_api_key",
+   "type": "function",
+   "name": "mask_api_key",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    545,
+    559
+   ],
+   "summary": "Returns a redacted version of the stored API key (e.g. first/last few characters visible) safe for logging or display.",
+   "tags": [
+    "security",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:mask_session_token",
+   "type": "function",
+   "name": "mask_session_token",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    562,
+    576
+   ],
+   "summary": "Returns a redacted version of the stored session token safe for logging or display.",
+   "tags": [
+    "security",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_official_anthropic_endpoint",
+   "type": "function",
+   "name": "is_official_anthropic_endpoint",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    591,
+    611
+   ],
+   "summary": "Checks whether a base URL points at Anthropic's official API endpoint (as opposed to a proxy or third-party mirror).",
+   "tags": [
+    "utility",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_claude_official_oauth_token",
+   "type": "function",
+   "name": "is_claude_official_oauth_token",
+   "filePath": "src-tauri/crates/key-vault/src/key_store/types.rs",
+   "lineRange": [
+    618,
+    620
+   ],
+   "summary": "Checks whether a token string matches the format of an official Claude Code OAuth-issued token.",
+   "tags": [
+    "oauth",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/provider_config.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    256,
+    270
+   ],
+   "summary": "Constructs a ProviderConfig with a single default protocol/endpoint.",
+   "tags": [
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/provider_config.rs:with_protocols",
+   "type": "function",
+   "name": "with_protocols",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    272,
+    292
+   ],
+   "summary": "Constructs a ProviderConfig supporting multiple protocols with an explicit default.",
+   "tags": [
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/provider_config.rs:default_anthropic_base_url",
+   "type": "function",
+   "name": "default_anthropic_base_url",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    313,
+    317
+   ],
+   "summary": "Returns the default Anthropic-compatible base URL used when a provider config doesn't specify one.",
+   "tags": [
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/provider_config.rs:get_provider_config",
+   "type": "function",
+   "name": "get_provider_config",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    324,
+    516
+   ],
+   "summary": "Looks up the static ProviderConfig (env var names, base URL, protocols, endpoints) for a given ModelType, covering every supported API provider.",
+   "tags": [
+    "config",
+    "data-model"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/provider_config.rs:get_all_provider_configs",
+   "type": "function",
+   "name": "get_all_provider_configs",
+   "filePath": "src-tauri/crates/key-vault/src/provider_config.rs",
+   "lineRange": [
+    520,
+    560
+   ],
+   "summary": "Returns the ProviderConfig for every API-key provider ModelType, used to populate provider selection UI.",
+   "tags": [
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    63,
+    68
+   ],
+   "summary": "Constructs an AnthropicValidator with the default timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:with_timeout",
+   "type": "function",
+   "name": "with_timeout",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    70,
+    75
+   ],
+   "summary": "Constructs an AnthropicValidator with a custom timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:validate",
+   "type": "function",
+   "name": "validate",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    84,
+    237
+   ],
+   "summary": "Validates an Anthropic API key by listing models and sending a minimal test message, returning a ValidationResult with available models on success.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:get_models",
+   "type": "function",
+   "name": "get_models",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    240,
+    283
+   ],
+   "summary": "Fetches the list of available models from Anthropic's models API.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:test_messages",
+   "type": "function",
+   "name": "test_messages",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    288,
+    350
+   ],
+   "summary": "Sends a minimal request to Anthropic's Messages API to confirm the key can actually perform inference.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:validate_format",
+   "type": "function",
+   "name": "validate_format",
+   "filePath": "src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "lineRange": [
+    353,
+    370
+   ],
+   "summary": "Checks that an Anthropic API key string matches the expected `sk-ant-` prefix format, without a network call.",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    34,
+    39
+   ],
+   "summary": "Constructs an AzureOpenAIValidator with the default timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:validate",
+   "type": "function",
+   "name": "validate",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    41,
+    82
+   ],
+   "summary": "Validates Azure OpenAI credentials by probing the deployments/models endpoint for the given resource.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:get_models",
+   "type": "function",
+   "name": "get_models",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    84,
+    110
+   ],
+   "summary": "Fetches the list of deployed models from an Azure OpenAI resource.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:try_get_models",
+   "type": "function",
+   "name": "try_get_models",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    112,
+    152
+   ],
+   "summary": "Attempts a single models-list request against a specific Azure OpenAI endpoint/API version.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:validate_format",
+   "type": "function",
+   "name": "validate_format",
+   "filePath": "src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "lineRange": [
+    154,
+    164
+   ],
+   "summary": "Checks that an Azure OpenAI API key string is non-empty and well-formed, without a network call.",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/store.rs:KeyStore",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelType",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:AuthMethod",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ProviderProtocol",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:HealthStatus",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelKey",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelAlias",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelVariant",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:DefaultVariant",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderEndpointSpec",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderEndpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderConfig",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:ModelsResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:ModelInfo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:MessagesRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:Message",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:AnthropicValidator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:ModelsResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:ModelInfo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:AzureOpenAIValidator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get_by_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get_by_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get_all",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:get_all",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:set",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:set",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:delete",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:delete",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:delete_by_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/store.rs:delete_by_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:as_str",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:as_str",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:from_str",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:from_str",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_api_key_provider",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_api_key_provider",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_cli_agent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_cli_agent",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:needs_mitm_proxy",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:needs_mitm_proxy",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_acp",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_acp",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_market_native",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_market_native",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:mask_api_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:mask_api_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:mask_session_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:mask_session_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_official_anthropic_endpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_official_anthropic_endpoint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_claude_official_oauth_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "function:src-tauri/crates/key-vault/src/key_store/types.rs:is_claude_official_oauth_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:with_protocols",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:default_anthropic_base_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:default_anthropic_base_url",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:get_provider_config",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:get_provider_config",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:get_all_provider_configs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "function:src-tauri/crates/key-vault/src/provider_config.rs:get_all_provider_configs",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:with_timeout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:with_timeout",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:validate",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:validate",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:get_models",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:test_messages",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:test_messages",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:validate_format",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:validate_format",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:validate",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:validate",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:get_models",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:try_get_models",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:validate_format",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:validate_format",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/store.rs:KeyStore",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelType",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:AuthMethod",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ProviderProtocol",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:HealthStatus",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelKey",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelAlias",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:ModelVariant",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/types.rs",
+   "target": "class:src-tauri/crates/key-vault/src/key_store/types.rs:DefaultVariant",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderEndpointSpec",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderEndpoint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "target": "class:src-tauri/crates/key-vault/src/provider_config.rs:ProviderConfig",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs:AnthropicValidator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs:AzureOpenAIValidator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/key_store/store.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/auto_detect/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/commands/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/e2e_guard.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_extractor.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/key_store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/provider_config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/test_support.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/lib.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  }
+ ]
+}

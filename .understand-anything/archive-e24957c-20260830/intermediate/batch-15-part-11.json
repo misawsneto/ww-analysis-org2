@@ -1,0 +1,477 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/api/websocket_handler.rs",
+   "type": "file",
+   "name": "websocket_handler.rs",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "summary": "Frontend event fanout: maintains the per-session Tauri IPC channel registry (primary, backpressure-aware event delivery) and a secondary WebSocket broadcast tee for debug clients and non-session IDE events, dispatching every outgoing event to both.",
+   "tags": [
+    "event-handler",
+    "websocket",
+    "real-time",
+    "session-management"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:register_channel",
+   "type": "function",
+   "name": "register_channel",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    59,
+    69
+   ],
+   "summary": "Register a Tauri IPC Channel for a specific session. Returns a unique channel_id for targeted unsubscription.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:unregister_channel",
+   "type": "function",
+   "name": "unregister_channel",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    75,
+    84
+   ],
+   "summary": "Unregister a specific channel by its channel_id. Only removes the targeted channel \u2014 other channels for the same session are left intact, preventing race conditions when the frontend unmounts and re-mounts quickly.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:unregister_all_channels",
+   "type": "function",
+   "name": "unregister_all_channels",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    87,
+    91
+   ],
+   "summary": "Unregister all channels for a session (used on session destroy).",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:frontend_subscriber_count",
+   "type": "function",
+   "name": "frontend_subscriber_count",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    96,
+    106
+   ],
+   "summary": "Total number of frontend subscribers \u2014 IPC channels plus debug WebSocket clients. Used by tools (e.g. ActionBridge) to decide whether a round-trip dispatch has any chance of being answered.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:extract_session_id",
+   "type": "function",
+   "name": "extract_session_id",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    110,
+    134
+   ],
+   "summary": "Extract session_id from a JSON message string. Checks top-level session_id / sessionId and nested payload.session_id / payload.sessionId.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:dispatch_to_channel_entries",
+   "type": "function",
+   "name": "dispatch_to_channel_entries",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    144,
+    188
+   ],
+   "summary": "Implements `dispatch_to_channel_entries(session_id, channels, message)` in websocket_handler.rs.",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:dispatch_to_channels",
+   "type": "function",
+   "name": "dispatch_to_channels",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    195,
+    223
+   ],
+   "summary": "Dispatch a message to all Tauri Channels registered for its session_id.  Session-less IDE action requests are global UI-control bridge messages, so they are delivered to every registered frontend channel. The first mounted frontend listener to answer resolves the bridge...",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:ws_handler",
+   "type": "function",
+   "name": "ws_handler",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    226,
+    231
+   ],
+   "summary": "WebSocket upgrade handler",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:handle_socket",
+   "type": "function",
+   "name": "handle_socket",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    234,
+    279
+   ],
+   "summary": "Handle individual WebSocket connection",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:init_broadcaster",
+   "type": "function",
+   "name": "init_broadcaster",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    282,
+    286
+   ],
+   "summary": "Initialize the global WebSocket broadcaster",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:broadcast",
+   "type": "function",
+   "name": "broadcast",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    293,
+    306
+   ],
+   "summary": "Fan out a message to all frontend subscribers.  Dispatches to any registered per-session Tauri IPC Channels (primary path for in-app UI) AND tees to the debug WebSocket broadcaster. Both steps are best-effort \u2014 missing subscribers and slow consumers are dropped.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:subscribe_session_events",
+   "type": "function",
+   "name": "subscribe_session_events",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    386,
+    392
+   ],
+   "summary": "Implements `subscribe_session_events(session_id, on_event)` in websocket_handler.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/websocket_handler.rs:unsubscribe_session_events",
+   "type": "function",
+   "name": "unsubscribe_session_events",
+   "filePath": "src-tauri/src/api/websocket_handler.rs",
+   "lineRange": [
+    395,
+    405
+   ],
+   "summary": "Implements `unsubscribe_session_events(session_id, channel_id)` in websocket_handler.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/app_update.rs",
+   "type": "file",
+   "name": "app_update.rs",
+   "filePath": "src-tauri/src/app_update.rs",
+   "summary": "Channel-aware (stable/beta) app-update check that rebuilds the Tauri updater with the selected channel's manifest URL and registers the resulting update handle in webview state for the frontend's updater flow.",
+   "tags": [
+    "tauri-command",
+    "update",
+    "configuration"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/app_update.rs:check_app_update",
+   "type": "function",
+   "name": "check_app_update",
+   "filePath": "src-tauri/src/app_update.rs",
+   "lineRange": [
+    65,
+    94
+   ],
+   "summary": "Implements `check_app_update(webview, channel, timeout_ms)` in app_update.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/app_update.rs:UpdateChannel",
+   "type": "class",
+   "name": "UpdateChannel",
+   "filePath": "src-tauri/src/app_update.rs",
+   "lineRange": [
+    36,
+    39
+   ],
+   "summary": "Defines `UpdateChannel` with methods manifest_url in app_update.rs.",
+   "tags": [
+    "data-model",
+    "has-behavior"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/app_update.rs:UpdateMetadata",
+   "type": "class",
+   "name": "UpdateMetadata",
+   "filePath": "src-tauri/src/app_update.rs",
+   "lineRange": [
+    55,
+    62
+   ],
+   "summary": "Mirror of the updater plugin's check-command response so the frontend can construct the plugin's Update class around it (rid is live in the webview resource table).",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:register_channel",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:register_channel",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:unregister_channel",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:unregister_channel",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:unregister_all_channels",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:unregister_all_channels",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:frontend_subscriber_count",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:frontend_subscriber_count",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:extract_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:extract_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:dispatch_to_channel_entries",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:dispatch_to_channels",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:ws_handler",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:ws_handler",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:handle_socket",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:init_broadcaster",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:init_broadcaster",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:broadcast",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:broadcast",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:subscribe_session_events",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:subscribe_session_events",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:unsubscribe_session_events",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/websocket_handler.rs",
+   "target": "function:src-tauri/src/api/websocket_handler.rs:unsubscribe_session_events",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/app_update.rs",
+   "target": "function:src-tauri/src/app_update.rs:check_app_update",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/app_update.rs",
+   "target": "function:src-tauri/src/app_update.rs:check_app_update",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/app_update.rs",
+   "target": "class:src-tauri/src/app_update.rs:UpdateChannel",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/app_update.rs",
+   "target": "class:src-tauri/src/app_update.rs:UpdateChannel",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/app_update.rs",
+   "target": "class:src-tauri/src/app_update.rs:UpdateMetadata",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/app_update.rs",
+   "target": "class:src-tauri/src/app_update.rs:UpdateMetadata",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

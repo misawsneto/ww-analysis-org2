@@ -1,0 +1,1196 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "summary": "Tauri command handlers that scan local listening TCP ports, kill workspace-owned processes, and ingest advertised dev-server URLs, delegating the blocking work to spawn_blocking tasks.",
+      "tags": [
+        "tauri-command",
+        "async",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_scan",
+      "type": "function",
+      "name": "workspace_ports_scan",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "lineRange": [
+        13,
+        19
+      ],
+      "summary": "Tauri command that scans local listening TCP ports and attributes them to workspace folders, delegating the blocking scan to a background task.",
+      "tags": [
+        "tauri-command",
+        "async",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_kill",
+      "type": "function",
+      "name": "workspace_ports_kill",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "lineRange": [
+        23,
+        29
+      ],
+      "summary": "Tauri command that stops a workspace-owned listening process after re-verifying ownership, run on a blocking task.",
+      "tags": [
+        "tauri-command",
+        "async",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_ingest_advertised_url",
+      "type": "function",
+      "name": "workspace_ports_ingest_advertised_url",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "lineRange": [
+        33,
+        50
+      ],
+      "summary": "Tauri command that ingests an advertised dev-server URL from terminal output into the port-URL cache.",
+      "tags": [
+        "tauri-command",
+        "async",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "summary": "Module barrel for workspace port scanning, re-exporting the public Tauri commands and request/response types used by the WorkStation status bar feature.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "type": "file",
+      "name": "scanner.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "summary": "Cross-platform (macOS/Linux/Windows) listening-port scanner that shells out to lsof/netstat/procfs to enumerate TCP listeners, enriches them with process metadata, and attributes/kills workspace-owned ports.",
+      "tags": [
+        "cross-platform",
+        "process-inspection",
+        "port-scanning",
+        "system-probe"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Dispatches to OS-specific subprocess-based scanners (lsof on macOS, netstat on Windows, /proc/net/tcp parsing on Linux) behind a common enrichment/attribution pipeline."
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_workspace_ports",
+      "type": "function",
+      "name": "scan_workspace_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        87,
+        129
+      ],
+      "summary": "Scans the host for listening TCP ports (dispatching to the OS-specific scanner), attributes each to a workspace folder, and returns the sorted/deduped result.",
+      "tags": [
+        "tauri-command",
+        "port-scanning",
+        "cross-platform"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:kill_workspace_port",
+      "type": "function",
+      "name": "kill_workspace_port",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        132,
+        194
+      ],
+      "summary": "Re-verifies a workspace-owned listening port's ownership before terminating its process, guarding against killing unrelated processes.",
+      "tags": [
+        "process-management",
+        "workspace-ports"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:terminate_process",
+      "type": "function",
+      "name": "terminate_process",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        196,
+        218
+      ],
+      "summary": "Sends a termination signal to a process by PID, with a platform-specific implementation.",
+      "tags": [
+        "process-management",
+        "cross-platform"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:enrich_port",
+      "type": "function",
+      "name": "enrich_port",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        229,
+        268
+      ],
+      "summary": "Attaches process metadata and workspace attribution to a raw listening port record.",
+      "tags": [
+        "port-scanning",
+        "data-enrichment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:compare_workspace_ports",
+      "type": "function",
+      "name": "compare_workspace_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        270,
+        280
+      ],
+      "summary": "Comparator used to sort workspace ports deterministically for stable UI ordering.",
+      "tags": [
+        "utility",
+        "sorting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:is_container_process",
+      "type": "function",
+      "name": "is_container_process",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        292,
+        302
+      ],
+      "summary": "Heuristically determines whether a process is running inside a container (e.g. Docker), used to adjust port attribution/display.",
+      "tags": [
+        "heuristic",
+        "process-inspection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_platform_listening_ports",
+      "type": "function",
+      "name": "scan_platform_listening_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        351,
+        371
+      ],
+      "summary": "Dispatches to the correct OS-specific listening-port scanner (darwin/windows/linux).",
+      "tags": [
+        "cross-platform",
+        "port-scanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:run_command",
+      "type": "function",
+      "name": "run_command",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        373,
+        443
+      ],
+      "summary": "Executes an external CLI command (lsof/netstat/etc.) with a timeout and cooldown backoff, returning its stdout or a ScanError.",
+      "tags": [
+        "process-management",
+        "subprocess",
+        "timeout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_lsof_listening_output",
+      "type": "function",
+      "name": "parse_lsof_listening_output",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        446,
+        480
+      ],
+      "summary": "Parses macOS lsof output into a list of raw listening ports.",
+      "tags": [
+        "parsing",
+        "macos"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_netstat_listening_output",
+      "type": "function",
+      "name": "parse_netstat_listening_output",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        483,
+        519
+      ],
+      "summary": "Parses Windows netstat output into a list of raw listening ports.",
+      "tags": [
+        "parsing",
+        "windows"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_proc_net_tcp",
+      "type": "function",
+      "name": "parse_proc_net_tcp",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        522,
+        541
+      ],
+      "summary": "Parses Linux /proc/net/tcp content into a list of raw listening ports.",
+      "tags": [
+        "parsing",
+        "linux"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:dedupe_raw_ports",
+      "type": "function",
+      "name": "dedupe_raw_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        543,
+        560
+      ],
+      "summary": "Removes duplicate raw listening-port entries (same pid and port) from a scan result.",
+      "tags": [
+        "utility",
+        "deduplication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_address_with_port",
+      "type": "function",
+      "name": "parse_address_with_port",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        567,
+        589
+      ],
+      "summary": "Parses a 'host:port' style address string into its structured components.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_proc_address",
+      "type": "function",
+      "name": "parse_proc_address",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        592,
+        627
+      ],
+      "summary": "Parses a hex-encoded address from /proc/net/tcp into a structured address and port.",
+      "tags": [
+        "parsing",
+        "linux"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:format_ipv6_address",
+      "type": "function",
+      "name": "format_ipv6_address",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        630,
+        653
+      ],
+      "summary": "Formats a hex-encoded IPv6 address into its standard colon-separated string form.",
+      "tags": [
+        "formatting",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_darwin_lsof_ports",
+      "type": "function",
+      "name": "scan_darwin_lsof_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        656,
+        673
+      ],
+      "summary": "Runs and parses lsof to enumerate listening TCP ports on macOS.",
+      "tags": [
+        "macos",
+        "port-scanning",
+        "subprocess"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:load_darwin_process_metadata",
+      "type": "function",
+      "name": "load_darwin_process_metadata",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        676,
+        718
+      ],
+      "summary": "Looks up process name and executable path metadata for a set of PIDs on macOS.",
+      "tags": [
+        "macos",
+        "process-inspection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_windows_netstat_ports",
+      "type": "function",
+      "name": "scan_windows_netstat_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        721,
+        735
+      ],
+      "summary": "Runs and parses netstat to enumerate listening TCP ports on Windows.",
+      "tags": [
+        "windows",
+        "port-scanning",
+        "subprocess"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:load_windows_process_metadata",
+      "type": "function",
+      "name": "load_windows_process_metadata",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        738,
+        785
+      ],
+      "summary": "Looks up process name and executable path metadata for a set of PIDs on Windows.",
+      "tags": [
+        "windows",
+        "process-inspection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_linux_proc_ports",
+      "type": "function",
+      "name": "scan_linux_proc_ports",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        788,
+        820
+      ],
+      "summary": "Enumerates listening TCP ports on Linux by reading /proc/net/tcp.",
+      "tags": [
+        "linux",
+        "port-scanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:map_linux_inodes_to_pids",
+      "type": "function",
+      "name": "map_linux_inodes_to_pids",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        823,
+        868
+      ],
+      "summary": "Maps socket inodes (from /proc/net/tcp) to owning PIDs by scanning /proc/<pid>/fd on Linux.",
+      "tags": [
+        "linux",
+        "process-inspection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:load_linux_process_metadata",
+      "type": "function",
+      "name": "load_linux_process_metadata",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        871,
+        887
+      ],
+      "summary": "Looks up process name and executable path metadata for a single PID on Linux.",
+      "tags": [
+        "linux",
+        "process-inspection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:RawListeningPort",
+      "type": "class",
+      "name": "RawListeningPort",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        28,
+        35
+      ],
+      "summary": "Raw listening-port record as parsed directly from OS scanner output, before enrichment.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:TimeoutBackoff",
+      "type": "class",
+      "name": "TimeoutBackoff",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        44,
+        47
+      ],
+      "summary": "Tracks consecutive scan-command timeouts to apply an exponential cooldown before retrying, avoiding repeated slow subprocess calls.",
+      "tags": [
+        "state-management",
+        "backoff"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:ScanError",
+      "type": "class",
+      "name": "ScanError",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "lineRange": [
+        320,
+        323
+      ],
+      "summary": "Error type for platform port-scan failures, distinguishing timeout errors from other failures.",
+      "tags": [
+        "error-handling",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "summary": "Serde-serializable request/response and domain types (WorkspacePort, ownership confidence, protocol/kind enums) shared across the workspace-ports scanning feature.",
+      "tags": [
+        "type-definition",
+        "serialization",
+        "workspace-ports"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortProbe",
+      "type": "class",
+      "name": "WorkspacePortProbe",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        8,
+        13
+      ],
+      "summary": "Request payload identifying a workspace folder (id + path) to scan for listening ports.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortAttributionConfidence",
+      "type": "class",
+      "name": "WorkspacePortAttributionConfidence",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        18,
+        22
+      ],
+      "summary": "Enum expressing how confident the attribution of a port to a workspace folder is (e.g. exact cwd match vs. heuristic).",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortOwner",
+      "type": "class",
+      "name": "WorkspacePortOwner",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        27,
+        33
+      ],
+      "summary": "The workspace folder and confidence level a listening port has been attributed to.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortProtocol",
+      "type": "class",
+      "name": "WorkspacePortProtocol",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        38,
+        42
+      ],
+      "summary": "Enum of transport protocols (TCP/UDP) a listening port uses.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKind",
+      "type": "class",
+      "name": "WorkspacePortKind",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        47,
+        51
+      ],
+      "summary": "Enum categorizing the kind of process/service behind a listening port (e.g. dev server, unknown).",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePort",
+      "type": "class",
+      "name": "WorkspacePort",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        56,
+        74
+      ],
+      "summary": "Full record of a detected listening port including address, process metadata, protocol, kind, and workspace attribution, sent to the frontend.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortScanRequest",
+      "type": "class",
+      "name": "WorkspacePortScanRequest",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        79,
+        82
+      ],
+      "summary": "Request payload for scanning listening ports across a set of workspace folders.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortScanResult",
+      "type": "class",
+      "name": "WorkspacePortScanResult",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        87,
+        93
+      ],
+      "summary": "Response payload containing the scanned/attributed ports and scan availability status.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKillRequest",
+      "type": "class",
+      "name": "WorkspacePortKillRequest",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        98,
+        103
+      ],
+      "summary": "Request payload identifying a workspace-owned port/process to terminate.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKillResult",
+      "type": "class",
+      "name": "WorkspacePortKillResult",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        108,
+        112
+      ],
+      "summary": "Response payload reporting whether a workspace-port kill request succeeded.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortIngestAdvertisedUrlRequest",
+      "type": "class",
+      "name": "WorkspacePortIngestAdvertisedUrlRequest",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        117,
+        120
+      ],
+      "summary": "Request payload for ingesting a terminal-advertised dev-server URL for a workspace folder.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortIngestAdvertisedUrlResult",
+      "type": "class",
+      "name": "WorkspacePortIngestAdvertisedUrlResult",
+      "filePath": "src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "lineRange": [
+        125,
+        130
+      ],
+      "summary": "Response payload reporting whether an advertised URL was accepted and its detected port.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_scan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_scan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_kill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_kill",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_ingest_advertised_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_ingest_advertised_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/attribution.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_workspace_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_workspace_ports",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:kill_workspace_port",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:kill_workspace_port",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:terminate_process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:enrich_port",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:compare_workspace_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:is_container_process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:is_container_process",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_platform_listening_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:run_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_lsof_listening_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_lsof_listening_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_netstat_listening_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_netstat_listening_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_proc_net_tcp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_proc_net_tcp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:dedupe_raw_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_address_with_port",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:parse_proc_address",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:format_ipv6_address",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_darwin_lsof_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:load_darwin_process_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_windows_netstat_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:load_windows_process_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_linux_proc_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:map_linux_inodes_to_pids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:load_linux_process_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:RawListeningPort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:RawListeningPort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:TimeoutBackoff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/scanner.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:ScanError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortProbe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortProbe",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortAttributionConfidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortAttributionConfidence",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortOwner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortOwner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortProtocol",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortProtocol",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortScanRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortScanRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortScanResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortScanResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKillRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKillRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKillResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortKillResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortIngestAdvertisedUrlRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortIngestAdvertisedUrlRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortIngestAdvertisedUrlResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/workspace_ports/types.rs",
+      "target": "class:src-tauri/crates/system-services/src/workspace_ports/types.rs:WorkspacePortIngestAdvertisedUrlResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_scan",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:scan_workspace_ports",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_kill",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/scanner.rs:kill_workspace_port",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/system-services/src/workspace_ports/commands.rs:workspace_ports_ingest_advertised_url",
+      "target": "function:src-tauri/crates/system-services/src/workspace_ports/advertised_urls.rs:ingest_advertised_url",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

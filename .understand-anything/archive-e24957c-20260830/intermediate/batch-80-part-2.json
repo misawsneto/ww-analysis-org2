@@ -1,0 +1,1628 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/codex/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/mod.rs",
+   "summary": "Module root for the Codex CLI JSONL session source, defining the codexapp- session id prefix and re-exporting the app.rs transcript parser.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "source-adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/mod.rs",
+   "summary": "Module root for the Cursor CLI (cursor-agent) session source, defining the cursorcliapp- session id prefix and re-exporting the per-session SQLite store reader.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "source-adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "type": "file",
+   "name": "history.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "summary": "Reads and normalizes Cursor CLI (cursor-agent) session history from per-session SQLite 'store.db' files, including a hand-rolled protobuf-like wire-format decoder and tool-call normalization for shell/edit operations.",
+   "tags": [
+    "source-adapter",
+    "parser",
+    "database"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Implements a minimal varint/wire-format decoder (read_varint, wire_fields) to parse Cursor's binary blob columns without a full protobuf schema."
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:list_cursor_cli_history_sessions_paginated",
+   "type": "function",
+   "name": "list_cursor_cli_history_sessions_paginated",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    116,
+    123
+   ],
+   "summary": "Lists cached Cursor CLI sessions in a paginated page for the sidebar.",
+   "tags": [
+    "source-adapter",
+    "pagination",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:list_cursor_cli_recent_paths",
+   "type": "function",
+   "name": "list_cursor_cli_recent_paths",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    125,
+    131
+   ],
+   "summary": "Returns the most recently touched Cursor CLI session store paths for change detection.",
+   "tags": [
+    "source-adapter",
+    "utility",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:load_cursor_cli_history_for_session",
+   "type": "function",
+   "name": "load_cursor_cli_history_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    133,
+    141
+   ],
+   "summary": "Loads full history for a single Cursor CLI session id from its per-session store.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:stat_cursor_cli_history_for_session",
+   "type": "function",
+   "name": "stat_cursor_cli_history_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    147,
+    156
+   ],
+   "summary": "Returns lightweight stat metadata (mtime/size) for a Cursor CLI session's store file without full parsing.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:cursor_cli_history_candidate_paths",
+   "type": "function",
+   "name": "cursor_cli_history_candidate_paths",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    167,
+    194
+   ],
+   "summary": "Enumerates candidate on-disk store.db paths for all discovered Cursor CLI sessions.",
+   "tags": [
+    "source-adapter",
+    "discovery",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:sync_cursor_cli_history_cache",
+   "type": "function",
+   "name": "sync_cursor_cli_history_cache",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    196,
+    247
+   ],
+   "summary": "Synchronizes the Cursor CLI session cache by discovering, parsing, and upserting all on-disk session records.",
+   "tags": [
+    "source-adapter",
+    "sync",
+    "caching"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:discover_cursor_cli_history_records",
+   "type": "function",
+   "name": "discover_cursor_cli_history_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    249,
+    297
+   ],
+   "summary": "Discovers all Cursor CLI session stores under the known sessions directory.",
+   "tags": [
+    "source-adapter",
+    "discovery",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:session_meta_from_store_conn",
+   "type": "function",
+   "name": "session_meta_from_store_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    299,
+    349
+   ],
+   "summary": "Reads session metadata (title, model, timestamps) from an open Cursor CLI store SQLite connection.",
+   "tags": [
+    "parser",
+    "database",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:session_meta_to_cache_input",
+   "type": "function",
+   "name": "session_meta_to_cache_input",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    351,
+    377
+   ],
+   "summary": "Converts parsed Cursor CLI session metadata into the cache input shape used by the imported-history cache layer.",
+   "tags": [
+    "conversion",
+    "caching",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:first_user_prompt_from_chunks",
+   "type": "function",
+   "name": "first_user_prompt_from_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    379,
+    393
+   ],
+   "summary": "Extracts the first user-authored prompt text from a list of parsed activity chunks.",
+   "tags": [
+    "utility",
+    "cursor-cli-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:open_store_readonly",
+   "type": "function",
+   "name": "open_store_readonly",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    399,
+    405
+   ],
+   "summary": "Opens a Cursor CLI store.db SQLite file in read-only mode.",
+   "tags": [
+    "database",
+    "filesystem",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:resolve_store_path",
+   "type": "function",
+   "name": "resolve_store_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    407,
+    423
+   ],
+   "summary": "Resolves the on-disk store.db path for a given Cursor CLI source session id.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:stat_store",
+   "type": "function",
+   "name": "stat_store",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    425,
+    436
+   ],
+   "summary": "Returns filesystem stat metadata for a Cursor CLI store.db file.",
+   "tags": [
+    "filesystem",
+    "utility",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:store_updated_at_ms",
+   "type": "function",
+   "name": "store_updated_at_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    438,
+    440
+   ],
+   "summary": "Computes the last-updated timestamp in epoch milliseconds for a store.db file.",
+   "tags": [
+    "utility",
+    "filesystem",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:metadata_mtime_epoch_ms",
+   "type": "function",
+   "name": "metadata_mtime_epoch_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    442,
+    449
+   ],
+   "summary": "Converts filesystem metadata's modification time into epoch milliseconds.",
+   "tags": [
+    "utility",
+    "cursor-cli-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_store_meta",
+   "type": "function",
+   "name": "read_store_meta",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    451,
+    467
+   ],
+   "summary": "Reads the top-level metadata row from a Cursor CLI store SQLite connection.",
+   "tags": [
+    "database",
+    "parser",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:decode_meta_bytes",
+   "type": "function",
+   "name": "decode_meta_bytes",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    471,
+    476
+   ],
+   "summary": "Decodes the raw metadata blob bytes from a Cursor CLI store into structured fields.",
+   "tags": [
+    "parser",
+    "binary-decoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_blob",
+   "type": "function",
+   "name": "read_blob",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    478,
+    484
+   ],
+   "summary": "Reads a single binary blob by id from the Cursor CLI store's blob table.",
+   "tags": [
+    "database",
+    "cursor-cli-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_store_manifest",
+   "type": "function",
+   "name": "read_store_manifest",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    486,
+    528
+   ],
+   "summary": "Reads and decodes the root manifest blob that indexes a Cursor CLI session's message tree.",
+   "tags": [
+    "parser",
+    "binary-decoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:load_history_from_store_conn",
+   "type": "function",
+   "name": "load_history_from_store_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    534,
+    658
+   ],
+   "summary": "Loads and fully parses conversation history from an open Cursor CLI store connection into canonical activity chunks.",
+   "tags": [
+    "source-adapter",
+    "parser",
+    "database"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:message_content_text",
+   "type": "function",
+   "name": "message_content_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    660,
+    671
+   ],
+   "summary": "Extracts the plain text content from a Cursor CLI message content value.",
+   "tags": [
+    "parser",
+    "utility",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:message_content_items",
+   "type": "function",
+   "name": "message_content_items",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    673,
+    678
+   ],
+   "summary": "Extracts the structured content items array from a Cursor CLI message content value.",
+   "tags": [
+    "parser",
+    "utility",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:clean_user_text",
+   "type": "function",
+   "name": "clean_user_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    687,
+    711
+   ],
+   "summary": "Cleans and de-scaffolds raw user message text extracted from a Cursor CLI transcript.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:strip_user_query_scaffold",
+   "type": "function",
+   "name": "strip_user_query_scaffold",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    713,
+    730
+   ],
+   "summary": "Strips Cursor's internal query-scaffolding wrapper text from a user message.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:trim_wrapper_edges",
+   "type": "function",
+   "name": "trim_wrapper_edges",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    733,
+    743
+   ],
+   "summary": "Trims leading/trailing wrapper markers from extracted message text.",
+   "tags": [
+    "utility",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:split_think_blocks",
+   "type": "function",
+   "name": "split_think_blocks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    748,
+    769
+   ],
+   "summary": "Splits reasoning/'think' blocks out of raw assistant message text.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:tool_call_from_item",
+   "type": "function",
+   "name": "tool_call_from_item",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    771,
+    783
+   ],
+   "summary": "Builds a canonical tool-call structure from a raw Cursor CLI message content item.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:tool_result_output_text",
+   "type": "function",
+   "name": "tool_result_output_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    785,
+    791
+   ],
+   "summary": "Extracts the textual output from a Cursor CLI tool result value.",
+   "tags": [
+    "parser",
+    "utility",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:normalize_cursor_tool_call",
+   "type": "function",
+   "name": "normalize_cursor_tool_call",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    796,
+    809
+   ],
+   "summary": "Normalizes a raw Cursor CLI tool name and arguments into the app's canonical tool-call shape.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:normalize_shell_args",
+   "type": "function",
+   "name": "normalize_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    811,
+    822
+   ],
+   "summary": "Normalizes raw shell tool call arguments into a canonical command/cwd structure.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:normalize_edit_args",
+   "type": "function",
+   "name": "normalize_edit_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    824,
+    839
+   ],
+   "summary": "Normalizes raw file-edit tool call arguments into canonical path/diff form.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:cursor_cli_source_id_from_session_id",
+   "type": "function",
+   "name": "cursor_cli_source_id_from_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    841,
+    849
+   ],
+   "summary": "Extracts the underlying Cursor CLI source session id from a canonical session id.",
+   "tags": [
+    "utility",
+    "cursor-cli-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:wire_fields",
+   "type": "function",
+   "name": "wire_fields",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    863,
+    896
+   ],
+   "summary": "Decodes a wire-format encoded byte buffer into a list of field number/value pairs.",
+   "tags": [
+    "parser",
+    "binary-decoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_varint",
+   "type": "function",
+   "name": "read_varint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    898,
+    913
+   ],
+   "summary": "Reads a single protobuf-style varint from a byte buffer at the given offset.",
+   "tags": [
+    "parser",
+    "binary-decoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:hex_encode",
+   "type": "function",
+   "name": "hex_encode",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    915,
+    922
+   ],
+   "summary": "Encodes a byte slice as a lowercase hexadecimal string.",
+   "tags": [
+    "utility",
+    "encoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:hex_decode",
+   "type": "function",
+   "name": "hex_decode",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    924,
+    937
+   ],
+   "summary": "Decodes a hexadecimal string into a byte vector.",
+   "tags": [
+    "utility",
+    "encoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:file_uri_to_path",
+   "type": "function",
+   "name": "file_uri_to_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    940,
+    954
+   ],
+   "summary": "Converts a file:// URI into a plain filesystem path.",
+   "tags": [
+    "utility",
+    "parser",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:percent_decode",
+   "type": "function",
+   "name": "percent_decode",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "lineRange": [
+    956,
+    974
+   ],
+   "summary": "Decodes percent-encoded (URL-escaped) characters in a string.",
+   "tags": [
+    "utility",
+    "encoding",
+    "cursor-cli-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "type": "file",
+   "name": "db.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "summary": "Scans the Cursor IDE global 'state.vscdb' and workspace conversation-index SQLite databases, builds cache inputs from raw composer data, and serves paginated/filtered session listings for the sidebar.",
+   "tags": [
+    "source-adapter",
+    "database",
+    "parser"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:RawComposerData",
+   "type": "class",
+   "name": "RawComposerData",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    42,
+    80
+   ],
+   "summary": "Raw deserialized shape of a Cursor IDE composer (chat session) row as stored in state.vscdb before normalization.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:CursorSession",
+   "type": "class",
+   "name": "CursorSession",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    146,
+    174
+   ],
+   "summary": "Canonical Cursor IDE session summary combining cached metadata and derived fields, returned to the sidebar and session APIs.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:get_cursor_sessions",
+   "type": "function",
+   "name": "get_cursor_sessions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    176,
+    193
+   ],
+   "summary": "Returns Cursor IDE sessions filtered by an optional date range from the cache.",
+   "tags": [
+    "source-adapter",
+    "query",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:list_for_sidebar",
+   "type": "function",
+   "name": "list_for_sidebar",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    195,
+    201
+   ],
+   "summary": "Returns a paginated page of Cursor IDE sessions for the sidebar listing.",
+   "tags": [
+    "source-adapter",
+    "pagination",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:get_cached_session",
+   "type": "function",
+   "name": "get_cached_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    203,
+    211
+   ],
+   "summary": "Looks up a single cached Cursor IDE session by id.",
+   "tags": [
+    "source-adapter",
+    "query",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:list_for_sidebar_filtered",
+   "type": "function",
+   "name": "list_for_sidebar_filtered",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    213,
+    249
+   ],
+   "summary": "Returns a paginated, filtered page of Cursor IDE sessions honoring an inclusion predicate.",
+   "tags": [
+    "source-adapter",
+    "pagination",
+    "filtering"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:delta_sync",
+   "type": "function",
+   "name": "delta_sync",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    259,
+    321
+   ],
+   "summary": "Performs an incremental sync of the Cursor IDE cache by discovering only changed sessions since the last run.",
+   "tags": [
+    "source-adapter",
+    "sync",
+    "caching"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cached_cursor_child_ids_by_parent",
+   "type": "function",
+   "name": "cached_cursor_child_ids_by_parent",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    323,
+    352
+   ],
+   "summary": "Builds a map of parent session id to child (continuation) session ids from the cache.",
+   "tags": [
+    "source-adapter",
+    "query",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:discover_from_index",
+   "type": "function",
+   "name": "discover_from_index",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    354,
+    378
+   ],
+   "summary": "Discovers Cursor IDE session rows from the workspace conversation-index database.",
+   "tags": [
+    "source-adapter",
+    "discovery",
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:build_inputs_from_index",
+   "type": "function",
+   "name": "build_inputs_from_index",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    384,
+    463
+   ],
+   "summary": "Builds a cache input record for a session discovered via the conversation index, enriching it with data from the main Cursor DB.",
+   "tags": [
+    "source-adapter",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:minimal_cache_input_from_index",
+   "type": "function",
+   "name": "minimal_cache_input_from_index",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    469,
+    497
+   ],
+   "summary": "Builds a minimal cache input record directly from an index row when full composer data is unavailable.",
+   "tags": [
+    "source-adapter",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:load_composer_raw",
+   "type": "function",
+   "name": "load_composer_raw",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    500,
+    518
+   ],
+   "summary": "Loads the raw composer data blob for a given composer id from the Cursor IDE database.",
+   "tags": [
+    "database",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cache_input_from_raw",
+   "type": "function",
+   "name": "cache_input_from_raw",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    522,
+    590
+   ],
+   "summary": "Converts raw composer data plus source metadata into a full cache input record.",
+   "tags": [
+    "conversion",
+    "data-model",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cursor_last_active_at",
+   "type": "function",
+   "name": "cursor_last_active_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    592,
+    621
+   ],
+   "summary": "Computes the last-active timestamp for a Cursor IDE session from its raw composer data.",
+   "tags": [
+    "utility",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cursor_session_from_cached",
+   "type": "function",
+   "name": "cursor_session_from_cached",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    623,
+    647
+   ],
+   "summary": "Builds a canonical CursorSession from a cached session row.",
+   "tags": [
+    "conversion",
+    "data-model",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cursor_metadata_from_cached",
+   "type": "function",
+   "name": "cursor_metadata_from_cached",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    649,
+    657
+   ],
+   "summary": "Extracts workspace/repo metadata from a cached Cursor IDE session row.",
+   "tags": [
+    "conversion",
+    "utility",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:date_str_to_epoch_ms",
+   "type": "function",
+   "name": "date_str_to_epoch_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    659,
+    679
+   ],
+   "summary": "Parses a date string into epoch milliseconds at the start of day.",
+   "tags": [
+    "utility",
+    "date-parsing",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:date_str_to_epoch_ms_end",
+   "type": "function",
+   "name": "date_str_to_epoch_ms_end",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    681,
+    701
+   ],
+   "summary": "Parses a date string into epoch milliseconds at the end of day.",
+   "tags": [
+    "utility",
+    "date-parsing",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:parse_iso_to_epoch_ms",
+   "type": "function",
+   "name": "parse_iso_to_epoch_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "lineRange": [
+    703,
+    707
+   ],
+   "summary": "Parses an ISO-8601 timestamp string into epoch milliseconds.",
+   "tags": [
+    "utility",
+    "date-parsing",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "type": "file",
+   "name": "disk_reads.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "summary": "Small helpers that read directly from Cursor IDE's application-support files on disk (model name list, composer last-updated timestamp) as a fallback to the SQLite store.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs:cursor_model_names_from_disk",
+   "type": "function",
+   "name": "cursor_model_names_from_disk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "lineRange": [
+    47,
+    69
+   ],
+   "summary": "Reads the list of known Cursor model display names from the application's user blob file on disk.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs:cursor_composer_last_updated_at",
+   "type": "function",
+   "name": "cursor_composer_last_updated_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "lineRange": [
+    82,
+    108
+   ],
+   "summary": "Reads a composer's last-updated timestamp directly from its on-disk workspace state file.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:list_cursor_cli_history_sessions_paginated",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:list_cursor_cli_history_sessions_paginated",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:list_cursor_cli_recent_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:list_cursor_cli_recent_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:load_cursor_cli_history_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:load_cursor_cli_history_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:stat_cursor_cli_history_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:stat_cursor_cli_history_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:cursor_cli_history_candidate_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:cursor_cli_history_candidate_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:sync_cursor_cli_history_cache",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:discover_cursor_cli_history_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:session_meta_from_store_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:session_meta_to_cache_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:first_user_prompt_from_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:open_store_readonly",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:resolve_store_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:stat_store",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:store_updated_at_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:metadata_mtime_epoch_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_store_meta",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:decode_meta_bytes",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_blob",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_store_manifest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:load_history_from_store_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:message_content_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:message_content_items",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:clean_user_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:strip_user_query_scaffold",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:trim_wrapper_edges",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:split_think_blocks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:tool_call_from_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:tool_result_output_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:normalize_cursor_tool_call",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:normalize_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:normalize_edit_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:cursor_cli_source_id_from_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:wire_fields",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:read_varint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:hex_encode",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:hex_decode",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:file_uri_to_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:percent_decode",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:RawComposerData",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:CursorSession",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:CursorSession",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:get_cursor_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:get_cursor_sessions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:list_for_sidebar",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:list_for_sidebar",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:get_cached_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:get_cached_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:list_for_sidebar_filtered",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:list_for_sidebar_filtered",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:delta_sync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cached_cursor_child_ids_by_parent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:discover_from_index",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:build_inputs_from_index",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:minimal_cache_input_from_index",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:load_composer_raw",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cache_input_from_raw",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cursor_last_active_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cursor_session_from_cached",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:cursor_metadata_from_cached",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:date_str_to_epoch_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:date_str_to_epoch_ms_end",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:parse_iso_to_epoch_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs:cursor_model_names_from_disk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs:cursor_model_names_from_disk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs:cursor_composer_last_updated_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs:cursor_composer_last_updated_at",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/history.rs:load_history_from_store_conn",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:tool_call_chunk",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs:delta_sync",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/cache.rs:sync_source_cache_from_conn",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:imported_history_loader",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_cli/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:imported_history_loader",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  }
+ ]
+}

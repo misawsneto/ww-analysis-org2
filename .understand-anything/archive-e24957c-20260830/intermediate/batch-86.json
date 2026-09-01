@@ -1,0 +1,665 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx",
+      "type": "file",
+      "name": "SimpleGridCell.tsx",
+      "filePath": "src/engines/Simulator/components/GridCell/SimpleGridCell.tsx",
+      "summary": "Memoized grid-cell component that renders a single subagent's simulator content pane without independent replay controls, using custom equality checks on event signatures to avoid unnecessary re-renders.",
+      "tags": ["component", "grid-cell", "memoization", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx",
+      "type": "file",
+      "name": "SubagentChatPane.tsx",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentChatPane.tsx",
+      "summary": "Renders a scrollable, time-windowed chat transcript for a subagent session up to the current replay cursor, with collapse/expand-all controls and an embedded prompt toggle for the originating task.",
+      "tags": ["component", "chat", "replay", "subagent"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx",
+      "type": "file",
+      "name": "SubagentEventPane.tsx",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentEventPane.tsx",
+      "summary": "Renders the live/replay activity pane for a subagent session by resolving the current non-empty event, determining its app type, and delegating to CompactEventView for IDE-style event rendering.",
+      "tags": ["component", "event-rendering", "replay", "subagent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx",
+      "type": "file",
+      "name": "SubagentPinnedPreviewPopover.tsx",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx",
+      "summary": "Popover component showing a pinned preview of a subagent's TODO list with per-item status icons and blocking-relationship indicators.",
+      "tags": ["component", "popover", "todo-list", "subagent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx",
+      "type": "file",
+      "name": "SubagentPromptToggle.tsx",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx",
+      "summary": "Collapsible toggle button/panel that reveals the raw or parsed task prompt that originated a subagent session, rendered via a portal-positioned dropdown.",
+      "tags": ["component", "dropdown", "prompt-display", "subagent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/Simulator/components/GridCell/index.ts",
+      "summary": "Barrel file re-exporting the IndependentGridCell and SimpleGridCell grid-cell component variants for consumption elsewhere in the Simulator grid.",
+      "tags": ["barrel", "entry-point", "grid-cell"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts",
+      "type": "file",
+      "name": "subagentCellHeaderIconKind.ts",
+      "filePath": "src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts",
+      "summary": "Utility that derives which header icon a subagent grid cell should display based on its recent events and whether the session type/status is terminal.",
+      "tags": ["utility", "icon-resolution", "grid-cell"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "summary": "Panel and accompanying hook that requests and caches natural-language explanations of the current simulator step from a local MiniCPM model via the housekeeper account, with debouncing, request-sequencing, and an LRU-style cache.",
+      "tags": ["component", "hook", "ai-explanation", "caching"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/MultiTaskHeader.tsx",
+      "type": "file",
+      "name": "MultiTaskHeader.tsx",
+      "filePath": "src/engines/Simulator/components/MultiTaskHeader.tsx",
+      "summary": "Header bar shown when multiple background tasks are active in the simulator, displaying the active task count and providing close/minimize controls.",
+      "tags": ["component", "header", "multi-task"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx",
+      "summary": "Memoized replay control bar styled like a music player, used for scrubbing and controlling simulator session playback.",
+      "tags": ["component", "replay", "playback-controls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx",
+      "type": "file",
+      "name": "SimulatorSingleView.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx",
+      "summary": "Renders the single-session view of the simulator content area, showing the active app's content along with an optional floating replay container overlay.",
+      "tags": ["component", "single-view", "simulator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx",
+      "type": "file",
+      "name": "StateDisplays.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx",
+      "summary": "Provides idle and booting placeholder state displays shown in the simulator content area before or during session initialization, with animated transitions.",
+      "tags": ["component", "state-display", "loading-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorContentArea/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/types.ts",
+      "summary": "Type definitions for the props consumed by the SimulatorContentArea component family.",
+      "tags": ["type-definition", "simulator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx",
+      "type": "file",
+      "name": "useSimulatorContent.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx",
+      "summary": "Hook that resolves which app(s) to render for the current simulator event, tracking retained app types across a session and delegating rendering to the simulator app renderer.",
+      "tags": ["hook", "app-rendering", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorFloatingInput/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorFloatingInput/index.tsx",
+      "summary": "Small floating input component overlay for the simulator, used for live interaction with an active session.",
+      "tags": ["component", "floating-ui", "simulator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx",
+      "type": "file",
+      "name": "EventFilterDropdown.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx",
+      "summary": "Dropdown control letting users filter which simulator event types are shown, backed by a shared filter atom and a reusable dropdown-positioning engine.",
+      "tags": ["component", "dropdown", "filtering", "status-bar"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx",
+      "type": "file",
+      "name": "FollowModeDropdown.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx",
+      "summary": "Dropdown control for choosing which app the simulator's camera should follow (auto or locked to a specific app), rendering an icon for the currently followed app.",
+      "tags": ["component", "dropdown", "follow-mode", "status-bar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx",
+      "type": "file",
+      "name": "PlaybackSpeedInline.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx",
+      "summary": "Inline dropdown control for selecting simulator replay playback speed from a fixed set of speed options.",
+      "tags": ["component", "dropdown", "playback-speed", "status-bar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx",
+      "type": "file",
+      "name": "ReplayTimestampSegment.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx",
+      "summary": "Small status-bar segment displaying the current wall-clock timestamp of the active replay position, hidden outside replay mode.",
+      "tags": ["component", "timestamp", "status-bar"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/index.tsx",
+      "summary": "Composite status bar for the simulator, assembling the event filter, follow-mode, playback-speed, and timestamp controls into the simulator's bottom control strip.",
+      "tags": ["component", "status-bar", "composite", "simulator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SimulatorStatusBar/tokens.ts",
+      "type": "file",
+      "name": "tokens.ts",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/tokens.ts",
+      "summary": "Shared Tailwind class-name token constants for consistent text and icon-button sizing/styling across the simulator status bar controls.",
+      "tags": ["design-tokens", "styling", "status-bar"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/Simulator/components/SubagentPipCard.tsx",
+      "type": "file",
+      "name": "SubagentPipCard.tsx",
+      "filePath": "src/engines/Simulator/components/SubagentPipCard.tsx",
+      "summary": "Large picture-in-picture card component that displays a grid of active subagent sessions alongside the main simulator content, supporting resize dragging, banner collapse, session expansion, and pagination across many subagents.",
+      "tags": ["component", "picture-in-picture", "subagent", "resizable"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/config.ts",
+      "type": "file",
+      "name": "config.ts",
+      "filePath": "src/engines/Simulator/config.ts",
+      "summary": "Central configuration module for the Simulator engine defining icon sets, grid layout options, auto-layout calculation, style tokens, and per-event-type icon mappings.",
+      "tags": ["config", "layout", "icon-config", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/cellReplayTypes.ts",
+      "type": "file",
+      "name": "cellReplayTypes.ts",
+      "filePath": "src/engines/Simulator/hooks/cellReplayTypes.ts",
+      "summary": "Type definitions for per-cell independent replay state, controls, and the useCellReplayState hook's options/return shape.",
+      "tags": ["type-definition", "replay", "hook-types"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx:getEventRenderSignature",
+      "type": "function",
+      "name": "getEventRenderSignature",
+      "filePath": "src/engines/Simulator/components/GridCell/SimpleGridCell.tsx",
+      "lineRange": [20, 35],
+      "summary": "Builds a stable string signature from a session event's key fields (id, status, text, args, result, etc.) used to detect meaningful re-render changes.",
+      "tags": ["utility", "memoization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx:SimpleGridCell",
+      "type": "function",
+      "name": "SimpleGridCell",
+      "filePath": "src/engines/Simulator/components/GridCell/SimpleGridCell.tsx",
+      "lineRange": [45, 85],
+      "summary": "Memoized grid-cell component wrapping the simulator content area with a custom comparator based on event render signatures to skip unnecessary re-renders.",
+      "tags": ["component", "memoization", "grid-cell"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx:SubagentChatPaneComponent",
+      "type": "function",
+      "name": "SubagentChatPaneComponent",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentChatPane.tsx",
+      "lineRange": [95, 217],
+      "summary": "Renders the chat transcript for a subagent session up to the current replay cursor, with collapse/expand-all controls and an embedded prompt toggle.",
+      "tags": ["component", "chat", "replay"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx:SubagentEventPaneComponent",
+      "type": "function",
+      "name": "SubagentEventPaneComponent",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentEventPane.tsx",
+      "lineRange": [32, 105],
+      "summary": "Resolves the current non-empty event for a subagent session and renders it through CompactEventView, computing app type and IDE-specific state along the way.",
+      "tags": ["component", "event-rendering", "replay"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx:TodoStatusIcon",
+      "type": "function",
+      "name": "TodoStatusIcon",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx",
+      "lineRange": [36, 67],
+      "summary": "Renders a status icon (done, blocked, in-progress, pending) for a single TODO item based on its status and blocked flag.",
+      "tags": ["component", "icon", "todo-list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx:SubagentPinnedPreviewPopoverComponent",
+      "type": "function",
+      "name": "SubagentPinnedPreviewPopoverComponent",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx",
+      "lineRange": [69, 141],
+      "summary": "Popover listing a subagent session's TODO items with status icons, batch title, and blocked-by indicators.",
+      "tags": ["component", "popover", "todo-list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:resolvePromptFromSession",
+      "type": "function",
+      "name": "resolvePromptFromSession",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx",
+      "lineRange": [47, 58],
+      "summary": "Scans a session's chat events for the first task-assignment prompt and parses it into a structured prompt object.",
+      "tags": ["utility", "prompt-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:SubagentPromptToggleComponent",
+      "type": "function",
+      "name": "SubagentPromptToggleComponent",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx",
+      "lineRange": [60, 148],
+      "summary": "Toggle button that opens a portal-positioned dropdown panel showing the parsed or raw task prompt that spawned the current subagent session.",
+      "tags": ["component", "dropdown", "prompt-display"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:ParsedPromptPanel",
+      "type": "function",
+      "name": "ParsedPromptPanel",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx",
+      "lineRange": [150, 171],
+      "summary": "Renders a structured, human-readable view of a parsed task-assignment prompt.",
+      "tags": ["component", "prompt-display"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:RawPromptPanel",
+      "type": "function",
+      "name": "RawPromptPanel",
+      "filePath": "src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx",
+      "lineRange": [173, 187],
+      "summary": "Renders the raw, unparsed prompt text as a fallback display panel.",
+      "tags": ["component", "prompt-display"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts:resolveSubagentHeaderIconKind",
+      "type": "function",
+      "name": "resolveSubagentHeaderIconKind",
+      "filePath": "src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts",
+      "lineRange": [16, 37],
+      "summary": "Determines which header icon variant a subagent grid cell should show based on whether the session type/status is terminal and the color of its most recent event type.",
+      "tags": ["utility", "icon-resolution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:rememberExplanation",
+      "type": "function",
+      "name": "rememberExplanation",
+      "filePath": "src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "lineRange": [31, 40],
+      "summary": "Stores a step explanation in the module-level LRU-style cache, evicting the oldest entry once the cache limit is exceeded.",
+      "tags": ["utility", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:buildErrorText",
+      "type": "function",
+      "name": "buildErrorText",
+      "filePath": "src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "lineRange": [42, 53],
+      "summary": "Normalizes an error thrown by the step-explanation request into a truncated, user-presentable error message.",
+      "tags": ["utility", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:toStepExplainRequest",
+      "type": "function",
+      "name": "toStepExplainRequest",
+      "filePath": "src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "lineRange": [60, 74],
+      "summary": "Converts a simulator session event into the request payload shape expected by the sessionStepExplain API call.",
+      "tags": ["utility", "request-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:useMiniCPMStepExplanation",
+      "type": "function",
+      "name": "useMiniCPMStepExplanation",
+      "filePath": "src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "lineRange": [76, 175],
+      "summary": "Hook that tracks the current simulator step, requests a MiniCPM-generated explanation for it (with caching, debouncing, and race-condition guarding via a request sequence ref), and exposes loading/ready/fallback status.",
+      "tags": ["hook", "ai-explanation", "state-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:MiniCPMStepExplanationPanel",
+      "type": "function",
+      "name": "MiniCPMStepExplanationPanel",
+      "filePath": "src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx",
+      "lineRange": [181, 257],
+      "summary": "Default-exported panel component that displays the current MiniCPM step explanation with a status icon, label, and close button.",
+      "tags": ["component", "ai-explanation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MultiTaskHeader.tsx:MultiTaskHeader",
+      "type": "function",
+      "name": "MultiTaskHeader",
+      "filePath": "src/engines/Simulator/components/MultiTaskHeader.tsx",
+      "lineRange": [22, 72],
+      "summary": "Header component shown when multiple background tasks are running, displaying the active task count with minimize and close actions.",
+      "tags": ["component", "header"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx:MusicPlayerReplayBar",
+      "type": "function",
+      "name": "MusicPlayerReplayBar",
+      "filePath": "src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx",
+      "lineRange": [22, 109],
+      "summary": "Default-exported, memoized replay control bar with music-player-style transport controls for simulator session playback.",
+      "tags": ["component", "replay", "playback-controls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx:SimulatorSingleView",
+      "type": "function",
+      "name": "SimulatorSingleView",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx",
+      "lineRange": [32, 72],
+      "summary": "Renders the single-session simulator view, showing the active app's content and an optional floating replay overlay when applicable.",
+      "tags": ["component", "single-view"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx:IdleState",
+      "type": "function",
+      "name": "IdleState",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx",
+      "lineRange": [16, 55],
+      "summary": "Placeholder display shown when the simulator has no active session, before any content has started streaming.",
+      "tags": ["component", "state-display"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx:BootingState",
+      "type": "function",
+      "name": "BootingState",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx",
+      "lineRange": [59, 135],
+      "summary": "Animated placeholder display shown while the simulator session is booting, with staged fade-in animations and a progress bar.",
+      "tags": ["component", "state-display", "loading-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx:useSimulatorContent",
+      "type": "function",
+      "name": "useSimulatorContent",
+      "filePath": "src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx",
+      "lineRange": [41, 111],
+      "summary": "Hook that determines the current and retained app types for a simulator event stream and renders the corresponding app content components via the simulator app renderer.",
+      "tags": ["hook", "app-rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorFloatingInput/index.tsx:SimulatorFloatingInput",
+      "type": "function",
+      "name": "SimulatorFloatingInput",
+      "filePath": "src/engines/Simulator/components/SimulatorFloatingInput/index.tsx",
+      "lineRange": [18, 28],
+      "summary": "Small floating input overlay component for the simulator, default-exported for use in the main simulator view.",
+      "tags": ["component", "floating-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx:EventFilterDropdown",
+      "type": "function",
+      "name": "EventFilterDropdown",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx",
+      "lineRange": [41, 224],
+      "summary": "Dropdown that lets users toggle which simulator event types are visible, driven by a shared filter atom and a reusable dropdown-positioning hook, with select-all/clear-all shortcuts.",
+      "tags": ["component", "dropdown", "filtering"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx:FollowModeDropdown",
+      "type": "function",
+      "name": "FollowModeDropdown",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx",
+      "lineRange": [43, 175],
+      "summary": "Dropdown for locking the simulator's camera focus to auto or a specific app, rendering the currently followed app's icon and label.",
+      "tags": ["component", "dropdown", "follow-mode"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx:PlaybackSpeedInline",
+      "type": "function",
+      "name": "PlaybackSpeedInline",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx",
+      "lineRange": [21, 114],
+      "summary": "Inline dropdown for selecting the simulator replay playback speed from a predefined set of options, closing the dropdown on selection.",
+      "tags": ["component", "dropdown", "playback-speed"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx:ReplayTimestampSegment",
+      "type": "function",
+      "name": "ReplayTimestampSegment",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx",
+      "lineRange": [9, 35],
+      "summary": "Displays the current wall-clock timestamp of the replay position in a fixed-width pill, rendering nothing outside replay mode.",
+      "tags": ["component", "timestamp"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar",
+      "type": "function",
+      "name": "SimulatorStatusBar",
+      "filePath": "src/engines/Simulator/components/SimulatorStatusBar/index.tsx",
+      "lineRange": [62, 239],
+      "summary": "Composite status bar assembling the replay timestamp, event filter, playback speed, and follow-mode controls for the simulator's bottom control strip.",
+      "tags": ["component", "status-bar", "composite"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/components/SubagentPipCard.tsx:SubagentPipCard",
+      "type": "function",
+      "name": "SubagentPipCard",
+      "filePath": "src/engines/Simulator/components/SubagentPipCard.tsx",
+      "lineRange": [83, 588],
+      "summary": "Picture-in-picture card rendering a resizable grid of active subagent sessions alongside the main simulator content, handling drag-to-resize, banner auto-collapse, session expansion/pagination, and per-session grid-cell rendering via IndependentGridCell.",
+      "tags": ["component", "picture-in-picture", "resizable", "subagent"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/config.ts:calculateAutoLayout",
+      "type": "function",
+      "name": "calculateAutoLayout",
+      "filePath": "src/engines/Simulator/config.ts",
+      "lineRange": [114, 123],
+      "summary": "Computes the automatic grid layout key (rows x columns) to use for the simulator grid based on the number of active tasks.",
+      "tags": ["utility", "layout-calculation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/config.ts:getLayoutCells",
+      "type": "function",
+      "name": "getLayoutCells",
+      "filePath": "src/engines/Simulator/config.ts",
+      "lineRange": [185, 188],
+      "summary": "Looks up the number of grid cells for a given layout option, defaulting to 1 if not found.",
+      "tags": ["utility", "layout-calculation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/config.ts:getLayoutIcon",
+      "type": "function",
+      "name": "getLayoutIcon",
+      "filePath": "src/engines/Simulator/config.ts",
+      "lineRange": [191, 203],
+      "summary": "Returns the Lucide icon component corresponding to a given grid layout option.",
+      "tags": ["utility", "icon-resolution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/config.ts:getEventTypeIcon",
+      "type": "function",
+      "name": "getEventTypeIcon",
+      "filePath": "src/engines/Simulator/config.ts",
+      "lineRange": [206, 208],
+      "summary": "Looks up the icon component configured for a given simulator event type.",
+      "tags": ["utility", "icon-resolution"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx", "target": "function:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx:getEventRenderSignature", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx", "target": "function:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx:SimpleGridCell", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx", "target": "function:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx:SimpleGridCell", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx", "target": "file:src/engines/Simulator/SimulatorMainPane.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SimpleGridCell.tsx", "target": "file:src/engines/Simulator/types/gridTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx:SubagentChatPaneComponent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx:SubagentChatPaneComponent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx", "target": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/GridCell/SubagentChatPane.tsx:SubagentChatPaneComponent", "target": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:SubagentPromptToggleComponent", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx:SubagentEventPaneComponent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx:SubagentEventPaneComponent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx", "target": "file:src/engines/Simulator/components/CompactEventView/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx", "target": "file:src/engines/Simulator/types/appTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx", "target": "file:src/engines/Simulator/utils/eventToDockMapping.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx", "target": "file:src/engines/Simulator/utils/skipEmptyRunningEvent.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx:SubagentEventPaneComponent", "target": "function:src/engines/Simulator/utils/skipEmptyRunningEvent.ts:resolveNonEmptyEvent", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx:SubagentEventPaneComponent", "target": "function:src/engines/Simulator/utils/eventToDockMapping.ts:getAppTypeForSessionEvent", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/GridCell/SubagentEventPane.tsx:SubagentEventPaneComponent", "target": "function:src/engines/Simulator/components/CompactEventView/index.tsx:CompactEventView", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx:TodoStatusIcon", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx:SubagentPinnedPreviewPopoverComponent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPinnedPreviewPopover.tsx:SubagentPinnedPreviewPopoverComponent", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:resolvePromptFromSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:SubagentPromptToggleComponent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:ParsedPromptPanel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:RawPromptPanel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx", "target": "function:src/engines/Simulator/components/GridCell/SubagentPromptToggle.tsx:SubagentPromptToggleComponent", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts", "target": "function:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts:resolveSubagentHeaderIconKind", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts", "target": "function:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts:resolveSubagentHeaderIconKind", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts", "target": "file:src/engines/Simulator/utils/eventSegments.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/GridCell/subagentCellHeaderIconKind.ts:resolveSubagentHeaderIconKind", "target": "function:src/engines/Simulator/utils/eventSegments.ts:getEventTypeForColor", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx", "target": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:rememberExplanation", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx", "target": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:buildErrorText", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx", "target": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:toStepExplainRequest", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx", "target": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:useMiniCPMStepExplanation", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx", "target": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:MiniCPMStepExplanationPanel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx", "target": "function:src/engines/Simulator/components/MiniCPMStepExplanationPanel/index.tsx:MiniCPMStepExplanationPanel", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/MultiTaskHeader.tsx", "target": "function:src/engines/Simulator/components/MultiTaskHeader.tsx:MultiTaskHeader", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MultiTaskHeader.tsx", "target": "function:src/engines/Simulator/components/MultiTaskHeader.tsx:MultiTaskHeader", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx", "target": "function:src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx:MusicPlayerReplayBar", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx", "target": "function:src/engines/Simulator/components/MusicPlayerReplayBar/index.tsx:MusicPlayerReplayBar", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx:SimulatorSingleView", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx:SimulatorSingleView", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/SimulatorSingleView.tsx", "target": "file:src/engines/Simulator/components/FloatingReplayContainer/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx:IdleState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx:BootingState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx:IdleState", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/StateDisplays.tsx:BootingState", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx:useSimulatorContent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx", "target": "function:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx:useSimulatorContent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx", "target": "file:src/engines/Simulator/types/appTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx", "target": "file:src/engines/Simulator/utils/eventToDockMapping.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/SimulatorContentArea/useSimulatorContent.tsx:useSimulatorContent", "target": "function:src/engines/Simulator/utils/eventToDockMapping.ts:getAppTypeForSessionEvent", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorFloatingInput/index.tsx", "target": "function:src/engines/Simulator/components/SimulatorFloatingInput/index.tsx:SimulatorFloatingInput", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorFloatingInput/index.tsx", "target": "function:src/engines/Simulator/components/SimulatorFloatingInput/index.tsx:SimulatorFloatingInput", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx:EventFilterDropdown", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx:EventFilterDropdown", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx:FollowModeDropdown", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx:FollowModeDropdown", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx", "target": "file:src/engines/Simulator/components/Dock/dockTitleCenter.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx", "target": "file:src/engines/Simulator/types/appTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx:FollowModeDropdown", "target": "function:src/engines/Simulator/components/Dock/dockTitleCenter.ts:getSimulatorDockTitleCenterEnglish", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx:PlaybackSpeedInline", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx:PlaybackSpeedInline", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/tokens.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx:ReplayTimestampSegment", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx:ReplayTimestampSegment", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/tokens.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SimulatorStatusBar/index.tsx", "target": "file:src/engines/Simulator/components/SimulatorStatusBar/tokens.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/EventFilterDropdown.tsx:EventFilterDropdown", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/FollowModeDropdown.tsx:FollowModeDropdown", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/PlaybackSpeedInline.tsx:PlaybackSpeedInline", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/SimulatorStatusBar/index.tsx:SimulatorStatusBar", "target": "function:src/engines/Simulator/components/SimulatorStatusBar/ReplayTimestampSegment.tsx:ReplayTimestampSegment", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/components/SubagentPipCard.tsx", "target": "function:src/engines/Simulator/components/SubagentPipCard.tsx:SubagentPipCard", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/components/SubagentPipCard.tsx", "target": "function:src/engines/Simulator/components/SubagentPipCard.tsx:SubagentPipCard", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/components/SubagentPipCard.tsx", "target": "file:src/engines/Simulator/components/GridCell/IndependentGridCell.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SubagentPipCard.tsx", "target": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/Simulator/components/SubagentPipCard.tsx", "target": "file:src/engines/Simulator/hooks/useSubagentSessions.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/engines/Simulator/components/SubagentPipCard.tsx:SubagentPipCard", "target": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:useMultiSessionSimulatorEvents", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/SubagentPipCard.tsx:SubagentPipCard", "target": "function:src/engines/Simulator/hooks/useSubagentSessions.ts:isActiveAtTimestamp", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/Simulator/components/SubagentPipCard.tsx:SubagentPipCard", "target": "function:src/engines/Simulator/components/GridCell/IndependentGridCell.tsx:IndependentGridCell", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:calculateAutoLayout", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:getLayoutCells", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:getLayoutIcon", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:getEventTypeIcon", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:calculateAutoLayout", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:getLayoutCells", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:getLayoutIcon", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/Simulator/config.ts", "target": "function:src/engines/Simulator/config.ts:getEventTypeIcon", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

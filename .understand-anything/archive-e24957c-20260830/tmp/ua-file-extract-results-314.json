@@ -1,0 +1,648 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 11,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docs/architecture-audit-2026-07-12/AgentOrgRecovery.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 444,
+      "nonEmptyLines": 336,
+      "sections": [
+        {
+          "heading": "Agent Org Recovery 与一致性加固：最终代码审计报告",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "一句话结论",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "大白话：现在这套设计是什么",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "真人运行诊断后的四批追加修复",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "第 1 批：切断 WakeNoop 自我循环",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "实机日志复核：把 Coordinator intervention 的源头一起修掉",
+          "level": 3,
+          "line": 87
+        },
+        {
+          "heading": "第 2 批：给跨 Session 的成果一张持久交接单",
+          "level": 3,
+          "line": 119
+        },
+        {
+          "heading": "第 3 批：把“成员空闲”和“任务完成”分成两封不同的回执",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "第 4 批：把 run 的结束改成真正的“项目验收”",
+          "level": 3,
+          "line": 151
+        },
+        {
+          "heading": "四批追加审计发现并修正的尾部问题",
+          "level": 3,
+          "line": 175
+        },
+        {
+          "heading": "Breaking Bad 真人运行后的顺序派工与 Wake intent 修复",
+          "level": 2,
+          "line": 185
+        },
+        {
+          "heading": "1. 任务不再因“漏写 blocked_by”静默抢跑",
+          "level": 3,
+          "line": 187
+        },
+        {
+          "heading": "2. Scheduler 负责把每个 enqueue 决定写成终态",
+          "level": 3,
+          "line": 207
+        },
+        {
+          "heading": "3. 升级后自动修旧数据，启动时先收尾再暂停",
+          "level": 3,
+          "line": 216
+        },
+        {
+          "heading": "实际改了什么",
+          "level": 2,
+          "line": 222
+        },
+        {
+          "heading": "1. Watchdog 从“边看边改”改为“先分析、后执行”",
+          "level": 3,
+          "line": 224
+        },
+        {
+          "heading": "2. Wake 真正幂等，并把 Running 状态放回正确时刻",
+          "level": 3,
+          "line": 232
+        },
+        {
+          "heading": "3. Recovery budget 持久化",
+          "level": 3,
+          "line": 241
+        },
+        {
+          "heading": "4. Task eligibility 和显式指派逻辑统一",
+          "level": 3,
+          "line": 250
+        },
+        {
+          "heading": "5. 成员失败、shutdown 和 restart 使用明确 disposition",
+          "level": 3,
+          "line": 260
+        },
+        {
+          "heading": "6. Run finality 与 task mutation 原子化",
+          "level": 3,
+          "line": 285
+        },
+        {
+          "heading": "7. 删除 stale 自动抢任务",
+          "level": 3,
+          "line": 292
+        },
+        {
+          "heading": "8. CLI Agent Org 能力边界变得诚实",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "用户现在看到的界面与行为",
+          "level": 2,
+          "line": 310
+        },
+        {
+          "heading": "本轮代码审计发现并修复的问题",
+          "level": 2,
+          "line": 328
+        },
+        {
+          "heading": "Architecture Audit：10 层检查",
+          "level": 2,
+          "line": 351
+        },
+        {
+          "heading": "状态所有权表",
+          "level": 2,
+          "line": 366
+        },
+        {
+          "heading": "入口一致性矩阵",
+          "level": 2,
+          "line": 377
+        },
+        {
+          "heading": "验证记录",
+          "level": 2,
+          "line": 388
+        },
+        {
+          "heading": "有意保留的设计边界",
+          "level": 2,
+          "line": 418
+        },
+        {
+          "heading": "Commit-ready 判定",
+          "level": 2,
+          "line": 426
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 31
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/GitProfiles.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 52,
+      "nonEmptyLines": 41,
+      "sections": [
+        {
+          "heading": "Architecture Audit — Git Profiles",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Ten-layer audit",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "Term overloading table",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Resolver and entry-point matrices",
+          "level": 2,
+          "line": 38
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/KanbanNamingCleanup.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 38,
+      "nonEmptyLines": 30,
+      "sections": [
+        {
+          "heading": "Kanban naming cleanup — architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "10-layer audit",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Term-overloading check",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Systematic sweep",
+          "level": 2,
+          "line": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/OrgtrackUsageAnalyticsOptimization.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 165,
+      "nonEmptyLines": 128,
+      "sections": [
+        {
+          "heading": "Orgtrack Usage Analytics — Optimization Plan",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Current state (baseline)",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Pricing",
+          "level": 3,
+          "line": 18
+        },
+        {
+          "heading": "Parse / cache correctness",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "Tier 1 — Pricing accuracy",
+          "level": 2,
+          "line": 56
+        },
+        {
+          "heading": "T1.1 — Bundled model-price catalog",
+          "level": 3,
+          "line": 61
+        },
+        {
+          "heading": "T1.2 — Cost imported/external tokens",
+          "level": 3,
+          "line": 75
+        },
+        {
+          "heading": "T1.3 — Recorded vs estimated cost",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "T1.4 — Surface cost in every usage view (frontend)",
+          "level": 3,
+          "line": 90
+        },
+        {
+          "heading": "Tier 2 — Parse / cache correctness",
+          "level": 2,
+          "line": 101
+        },
+        {
+          "heading": "T2.1 — Stronger cache fingerprints",
+          "level": 3,
+          "line": 105
+        },
+        {
+          "heading": "T2.2 — Robust CLI parsing",
+          "level": 3,
+          "line": 116
+        },
+        {
+          "heading": "T2.3 — Token-accounting quirk verification",
+          "level": 3,
+          "line": 123
+        },
+        {
+          "heading": "Discovered follow-ups (parked)",
+          "level": 2,
+          "line": 131
+        },
+        {
+          "heading": "Out of scope",
+          "level": 2,
+          "line": 151
+        },
+        {
+          "heading": "Verification",
+          "level": 2,
+          "line": 159
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/SharedAccountDetails.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 47,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "Shared Account Details Architecture Audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Completion checklist",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Ten-layer findings",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Entry-point matrix",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Default and async branch matrix",
+          "level": 2,
+          "line": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/WorkManagementGitHubLazyListsCache.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "Kanban GitHub lazy lists and cache — architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Ten-layer audit",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Cache bounds and lifecycle",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Scoped-out layers",
+          "level": 2,
+          "line": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/WorkManagementGitHubListUnification.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 58,
+      "nonEmptyLines": 48,
+      "sections": [
+        {
+          "heading": "Kanban GitHub list unification — architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Ten-layer audit",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Term overloading table",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "Default branch matrix",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "Structural sweep",
+          "level": 2,
+          "line": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/WorkManagementSidebarRemoval.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 38,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "Kanban sidebar removal — architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "10-layer audit",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Term-overloading check",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Systematic sweep",
+          "level": 2,
+          "line": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/launchpad-manage-consolidation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 35,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "Launchpad Manage consolidation architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Ten-layer audit",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "Lifecycle / memory boundary",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Scoped-out layers",
+          "level": 2,
+          "line": 33
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/work-management-chat-tab.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 48,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "Kanban → ChatPanel tab migration architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Ten-layer audit",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Entry-point parity matrix",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "Scoped-out layers",
+          "level": 2,
+          "line": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/architecture-audit-2026-07-12/work-management-github-consolidation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 38,
+      "nonEmptyLines": 30,
+      "sections": [
+        {
+          "heading": "Kanban GitHub consolidation architecture audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Acceptance criteria",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Ten-layer audit",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "Entry-point and ownership matrix",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Scoped-out layers",
+          "level": 2,
+          "line": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    }
+  ]
+}

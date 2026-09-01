@@ -1,0 +1,1596 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "type": "file",
+   "name": "sync_oauth.rs",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "summary": "Debug-only `/agent/test/sync/oauth/*` endpoints exercising Linear's OAuth authorization-code + PKCE flow and connection-token refresh against a self-hosted mock token endpoint, plus token inspection/seeding helpers.",
+   "tags": [
+    "debug-only",
+    "api-handler",
+    "e2e-testing",
+    "oauth"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:stop_mock_server_inner",
+   "type": "function",
+   "name": "stop_mock_server_inner",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    86,
+    101
+   ],
+   "summary": "Stop and drop any prior live mock server. Idempotent.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_start",
+   "type": "function",
+   "name": "test_oauth_mock_server_start",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    120,
+    172
+   ],
+   "summary": "Bring up a fresh mock server bound to an ephemeral loopback port. Idempotent: any prior server is torn down first.  Returns { url } \u2014 the absolute URL the e2e scenario should pass to oauth/set-token-endpoint.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_stop",
+   "type": "function",
+   "name": "test_oauth_mock_server_stop",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    175,
+    178
+   ],
+   "summary": "Tear down the live mock server, if any. Idempotent.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_status",
+   "type": "function",
+   "name": "test_oauth_mock_server_status",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    184,
+    198
+   ],
+   "summary": "Snapshot of the live mock server: bound url + how many POST /oauth/token requests have hit it. Lets scenarios assert the production code actually called through to the mock (and didn't short-circuit on a cached token).",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:mock_token_handler",
+   "type": "function",
+   "name": "mock_token_handler",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    200,
+    220
+   ],
+   "summary": "Implements `mock_token_handler(State(state))` in sync_oauth.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_set_token_endpoint",
+   "type": "function",
+   "name": "test_oauth_set_token_endpoint",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    238,
+    243
+   ],
+   "summary": "Install (or clear) the Linear /oauth/token URL override. Backed by oauth::linear::set_test_token_endpoint. Used by every OAuth scenario to redirect the production code at the in-process mock.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_set_client_id",
+   "type": "function",
+   "name": "test_oauth_set_client_id",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    261,
+    264
+   ],
+   "summary": "Install (or clear) the test override for the Linear OAuth client id. Backed by oauth::linear::set_test_client_id. Required so the ensure-fresh-token and start paths can run without depending on ORGII_LINEAR_OAUTH_CLIENT_ID being set at build time on dev / CI machines.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_start",
+   "type": "function",
+   "name": "test_oauth_start",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    291,
+    346
+   ],
+   "summary": "Drive the shared commands_sync::start_oauth_flow_inner code path with skip_browser=true so the e2e harness exercises the same descriptor + PENDING_FLOWS registration logic the production connection OAuth start command runs. The only short-circuit is the...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_simulate_callback",
+   "type": "function",
+   "name": "test_oauth_simulate_callback",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    370,
+    384
+   ],
+   "summary": "Simulate the browser's redirect to http://127.0.0.1:{port}/callback?code=\u2026&state=\u2026 without binding a real port.  Returns { ok: true } when the exchange succeeded and the token landed in the store. Returns an error string containing \"state_mismatch\" when the caller-supplied state...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_cancel",
+   "type": "function",
+   "name": "test_oauth_cancel",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    394,
+    397
+   ],
+   "summary": "Cancel the pending flow for (connection_id, adapter_id) and drop it from the registry.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_ensure_fresh_token",
+   "type": "function",
+   "name": "test_oauth_ensure_fresh_token",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    404,
+    411
+   ],
+   "summary": "Force a refresh through oauth::ensure_fresh_connection_token. Returns { ok: true, refreshed: true } if the call succeeded, or { ok: false, error } if it failed. The bearer is **never** echoed back \u2014 the scenario asserts refresh side effects via oauth/token instead.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:simulate_connection_redirect_callback",
+   "type": "function",
+   "name": "simulate_connection_redirect_callback",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    413,
+    462
+   ],
+   "summary": "Implements `simulate_connection_redirect_callback(connection_id, adapter_id, code, state)` in sync_oauth.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_token",
+   "type": "function",
+   "name": "test_oauth_token",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    477,
+    495
+   ],
+   "summary": "Non-secret projection of the stored ConnectionTokenRecord for connection_id. NEVER returns the access token or refresh token plaintext \u2014 scenarios assert presence + expiry + source, never the bearer bytes themselves.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_seed_token",
+   "type": "function",
+   "name": "test_oauth_seed_token",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    513,
+    524
+   ],
+   "summary": "Pre-stash a typed ConnectionTokenRecord for connection_id. Used by the refresh scenarios to seed an expired bearer + refresh token before driving the worker.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_clear_token",
+   "type": "function",
+   "name": "test_oauth_clear_token",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    529,
+    534
+   ],
+   "summary": "Forget the stored token for connection_id. Idempotent. Wraps connection_token_store::clear; called by every OAuth scenario in the cleanup tail.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:MockServerStartRequest",
+   "type": "class",
+   "name": "MockServerStartRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    104,
+    113
+   ],
+   "summary": "Data structure `MockServerStartRequest` with fields status, body in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SetTokenEndpointRequest",
+   "type": "class",
+   "name": "SetTokenEndpointRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    227,
+    233
+   ],
+   "summary": "Data structure `SetTokenEndpointRequest` with fields url in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SetClientIdRequest",
+   "type": "class",
+   "name": "SetClientIdRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    246,
+    254
+   ],
+   "summary": "Data structure `SetClientIdRequest` with fields client_id in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:OAuthStartRequest",
+   "type": "class",
+   "name": "OAuthStartRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    267,
+    277
+   ],
+   "summary": "Data structure `OAuthStartRequest` with fields connection_id, adapter_id, client_id in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SimulateCallbackRequest",
+   "type": "class",
+   "name": "SimulateCallbackRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    349,
+    360
+   ],
+   "summary": "Data structure `SimulateCallbackRequest` with fields connection_id, adapter_id, code, state in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:ConnectionAdapterRequest",
+   "type": "class",
+   "name": "ConnectionAdapterRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    387,
+    390
+   ],
+   "summary": "Data structure `ConnectionAdapterRequest` with fields connection_id, adapter_id in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:TokenQuery",
+   "type": "class",
+   "name": "TokenQuery",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    469,
+    471
+   ],
+   "summary": "Data structure `TokenQuery` with fields connection_id in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SeedTokenRequest",
+   "type": "class",
+   "name": "SeedTokenRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync_oauth.rs",
+   "lineRange": [
+    498,
+    508
+   ],
+   "summary": "Data structure `SeedTokenRequest` with fields connection_id, access_token, refresh_token, expires_at_unix, source in sync_oauth.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "type": "file",
+   "name": "workspace.rs",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "summary": "Debug-only `/agent/test/session/workspace/*` and `/agent/test/session/prompt/*` endpoints mirroring production workspace-mutator and session-lifecycle Tauri commands, including paired helper-only/caller-path probes for exec-mode and status parsing.",
+   "tags": [
+    "debug-only",
+    "api-handler",
+    "e2e-testing",
+    "workspace"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_add_directory",
+   "type": "function",
+   "name": "test_session_workspace_add_directory",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    43,
+    110
+   ],
+   "summary": "Implements `test_session_workspace_add_directory(Json(body))` in workspace.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_remove_directory",
+   "type": "function",
+   "name": "test_session_workspace_remove_directory",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    112,
+    160
+   ],
+   "summary": "Implements `test_session_workspace_remove_directory(Json(body))` in workspace.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_list",
+   "type": "function",
+   "name": "test_session_workspace_list",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    162,
+    193
+   ],
+   "summary": "Implements `test_session_workspace_list(Json(body))` in workspace.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_launch_seed_only",
+   "type": "function",
+   "name": "test_session_launch_seed_only",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    205,
+    364
+   ],
+   "summary": "Launch-time seeding caller-path: drive session_launch_impl with additional_directories populated and content = \"\" so the persist-workspace step runs without the send_message path kicking off an LLM turn. Verifies that the launch-time seeding path correctly mirrors IDE multi-root...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_list_from_db",
+   "type": "function",
+   "name": "test_session_workspace_list_from_db",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    372,
+    433
+   ],
+   "summary": "Companion to launch-seed-only: reads the persisted workspace snapshot directly from the SQLite row via load_workspace, bypassing the SessionRuntime cache. This lets the seed-only scenario assert on what actually hit disk without first booting a runtime (which would require a...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_prompt_environment_block",
+   "type": "function",
+   "name": "test_session_prompt_environment_block",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    444,
+    516
+   ],
+   "summary": "Render the SDE/OS system prompt for a live session and return only its ## Environment block so E2E can assert that add_workspace_directory mutations surface the next time the prompt is built. caller-path coverage ( coverage): we intentionally invoke the same UnifiedPromptBuilder...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:extract_section",
+   "type": "function",
+   "name": "extract_section",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    522,
+    531
+   ],
+   "summary": "Extract a Markdown ## Header section up to the next ##  header (exclusive) or the end of the string. Used by test_session_prompt_environment_block to keep E2E assertions focused on the ## Environment block.",
+   "tags": [
+    "debug-only",
+    "e2e-testing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_aggregate_list_filter",
+   "type": "function",
+   "name": "test_session_aggregate_list_filter",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    547,
+    584
+   ],
+   "summary": "POST /agent/test/session/aggregate-list-filter \u2014 **symbol-pinning probe** for the list_all_sessions filter validation. Body shape:  json { \"key_source\": \"hosted_key\" }   // accepted, returns ok=true { \"key_source\": \"market\" }       // typo, returns ok=false + reason {}          ...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_seed_compacted_history",
+   "type": "function",
+   "name": "test_session_seed_compacted_history",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    590,
+    680
+   ],
+   "summary": "POST /agent/test/session/seed-compacted-history \u2014 seed a session with an old transcript, then compact it through the production append-only compact-boundary helper. E2E uses this to prove restarts read the durable compacted view instead of old full history.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_llm_history",
+   "type": "function",
+   "name": "test_session_llm_history",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    697,
+    761
+   ],
+   "summary": "POST /agent/test/session/parse-exec-mode \u2014 **symbol-pinning probe** for AgentExecMode::parse. Body shape:  json { \"mode\": \"plan\" }     // accepted \u2192 ok=true,  parsed=\"plan\" { \"mode\": \"plann\" }    // typo     \u2192 ok=false, reason=... { \"mode\": \"\" }         // empty    \u2192 ok=false,...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_seed_raw_history",
+   "type": "function",
+   "name": "test_session_seed_raw_history",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    765,
+    849
+   ],
+   "summary": "POST /agent/test/session/seed-raw-history \u2014 seed un-compacted user/assistant rows so E2E can trigger auto-compaction through the real turn.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_provider_request_capture",
+   "type": "function",
+   "name": "test_session_provider_request_capture",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    853,
+    915
+   ],
+   "summary": "POST /agent/test/session/provider-request-capture \u2014 debug-only capture of the final provider-bound request payload built by turn_executor.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_parse_exec_mode",
+   "type": "function",
+   "name": "test_parse_exec_mode",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    917,
+    935
+   ],
+   "summary": "Implements `test_parse_exec_mode(Json(body))` in workspace.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_parse_session_status",
+   "type": "function",
+   "name": "test_parse_session_status",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    944,
+    964
+   ],
+   "summary": "POST /agent/test/session/parse-status \u2014 **symbol-pinning probe** for SessionStatus::parse. Same fail-closed contract as the exec-mode probe above, but covers the second hardened parser: agent_update_session_status now rejects unknown wire status strings instead of silently...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_resolve_exec_mode_from_wire",
+   "type": "function",
+   "name": "test_resolve_exec_mode_from_wire",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    999,
+    1028
+   ],
+   "summary": "POST /agent/test/session/resolve-exec-mode-from-wire \u2014 **caller-path probe** for the exec-mode wire contract used by agent_send_message.  Drives state::commands::session::message::resolve_agent_mode, the helper that send_message_impl calls before dispatching the turn. This...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_update_status_via_cmd",
+   "type": "function",
+   "name": "test_session_update_status_via_cmd",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    1051,
+    1107
+   ],
+   "summary": "POST /agent/test/session/update-status-via-cmd \u2014 **caller-path probe** for the wire contract enforced by agent_update_session_status.  Mirrors the command body verbatim (SessionStatus::parse \u2192 update_status), so a refactor that drops the parse step (or silently maps unknown...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_aggregate_list_via_cmd",
+   "type": "function",
+   "name": "test_session_aggregate_list_via_cmd",
+   "filePath": "src-tauri/src/api/agent/test/workspace.rs",
+   "lineRange": [
+    1123,
+    1199
+   ],
+   "summary": "POST /agent/test/session/aggregate-list-via-cmd \u2014 **caller-path probe** for session_aggregate_list.  Mirrors the command body (spawn_blocking(list_all_sessions(filter))) rather than calling the aggregator inline. This catches a regression where the command's spawn_blocking...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/src/api/agent_approval_ingest.rs",
+   "type": "file",
+   "name": "agent_approval_ingest.rs",
+   "filePath": "src-tauri/src/api/agent_approval_ingest.rs",
+   "summary": "HTTP webhook receiving hook-approval requests (HookApprovalRequestV1) from external CLI tool hooks (e.g. Claude Code) and parking them for the corresponding session's approval-response flow.",
+   "tags": [
+    "webhook",
+    "api-handler",
+    "hook-integration"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent_approval_ingest.rs:handle",
+   "type": "function",
+   "name": "handle",
+   "filePath": "src-tauri/src/api/agent_approval_ingest.rs",
+   "lineRange": [
+    47,
+    81
+   ],
+   "summary": "Implements `handle(headers, body)` in agent_approval_ingest.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "type": "file",
+   "name": "agent_status_ingest.rs",
+   "filePath": "src-tauri/src/api/agent_status_ingest.rs",
+   "summary": "Local HTTP webhook and token-based auth used by external CLI hook processes to report status; writes the hook token/port to a discovery file that external processes read on startup.",
+   "tags": [
+    "webhook",
+    "api-handler",
+    "authentication"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent_status_ingest.rs:write_endpoint_file",
+   "type": "function",
+   "name": "write_endpoint_file",
+   "filePath": "src-tauri/src/api/agent_status_ingest.rs",
+   "lineRange": [
+    32,
+    61
+   ],
+   "summary": "Publish the current port/token for hook subprocesses. Called right after the axum listener binds; failure is non-fatal (status degrades to the mtime fallback, provenance capture is unaffected).",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent_status_ingest.rs:token_matches",
+   "type": "function",
+   "name": "token_matches",
+   "filePath": "src-tauri/src/api/agent_status_ingest.rs",
+   "lineRange": [
+    65,
+    76
+   ],
+   "summary": "Timing-safe token comparison: the loopback bind already scopes callers to this machine, but don't leak the token through early-exit comparison.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent_status_ingest.rs:authorize_hook_request",
+   "type": "function",
+   "name": "authorize_hook_request",
+   "filePath": "src-tauri/src/api/agent_status_ingest.rs",
+   "lineRange": [
+    80,
+    85
+   ],
+   "summary": "Shared bearer-token check for every /hooks/* loopback route (status ingest here, approval long-poll in agent_approval_ingest).",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent_status_ingest.rs:handle",
+   "type": "function",
+   "name": "handle",
+   "filePath": "src-tauri/src/api/agent_status_ingest.rs",
+   "lineRange": [
+    87,
+    108
+   ],
+   "summary": "Implements `handle(headers, body)` in agent_status_ingest.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/api/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/src/api/mod.rs",
+   "summary": "Root of the unified HTTP API module: declares the agent/agent_approval_ingest/agent_status_ingest/server/websocket_handler submodules, re-exports start_server and init_broadcaster, and (debug builds) exposes a process-global Tauri AppHandle for dev-only test endpoints.",
+   "tags": [
+    "barrel",
+    "entry-point",
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/mod.rs:init_app_handle",
+   "type": "function",
+   "name": "init_app_handle",
+   "filePath": "src-tauri/src/api/mod.rs",
+   "lineRange": [
+    25,
+    27
+   ],
+   "summary": "Implements `init_app_handle(handle)` in mod.rs.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/mod.rs:get_app_handle",
+   "type": "function",
+   "name": "get_app_handle",
+   "filePath": "src-tauri/src/api/mod.rs",
+   "lineRange": [
+    30,
+    32
+   ],
+   "summary": "Implements `get_app_handle()` in mod.rs.",
+   "tags": [
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/api/server.rs",
+   "type": "file",
+   "name": "server.rs",
+   "filePath": "src-tauri/src/api/server.rs",
+   "summary": "Bootstraps the single in-process Axum server (port configurable via ORGII_IDE_SERVER_PORT) combining the Git, Search, Agent, and WebSocket routers plus Swagger/OpenAPI docs, open CORS, and request-timeout middleware.",
+   "tags": [
+    "entry-point",
+    "server-bootstrap",
+    "api-handler"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/api/server.rs:start_server",
+   "type": "function",
+   "name": "start_server",
+   "filePath": "src-tauri/src/api/server.rs",
+   "lineRange": [
+    250,
+    341
+   ],
+   "summary": "Start the unified IDE server",
+   "tags": [
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/server.rs:automation_webhook_handler",
+   "type": "function",
+   "name": "automation_webhook_handler",
+   "filePath": "src-tauri/src/api/server.rs",
+   "lineRange": [
+    345,
+    362
+   ],
+   "summary": "Handler for automation webhook triggers. POST /automation/webhook/{route} fires the matching webhook trigger.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:stop_mock_server_inner",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_start",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_start",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_stop",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_stop",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_mock_server_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:mock_token_handler",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_set_token_endpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_set_token_endpoint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_set_client_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_set_client_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_start",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_start",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_simulate_callback",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_simulate_callback",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_cancel",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_cancel",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_ensure_fresh_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_ensure_fresh_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:simulate_connection_redirect_callback",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_seed_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_seed_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_clear_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync_oauth.rs:test_oauth_clear_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:MockServerStartRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:MockServerStartRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SetTokenEndpointRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SetTokenEndpointRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SetClientIdRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SetClientIdRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:OAuthStartRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:OAuthStartRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SimulateCallbackRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SimulateCallbackRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:ConnectionAdapterRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:ConnectionAdapterRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:TokenQuery",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:TokenQuery",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SeedTokenRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync_oauth.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync_oauth.rs:SeedTokenRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_add_directory",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_add_directory",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_remove_directory",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_remove_directory",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_list",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_list",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_launch_seed_only",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_launch_seed_only",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_list_from_db",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_workspace_list_from_db",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_prompt_environment_block",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_prompt_environment_block",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:extract_section",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_aggregate_list_filter",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_aggregate_list_filter",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_seed_compacted_history",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_seed_compacted_history",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_llm_history",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_llm_history",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_seed_raw_history",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_seed_raw_history",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_provider_request_capture",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_provider_request_capture",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_parse_exec_mode",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_parse_exec_mode",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_parse_session_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_parse_session_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_resolve_exec_mode_from_wire",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_resolve_exec_mode_from_wire",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_update_status_via_cmd",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_update_status_via_cmd",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_aggregate_list_via_cmd",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/workspace.rs",
+   "target": "function:src-tauri/src/api/agent/test/workspace.rs:test_session_aggregate_list_via_cmd",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_approval_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_approval_ingest.rs:handle",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_approval_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_approval_ingest.rs:handle",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_approval_ingest.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/src/api/agent_approval_ingest.rs:handle",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:authorize_hook_request",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/src/api/agent_approval_ingest.rs:handle",
+   "target": "function:src-tauri/src/agent_sessions/cli/hook_approvals.rs:park_hook_approval",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:write_endpoint_file",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:write_endpoint_file",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:token_matches",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:authorize_hook_request",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:authorize_hook_request",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:handle",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "target": "function:src-tauri/src/api/agent_status_ingest.rs:handle",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "function:src-tauri/src/api/mod.rs:init_app_handle",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "function:src-tauri/src/api/mod.rs:init_app_handle",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "function:src-tauri/src/api/mod.rs:get_app_handle",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "function:src-tauri/src/api/mod.rs:get_app_handle",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "file:src-tauri/src/api/agent_approval_ingest.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "file:src-tauri/src/api/agent_status_ingest.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "file:src-tauri/src/api/agent/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "file:src-tauri/src/api/server.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/api/mod.rs",
+   "target": "file:src-tauri/src/api/websocket_handler.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/api/server.rs",
+   "target": "function:src-tauri/src/api/server.rs:start_server",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/server.rs",
+   "target": "function:src-tauri/src/api/server.rs:start_server",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/server.rs",
+   "target": "function:src-tauri/src/api/server.rs:automation_webhook_handler",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  }
+ ]
+}

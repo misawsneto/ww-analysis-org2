@@ -1,0 +1,151 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/hooks/project/useAllRepoProjects.ts",
+      "type": "file",
+      "name": "useAllRepoProjects.ts",
+      "filePath": "src/hooks/project/useAllRepoProjects.ts",
+      "summary": "React hook that loads every project from the global SQLite project store, enriching each project with label and member maps, and reloads when the project list or backend data-changed signal fires.",
+      "tags": ["hook", "react", "data-fetching", "jotai", "project"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/project/useAllRepoProjects.ts:useAllRepoProjects",
+      "type": "function",
+      "name": "useAllRepoProjects",
+      "filePath": "src/hooks/project/useAllRepoProjects.ts",
+      "lineRange": [35, 93],
+      "summary": "Async hook that fetches all projects via projectApi, enriches them with label and member maps, and exposes the resulting entry plus a refresh callback, guarding against stale in-flight responses with a cancellation ref.",
+      "tags": ["hook", "async", "data-fetching", "race-condition-guard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/project/useCollabOutboxPending.ts",
+      "type": "file",
+      "name": "useCollabOutboxPending.ts",
+      "filePath": "src/hooks/project/useCollabOutboxPending.ts",
+      "summary": "React hook that tracks pending (unsynced) collaboration outbox project and work-item IDs across a set of organizations, refreshing on project-data-change and outbox-flush events.",
+      "tags": ["hook", "react", "collaboration", "sync", "state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/project/useCollabOutboxPending.ts:useCollabOutboxPending",
+      "type": "function",
+      "name": "useCollabOutboxPending",
+      "filePath": "src/hooks/project/useCollabOutboxPending.ts",
+      "lineRange": [18, 88],
+      "summary": "Hook that polls projectApi.listCollabOutboxPendingIds per organization, computes pending project/work-item ID sets, and re-subscribes to project-data-changed and outbox-flushed events to keep the sets fresh.",
+      "tags": ["hook", "async", "event-listener", "collaboration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/project/useProjectDataChanged.ts",
+      "type": "file",
+      "name": "useProjectDataChanged.ts",
+      "filePath": "src/hooks/project/useProjectDataChanged.ts",
+      "summary": "Centralized coordinator for the Tauri \"orgii-data-changed\" event: provides a single app-level listener hook that bumps a shared Jotai signal atom and invalidates the API read cache, plus a subscriber hook other hooks use instead of registering their own Tauri listeners.",
+      "tags": ["hook", "event-handler", "tauri", "jotai", "state-management"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a Jotai signal atom as a pub/sub bus so only one Tauri event listener is registered app-wide, avoiding duplicate listener churn across many consumer hooks."
+    },
+    {
+      "id": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChangedListener",
+      "type": "function",
+      "name": "useProjectDataChangedListener",
+      "filePath": "src/hooks/project/useProjectDataChanged.ts",
+      "lineRange": [38, 60],
+      "summary": "Sets up the single Tauri event listener for \"orgii-data-changed\", invalidating the project API cache and bumping the shared signal atom whenever the Rust backend emits a data-change event.",
+      "tags": ["event-listener", "tauri", "side-effect"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChanged",
+      "type": "function",
+      "name": "useProjectDataChanged",
+      "filePath": "src/hooks/project/useProjectDataChanged.ts",
+      "lineRange": [66, 86],
+      "summary": "Subscribes a callback to the shared project-data-changed signal atom, optionally firing on mount, so consumers can react to backend data changes without registering their own Tauri listener.",
+      "tags": ["hook", "subscription", "event-driven"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/hooks/project/useAllRepoProjects.ts",
+      "target": "function:src/hooks/project/useAllRepoProjects.ts:useAllRepoProjects",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/project/useAllRepoProjects.ts",
+      "target": "function:src/hooks/project/useAllRepoProjects.ts:useAllRepoProjects",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/project/useAllRepoProjects.ts",
+      "target": "file:src/hooks/project/useProjectDataChanged.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/project/useCollabOutboxPending.ts",
+      "target": "function:src/hooks/project/useCollabOutboxPending.ts:useCollabOutboxPending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/project/useCollabOutboxPending.ts",
+      "target": "function:src/hooks/project/useCollabOutboxPending.ts:useCollabOutboxPending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/project/useCollabOutboxPending.ts",
+      "target": "file:src/hooks/project/useProjectDataChanged.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/hooks/project/useCollabOutboxPending.ts:useCollabOutboxPending",
+      "target": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChanged",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/project/useProjectDataChanged.ts",
+      "target": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChangedListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/project/useProjectDataChanged.ts",
+      "target": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChangedListener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/project/useProjectDataChanged.ts",
+      "target": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/project/useProjectDataChanged.ts",
+      "target": "function:src/hooks/project/useProjectDataChanged.ts:useProjectDataChanged",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

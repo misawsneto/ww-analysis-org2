@@ -1,0 +1,1693 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "type": "file",
+      "name": "params.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "summary": "Parses and validates await-tool parameters (handle lists, wait mode, tail-line counts) and resolves job handles against the background registry.",
+      "tags": [
+        "validation",
+        "parsing",
+        "job-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:parse_handles",
+      "type": "function",
+      "name": "parse_handles",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "lineRange": [
+        29,
+        83
+      ],
+      "summary": "Parses the one-or-many `handles` parameter (single string or array) into a validated list, enforcing the max-handles-per-call guard.",
+      "tags": [
+        "parsing",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:parse_wait_mode",
+      "type": "function",
+      "name": "parse_wait_mode",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "lineRange": [
+        85,
+        94
+      ],
+      "summary": "Parses the optional `wait_mode` parameter into the `any`/`all` enum, defaulting to `any`.",
+      "tags": [
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:resolve_job_or_unknown",
+      "type": "function",
+      "name": "resolve_job_or_unknown",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "lineRange": [
+        117,
+        128
+      ],
+      "summary": "Looks up a job handle in the background registry, returning a placeholder 'unknown' snapshot when the handle has no matching job.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "type": "file",
+      "name": "response.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "summary": "Builds the canonical text/meta response payloads for the await tool's wait_for/monitor (aggregated snapshot) and list (table) subcommands.",
+      "tags": [
+        "serialization",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs:build_response",
+      "type": "function",
+      "name": "build_response",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "lineRange": [
+        21,
+        54
+      ],
+      "summary": "Aggregates one or many HandleSnapshots into the canonical text/meta response body (`[<handle>: <label>] ...` plus tailed output) for wait_for/monitor.",
+      "tags": [
+        "serialization",
+        "job-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs:build_list_response",
+      "type": "function",
+      "name": "build_list_response",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "lineRange": [
+        56,
+        93
+      ],
+      "summary": "Renders a list of job snapshots as a table response for the `list` subcommand.",
+      "tags": [
+        "serialization",
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "type": "file",
+      "name": "snapshot.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "summary": "Defines HandleSnapshot and status-resolution helpers that capture a single background job's state at a point in time for rendering by the await tool's response builders.",
+      "tags": [
+        "data-model",
+        "job-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:HandleSnapshot",
+      "type": "class",
+      "name": "HandleSnapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "lineRange": [
+        70,
+        83
+      ],
+      "summary": "Canonical point-in-time representation of one background handle (status, exit code, killed flag, waited time, pattern-match info, output body) shared by the wait_for and monitor subcommands.",
+      "tags": [
+        "data-model",
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:resolve_status",
+      "type": "function",
+      "name": "resolve_status",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "lineRange": [
+        28,
+        66
+      ],
+      "summary": "Resolves a raw JobStatus into a display-friendly ResolvedStatus (running/succeeded/failed/killed) plus exit code, unifying shell and subagent job semantics.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:to_meta_item",
+      "type": "function",
+      "name": "to_meta_item",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "lineRange": [
+        96,
+        118
+      ],
+      "summary": "Converts a HandleSnapshot into the structured meta item shape included in the await tool's machine-readable response.",
+      "tags": [
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:running_snapshot",
+      "type": "function",
+      "name": "running_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "lineRange": [
+        121,
+        140
+      ],
+      "summary": "Constructs a HandleSnapshot for a still-running job, including elapsed wait time and any pattern-match info.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:terminal_snapshot",
+      "type": "function",
+      "name": "terminal_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "lineRange": [
+        142,
+        160
+      ],
+      "summary": "Constructs a HandleSnapshot for a finished (succeeded/failed/killed) job from its terminal status and output body.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "type": "file",
+      "name": "external.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "summary": "Launches shell commands in the user's external OS terminal (Terminal.app, common Linux emulators, or Windows Terminal/PowerShell) instead of the integrated PTY, with per-platform command quoting.",
+      "tags": [
+        "platform-specific",
+        "terminal",
+        "utility"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses `#[cfg(...)]`-gated platform variants of `launch_for_platform` for macOS, Linux, and Windows rather than runtime branching."
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "lineRange": [
+        13,
+        22
+      ],
+      "summary": "Parses the optional `terminal_target` string parameter (\"integrated\"/\"external\") into a TerminalTarget enum, defaulting to integrated.",
+      "tags": [
+        "parsing",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs:launch_for_platform",
+      "type": "function",
+      "name": "launch_for_platform",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "lineRange": [
+        50,
+        100
+      ],
+      "summary": "Launches the given command in the user's external OS terminal application, with three `#[cfg(...)]`-gated implementations for macOS (osascript/Terminal.app), Linux (common terminal emulators), and Windows (Windows Terminal/PowerShell).",
+      "tags": [
+        "platform-specific",
+        "process-execution"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Three separate cfg-gated definitions of the same function name are merged into a single node here; only one is compiled per target OS."
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "summary": "Defines `ExecTool`, the `run_shell` agent tool that executes commands either as a fast subprocess or, for interactive sessions, via a persistent PTY, including command-confirmation and security-policy gating.",
+      "tags": [
+        "api-handler",
+        "tool-infra",
+        "process-execution",
+        "entry-point"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Large (887-line) tool implementation combining trait-based dependency injection (router, security policy, permission provider) with async command dispatch."
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:ExecTool",
+      "type": "class",
+      "name": "ExecTool",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        70,
+        83
+      ],
+      "summary": "Tool struct implementing `run_shell`, holding the working directory, PTY resources, security policy, permission provider, cancel flag, and session key needed to execute commands via subprocess or PTY with confirmation gating.",
+      "tags": [
+        "api-handler",
+        "process-execution",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        87,
+        102
+      ],
+      "summary": "Constructs an ExecTool with a working directory, timeout, and workspace-restriction flag for the subprocess-only (non-PTY) execution path.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:new_with_pty",
+      "type": "function",
+      "name": "new_with_pty",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        105,
+        126
+      ],
+      "summary": "Constructs an ExecTool wired with PTY session storage and the Tauri app handle, enabling the interactive PTY execution path.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:request_command_confirmation_inner",
+      "type": "function",
+      "name": "request_command_confirmation_inner",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        177,
+        234
+      ],
+      "summary": "Core logic for deciding whether a shell command requires explicit user confirmation before running, consulting the security policy and permission provider and handling the force-prompt override.",
+      "tags": [
+        "security",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:description",
+      "type": "function",
+      "name": "description",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        264,
+        280
+      ],
+      "summary": "Returns the human-readable tool description for run_shell surfaced to the LLM.",
+      "tags": [
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:llm_description",
+      "type": "function",
+      "name": "llm_description",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        282,
+        340
+      ],
+      "summary": "Builds the full LLM-facing description of run_shell, covering subprocess vs interactive PTY modes and backgrounding/await_output follow-up.",
+      "tags": [
+        "metadata"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:parameters",
+      "type": "function",
+      "name": "parameters",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        342,
+        383
+      ],
+      "summary": "Builds the JSON schema for run_shell's command/interactive/timeout/kill_handle parameters.",
+      "tags": [
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:execute_text",
+      "type": "function",
+      "name": "execute_text",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "lineRange": [
+        404,
+        640
+      ],
+      "summary": "Main entry point for run_shell: validates the command against the security policy, requests confirmation if needed, then dispatches to the subprocess or PTY execution path and formats the result.",
+      "tags": [
+        "api-handler",
+        "process-execution",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "type": "file",
+      "name": "pty.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "summary": "Manages persistent PTY (pseudo-terminal) sessions shared with the frontend terminal UI, initializing sessions on demand and executing commands within them for interactive use cases (sudo, ssh, password prompts).",
+      "tags": [
+        "terminal",
+        "process-execution",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "lineRange": [
+        29,
+        38
+      ],
+      "summary": "Constructs PtyResources wrapping the shared PTY session map and Tauri app handle.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:ensure_pty_initialized",
+      "type": "function",
+      "name": "ensure_pty_initialized",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "lineRange": [
+        46,
+        103
+      ],
+      "summary": "Ensures a persistent PTY session exists for the agent, spawning and registering one against the given working directory if it doesn't already exist.",
+      "tags": [
+        "terminal",
+        "process-execution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:execute_via_pty",
+      "type": "function",
+      "name": "execute_via_pty",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "lineRange": [
+        109,
+        239
+      ],
+      "summary": "Sends a command into a persistent PTY session and waits (bounded by wait_secs) for output, returning immediately with a background handle if the command doesn't complete in time.",
+      "tags": [
+        "terminal",
+        "process-execution",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "type": "file",
+      "name": "registry.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "summary": "Global in-memory registry tracking backgrounded shell processes and subagent jobs (BackgroundJob) with live broadcast channels, so the await tool can subscribe to output and query status via a unified string handle.",
+      "tags": [
+        "job-management",
+        "state-management",
+        "service"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Central shared-state module with process-tree signal handling that has platform-specific (unix/windows) implementations of terminate_shell_process_tree."
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:BackgroundJob",
+      "type": "class",
+      "name": "BackgroundJob",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        58,
+        94
+      ],
+      "summary": "Registry entry tracking one backgrounded shell process or subagent job \u2014 its status, output broadcast channel, recent output ring buffer, join handle, and cancel flag \u2014 with methods to subscribe, snapshot, and record output.",
+      "tags": [
+        "data-model",
+        "job-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:snapshot",
+      "type": "function",
+      "name": "snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        127,
+        146
+      ],
+      "summary": "Captures a point-in-time JobSnapshot (status, recent output) of a BackgroundJob for polling consumers.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_shell",
+      "type": "function",
+      "name": "register_shell",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        189,
+        216
+      ],
+      "summary": "Registers a newly-backgrounded shell process (pid, command, log path, session) as a BackgroundJob in the registry.",
+      "tags": [
+        "job-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_subagent",
+      "type": "function",
+      "name": "register_subagent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        222,
+        237
+      ],
+      "summary": "Registers a launched background subagent job under a handle scoped to its session.",
+      "tags": [
+        "job-management",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_subagent_with_flag",
+      "type": "function",
+      "name": "register_subagent_with_flag",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        247,
+        279
+      ],
+      "summary": "Registers a background subagent job together with its cancellation flag so it can later be cooperatively cancelled.",
+      "tags": [
+        "job-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:broadcast_subagent_job_changed",
+      "type": "function",
+      "name": "broadcast_subagent_job_changed",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        287,
+        304
+      ],
+      "summary": "Emits a frontend event notifying that a subagent job's status changed, for live UI updates.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:mark_exited",
+      "type": "function",
+      "name": "mark_exited",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        312,
+        340
+      ],
+      "summary": "Marks a background job as exited with a terminal status, updating the registry entry and notifying subscribers.",
+      "tags": [
+        "job-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:remove",
+      "type": "function",
+      "name": "remove",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        357,
+        375
+      ],
+      "summary": "Removes a job from the registry, replacing it with a tombstone so late status queries still resolve gracefully.",
+      "tags": [
+        "job-management",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:resolve_status_with_tombstone",
+      "type": "function",
+      "name": "resolve_status_with_tombstone",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        397,
+        409
+      ],
+      "summary": "Resolves a handle's status, falling back to tombstone records for jobs that have already been removed from the live map.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_shell_for_session",
+      "type": "function",
+      "name": "list_shell_for_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        424,
+        433
+      ],
+      "summary": "Lists all shell background jobs registered for a given session id.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_jobs",
+      "type": "function",
+      "name": "list_jobs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        437,
+        446
+      ],
+      "summary": "Lists all background jobs (shell and subagent) registered for a given session id.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:claim_subagent_wake_for_session",
+      "type": "function",
+      "name": "claim_subagent_wake_for_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        506,
+        521
+      ],
+      "summary": "Atomically claims the 'wake dispatched' flag for a session's finished subagent jobs so only one wake notification fires per completion.",
+      "tags": [
+        "job-management",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:release_subagent_wake_for_session",
+      "type": "function",
+      "name": "release_subagent_wake_for_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        531,
+        542
+      ],
+      "summary": "Releases the previously-claimed wake flag for a session's subagent jobs.",
+      "tags": [
+        "job-management",
+        "concurrency"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_running_shell_jobs",
+      "type": "function",
+      "name": "list_running_shell_jobs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        558,
+        572
+      ],
+      "summary": "Returns all currently-running shell jobs across all sessions, used for process-tree cleanup and diagnostics.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_running_subagent_jobs",
+      "type": "function",
+      "name": "list_running_subagent_jobs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        588,
+        606
+      ],
+      "summary": "Returns all currently-running subagent jobs across all sessions.",
+      "tags": [
+        "job-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:send_signal_to_process_tree",
+      "type": "function",
+      "name": "send_signal_to_process_tree",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        633,
+        654
+      ],
+      "summary": "Sends a POSIX signal to an entire process tree rooted at the given pid.",
+      "tags": [
+        "process-execution",
+        "platform-specific"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:terminate_shell_process_tree",
+      "type": "function",
+      "name": "terminate_shell_process_tree",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        663,
+        688
+      ],
+      "summary": "Terminates a shell job's entire process tree, with separate `#[cfg(unix)]`/`#[cfg(windows)]` implementations for signal-based (unix) versus taskkill-based (windows) termination.",
+      "tags": [
+        "process-execution",
+        "platform-specific"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Two cfg-gated definitions (unix and windows) of the same function name are merged into a single node here; only one is compiled per target OS."
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:kill_shell",
+      "type": "function",
+      "name": "kill_shell",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        720,
+        740
+      ],
+      "summary": "Kills a registered shell job's process tree and marks it as killed in the registry.",
+      "tags": [
+        "job-management",
+        "process-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:kill_subagent",
+      "type": "function",
+      "name": "kill_subagent",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        754,
+        809
+      ],
+      "summary": "Cancels a running background subagent job, signaling its cancel flag and waiting for it to wind down before marking it killed.",
+      "tags": [
+        "job-management",
+        "concurrency"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:cancel_subagents_for_session",
+      "type": "function",
+      "name": "cancel_subagents_for_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "lineRange": [
+        819,
+        851
+      ],
+      "summary": "Cancels all running background subagent jobs for a given session, e.g. when the session is torn down.",
+      "tags": [
+        "job-management",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "type": "file",
+      "name": "subprocess.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "summary": "Fast subprocess execution path using `tokio::process::Command` with real-time stdout/stderr streaming, process-group signal handling, backgrounding, and cancellation support.",
+      "tags": [
+        "process-execution",
+        "async",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_exec_output",
+      "type": "function",
+      "name": "broadcast_exec_output",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        19,
+        28
+      ],
+      "summary": "Broadcasts a single `agent:exec_output` streaming event chunk (stdout/stderr) to the frontend.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_started",
+      "type": "function",
+      "name": "broadcast_process_started",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        31,
+        46
+      ],
+      "summary": "Broadcasts an event announcing that a subprocess has started, including its pid, command, and log path.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_exited",
+      "type": "function",
+      "name": "broadcast_process_exited",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        49,
+        59
+      ],
+      "summary": "Broadcasts an event announcing that a subprocess exited, including its exit code and whether it was killed.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_backgrounded",
+      "type": "function",
+      "name": "broadcast_process_backgrounded",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        86,
+        101
+      ],
+      "summary": "Broadcasts an event announcing that a still-running subprocess was moved to the background (timeout exceeded).",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:format_command_result",
+      "type": "function",
+      "name": "format_command_result",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        115,
+        141
+      ],
+      "summary": "Formats a subprocess's stdout, stderr, and exit code into the tool-result text shown to the LLM.",
+      "tags": [
+        "formatting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:signal_process_group",
+      "type": "function",
+      "name": "signal_process_group",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        144,
+        163
+      ],
+      "summary": "Sends a signal to an entire process group (not just the leader) so subprocess trees terminate cleanly.",
+      "tags": [
+        "process-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:terminate_child_tree",
+      "type": "function",
+      "name": "terminate_child_tree",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        166,
+        199
+      ],
+      "summary": "Terminates a child process and any of its descendants, escalating from graceful signal to force-kill as needed.",
+      "tags": [
+        "process-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:configure_git_environment",
+      "type": "function",
+      "name": "configure_git_environment",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        217,
+        243
+      ],
+      "summary": "Sets environment variables on a spawned command so git subcommands behave non-interactively (no pager, no prompts) under agent control.",
+      "tags": [
+        "process-execution",
+        "configuration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:finish_cancelled_process",
+      "type": "function",
+      "name": "finish_cancelled_process",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        245,
+        268
+      ],
+      "summary": "Cleans up a subprocess that was cancelled mid-flight: kills it, finalizes its log, and clears session bookkeeping.",
+      "tags": [
+        "process-execution",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:execute_via_command",
+      "type": "function",
+      "name": "execute_via_command",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        286,
+        551
+      ],
+      "summary": "Spawns and drives a subprocess to completion (or timeout/backgrounding), streaming stdout/stderr in real time, honoring the cancel flag, and writing output to the terminal log.",
+      "tags": [
+        "process-execution",
+        "async",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:handle_backgrounded",
+      "type": "function",
+      "name": "handle_backgrounded",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "lineRange": [
+        562,
+        739
+      ],
+      "summary": "Takes over a still-running subprocess after the foreground wait window elapses, registering it in the background job registry and continuing to stream its output asynchronously.",
+      "tags": [
+        "process-execution",
+        "async",
+        "job-management"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:parse_handles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:parse_handles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:parse_wait_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:parse_wait_mode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:resolve_job_or_unknown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/params.rs:resolve_job_or_unknown",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs:build_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs:build_response",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs:build_list_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/response.rs:build_list_response",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:HandleSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:HandleSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:resolve_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:resolve_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:to_meta_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:to_meta_item",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:running_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:running_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:terminal_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/snapshot.rs:terminal_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs:parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs:parse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs:launch_for_platform",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:ExecTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:ExecTool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:new_with_pty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:new_with_pty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:request_command_confirmation_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:llm_description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:parameters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:execute_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/action_router.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/await_tool/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/external.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:ensure_pty_initialized",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:ensure_pty_initialized",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:execute_via_pty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:execute_via_pty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:BackgroundJob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:BackgroundJob",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_shell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_shell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_subagent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_subagent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_subagent_with_flag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_subagent_with_flag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:broadcast_subagent_job_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:broadcast_subagent_job_changed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:mark_exited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:mark_exited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:remove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:resolve_status_with_tombstone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:resolve_status_with_tombstone",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_shell_for_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_shell_for_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_jobs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_jobs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:claim_subagent_wake_for_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:claim_subagent_wake_for_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:release_subagent_wake_for_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:release_subagent_wake_for_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_running_shell_jobs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_running_shell_jobs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_running_subagent_jobs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:list_running_subagent_jobs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:send_signal_to_process_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:terminate_shell_process_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:terminate_shell_process_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:kill_shell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:kill_shell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:kill_subagent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:kill_subagent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:cancel_subagents_for_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:cancel_subagents_for_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_exec_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_exec_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_started",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_started",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_exited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_exited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_backgrounded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:broadcast_process_backgrounded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:format_command_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:format_command_result",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:signal_process_group",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:terminate_child_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:configure_git_environment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:finish_cancelled_process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:execute_via_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:execute_via_command",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:handle_backgrounded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/impls/coding/terminal_log.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:execute_via_command",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/mod.rs:execute_text",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/pty.rs:execute_via_pty",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/subprocess.rs:handle_backgrounded",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/impls/coding/exec/registry.rs:register_shell",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

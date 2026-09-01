@@ -1,0 +1,142 @@
+{
+  "nodes": [
+    {
+      "id": "config:src-tauri/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/Cargo.toml",
+      "summary": "Root Cargo workspace manifest defining the org2 Tauri desktop binary and its ~20+ internal crates (agent-core, database, browser, ui-indexer, etc.), plus shared dependency versions, build profiles, and cargo-machete false-positive allow-list for crates only referenced via the tauri::generate_handler! macro.",
+      "tags": ["configuration", "build-system", "rust", "workspace"],
+      "complexity": "complex",
+      "languageNotes": "Cargo workspace manifest: [workspace.dependencies] centralizes shared version pins for member crates, and [package.metadata.cargo-machete] documents an allow-list needed because macro-expanded Tauri command registration is invisible to unused-dependency linting."
+    },
+    {
+      "id": "config:src-tauri/Info.plist",
+      "type": "config",
+      "name": "Info.plist",
+      "filePath": "src-tauri/Info.plist",
+      "summary": "macOS Info.plist declaring TCC usage-description strings (microphone and speech recognition) required for the WKWebView to request audio permissions when the app is built as a signed .app bundle.",
+      "tags": ["configuration", "macos", "infrastructure", "permissions"],
+      "complexity": "simple",
+      "languageNotes": "NSMicrophoneUsageDescription only takes effect inside a bundled .app; `tauri dev` runs a bare binary that cannot request TCC permissions."
+    },
+    {
+      "id": "config:src-tauri/entitlements.plist",
+      "type": "config",
+      "name": "entitlements.plist",
+      "filePath": "src-tauri/entitlements.plist",
+      "summary": "macOS hardened-runtime entitlements for the main app: allows JIT/unsigned executable memory for the JS engine, disables library validation for sidecar/plugin loading, disables the App Sandbox for full filesystem access, and grants microphone/network access.",
+      "tags": ["configuration", "macos", "infrastructure", "security"],
+      "complexity": "simple",
+      "languageNotes": "App Sandbox is explicitly disabled to allow unrestricted filesystem access similar to VSCode/Cursor, trading sandbox isolation for editor-like capabilities."
+    },
+    {
+      "id": "config:src-tauri/insta.yaml",
+      "type": "config",
+      "name": "insta.yaml",
+      "filePath": "src-tauri/insta.yaml",
+      "summary": "Configuration for the `insta` Rust snapshot-testing crate, setting new-snapshot update mode and fail-fast glob matching for the workspace's test suite.",
+      "tags": ["configuration", "testing", "rust", "snapshot-testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/provider-key-check.example.json",
+      "type": "config",
+      "name": "provider-key-check.example.json",
+      "filePath": "src-tauri/provider-key-check.example.json",
+      "summary": "Example configuration for the bin-provider-key-check utility crate, listing the environment variable names used to validate API keys/session tokens for each supported AI agent/provider (Cursor, Copilot, Codex, Claude Code, Kiro, Gemini, DeepSeek, OpenRouter, Azure, etc.).",
+      "tags": ["configuration", "example", "credentials", "provider-integration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src-tauri/rust-analyzer.toml",
+      "type": "config",
+      "name": "rust-analyzer.toml",
+      "filePath": "src-tauri/rust-analyzer.toml",
+      "summary": "Project-local rust-analyzer configuration that redirects its cargo check build artifacts to a separate target/ra directory to avoid lock contention and cache invalidation with regular cargo builds.",
+      "tags": ["configuration", "rust", "tooling", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/sidecar-entitlements.plist",
+      "type": "config",
+      "name": "sidecar-entitlements.plist",
+      "filePath": "src-tauri/sidecar-entitlements.plist",
+      "summary": "Minimal macOS hardened-runtime entitlements file granting only network client access, applied to bundled sidecar binaries distinct from the main app's broader entitlement set.",
+      "tags": ["configuration", "macos", "infrastructure", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/tauri.conf.json",
+      "type": "config",
+      "name": "tauri.conf.json",
+      "filePath": "src-tauri/tauri.conf.json",
+      "summary": "Primary Tauri application configuration for ORGII: defines the frontend build/dev commands, main window (1200x800, transparent, overlay titlebar), a strict CSP, the fs/deep-link/updater/shell plugin settings, and bundle/icon/updater endpoint configuration.",
+      "tags": ["configuration", "tauri", "infrastructure", "deployment"],
+      "complexity": "moderate",
+      "languageNotes": "CSP explicitly allows 'wasm-unsafe-eval' and ipc:/asset: schemes needed for Tauri's IPC bridge and CodeMirror's nonce-scoped inline styles."
+    },
+    {
+      "id": "config:src-tauri/tauri.macos.conf.json",
+      "type": "config",
+      "name": "tauri.macos.conf.json",
+      "filePath": "src-tauri/tauri.macos.conf.json",
+      "summary": "macOS-specific Tauri config override supplying bundle resources, the entitlements.plist reference, code-signing identity, and minimum macOS version for the .app bundle.",
+      "tags": ["configuration", "tauri", "macos", "deployment"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/tauri.windows.conf.json",
+      "type": "config",
+      "name": "tauri.windows.conf.json",
+      "filePath": "src-tauri/tauri.windows.conf.json",
+      "summary": "Windows-specific Tauri config override adjusting the main window's decorations and transparency (non-transparent, native decorations) and bundle resources for the Windows build.",
+      "tags": ["configuration", "tauri", "windows", "deployment"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:src-tauri/tauri.macos.conf.json",
+      "target": "config:src-tauri/entitlements.plist",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/tauri.macos.conf.json",
+      "target": "config:src-tauri/tauri.conf.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/tauri.windows.conf.json",
+      "target": "config:src-tauri/tauri.conf.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/rust-analyzer.toml",
+      "target": "config:src-tauri/Cargo.toml",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/insta.yaml",
+      "target": "config:src-tauri/Cargo.toml",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:src-tauri/provider-key-check.example.json",
+      "target": "config:src-tauri/Cargo.toml",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

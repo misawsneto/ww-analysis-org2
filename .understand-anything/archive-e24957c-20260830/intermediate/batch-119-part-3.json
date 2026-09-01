@@ -1,0 +1,1211 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "type": "file",
+      "name": "remotes.rs",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "summary": "Axum route handlers for remote management and network operations: list/add/update/delete remotes, push, pull, fetch, and credential fill, plus streaming variants mounted via commands::streaming.",
+      "tags": [
+        "api-handler",
+        "git",
+        "networking",
+        "routing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "type": "file",
+      "name": "staging.rs",
+      "filePath": "src-tauri/crates/git-api/src/routes/staging.rs",
+      "summary": "Axum route handlers for the staging area: stage/unstage files, discard changes, and resolve merge conflicts, plus streaming stage/commit endpoints.",
+      "tags": [
+        "api-handler",
+        "git",
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "type": "file",
+      "name": "stash.rs",
+      "filePath": "src-tauri/crates/git-api/src/routes/stash.rs",
+      "summary": "Axum route handlers for git stash operations: list, push, apply, and drop stash entries.",
+      "tags": [
+        "api-handler",
+        "git",
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "type": "file",
+      "name": "status.rs",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "summary": "Axum route handlers for repository status: working directory status (with a cheap HEAD-sha cache to short-circuit unchanged repos), ahead/behind counts, default branch, and local commit list.",
+      "tags": [
+        "api-handler",
+        "git",
+        "caching",
+        "routing"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses a cheap HEAD sha read to cache and short-circuit expensive git status computation between requests."
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "type": "file",
+      "name": "worktrees.rs",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "summary": "Axum route handlers for git worktrees: list, create, and remove worktrees, with diff-summary caching and path validation against pathological/unsafe checkout locations.",
+      "tags": [
+        "api-handler",
+        "git",
+        "caching",
+        "routing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/git-api/src/types.rs",
+      "summary": "Central request/response DTO module for the Git HTTP API: ~89 serde/utoipa-annotated structs and enums covering status, branches, commits, remotes, diff, merge/rebase/cherry-pick/revert/reset, stash, worktrees, and blame payloads.",
+      "tags": [
+        "type-definition",
+        "data-model",
+        "serialization",
+        "api-schema"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Each DTO derives Serialize/Deserialize plus utoipa::ToSchema for OpenAPI generation; almost all are plain field-only structs with no behavior."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:routes",
+      "type": "function",
+      "name": "routes",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        18,
+        50
+      ],
+      "summary": "Builds the Axum Router mapping remote management and push/pull/fetch (including streaming variants) endpoints to their handlers.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:get_remotes",
+      "type": "function",
+      "name": "get_remotes",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        78,
+        90
+      ],
+      "summary": "Handler listing configured remotes via commands::list_remotes.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:add_remote",
+      "type": "function",
+      "name": "add_remote",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        106,
+        120
+      ],
+      "summary": "Handler that adds a new remote via commands::add_remote.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:update_remote",
+      "type": "function",
+      "name": "update_remote",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        137,
+        151
+      ],
+      "summary": "Handler that updates an existing remote's URL via commands::update_remote.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:delete_remote",
+      "type": "function",
+      "name": "delete_remote",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        167,
+        176
+      ],
+      "summary": "Handler that deletes a remote via commands::delete_remote.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:push",
+      "type": "function",
+      "name": "push",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        192,
+        215
+      ],
+      "summary": "Handler that pushes local commits to a remote via commands::push_to_remote.",
+      "tags": [
+        "api-handler",
+        "git",
+        "networking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:pull",
+      "type": "function",
+      "name": "pull",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        231,
+        253
+      ],
+      "summary": "Handler that pulls from a remote via commands::pull_from_remote.",
+      "tags": [
+        "api-handler",
+        "git",
+        "networking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fetch",
+      "type": "function",
+      "name": "fetch",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        269,
+        290
+      ],
+      "summary": "Handler that fetches from a remote via commands::fetch_from_remote.",
+      "tags": [
+        "api-handler",
+        "git",
+        "networking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fill_credentials",
+      "type": "function",
+      "name": "fill_credentials",
+      "filePath": "src-tauri/crates/git-api/src/routes/remotes.rs",
+      "lineRange": [
+        293,
+        307
+      ],
+      "summary": "Handler that fills/validates git credentials for a remote URL via commands::fill_git_credentials.",
+      "tags": [
+        "api-handler",
+        "git",
+        "authentication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/staging.rs:routes",
+      "type": "function",
+      "name": "routes",
+      "filePath": "src-tauri/crates/git-api/src/routes/staging.rs",
+      "lineRange": [
+        18,
+        36
+      ],
+      "summary": "Builds the Axum Router mapping staging-area endpoints (stage/unstage/discard/resolve-conflict, plus streaming stage/commit) to their handlers.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/staging.rs:stage_files",
+      "type": "function",
+      "name": "stage_files",
+      "filePath": "src-tauri/crates/git-api/src/routes/staging.rs",
+      "lineRange": [
+        65,
+        77
+      ],
+      "summary": "Handler that stages one or more files via commands::stage_file.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/staging.rs:unstage_files",
+      "type": "function",
+      "name": "unstage_files",
+      "filePath": "src-tauri/crates/git-api/src/routes/staging.rs",
+      "lineRange": [
+        93,
+        103
+      ],
+      "summary": "Handler that unstages one or more files via commands::unstage_files.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/staging.rs:discard_changes",
+      "type": "function",
+      "name": "discard_changes",
+      "filePath": "src-tauri/crates/git-api/src/routes/staging.rs",
+      "lineRange": [
+        119,
+        129
+      ],
+      "summary": "Handler that discards working-directory changes for given files via commands::discard_changes.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/staging.rs:resolve_conflict",
+      "type": "function",
+      "name": "resolve_conflict",
+      "filePath": "src-tauri/crates/git-api/src/routes/staging.rs",
+      "lineRange": [
+        145,
+        156
+      ],
+      "summary": "Handler that resolves a merge conflict for a file using a given strategy via commands::resolve_conflict.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/stash.rs:routes",
+      "type": "function",
+      "name": "routes",
+      "filePath": "src-tauri/crates/git-api/src/routes/stash.rs",
+      "lineRange": [
+        17,
+        23
+      ],
+      "summary": "Builds the Axum Router mapping stash list/push/apply/drop endpoints to their handlers.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_list",
+      "type": "function",
+      "name": "stash_list",
+      "filePath": "src-tauri/crates/git-api/src/routes/stash.rs",
+      "lineRange": [
+        51,
+        63
+      ],
+      "summary": "Handler listing stash entries via commands::stash_list.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_push",
+      "type": "function",
+      "name": "stash_push",
+      "filePath": "src-tauri/crates/git-api/src/routes/stash.rs",
+      "lineRange": [
+        79,
+        98
+      ],
+      "summary": "Handler that creates a new stash entry via commands::stash_push.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_apply",
+      "type": "function",
+      "name": "stash_apply",
+      "filePath": "src-tauri/crates/git-api/src/routes/stash.rs",
+      "lineRange": [
+        114,
+        128
+      ],
+      "summary": "Handler that applies (optionally popping) a stash entry via commands::stash_apply.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_drop",
+      "type": "function",
+      "name": "stash_drop",
+      "filePath": "src-tauri/crates/git-api/src/routes/stash.rs",
+      "lineRange": [
+        144,
+        156
+      ],
+      "summary": "Handler that drops a stash entry via commands::stash_drop.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/status.rs:read_head_sha_cheap",
+      "type": "function",
+      "name": "read_head_sha_cheap",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "lineRange": [
+        41,
+        71
+      ],
+      "summary": "Cheaply reads the current HEAD commit sha (without a full git2 status walk) used as a cache-invalidation key for the status endpoint.",
+      "tags": [
+        "git",
+        "caching",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/status.rs:routes",
+      "type": "function",
+      "name": "routes",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "lineRange": [
+        73,
+        88
+      ],
+      "summary": "Builds the Axum Router mapping status, ahead/behind, default-branch, and local-commits endpoints to their handlers.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/status.rs:get_status",
+      "type": "function",
+      "name": "get_status",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "lineRange": [
+        131,
+        257
+      ],
+      "summary": "Handler computing full working-directory git status (tracked/untracked/staged files), using the HEAD-sha cache to avoid recomputation when the repo is unchanged.",
+      "tags": [
+        "api-handler",
+        "git",
+        "caching"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/status.rs:get_ahead_behind",
+      "type": "function",
+      "name": "get_ahead_behind",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "lineRange": [
+        272,
+        287
+      ],
+      "summary": "Handler returning ahead/behind commit counts relative to upstream.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/status.rs:get_default_branch",
+      "type": "function",
+      "name": "get_default_branch",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "lineRange": [
+        303,
+        316
+      ],
+      "summary": "Handler returning the repository's default branch via commands::get_default_branch.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/status.rs:get_local_commits",
+      "type": "function",
+      "name": "get_local_commits",
+      "filePath": "src-tauri/crates/git-api/src/routes/status.rs",
+      "lineRange": [
+        332,
+        345
+      ],
+      "summary": "Handler listing commits local to the current branch (not yet pushed) via commands::get_local_commits.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:routes",
+      "type": "function",
+      "name": "routes",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "lineRange": [
+        41,
+        46
+      ],
+      "summary": "Builds the Axum Router mapping worktree list/create/remove endpoints to their handlers.",
+      "tags": [
+        "routing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:get_worktrees",
+      "type": "function",
+      "name": "get_worktrees",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "lineRange": [
+        67,
+        95
+      ],
+      "summary": "Handler listing all git worktrees for a repository, optionally including per-worktree diff summaries.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:create_worktree",
+      "type": "function",
+      "name": "create_worktree",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "lineRange": [
+        110,
+        149
+      ],
+      "summary": "Handler that creates a new git worktree at a validated path, rejecting pathological/unsafe checkout locations.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:remove_worktree",
+      "type": "function",
+      "name": "remove_worktree",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "lineRange": [
+        164,
+        192
+      ],
+      "summary": "Handler that removes a git worktree.",
+      "tags": [
+        "api-handler",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:summarize_worktree_diff",
+      "type": "function",
+      "name": "summarize_worktree_diff",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "lineRange": [
+        194,
+        255
+      ],
+      "summary": "Computes a diff summary (uncommitted changes count etc.) for a worktree using a cache, calling commands::diff::get_diff_numstat_combined for uncommitted stats.",
+      "tags": [
+        "git",
+        "diff",
+        "caching"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:validate_new_worktree_path",
+      "type": "function",
+      "name": "validate_new_worktree_path",
+      "filePath": "src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "lineRange": [
+        280,
+        302
+      ],
+      "summary": "Validates a proposed new-worktree path against traversal and pathological-location rules before allowing worktree creation.",
+      "tags": [
+        "security",
+        "validation"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:get_remotes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:add_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:update_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:delete_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:pull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fetch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fill_credentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:stage_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:unstage_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:discard_changes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:resolve_conflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_apply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:read_head_sha_cheap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_ahead_behind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_default_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_local_commits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:routes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:get_worktrees",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:create_worktree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:remove_worktree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:summarize_worktree_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:validate_new_worktree_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:get_remotes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:add_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:update_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:delete_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:push",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:pull",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fetch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fill_credentials",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:stage_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:unstage_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:discard_changes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/staging.rs:resolve_conflict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_push",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_apply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_drop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_ahead_behind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_default_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/status.rs:get_local_commits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:routes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:get_worktrees",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:create_worktree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:remove_worktree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/remotes.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/staging.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/stash.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/status.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/routes/worktrees.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:get_remotes",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:list_remotes",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:add_remote",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:add_remote",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:update_remote",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:update_remote",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:delete_remote",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:delete_remote",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:push",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:push_to_remote",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:pull",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:pull_from_remote",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fetch",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:fetch_from_remote",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/remotes.rs:fill_credentials",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:fill_git_credentials",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_list",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_list",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_push",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_push",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_apply",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_apply",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/stash.rs:stash_drop",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_drop",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/status.rs:get_default_branch",
+      "target": "function:src-tauri/crates/git-api/src/commands/branch.rs:get_default_branch",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/status.rs:get_local_commits",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:get_local_commits",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/routes/worktrees.rs:summarize_worktree_diff",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat_combined",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

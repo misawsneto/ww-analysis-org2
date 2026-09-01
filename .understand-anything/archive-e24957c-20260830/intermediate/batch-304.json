@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/collaboration/inviteDefaults.ts",
+      "type": "file",
+      "name": "inviteDefaults.ts",
+      "filePath": "src/store/collaboration/inviteDefaults.ts",
+      "summary": "Defines invite lifecycle defaults (usage limits, expiry window, role) for org bootstrap and panel-created invites, plus helpers that compute an expiry timestamp and assemble a default invite record.",
+      "tags": ["utility", "collaboration", "invites", "constants"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/collaboration/inviteDefaults.ts:getInviteExpiresAt",
+      "type": "function",
+      "name": "getInviteExpiresAt",
+      "filePath": "src/store/collaboration/inviteDefaults.ts",
+      "lineRange": [35, 40],
+      "summary": "Computes an ISO-8601 expiry timestamp a given number of days from now (or from a supplied reference date).",
+      "tags": ["utility", "date", "invites"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/collaboration/inviteDefaults.ts:createInviteDefaults",
+      "type": "function",
+      "name": "createInviteDefaults",
+      "filePath": "src/store/collaboration/inviteDefaults.ts",
+      "lineRange": [42, 54],
+      "summary": "Builds the default InviteDefaults record (usage limit, expiry, member role) based on whether the invite is a bootstrap or panel invite.",
+      "tags": ["factory", "invites", "collaboration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/collaboration/protocol.ts",
+      "type": "file",
+      "name": "protocol.ts",
+      "filePath": "src/store/collaboration/protocol.ts",
+      "summary": "Zod schemas for the collaboration wire protocol consumed by the managed ORG2 Cloud plane, validating RemoteTeammateSessionMetadata and its enum sub-schemas, plus a deterministic avatar identity helper.",
+      "tags": ["validation", "data-model", "collaboration", "serialization"],
+      "complexity": "moderate",
+      "languageNotes": "Uses zod's `satisfies z.ZodType<T>` idiom to keep runtime schemas structurally aligned with the hand-written TypeScript interfaces in types.ts, with `.nullish().transform()` chains normalizing null server values to undefined."
+    },
+    {
+      "id": "function:src/store/collaboration/protocol.ts:createCollabAvatarIdentity",
+      "type": "function",
+      "name": "createCollabAvatarIdentity",
+      "filePath": "src/store/collaboration/protocol.ts",
+      "lineRange": [171, 185],
+      "summary": "Deterministically derives a two-letter avatar initials string and a color variant from a member's display name.",
+      "tags": ["utility", "avatar", "deterministic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/collaboration/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/store/collaboration/types.ts",
+      "summary": "Defines the backend-agnostic collaboration wire types consumed by the managed ORG2 Cloud plane: session access/visibility/replay-level consts, org and member record shapes, and the RemoteTeammateSessionMetadata interface with fork lineage and comment-task provenance.",
+      "tags": ["type-definition", "data-model", "collaboration", "protocol"],
+      "complexity": "complex",
+      "languageNotes": "Uses the `as const` object + derived union type idiom (e.g. `COLLAB_ROLE` const paired with `CollabRole = (typeof COLLAB_ROLE)[keyof typeof COLLAB_ROLE]`) throughout instead of TypeScript enums."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/collaboration/inviteDefaults.ts",
+      "target": "file:src/store/collaboration/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/collaboration/protocol.ts",
+      "target": "file:src/store/collaboration/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/collaboration/inviteDefaults.ts",
+      "target": "function:src/store/collaboration/inviteDefaults.ts:getInviteExpiresAt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/collaboration/inviteDefaults.ts",
+      "target": "function:src/store/collaboration/inviteDefaults.ts:createInviteDefaults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/collaboration/protocol.ts",
+      "target": "function:src/store/collaboration/protocol.ts:createCollabAvatarIdentity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/collaboration/inviteDefaults.ts",
+      "target": "function:src/store/collaboration/inviteDefaults.ts:getInviteExpiresAt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/collaboration/inviteDefaults.ts",
+      "target": "function:src/store/collaboration/inviteDefaults.ts:createInviteDefaults",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/collaboration/protocol.ts",
+      "target": "function:src/store/collaboration/protocol.ts:createCollabAvatarIdentity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

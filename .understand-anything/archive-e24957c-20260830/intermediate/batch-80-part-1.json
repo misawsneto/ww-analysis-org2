@@ -1,0 +1,1990 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cline/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/mod.rs",
+   "summary": "Module root for the standalone Cline CLI history source, re-exporting the history-reading submodule that parses per-session JSON transcripts under ~/.cline/data/sessions.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "source-adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "type": "file",
+   "name": "app.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "summary": "Core parser for OpenAI Codex CLI JSONL session transcripts: discovers session files, parses metadata and message history, reverse-engineers shell exec calls (rg/sed/nl/head/tail/cat) into structured file-read and search tool calls, and normalizes everything into canonical session/activity records.",
+   "tags": [
+    "source-adapter",
+    "parser",
+    "data-model",
+    "utility"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Contains an extensive hand-rolled shell-token parser that recovers structured file-read/search intents from raw exec command strings, since Codex logs shell invocations rather than structured tool calls."
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:CodexTranscriptLocator",
+   "type": "class",
+   "name": "CodexTranscriptLocator",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    48,
+    52
+   ],
+   "summary": "Identifies the on-disk transcript file and session id used to resolve a Codex session's raw JSONL source.",
+   "tags": [
+    "data-model",
+    "codex-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:list_codex_app_sessions_paginated",
+   "type": "function",
+   "name": "list_codex_app_sessions_paginated",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    120,
+    127
+   ],
+   "summary": "Lists cached Codex app sessions in a paginated page for the sidebar.",
+   "tags": [
+    "source-adapter",
+    "pagination",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:list_codex_app_recent_paths",
+   "type": "function",
+   "name": "list_codex_app_recent_paths",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    129,
+    135
+   ],
+   "summary": "Returns the most recently touched Codex session file paths for fast-path change detection.",
+   "tags": [
+    "source-adapter",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_app_for_session",
+   "type": "function",
+   "name": "load_codex_app_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    137,
+    144
+   ],
+   "summary": "Loads full session history for a single Codex session id from the on-disk transcript.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sync_codex_app_cache",
+   "type": "function",
+   "name": "sync_codex_app_cache",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    146,
+    191
+   ],
+   "summary": "Synchronizes the Codex app session cache by discovering, parsing, and upserting all on-disk session records.",
+   "tags": [
+    "source-adapter",
+    "sync",
+    "caching"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:discover_codex_app_records",
+   "type": "function",
+   "name": "discover_codex_app_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    193,
+    224
+   ],
+   "summary": "Discovers all Codex session files under known session directories and returns parsed cache inputs.",
+   "tags": [
+    "source-adapter",
+    "discovery",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:collect_codex_session_files",
+   "type": "function",
+   "name": "collect_codex_session_files",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    226,
+    240
+   ],
+   "summary": "Recursively collects Codex session JSONL files from a directory into an output vector.",
+   "tags": [
+    "utility",
+    "filesystem",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_session_index",
+   "type": "function",
+   "name": "load_codex_session_index",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    251,
+    297
+   ],
+   "summary": "Loads and parses the Codex session index file that maps thread ids to titles and timestamps.",
+   "tags": [
+    "parser",
+    "data-loading",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_source_fingerprint",
+   "type": "function",
+   "name": "codex_source_fingerprint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    299,
+    312
+   ],
+   "summary": "Computes a stable fingerprint for a Codex session record used to detect changes between syncs.",
+   "tags": [
+    "utility",
+    "hashing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_session_index_title_for_record",
+   "type": "function",
+   "name": "codex_session_index_title_for_record",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    314,
+    326
+   ],
+   "summary": "Looks up a human-readable session title from the Codex session index for a given record.",
+   "tags": [
+    "utility",
+    "codex-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_thread_id_from_file_stem",
+   "type": "function",
+   "name": "codex_thread_id_from_file_stem",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    350,
+    359
+   ],
+   "summary": "Extracts the Codex thread id embedded in a session transcript file's stem.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:is_uuid_like",
+   "type": "function",
+   "name": "is_uuid_like",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    361,
+    373
+   ],
+   "summary": "Checks whether a string looks like a UUID, used to validate extracted thread/session identifiers.",
+   "tags": [
+    "utility",
+    "validation",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:parse_codex_session_meta",
+   "type": "function",
+   "name": "parse_codex_session_meta",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    375,
+    524
+   ],
+   "summary": "Parses a raw Codex JSONL record into structured session metadata (model, cwd, timestamps, token counts).",
+   "tags": [
+    "parser",
+    "data-model",
+    "codex-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:session_meta_to_cache_input",
+   "type": "function",
+   "name": "session_meta_to_cache_input",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    526,
+    550
+   ],
+   "summary": "Converts parsed Codex session metadata into the cache input shape used by the imported-history cache layer.",
+   "tags": [
+    "conversion",
+    "caching",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:parent_thread_id_from_session_meta_payload",
+   "type": "function",
+   "name": "parent_thread_id_from_session_meta_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    552,
+    578
+   ],
+   "summary": "Extracts a parent thread id reference from a Codex session metadata payload, if the session is a continuation.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_parent_thread_id_candidate",
+   "type": "function",
+   "name": "normalize_parent_thread_id_candidate",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    580,
+    589
+   ],
+   "summary": "Validates and normalizes a candidate parent thread id, rejecting self-references and malformed values.",
+   "tags": [
+    "validation",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_transcript_for_thread_id_near_path",
+   "type": "function",
+   "name": "resolve_codex_transcript_for_thread_id_near_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    604,
+    642
+   ],
+   "summary": "Resolves the on-disk transcript path for a given thread id by searching near a reference path.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:collect_codex_impact_from_patch_apply_end",
+   "type": "function",
+   "name": "collect_codex_impact_from_patch_apply_end",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    648,
+    679
+   ],
+   "summary": "Accumulates file-change impact metrics from a Codex patch_apply_end event payload.",
+   "tags": [
+    "parser",
+    "data-model",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:collect_codex_impact_from_payload",
+   "type": "function",
+   "name": "collect_codex_impact_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    681,
+    710
+   ],
+   "summary": "Dispatches a Codex event payload to the appropriate impact-collecting helper based on event type.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:accumulate_patch_impact",
+   "type": "function",
+   "name": "accumulate_patch_impact",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    719,
+    734
+   ],
+   "summary": "Accumulates added/removed line counts and touched file paths from a unified diff patch.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:patch_file_path_from_line",
+   "type": "function",
+   "name": "patch_file_path_from_line",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    736,
+    758
+   ],
+   "summary": "Extracts the file path referenced by a single diff header line.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_patch_path",
+   "type": "function",
+   "name": "normalize_patch_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    760,
+    771
+   ],
+   "summary": "Normalizes a patch file path by stripping diff prefixes and resolving relative segments.",
+   "tags": [
+    "utility",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_app_from_path",
+   "type": "function",
+   "name": "load_codex_app_from_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    773,
+    958
+   ],
+   "summary": "Loads and fully parses a Codex session transcript file into canonical session metadata and activity chunks.",
+   "tags": [
+    "source-adapter",
+    "parser",
+    "data-loading"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_tool_outputs",
+   "type": "function",
+   "name": "resolve_codex_tool_outputs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    960,
+    1003
+   ],
+   "summary": "Resolves pending tool call outputs against the recorded tool result payload for a Codex turn.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_call_group",
+   "type": "function",
+   "name": "resolve_codex_call_group",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1005,
+    1046
+   ],
+   "summary": "Groups related Codex tool calls together with their resolved output into a single call group chunk.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_write_stdin_call",
+   "type": "function",
+   "name": "resolve_write_stdin_call",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1048,
+    1093
+   ],
+   "summary": "Resolves a Codex write_stdin continuation call against its background tool call state.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:record_stdin_event",
+   "type": "function",
+   "name": "record_stdin_event",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1095,
+    1126
+   ],
+   "summary": "Records a stdin continuation event against the pending background tool call it targets.",
+   "tags": [
+    "parser",
+    "state-management",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:emit_codex_call_group",
+   "type": "function",
+   "name": "emit_codex_call_group",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1134,
+    1153
+   ],
+   "summary": "Emits a finalized tool call group chunk with its resolved output and exit code.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_exec_results",
+   "type": "function",
+   "name": "codex_exec_results",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1155,
+    1180
+   ],
+   "summary": "Parses the raw output value of a Codex exec tool call into structured exec results.",
+   "tags": [
+    "parser",
+    "data-model",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_exec_result_from_text",
+   "type": "function",
+   "name": "codex_exec_result_from_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1182,
+    1208
+   ],
+   "summary": "Parses a single exec result block of text into an output/session_id/exit_code structure.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_tool_call_chunk",
+   "type": "function",
+   "name": "codex_tool_call_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1254,
+    1301
+   ],
+   "summary": "Builds a canonical tool-call activity chunk from a resolved Codex tool call and its output.",
+   "tags": [
+    "parser",
+    "data-model",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:output_parts_for_tool_calls",
+   "type": "function",
+   "name": "output_parts_for_tool_calls",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1303,
+    1337
+   ],
+   "summary": "Splits the raw combined output value into per-call output fragments for a group of tool calls.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:pending_tool_calls_from_payload",
+   "type": "function",
+   "name": "pending_tool_calls_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1349,
+    1377
+   ],
+   "summary": "Extracts pending function/tool call requests from a Codex event payload.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:pending_custom_tool_calls_from_payload",
+   "type": "function",
+   "name": "pending_custom_tool_calls_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1379,
+    1415
+   ],
+   "summary": "Extracts pending custom (non-standard) tool call requests from a Codex event payload.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:web_search_call_from_payload",
+   "type": "function",
+   "name": "web_search_call_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1417,
+    1427
+   ],
+   "summary": "Extracts a web-search tool call from a Codex event payload.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_codex_tool_calls",
+   "type": "function",
+   "name": "normalize_codex_tool_calls",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1437,
+    1489
+   ],
+   "summary": "Normalizes a raw Codex tool call name and arguments into the app's canonical tool-call shape.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:is_codex_shell_tool_key",
+   "type": "function",
+   "name": "is_codex_shell_tool_key",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1491,
+    1505
+   ],
+   "summary": "Checks whether a raw tool name refers to Codex's shell execution tool.",
+   "tags": [
+    "utility",
+    "validation",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_shell_args",
+   "type": "function",
+   "name": "normalize_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1507,
+    1528
+   ],
+   "summary": "Normalizes raw shell tool call arguments into a canonical command/cwd structure.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_write_stdin_args",
+   "type": "function",
+   "name": "normalize_write_stdin_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1530,
+    1559
+   ],
+   "summary": "Normalizes raw write_stdin tool call arguments into canonical continuation input.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_apply_patch_args",
+   "type": "function",
+   "name": "normalize_apply_patch_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1561,
+    1578
+   ],
+   "summary": "Normalizes raw apply_patch tool call arguments into a canonical patch structure.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_edit_args",
+   "type": "function",
+   "name": "normalize_edit_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1580,
+    1622
+   ],
+   "summary": "Normalizes raw file-edit tool call arguments (path, old/new content) into canonical form.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_search_args",
+   "type": "function",
+   "name": "normalize_search_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1624,
+    1640
+   ],
+   "summary": "Normalizes raw search tool call arguments into a canonical query structure.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_web_search_args",
+   "type": "function",
+   "name": "normalize_web_search_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1642,
+    1677
+   ],
+   "summary": "Normalizes raw web-search tool call arguments into a canonical query structure.",
+   "tags": [
+    "parser",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_arg_values_from_shell_args",
+   "type": "function",
+   "name": "read_file_arg_values_from_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1685,
+    1730
+   ],
+   "summary": "Reverse-engineers file-read intents (path, offset, limit) from a raw shell command's arguments.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:shell_read_args_to_value",
+   "type": "function",
+   "name": "shell_read_args_to_value",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1732,
+    1754
+   ],
+   "summary": "Converts resolved shell-derived file-read arguments into the canonical tool-call value shape.",
+   "tags": [
+    "parser",
+    "conversion",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:split_shell_read_command_chain",
+   "type": "function",
+   "name": "split_shell_read_command_chain",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1762,
+    1807
+   ],
+   "summary": "Splits a shell command string into a chain of piped sub-commands for individual parsing.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_tokens",
+   "type": "function",
+   "name": "read_file_args_from_tokens",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1819,
+    1838
+   ],
+   "summary": "Dispatches tokenized shell command arguments to the appropriate file-read pattern parser (cat/sed/head/tail/nl).",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_nl_sed_pipeline",
+   "type": "function",
+   "name": "read_file_args_from_nl_sed_pipeline",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1840,
+    1864
+   ],
+   "summary": "Parses a `nl | sed` shell pipeline into a file-read range (offset/limit).",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_path_from_nl",
+   "type": "function",
+   "name": "read_file_path_from_nl",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1866,
+    1892
+   ],
+   "summary": "Extracts the target file path from an `nl` shell command's tokens.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:nl_option_consumes_next",
+   "type": "function",
+   "name": "nl_option_consumes_next",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1894,
+    1911
+   ],
+   "summary": "Determines whether an `nl` command-line flag consumes the following token as its value.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_range_from_pipeline_sed",
+   "type": "function",
+   "name": "read_range_from_pipeline_sed",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1913,
+    1949
+   ],
+   "summary": "Extracts a line range from a `sed` command used as part of a read pipeline.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_cat",
+   "type": "function",
+   "name": "read_file_args_from_cat",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1951,
+    1962
+   ],
+   "summary": "Parses a `cat` shell command's tokens into a whole-file read intent.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_sed",
+   "type": "function",
+   "name": "read_file_args_from_sed",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    1964,
+    2007
+   ],
+   "summary": "Parses a standalone `sed` shell command into a file-read range intent.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_head_tail",
+   "type": "function",
+   "name": "read_file_args_from_head_tail",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2009,
+    2053
+   ],
+   "summary": "Parses a `head`/`tail` shell command into a file-read range intent.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:shell_path_args",
+   "type": "function",
+   "name": "shell_path_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2055,
+    2075
+   ],
+   "summary": "Extracts the positional path arguments from a tokenized shell command, honoring a flag allowlist.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:single_shell_path_arg",
+   "type": "function",
+   "name": "single_shell_path_arg",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2077,
+    2086
+   ],
+   "summary": "Returns the sole path argument from a list if exactly one is present.",
+   "tags": [
+    "utility",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sed_range_to_offset_limit",
+   "type": "function",
+   "name": "sed_range_to_offset_limit",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2088,
+    2106
+   ],
+   "summary": "Converts a `sed` line-range expression into an offset/limit pair.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sed_single_range_to_offset_limit",
+   "type": "function",
+   "name": "sed_single_range_to_offset_limit",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2108,
+    2126
+   ],
+   "summary": "Converts a single `sed` address expression into an offset/limit pair.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_tool_name_key",
+   "type": "function",
+   "name": "normalize_tool_name_key",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2128,
+    2139
+   ],
+   "summary": "Normalizes a raw tool name string into a canonical lookup key.",
+   "tags": [
+    "utility",
+    "normalization",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_search_args_from_shell_args",
+   "type": "function",
+   "name": "rg_search_args_from_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2141,
+    2171
+   ],
+   "summary": "Reverse-engineers a structured search query from a raw `rg` (ripgrep) shell invocation.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:exploration_tool_calls_from_shell_args",
+   "type": "function",
+   "name": "exploration_tool_calls_from_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2177,
+    2230
+   ],
+   "summary": "Dispatches a shell command's arguments to the appropriate exploration tool parser (rg search/rg --files/find).",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:is_exploration_context_probe",
+   "type": "function",
+   "name": "is_exploration_context_probe",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2241,
+    2257
+   ],
+   "summary": "Detects shell commands that are lightweight directory/context probes rather than meaningful file operations.",
+   "tags": [
+    "parser",
+    "validation",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_files_args_from_shell_args",
+   "type": "function",
+   "name": "rg_files_args_from_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2259,
+    2293
+   ],
+   "summary": "Parses an `rg --files` shell invocation into a structured directory-listing tool call.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:find_args_from_shell_args",
+   "type": "function",
+   "name": "find_args_from_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2295,
+    2339
+   ],
+   "summary": "Parses a `find` shell invocation into a structured directory-listing tool call.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:option_values",
+   "type": "function",
+   "name": "option_values",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2341,
+    2353
+   ],
+   "summary": "Extracts the values following given short/long option flags from a tokenized command.",
+   "tags": [
+    "utility",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:has_only_output_limiter_pipeline",
+   "type": "function",
+   "name": "has_only_output_limiter_pipeline",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2355,
+    2368
+   ],
+   "summary": "Checks whether a shell pipeline consists only of output-limiting commands (head/tail/wc) with no semantic effect.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:shell_tokens",
+   "type": "function",
+   "name": "shell_tokens",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2370,
+    2418
+   ],
+   "summary": "Tokenizes a raw shell command string, honoring quoting rules, into a list of argument tokens.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_pattern_from_tokens",
+   "type": "function",
+   "name": "rg_pattern_from_tokens",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2436,
+    2465
+   ],
+   "summary": "Extracts the search pattern argument from tokenized `rg` command-line arguments.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_flag_consumes_next",
+   "type": "function",
+   "name": "rg_flag_consumes_next",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2467,
+    2486
+   ],
+   "summary": "Determines whether an `rg` command-line flag consumes the following token as its value.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:first_apply_patch_file_path",
+   "type": "function",
+   "name": "first_apply_patch_file_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2488,
+    2497
+   ],
+   "summary": "Returns the first file path referenced by an apply_patch payload.",
+   "tags": [
+    "utility",
+    "parser",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:parse_rg_output_matches",
+   "type": "function",
+   "name": "parse_rg_output_matches",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2499,
+    2513
+   ],
+   "summary": "Parses raw `rg` search output text into structured match records.",
+   "tags": [
+    "parser",
+    "shell-parsing",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:user_message_from_payload",
+   "type": "function",
+   "name": "user_message_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2515,
+    2524
+   ],
+   "summary": "Extracts the user-authored message text from a Codex event payload.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:session_title_from_payload",
+   "type": "function",
+   "name": "session_title_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2526,
+    2540
+   ],
+   "summary": "Extracts a session title string from a Codex event payload.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:content_text_from_payload",
+   "type": "function",
+   "name": "content_text_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2542,
+    2559
+   ],
+   "summary": "Extracts plain text content from a Codex message content payload.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:reasoning_text_from_payload",
+   "type": "function",
+   "name": "reasoning_text_from_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2568,
+    2584
+   ],
+   "summary": "Extracts model reasoning/thinking text from a Codex event payload.",
+   "tags": [
+    "parser",
+    "utility",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_session_path",
+   "type": "function",
+   "name": "resolve_codex_session_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2596,
+    2667
+   ],
+   "summary": "Resolves the on-disk file path for a Codex session from its cached file_stem, checking known session directories.",
+   "tags": [
+    "source-adapter",
+    "filesystem",
+    "codex-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_sessions_dirs",
+   "type": "function",
+   "name": "codex_sessions_dirs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2669,
+    2682
+   ],
+   "summary": "Returns the list of known root directories where Codex CLI stores session transcripts.",
+   "tags": [
+    "source-adapter",
+    "configuration",
+    "codex-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_sessions_dir_candidates",
+   "type": "function",
+   "name": "codex_sessions_dir_candidates",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "lineRange": [
+    2684,
+    2722
+   ],
+   "summary": "Builds candidate Codex session directory paths rooted at a given home directory.",
+   "tags": [
+    "utility",
+    "filesystem",
+    "codex-source"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:CodexTranscriptLocator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:CodexTranscriptLocator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:list_codex_app_sessions_paginated",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:list_codex_app_sessions_paginated",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:list_codex_app_recent_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:list_codex_app_recent_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_app_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_app_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sync_codex_app_cache",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:discover_codex_app_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:collect_codex_session_files",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_session_index",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_source_fingerprint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_session_index_title_for_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_thread_id_from_file_stem",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:is_uuid_like",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:parse_codex_session_meta",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:session_meta_to_cache_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:parent_thread_id_from_session_meta_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_parent_thread_id_candidate",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_transcript_for_thread_id_near_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_transcript_for_thread_id_near_path",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:collect_codex_impact_from_patch_apply_end",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:collect_codex_impact_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:accumulate_patch_impact",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:patch_file_path_from_line",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_patch_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_app_from_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:load_codex_app_from_path",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_tool_outputs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_call_group",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_write_stdin_call",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:record_stdin_event",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:emit_codex_call_group",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_exec_results",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_exec_result_from_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_tool_call_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:output_parts_for_tool_calls",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:pending_tool_calls_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:pending_custom_tool_calls_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:web_search_call_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_codex_tool_calls",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_codex_tool_calls",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:is_codex_shell_tool_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_write_stdin_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_apply_patch_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_edit_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_search_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_web_search_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_arg_values_from_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:shell_read_args_to_value",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:split_shell_read_command_chain",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_tokens",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_nl_sed_pipeline",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_path_from_nl",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:nl_option_consumes_next",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_range_from_pipeline_sed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_cat",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_sed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:read_file_args_from_head_tail",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:shell_path_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:single_shell_path_arg",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sed_range_to_offset_limit",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sed_single_range_to_offset_limit",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:normalize_tool_name_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_search_args_from_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:exploration_tool_calls_from_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:is_exploration_context_probe",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_files_args_from_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:find_args_from_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:option_values",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:has_only_output_limiter_pipeline",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:shell_tokens",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_pattern_from_tokens",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:rg_flag_consumes_next",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:first_apply_patch_file_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:parse_rg_output_matches",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:user_message_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:session_title_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:content_text_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:reasoning_text_from_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:resolve_codex_session_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_sessions_dirs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:codex_sessions_dir_candidates",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/codex/app.rs:sync_codex_app_cache",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:load_activity_chunks_for_session",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:imported_history_loader",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  }
+ ]
+}

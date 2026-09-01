@@ -1,0 +1,2004 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "summary": "Module root for the Cursor IDE session source, defining the cursoride- session id prefix and wiring together the db, disk_reads, history, helpers, io, models, and summaries submodules.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "source-adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "type": "file",
+   "name": "helpers.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "summary": "Conversion helpers that turn raw Cursor IDE bubble/composer data into canonical activity chunks: text cleanup, timestamp normalization, tool-call/result normalization, and subagent/question-answer linking.",
+   "tags": [
+    "source-adapter",
+    "parser",
+    "normalization"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:is_listable_cursor_session",
+   "type": "function",
+   "name": "is_listable_cursor_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    32,
+    63
+   ],
+   "summary": "Determines whether a cached Cursor IDE session row should be shown as a top-level listable session (vs. a hidden child/subagent session).",
+   "tags": [
+    "filtering",
+    "validation",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cache_row_to_session_row",
+   "type": "function",
+   "name": "cache_row_to_session_row",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    71,
+    116
+   ],
+   "summary": "Converts a cached database row into the CursorIdeSessionRow shape returned by the session list API.",
+   "tags": [
+    "conversion",
+    "data-model",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_touched_files_from_states",
+   "type": "function",
+   "name": "cursor_touched_files_from_states",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    120,
+    133
+   ],
+   "summary": "Extracts the list of files touched by a composer from its original-file-state snapshots.",
+   "tags": [
+    "parser",
+    "utility",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_file_uri_to_path",
+   "type": "function",
+   "name": "cursor_file_uri_to_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    135,
+    140
+   ],
+   "summary": "Converts a Cursor file:// URI into a plain filesystem path.",
+   "tags": [
+    "utility",
+    "parser",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_workspace_metadata_from_parts",
+   "type": "function",
+   "name": "cursor_workspace_metadata_from_parts",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    146,
+    175
+   ],
+   "summary": "Builds workspace metadata (repo path, branch) from tracked-git-repo and workspace-identifier fragments.",
+   "tags": [
+    "conversion",
+    "data-model",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:repo_name_from_path",
+   "type": "function",
+   "name": "repo_name_from_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    177,
+    184
+   ],
+   "summary": "Derives a short repository display name from a filesystem path.",
+   "tags": [
+    "utility",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:epoch_ms_to_iso",
+   "type": "function",
+   "name": "epoch_ms_to_iso",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    190,
+    194
+   ],
+   "summary": "Converts an epoch-milliseconds timestamp into an ISO-8601 string.",
+   "tags": [
+    "utility",
+    "date-parsing",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:composer_source_updated_at",
+   "type": "function",
+   "name": "composer_source_updated_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    196,
+    226
+   ],
+   "summary": "Computes the effective 'source updated at' timestamp for a composer, combining metadata and bubble order.",
+   "tags": [
+    "utility",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:parse_iso_to_epoch_ms",
+   "type": "function",
+   "name": "parse_iso_to_epoch_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    228,
+    232
+   ],
+   "summary": "Parses an ISO-8601 timestamp string into epoch milliseconds.",
+   "tags": [
+    "utility",
+    "date-parsing",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:duration_between_iso_ms",
+   "type": "function",
+   "name": "duration_between_iso_ms",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    234,
+    238
+   ],
+   "summary": "Computes the millisecond duration between two ISO-8601 timestamps.",
+   "tags": [
+    "utility",
+    "date-parsing",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:preview_text",
+   "type": "function",
+   "name": "preview_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    240,
+    244
+   ],
+   "summary": "Truncates text to a short preview suitable for list display.",
+   "tags": [
+    "utility",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_created_at",
+   "type": "function",
+   "name": "normalize_created_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    250,
+    255
+   ],
+   "summary": "Normalizes a raw created-at value (numeric or string) into an ISO-8601 timestamp.",
+   "tags": [
+    "utility",
+    "normalization",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:enforce_monotonic_created_at",
+   "type": "function",
+   "name": "enforce_monotonic_created_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    265,
+    278
+   ],
+   "summary": "Adjusts a sequence of activity chunk timestamps to be strictly monotonically increasing.",
+   "tags": [
+    "normalization",
+    "utility",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:fallback_turn_created_at",
+   "type": "function",
+   "name": "fallback_turn_created_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    284,
+    301
+   ],
+   "summary": "Computes a fallback created-at timestamp for a turn when explicit bubble timestamps are missing.",
+   "tags": [
+    "utility",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_fallback_user_chunk",
+   "type": "function",
+   "name": "build_fallback_user_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    303,
+    316
+   ],
+   "summary": "Builds a placeholder user-message activity chunk when the original bubble content is unavailable.",
+   "tags": [
+    "parser",
+    "data-model",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_unloaded_turn_placeholder_chunk",
+   "type": "function",
+   "name": "build_unloaded_turn_placeholder_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    318,
+    397
+   ],
+   "summary": "Builds a placeholder activity chunk representing a turn whose full content has not yet been loaded.",
+   "tags": [
+    "parser",
+    "data-model",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:bubbles_to_chunks",
+   "type": "function",
+   "name": "bubbles_to_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    403,
+    448
+   ],
+   "summary": "Converts an ordered list of Cursor IDE bubbles into canonical activity chunks for a session.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_subagent_prompt_bubble_to_chunk",
+   "type": "function",
+   "name": "cursor_subagent_prompt_bubble_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    450,
+    477
+   ],
+   "summary": "Converts a subagent prompt bubble into a canonical activity chunk.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:user_bubble_to_chunk",
+   "type": "function",
+   "name": "user_bubble_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    479,
+    494
+   ],
+   "summary": "Converts a user-message bubble into a canonical user-message activity chunk.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:assistant_text_bubble_to_chunk",
+   "type": "function",
+   "name": "assistant_text_bubble_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    496,
+    515
+   ],
+   "summary": "Converts an assistant text-response bubble into a canonical activity chunk.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:assistant_tool_bubble_to_chunk",
+   "type": "function",
+   "name": "assistant_tool_bubble_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    517,
+    549
+   ],
+   "summary": "Converts an assistant tool-use bubble into a canonical tool-call activity chunk.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_args_for_canonical",
+   "type": "function",
+   "name": "normalize_args_for_canonical",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    560,
+    596
+   ],
+   "summary": "Normalizes raw Cursor tool-call arguments into the app's canonical tool-call argument shape.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_result_for_canonical",
+   "type": "function",
+   "name": "normalize_result_for_canonical",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    598,
+    659
+   ],
+   "summary": "Normalizes a raw Cursor tool-call result into the app's canonical tool-result shape.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:link_subagent_session",
+   "type": "function",
+   "name": "link_subagent_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    667,
+    691
+   ],
+   "summary": "Links a subagent tool call to the child session it spawned.",
+   "tags": [
+    "parser",
+    "state-management",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:resolve_ask_question_answers",
+   "type": "function",
+   "name": "resolve_ask_question_answers",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    695,
+    753
+   ],
+   "summary": "Resolves a Cursor 'ask question' tool call against its recorded user answer.",
+   "tags": [
+    "parser",
+    "event-handler",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_cursor_edit_diff",
+   "type": "function",
+   "name": "build_cursor_edit_diff",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    761,
+    782
+   ],
+   "summary": "Builds a unified-diff-like structure from a Cursor edit tool call's old and new content.",
+   "tags": [
+    "parser",
+    "conversion",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:move_string_field",
+   "type": "function",
+   "name": "move_string_field",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    784,
+    793
+   ],
+   "summary": "Moves a string field from one key to another within a JSON object, if present.",
+   "tags": [
+    "utility",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_tool_name_to_canonical",
+   "type": "function",
+   "name": "cursor_tool_name_to_canonical",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    799,
+    815
+   ],
+   "summary": "Maps a raw Cursor tool name to the app's canonical tool-name enum/string.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:parse_inner_json",
+   "type": "function",
+   "name": "parse_inner_json",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    820,
+    828
+   ],
+   "summary": "Parses a JSON-encoded string value nested inside another JSON structure.",
+   "tags": [
+    "utility",
+    "parser",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:merge_cursor_additional_data",
+   "type": "function",
+   "name": "merge_cursor_additional_data",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    830,
+    845
+   ],
+   "summary": "Merges Cursor's 'additionalData' payload fields into a normalized tool result.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:enrich_tool_result",
+   "type": "function",
+   "name": "enrich_tool_result",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "lineRange": [
+    850,
+    871
+   ],
+   "summary": "Enriches a normalized tool result payload using data from its originating tool-former-data record.",
+   "tags": [
+    "parser",
+    "normalization",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "type": "file",
+   "name": "history.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "summary": "Public history-loading API for the Cursor IDE source: paginated session listing plus full-refresh, initial-window, and turn-window loading strategies used for progressive session detail loading.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "api-handler"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeSessionRow",
+   "type": "class",
+   "name": "CursorIdeSessionRow",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    98,
+    120
+   ],
+   "summary": "Row shape for a single Cursor IDE session as returned in a paginated session list.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeSessionPage",
+   "type": "class",
+   "name": "CursorIdeSessionPage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    125,
+    131
+   ],
+   "summary": "Paginated page of Cursor IDE session rows with a next-page cursor.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeInitialWindow",
+   "type": "class",
+   "name": "CursorIdeInitialWindow",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    135,
+    144
+   ],
+   "summary": "Initial slice of a Cursor IDE session's activity used for fast first paint before the full history loads.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeFullRefresh",
+   "type": "class",
+   "name": "CursorIdeFullRefresh",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    148,
+    151
+   ],
+   "summary": "Full recomputed activity history and metadata for a Cursor IDE session.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeTurnWindow",
+   "type": "class",
+   "name": "CursorIdeTurnWindow",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    155,
+    160
+   ],
+   "summary": "A single conversation turn's activity chunks loaded on demand for a Cursor IDE session.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:list_cursor_ide_sessions_paginated",
+   "type": "function",
+   "name": "list_cursor_ide_sessions_paginated",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    172,
+    190
+   ],
+   "summary": "Lists cached Cursor IDE sessions in a paginated page for the sidebar.",
+   "tags": [
+    "source-adapter",
+    "pagination",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_history_for_session",
+   "type": "function",
+   "name": "load_history_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    203,
+    227
+   ],
+   "summary": "Loads the full canonical activity history for a Cursor IDE session id.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_full_refresh_for_session",
+   "type": "function",
+   "name": "load_full_refresh_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    229,
+    295
+   ],
+   "summary": "Performs a full refresh load of a Cursor IDE session's metadata and activity from source.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_initial_window_for_session",
+   "type": "function",
+   "name": "load_initial_window_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    297,
+    485
+   ],
+   "summary": "Loads an initial window of recent activity for a Cursor IDE session to enable fast first paint.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "pagination"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_turn_window_for_session",
+   "type": "function",
+   "name": "load_turn_window_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "lineRange": [
+    487,
+    546
+   ],
+   "summary": "Loads the activity chunks for a single conversation turn of a Cursor IDE session on demand.",
+   "tags": [
+    "source-adapter",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "type": "file",
+   "name": "io.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "summary": "Low-level SQLite access for Cursor IDE's global state.vscdb and workspace conversation-index databases: opening connections and loading raw bubble/composer/content-blob rows.",
+   "tags": [
+    "source-adapter",
+    "database",
+    "filesystem"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:open_cursor_db",
+   "type": "function",
+   "name": "open_cursor_db",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    22,
+    29
+   ],
+   "summary": "Opens Cursor IDE's global state.vscdb SQLite database in read-only mode.",
+   "tags": [
+    "database",
+    "filesystem",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:cursor_global_storage_dir",
+   "type": "function",
+   "name": "cursor_global_storage_dir",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    33,
+    60
+   ],
+   "summary": "Resolves the OS-specific Cursor IDE global storage directory path.",
+   "tags": [
+    "filesystem",
+    "configuration",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:open_cursor_conversation_index_db",
+   "type": "function",
+   "name": "open_cursor_conversation_index_db",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    77,
+    84
+   ],
+   "summary": "Opens a workspace's Cursor conversation-index SQLite database in read-only mode.",
+   "tags": [
+    "database",
+    "filesystem",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_complete_bubble_order",
+   "type": "function",
+   "name": "load_complete_bubble_order",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    86,
+    167
+   ],
+   "summary": "Loads the complete ordered list of bubble ids for a composer, merging header order with any missing bubbles.",
+   "tags": [
+    "database",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_composer_for_order",
+   "type": "function",
+   "name": "load_composer_for_order",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    169,
+    189
+   ],
+   "summary": "Loads a composer's raw metadata row needed to resolve its bubble order.",
+   "tags": [
+    "database",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_bubbles_by_id",
+   "type": "function",
+   "name": "load_bubbles_by_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    191,
+    259
+   ],
+   "summary": "Batch-loads raw bubble rows by id from the Cursor IDE database for a given bubble order.",
+   "tags": [
+    "database",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_content_blob",
+   "type": "function",
+   "name": "load_content_blob",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "lineRange": [
+    265,
+    276
+   ],
+   "summary": "Loads a single large content blob by id from the Cursor IDE database.",
+   "tags": [
+    "database",
+    "data-loading",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "type": "file",
+   "name": "models.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "summary": "Serde data-model structs for raw Cursor IDE database rows (bubbles, composers, tool-former data, git/workspace metadata) plus a small non-cryptographic StableFingerprint hash builder used for change detection.",
+   "tags": [
+    "data-model",
+    "type-definition",
+    "cursor-ide-source"
+   ],
+   "complexity": "moderate",
+   "languageNotes": "StableFingerprint implements a simple streaming hasher (write_str/write_i64/write_usize/write_bytes/finish_hex) to produce a stable hex fingerprint independent of Rust's randomized default hasher."
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:OrderedBubble",
+   "type": "class",
+   "name": "OrderedBubble",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    15,
+    20
+   ],
+   "summary": "A bubble id paired with its type and raw JSON payload, in conversation order.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawBubble",
+   "type": "class",
+   "name": "RawBubble",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    24,
+    32
+   ],
+   "summary": "Raw deserialized shape of a single Cursor IDE conversation bubble row.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawToolFormerData",
+   "type": "class",
+   "name": "RawToolFormerData",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    36,
+    48
+   ],
+   "summary": "Raw deserialized tool invocation metadata (name, args, status, result) attached to a bubble.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawComposerHeader",
+   "type": "class",
+   "name": "RawComposerHeader",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    52,
+    56
+   ],
+   "summary": "Minimal header shape used to read a composer's bubble id/type without the full payload.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawComposerForOrder",
+   "type": "class",
+   "name": "RawComposerForOrder",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    60,
+    68
+   ],
+   "summary": "Composer fields needed to reconstruct bubble ordering and workspace/git metadata.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawCursorOriginalFileState",
+   "type": "class",
+   "name": "RawCursorOriginalFileState",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    72,
+    75
+   ],
+   "summary": "Raw snapshot of a file's state before an edit, used to compute touched files.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawCursorSubagentInfo",
+   "type": "class",
+   "name": "RawCursorSubagentInfo",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    79,
+    83
+   ],
+   "summary": "Raw metadata identifying a subagent invocation and its parent composer.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorComposerContext",
+   "type": "class",
+   "name": "CursorComposerContext",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    86,
+    88
+   ],
+   "summary": "Parsed composer context wrapping optional subagent info.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawTrackedGitRepo",
+   "type": "class",
+   "name": "RawTrackedGitRepo",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    100,
+    103
+   ],
+   "summary": "Raw tracked git repository entry (path and branches) from composer metadata.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawTrackedGitBranch",
+   "type": "class",
+   "name": "RawTrackedGitBranch",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    107,
+    109
+   ],
+   "summary": "Raw tracked git branch name entry.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawWorkspaceIdentifier",
+   "type": "class",
+   "name": "RawWorkspaceIdentifier",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    113,
+    115
+   ],
+   "summary": "Raw workspace identifier wrapping a URI.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawWorkspaceUri",
+   "type": "class",
+   "name": "RawWorkspaceUri",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    119,
+    122
+   ],
+   "summary": "Raw workspace URI with filesystem path and generic path fields.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorWorkspaceMetadata",
+   "type": "class",
+   "name": "CursorWorkspaceMetadata",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    125,
+    128
+   ],
+   "summary": "Resolved workspace metadata (repo path, branch) derived from raw git/workspace fragments.",
+   "tags": [
+    "data-model",
+    "cursor-ide-source",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorIdeTurnSummary",
+   "type": "class",
+   "name": "CursorIdeTurnSummary",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    136,
+    146
+   ],
+   "summary": "Cached summary of a single conversation turn (span, timing) used to avoid reprocessing.",
+   "tags": [
+    "data-model",
+    "caching",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:StableFingerprint",
+   "type": "class",
+   "name": "StableFingerprint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "lineRange": [
+    149,
+    151
+   ],
+   "summary": "Minimal streaming hash builder producing a stable hex fingerprint for change-detection signatures.",
+   "tags": [
+    "utility",
+    "hashing",
+    "cursor-ide-source"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/db.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/disk_reads.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/summaries.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:is_listable_cursor_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:is_listable_cursor_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cache_row_to_session_row",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cache_row_to_session_row",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_touched_files_from_states",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_touched_files_from_states",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_file_uri_to_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_workspace_metadata_from_parts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_workspace_metadata_from_parts",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:repo_name_from_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:repo_name_from_path",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:epoch_ms_to_iso",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:epoch_ms_to_iso",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:composer_source_updated_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:composer_source_updated_at",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:parse_iso_to_epoch_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:parse_iso_to_epoch_ms",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:duration_between_iso_ms",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:duration_between_iso_ms",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:preview_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:preview_text",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_created_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_created_at",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:enforce_monotonic_created_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:enforce_monotonic_created_at",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:fallback_turn_created_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:fallback_turn_created_at",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_fallback_user_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_fallback_user_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_unloaded_turn_placeholder_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_unloaded_turn_placeholder_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:bubbles_to_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:bubbles_to_chunks",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_subagent_prompt_bubble_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_subagent_prompt_bubble_to_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:user_bubble_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:user_bubble_to_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:assistant_text_bubble_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:assistant_text_bubble_to_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:assistant_tool_bubble_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:assistant_tool_bubble_to_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_args_for_canonical",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:normalize_result_for_canonical",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:link_subagent_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:resolve_ask_question_answers",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:build_cursor_edit_diff",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:move_string_field",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_tool_name_to_canonical",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:cursor_tool_name_to_canonical",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:parse_inner_json",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:parse_inner_json",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:merge_cursor_additional_data",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/helpers.rs:enrich_tool_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeSessionRow",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeSessionRow",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeSessionPage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeSessionPage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeInitialWindow",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeInitialWindow",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeFullRefresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeFullRefresh",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeTurnWindow",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:CursorIdeTurnWindow",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:list_cursor_ide_sessions_paginated",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:list_cursor_ide_sessions_paginated",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_history_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_history_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_full_refresh_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_full_refresh_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_initial_window_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_initial_window_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_turn_window_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/history.rs:load_turn_window_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:open_cursor_db",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:open_cursor_db",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:cursor_global_storage_dir",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:open_cursor_conversation_index_db",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:open_cursor_conversation_index_db",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_complete_bubble_order",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_complete_bubble_order",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_composer_for_order",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_composer_for_order",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_bubbles_by_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_bubbles_by_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_content_blob",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/io.rs:load_content_blob",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:OrderedBubble",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:OrderedBubble",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawBubble",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawBubble",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawToolFormerData",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawToolFormerData",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawComposerHeader",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawComposerHeader",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawComposerForOrder",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawComposerForOrder",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawCursorOriginalFileState",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawCursorOriginalFileState",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawCursorSubagentInfo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawCursorSubagentInfo",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorComposerContext",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorComposerContext",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawTrackedGitRepo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawTrackedGitRepo",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawTrackedGitBranch",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawTrackedGitBranch",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawWorkspaceIdentifier",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawWorkspaceIdentifier",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawWorkspaceUri",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:RawWorkspaceUri",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorWorkspaceMetadata",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorWorkspaceMetadata",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorIdeTurnSummary",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:CursorIdeTurnSummary",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:StableFingerprint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/cursor_ide/models.rs:StableFingerprint",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

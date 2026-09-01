@@ -1,0 +1,156 @@
+{
+  "nodes": [
+    {
+      "id": "config:.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": ".env.example",
+      "summary": "Template of environment variables for local development, covering API base URLs, Supabase auth configuration, Tauri code-signing keys, and OpenAI/Azure OpenAI API keys.",
+      "tags": ["configuration", "environment-variables", "secrets", "tauri", "api-keys"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.unimportedrc.json",
+      "type": "config",
+      "name": ".unimportedrc.json",
+      "filePath": ".unimportedrc.json",
+      "summary": "Configuration for the `unimported` tool defining the app's entry point (src/index.tsx), TS/JS extensions, ignore patterns, and path aliases used to detect unused files.",
+      "tags": ["configuration", "build-system", "dead-code-detection", "typescript"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "Agent skill-routing guide for Codex/orgii agents, mapping task scenarios (architecture, UI, cross-layer changes) to the audit/methodology skill each should invoke before declaring work done.",
+      "tags": ["documentation", "agent-workflow", "development", "routing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "CLAUDE.md",
+      "summary": "Claude Code-facing mirror of the agent skill-routing guide, mapping task scenarios to the audit/methodology skill agents should invoke before finishing work in this repo.",
+      "tags": ["documentation", "agent-workflow", "development", "routing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:CODE_OF_CONDUCT.md",
+      "type": "document",
+      "name": "CODE_OF_CONDUCT.md",
+      "filePath": "CODE_OF_CONDUCT.md",
+      "summary": "Project code of conduct outlining expected and unacceptable behavior for contributors and how to report violations.",
+      "tags": ["documentation", "code-of-conduct", "community", "governance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CONTRIBUTING.md",
+      "type": "document",
+      "name": "CONTRIBUTING.md",
+      "filePath": "CONTRIBUTING.md",
+      "summary": "Contributor guide covering local dev setup, required checks (lint/typecheck/tests/cargo), project directory map, coding expectations, PR checklist, and CLA/security/license policies.",
+      "tags": ["documentation", "development", "contributing", "guidelines"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Project README introducing ORG-II, an open-source Rust/Tauri agent IDE with agent trajectory replay, cross-session memory, and AI blame features; lists supported agents, downloads, and build-from-source instructions.",
+      "tags": ["documentation", "entry-point", "overview", "tauri"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:SECURITY.md",
+      "type": "document",
+      "name": "SECURITY.md",
+      "filePath": "SECURITY.md",
+      "summary": "Security policy defining supported versions, the vulnerability reporting process, response SLA, out-of-scope items, and disclosure policy.",
+      "tags": ["documentation", "security", "governance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Root npm package manifest for the ORGII Tauri desktop app, defining dependencies, devDependencies, and the full set of dev/build/test/lint/cargo scripts used across the frontend and Rust backend.",
+      "tags": ["configuration", "build-system", "npm", "tauri", "scripts"],
+      "complexity": "complex",
+      "languageNotes": "Scripts orchestrate a dual-stack build: webpack/esbuild for the React frontend and cargo for the Rust/Tauri backend, with dedicated cargo:test targets per Rust module (agent_core, event_store, work_station, etc.)."
+    },
+    {
+      "id": "config:pnpm-workspace.yaml",
+      "type": "config",
+      "name": "pnpm-workspace.yaml",
+      "filePath": "pnpm-workspace.yaml",
+      "summary": "pnpm workspace configuration declaring the single root package and allow-listing native/postinstall build scripts (e.g. esbuild, @swc/core, node-sass) for pnpm's build approval gate.",
+      "tags": ["configuration", "package-manager", "monorepo", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "tsconfig.json",
+      "summary": "TypeScript compiler configuration for the React frontend, defining path aliases (@/, @src/, @api/, @common/, @page/, @assets/), strict type checking, ES2020/ESNext module settings, and src/**/* as the compiled scope.",
+      "tags": ["configuration", "typescript", "build-system", "path-aliases"],
+      "complexity": "moderate",
+      "languageNotes": "Type checking is offloaded to the IDE for build performance; the actual webpack build uses esbuild-loader or ts-loader with transpileOnly instead of tsc."
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:package.json",
+      "target": "file:src/index.tsx",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.unimportedrc.json",
+      "target": "file:src/index.tsx",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:src/index.tsx",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:src/index.tsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CONTRIBUTING.md",
+      "target": "document:SECURITY.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CONTRIBUTING.md",
+      "target": "document:CODE_OF_CONDUCT.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "document:CLAUDE.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

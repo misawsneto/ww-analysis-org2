@@ -1,0 +1,1433 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "type": "file",
+      "name": "app_menu.rs",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "summary": "Builds and manages the native macOS-style application menu bar (App/File/Edit/View/Window/Help) for the Tauri app, including a persisted File > Open Recent submenu and native quit-confirmation menu event wiring.",
+      "tags": [
+        "menu",
+        "macos",
+        "tauri-command",
+        "state-management",
+        "ui"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses tauri::menu builder APIs with process-global Mutex/AtomicBool state for the recent-paths list and quit-confirmation flag."
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:create_app_menu",
+      "type": "function",
+      "name": "create_app_menu",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        33,
+        278
+      ],
+      "summary": "Constructs the full native menu bar (App/File/Edit/View/Window/Help submenus), including the File > Open Recent submenu, and returns it for attachment to the Tauri app.",
+      "tags": [
+        "menu",
+        "tauri",
+        "macos"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:create_open_recent_submenu",
+      "type": "function",
+      "name": "create_open_recent_submenu",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        281,
+        312
+      ],
+      "summary": "Builds the Open Recent submenu from the cached recent-paths list, capping the entries at MAX_RECENT_ITEMS.",
+      "tags": [
+        "menu",
+        "recent-files"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:save_recent_paths_to_disk",
+      "type": "function",
+      "name": "save_recent_paths_to_disk",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        323,
+        341
+      ],
+      "summary": "Persists the in-memory recent-paths list to recent_paths.json in the Tauri app data directory.",
+      "tags": [
+        "persistence",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:load_recent_paths_from_disk",
+      "type": "function",
+      "name": "load_recent_paths_from_disk",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        345,
+        400
+      ],
+      "summary": "Reads and deserializes recent_paths.json from the app data directory into the in-memory recent-paths list at startup.",
+      "tags": [
+        "persistence",
+        "file-io",
+        "startup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:initialize_recent_paths",
+      "type": "function",
+      "name": "initialize_recent_paths",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        410,
+        429
+      ],
+      "summary": "Loads persisted recent paths from disk and populates the global RECENT_PATHS state at app startup.",
+      "tags": [
+        "startup",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:add_to_recent_menu",
+      "type": "function",
+      "name": "add_to_recent_menu",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        432,
+        447
+      ],
+      "summary": "Adds a path to the front of the recent-paths list, deduplicating and truncating to MAX_RECENT_ITEMS, then persists and rebuilds the menu.",
+      "tags": [
+        "state-management",
+        "menu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:get_recent_paths",
+      "type": "function",
+      "name": "get_recent_paths",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        450,
+        452
+      ],
+      "summary": "Returns a snapshot of the current recent-paths list.",
+      "tags": [
+        "accessor",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:clear_recent_menu",
+      "type": "function",
+      "name": "clear_recent_menu",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        455,
+        458
+      ],
+      "summary": "Clears the recent-paths list and persists the empty state to disk.",
+      "tags": [
+        "state-management",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:setup_menu_events",
+      "type": "function",
+      "name": "setup_menu_events",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        488,
+        620
+      ],
+      "summary": "Registers the menu-event listener that dispatches native menu item clicks (recent-file open, quit, quit-confirmation) to app-level actions and window events.",
+      "tags": [
+        "event-handler",
+        "menu",
+        "tauri"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:rebuild_menu",
+      "type": "function",
+      "name": "rebuild_menu",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        623,
+        627
+      ],
+      "summary": "Recreates and re-attaches the application menu bar, used after the recent-files list changes.",
+      "tags": [
+        "menu",
+        "tauri"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_add_recent",
+      "type": "function",
+      "name": "menu_add_recent",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        635,
+        638
+      ],
+      "summary": "Tauri command wrapper around add_to_recent_menu for the frontend to register a newly opened path.",
+      "tags": [
+        "tauri-command",
+        "menu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_get_recent",
+      "type": "function",
+      "name": "menu_get_recent",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        642,
+        644
+      ],
+      "summary": "Tauri command exposing the current recent-paths list to the frontend.",
+      "tags": [
+        "tauri-command",
+        "menu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_clear_recent",
+      "type": "function",
+      "name": "menu_clear_recent",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        648,
+        651
+      ],
+      "summary": "Tauri command exposing clear_recent_menu to the frontend.",
+      "tags": [
+        "tauri-command",
+        "menu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:confirm_quit_app",
+      "type": "function",
+      "name": "confirm_quit_app",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        654,
+        656
+      ],
+      "summary": "Tauri command invoked when the user confirms the native quit-confirmation dialog, actually quitting the app.",
+      "tags": [
+        "tauri-command",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/app_menu.rs:cancel_quit_confirmation",
+      "type": "function",
+      "name": "cancel_quit_confirmation",
+      "filePath": "src-tauri/crates/system-services/src/app_menu.rs",
+      "lineRange": [
+        659,
+        661
+      ],
+      "summary": "Tauri command invoked when the user cancels the native quit-confirmation dialog, resetting the confirmation state.",
+      "tags": [
+        "tauri-command",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "type": "file",
+      "name": "dependencies.rs",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "summary": "Probes the host system for developer toolchain dependencies (git, node, python, etc.), caching detection results to disk with a TTL to avoid repeated slow probes.",
+      "tags": [
+        "system-probe",
+        "caching",
+        "toolchain-detection",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:lookup_install_hint",
+      "type": "function",
+      "name": "lookup_install_hint",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        124,
+        138
+      ],
+      "summary": "Looks up a human-readable install hint/command for a missing binary dependency by name.",
+      "tags": [
+        "lookup",
+        "toolchain-detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:parse_version",
+      "type": "function",
+      "name": "parse_version",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        542,
+        577
+      ],
+      "summary": "Extracts and normalizes a semantic-version-like string from raw CLI version output.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:probe_one",
+      "type": "function",
+      "name": "probe_one",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        579,
+        652
+      ],
+      "summary": "Runs a single dependency probe (executing the binary's version command) and returns its DependencyStatus, including timing.",
+      "tags": [
+        "system-probe",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:save_cache",
+      "type": "function",
+      "name": "save_cache",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        689,
+        702
+      ],
+      "summary": "Writes the probed dependency statuses and probe duration to a local JSON cache file.",
+      "tags": [
+        "caching",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:load_cache",
+      "type": "function",
+      "name": "load_cache",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        704,
+        760
+      ],
+      "summary": "Loads and validates the on-disk dependency cache, returning None if missing, malformed, or expired.",
+      "tags": [
+        "caching",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:is_binary_available",
+      "type": "function",
+      "name": "is_binary_available",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        775,
+        807
+      ],
+      "summary": "Checks whether a given binary is resolvable on PATH (or common install locations), used for cheap presence checks.",
+      "tags": [
+        "toolchain-detection",
+        "system-probe"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:detect_git_dependency",
+      "type": "function",
+      "name": "detect_git_dependency",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        814,
+        826
+      ],
+      "summary": "Probes specifically for git and returns its GitDependencyStatus, used before git-dependent workspace operations.",
+      "tags": [
+        "tauri-command",
+        "system-probe",
+        "async"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:detect_system_dependencies",
+      "type": "function",
+      "name": "detect_system_dependencies",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        833,
+        890
+      ],
+      "summary": "Runs all configured dependency probes concurrently and returns the aggregated SystemDependencies, refreshing the cache.",
+      "tags": [
+        "tauri-command",
+        "system-probe",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dependencies.rs:get_cached_dependencies",
+      "type": "function",
+      "name": "get_cached_dependencies",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        894,
+        899
+      ],
+      "summary": "Returns the cached dependency-detection results if present and not expired, avoiding a fresh probe.",
+      "tags": [
+        "tauri-command",
+        "caching",
+        "async"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/dependencies.rs:DependencyStatus",
+      "type": "class",
+      "name": "DependencyStatus",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        14,
+        28
+      ],
+      "summary": "Result of probing a single toolchain dependency: presence, version, and install hint.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/dependencies.rs:DependencyCategory",
+      "type": "class",
+      "name": "DependencyCategory",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        33,
+        41
+      ],
+      "summary": "Enum categorizing dependencies (e.g. VCS, runtime, package manager) for grouping in the UI.",
+      "tags": [
+        "data-model",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/dependencies.rs:SystemDependencies",
+      "type": "class",
+      "name": "SystemDependencies",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        670,
+        675
+      ],
+      "summary": "Aggregated result of a full system dependency scan plus cache metadata.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/dependencies.rs:GitDependencyStatus",
+      "type": "class",
+      "name": "GitDependencyStatus",
+      "filePath": "src-tauri/crates/system-services/src/dependencies.rs",
+      "lineRange": [
+        679,
+        681
+      ],
+      "summary": "Result of probing specifically for git availability/version.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "type": "file",
+      "name": "dock_menu.rs",
+      "filePath": "src-tauri/crates/system-services/src/dock_menu.rs",
+      "summary": "Implements the macOS Dock icon's native right-click menu via Objective-C interop, adding an Open Recent submenu, with a Tauri-callable installer; other platforms get no-op stubs.",
+      "tags": [
+        "macos",
+        "objective-c-interop",
+        "dock-menu",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dock_menu.rs:install_dock_menu",
+      "type": "function",
+      "name": "install_dock_menu",
+      "filePath": "src-tauri/crates/system-services/src/dock_menu.rs",
+      "lineRange": [
+        22,
+        67
+      ],
+      "summary": "Installs the native macOS Dock right-click menu with an Open Recent submenu via Objective-C class swizzling; compiled to a no-op stub on non-macOS platforms.",
+      "tags": [
+        "macos",
+        "objective-c-interop",
+        "dock-menu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dock_menu.rs:dock_menu_handler",
+      "type": "function",
+      "name": "dock_menu_handler",
+      "filePath": "src-tauri/crates/system-services/src/dock_menu.rs",
+      "lineRange": [
+        77,
+        141
+      ],
+      "summary": "Objective-C message handler invoked when a Dock menu item is clicked, dispatching to the appropriate recent-file action.",
+      "tags": [
+        "macos",
+        "objective-c-interop",
+        "event-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dock_menu.rs:install_dock_menu_action",
+      "type": "function",
+      "name": "install_dock_menu_action",
+      "filePath": "src-tauri/crates/system-services/src/dock_menu.rs",
+      "lineRange": [
+        152,
+        183
+      ],
+      "summary": "Tauri-callable entry point that installs the Dock menu action handler for the running app; no-op on non-macOS platforms.",
+      "tags": [
+        "macos",
+        "tauri-command",
+        "dock-menu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/dock_menu.rs:dock_menu_open_recent_handler",
+      "type": "function",
+      "name": "dock_menu_open_recent_handler",
+      "filePath": "src-tauri/crates/system-services/src/dock_menu.rs",
+      "lineRange": [
+        197,
+        220
+      ],
+      "summary": "Objective-C handler for a specific Open Recent Dock menu item click, resolving the selected recent path and emitting an open event.",
+      "tags": [
+        "macos",
+        "objective-c-interop",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/system-services/src/lib.rs",
+      "summary": "Crate root for the system-services library, re-exporting OS-integration modules (app menu, dock menu, tray, notifications, network, power, dependency probing, workspace ports) whose Tauri commands are registered by the app crate.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "crate-root",
+        "tauri"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/network.rs",
+      "type": "file",
+      "name": "network.rs",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "summary": "Detects active VPN network interfaces per-OS (macOS/Linux/Windows) and fetches approximate geolocation info from an external IP-info service.",
+      "tags": [
+        "network",
+        "vpn-detection",
+        "geolocation",
+        "cross-platform",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/network.rs:detect_vpn",
+      "type": "function",
+      "name": "detect_vpn",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        50,
+        61
+      ],
+      "summary": "Tauri command that aggregates detected VPN interfaces per-OS and returns the overall VpnStatus (connected flag + interface list).",
+      "tags": [
+        "tauri-command",
+        "vpn-detection",
+        "async"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/network.rs:detect_vpn_interfaces",
+      "type": "function",
+      "name": "detect_vpn_interfaces",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        68,
+        92
+      ],
+      "summary": "Enumerates active VPN network interfaces by name/type heuristics; separate cfg-gated implementations exist for macOS, Linux, and Windows.",
+      "tags": [
+        "cross-platform",
+        "vpn-detection",
+        "system-probe"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/network.rs:get_interface_status_macos",
+      "type": "function",
+      "name": "get_interface_status_macos",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        95,
+        157
+      ],
+      "summary": "Reads a macOS network interface's operational status via ifconfig-style system calls.",
+      "tags": [
+        "macos",
+        "network"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/network.rs:get_interface_status_linux",
+      "type": "function",
+      "name": "get_interface_status_linux",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        186,
+        212
+      ],
+      "summary": "Reads a Linux network interface's operational status via sysfs/ip commands.",
+      "tags": [
+        "linux",
+        "network"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/network.rs:fetch_geo_info",
+      "type": "function",
+      "name": "fetch_geo_info",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        291,
+        318
+      ],
+      "summary": "Tauri command that fetches approximate geolocation info (country/city/IP) from an external ipinfo-style API.",
+      "tags": [
+        "tauri-command",
+        "geolocation",
+        "async",
+        "http"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/network.rs:VpnStatus",
+      "type": "class",
+      "name": "VpnStatus",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        10,
+        13
+      ],
+      "summary": "Aggregated VPN connectivity status (connected flag + interface list) returned to the frontend.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/network.rs:VpnInterface",
+      "type": "class",
+      "name": "VpnInterface",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        16,
+        21
+      ],
+      "summary": "A single detected VPN network interface with name and status.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/system-services/src/network.rs:GeoInfo",
+      "type": "class",
+      "name": "GeoInfo",
+      "filePath": "src-tauri/crates/system-services/src/network.rs",
+      "lineRange": [
+        280,
+        286
+      ],
+      "summary": "Geolocation lookup result (IP, country, city, etc.) returned from fetch_geo_info.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "type": "file",
+      "name": "notifications.rs",
+      "filePath": "src-tauri/crates/system-services/src/notifications.rs",
+      "summary": "Exposes Tauri commands for sending native OS notifications and managing the macOS dock badge count, with permission check/request helpers.",
+      "tags": [
+        "tauri-command",
+        "notifications",
+        "macos",
+        "dock-badge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/notifications.rs:send_notification",
+      "type": "function",
+      "name": "send_notification",
+      "filePath": "src-tauri/crates/system-services/src/notifications.rs",
+      "lineRange": [
+        17,
+        25
+      ],
+      "summary": "Tauri command that sends a native OS notification with the given title and body.",
+      "tags": [
+        "tauri-command",
+        "notifications"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/notifications.rs:check_notification_permission",
+      "type": "function",
+      "name": "check_notification_permission",
+      "filePath": "src-tauri/crates/system-services/src/notifications.rs",
+      "lineRange": [
+        29,
+        40
+      ],
+      "summary": "Tauri command that checks the current OS notification permission state.",
+      "tags": [
+        "tauri-command",
+        "notifications",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/notifications.rs:request_notification_permission",
+      "type": "function",
+      "name": "request_notification_permission",
+      "filePath": "src-tauri/crates/system-services/src/notifications.rs",
+      "lineRange": [
+        44,
+        55
+      ],
+      "summary": "Tauri command that requests OS notification permission from the user.",
+      "tags": [
+        "tauri-command",
+        "notifications",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/notifications.rs:set_dock_badge",
+      "type": "function",
+      "name": "set_dock_badge",
+      "filePath": "src-tauri/crates/system-services/src/notifications.rs",
+      "lineRange": [
+        60,
+        86
+      ],
+      "summary": "Tauri command that sets the macOS dock icon badge to a numeric count, or clears it when None.",
+      "tags": [
+        "tauri-command",
+        "macos",
+        "dock-badge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/system-services/src/notifications.rs:clear_dock_badge",
+      "type": "function",
+      "name": "clear_dock_badge",
+      "filePath": "src-tauri/crates/system-services/src/notifications.rs",
+      "lineRange": [
+        90,
+        92
+      ],
+      "summary": "Tauri command that clears the macOS dock icon badge.",
+      "tags": [
+        "tauri-command",
+        "macos",
+        "dock-badge"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:create_app_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:create_app_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:create_open_recent_submenu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:save_recent_paths_to_disk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:load_recent_paths_from_disk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:initialize_recent_paths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:initialize_recent_paths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:add_to_recent_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:add_to_recent_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:get_recent_paths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:get_recent_paths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:clear_recent_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:clear_recent_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:setup_menu_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:setup_menu_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:rebuild_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:rebuild_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_add_recent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_add_recent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_get_recent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_get_recent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_clear_recent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:menu_clear_recent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:confirm_quit_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:confirm_quit_app",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:cancel_quit_confirmation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/app_menu.rs:cancel_quit_confirmation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:lookup_install_hint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:parse_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:probe_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:save_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:load_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:is_binary_available",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:is_binary_available",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:detect_git_dependency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:detect_git_dependency",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:detect_system_dependencies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:detect_system_dependencies",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:get_cached_dependencies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "function:src-tauri/crates/system-services/src/dependencies.rs:get_cached_dependencies",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:DependencyStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:DependencyStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:DependencyCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:DependencyCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:SystemDependencies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:SystemDependencies",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:GitDependencyStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "target": "class:src-tauri/crates/system-services/src/dependencies.rs:GitDependencyStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/dock_menu.rs:install_dock_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/dock_menu.rs:install_dock_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/dock_menu.rs:dock_menu_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/dock_menu.rs:install_dock_menu_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/dock_menu.rs:install_dock_menu_action",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "target": "function:src-tauri/crates/system-services/src/dock_menu.rs:dock_menu_open_recent_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/app_menu.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/dependencies.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/dock_menu.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/network.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/power.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/system_recents.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/tray.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/lib.rs",
+      "target": "file:src-tauri/crates/system-services/src/workspace_ports/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:detect_vpn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:detect_vpn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:detect_vpn_interfaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:get_interface_status_macos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:get_interface_status_linux",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:fetch_geo_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "function:src-tauri/crates/system-services/src/network.rs:fetch_geo_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "class:src-tauri/crates/system-services/src/network.rs:VpnStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "class:src-tauri/crates/system-services/src/network.rs:VpnStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "class:src-tauri/crates/system-services/src/network.rs:VpnInterface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "class:src-tauri/crates/system-services/src/network.rs:VpnInterface",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "class:src-tauri/crates/system-services/src/network.rs:GeoInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/network.rs",
+      "target": "class:src-tauri/crates/system-services/src/network.rs:GeoInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:send_notification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:send_notification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:check_notification_permission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:check_notification_permission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:request_notification_permission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:request_notification_permission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:set_dock_badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:set_dock_badge",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:clear_dock_badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/system-services/src/notifications.rs",
+      "target": "function:src-tauri/crates/system-services/src/notifications.rs:clear_dock_badge",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,1454 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "type": "file",
+      "name": "client.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "summary": "Thin GraphQL wrapper around https://api.linear.app/graphql: reqwest client construction (rustls), bearer-token auth, HTTP-status-to-SyncError mapping, and GraphQL errors[] extraction so a 200 OK with errors surfaces as the right SyncError variant.",
+      "tags": [
+        "http-client",
+        "sync",
+        "linear",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::with_endpoint",
+      "type": "function",
+      "name": "LinearClient::with_endpoint",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "lineRange": [
+        48,
+        61
+      ],
+      "summary": "Builds a LinearClient pointed at a custom GraphQL endpoint, used by tests against a mock server.",
+      "tags": [
+        "http-client",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::graphql",
+      "type": "function",
+      "name": "LinearClient::graphql",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "lineRange": [
+        66,
+        158
+      ],
+      "summary": "Issues an authenticated GraphQL request against the Linear API and maps the HTTP/GraphQL response into parsed data or a SyncError.",
+      "tags": [
+        "http-client",
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:extract_data",
+      "type": "function",
+      "name": "extract_data",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "lineRange": [
+        165,
+        191
+      ],
+      "summary": "Extracts the `data` field from a Linear GraphQL response, mapping a top-level errors[] array into the appropriate SyncError variant.",
+      "tags": [
+        "http-client",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:truncate",
+      "type": "function",
+      "name": "truncate",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "lineRange": [
+        209,
+        220
+      ],
+      "summary": "Truncates a string to a maximum length for error-message display, appending an ellipsis marker.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient",
+      "type": "class",
+      "name": "LinearClient",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "lineRange": [
+        36,
+        39
+      ],
+      "summary": "Thin reqwest-backed GraphQL client for the Linear adapter; knows only the endpoint URL, auth, and GraphQL error mapping -- no Linear domain logic.",
+      "tags": [
+        "http-client",
+        "sync"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "summary": "Linear sync adapter implementing SyncAdapter against Linear's GraphQL API, split across mod.rs (trait impl + field map + descriptor), parse.rs (pure JSON<->wire-shape converters), and client.rs (reqwest/GraphQL transport). Auth tokens are stored in the global sync connection token store, kept separate from key_vault::KeyService.",
+      "tags": [
+        "sync",
+        "linear",
+        "adapter",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::push",
+      "type": "function",
+      "name": "LinearAdapter::push",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        126,
+        192
+      ],
+      "summary": "Pushes one outbox entry (create/update) to Linear via a GraphQL mutation, built from parse::build_issue_update_input.",
+      "tags": [
+        "sync",
+        "linear"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::pull",
+      "type": "function",
+      "name": "LinearAdapter::pull",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        200,
+        279
+      ],
+      "summary": "Fetches Linear issues updated since a cursor via a paginated GraphQL query, converting them to ExternalChange via parse::parse_linear_issue.",
+      "tags": [
+        "sync",
+        "linear"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::descriptor",
+      "type": "function",
+      "name": "LinearAdapter::descriptor",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        285,
+        297
+      ],
+      "summary": "Returns the Linear adapter's AdapterDescriptor (id, label, OAuth/PAT auth methods, webhook/import support flags).",
+      "tags": [
+        "sync",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::pull_all",
+      "type": "function",
+      "name": "LinearAdapter::pull_all",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        316,
+        376
+      ],
+      "summary": "Paginates through all Linear issues for a bulk import using `first`/`after` cursors, converting each page via parse::parse_linear_issue.",
+      "tags": [
+        "sync",
+        "linear"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::verify_webhook",
+      "type": "function",
+      "name": "LinearAdapter::verify_webhook",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        384,
+        415
+      ],
+      "summary": "Verifies a Linear webhook's HMAC signature against the configured secret.",
+      "tags": [
+        "sync",
+        "linear",
+        "webhook"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::handle_webhook",
+      "type": "function",
+      "name": "LinearAdapter::handle_webhook",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        426,
+        436
+      ],
+      "summary": "Parses a verified Linear webhook payload into ExternalChange entries via parse::parse_linear_webhook_payload.",
+      "tags": [
+        "sync",
+        "linear",
+        "webhook"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter",
+      "type": "class",
+      "name": "LinearAdapter",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "lineRange": [
+        62,
+        62
+      ],
+      "summary": "SyncAdapter implementation for Linear issues, delegating GraphQL transport to client.rs and JSON mapping to parse.rs.",
+      "tags": [
+        "sync",
+        "linear",
+        "adapter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "type": "file",
+      "name": "parse.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "summary": "Pure mapping helpers between Linear's GraphQL issue shape and the adapter's canonical wire types (ExternalChange, IssueUpdateInput), kept dependency-free of HTTP so every function is testable as Value -> Value / Value -> ExternalChange.",
+      "tags": [
+        "sync",
+        "linear",
+        "serialization",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:normalize_linear_status",
+      "type": "function",
+      "name": "normalize_linear_status",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "lineRange": [
+        78,
+        97
+      ],
+      "summary": "Maps a Linear workflow state (name + type) onto the local WorkItemStatus enum.",
+      "tags": [
+        "sync",
+        "linear",
+        "mapping"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_issue",
+      "type": "function",
+      "name": "parse_linear_issue",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "lineRange": [
+        99,
+        174
+      ],
+      "summary": "Converts a raw Linear GraphQL issue node into a canonical ExternalChange, mapping labels, assignee, state, and estimate fields.",
+      "tags": [
+        "sync",
+        "linear",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:build_issue_update_input",
+      "type": "function",
+      "name": "build_issue_update_input",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "lineRange": [
+        184,
+        215
+      ],
+      "summary": "Builds the Linear GraphQL IssueUpdateInput variables object for updating an issue from the local WorkItem's writable fields.",
+      "tags": [
+        "sync",
+        "linear",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_webhook_payload",
+      "type": "function",
+      "name": "parse_linear_webhook_payload",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "lineRange": [
+        237,
+        251
+      ],
+      "summary": "Converts a verified Linear webhook event payload into ExternalChange entries.",
+      "tags": [
+        "sync",
+        "linear",
+        "webhook"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:op_to_mutation",
+      "type": "function",
+      "name": "op_to_mutation",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "lineRange": [
+        267,
+        278
+      ],
+      "summary": "Maps an OutboxOp (create/update/delete) onto the Linear GraphQL mutation name to invoke.",
+      "tags": [
+        "sync",
+        "linear",
+        "mapping"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "summary": "Built-in SyncAdapter implementations plus a lazy registry: echo::EchoAdapter (test/manual smoke), linear (GraphQL), github (REST). The registry is a OnceLock<HashMap> populated at first access, giving O(1) lookups for the process lifetime.",
+      "tags": [
+        "sync",
+        "registry",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/adapters/mod.rs:build_registry",
+      "type": "function",
+      "name": "build_registry",
+      "filePath": "src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "lineRange": [
+        26,
+        35
+      ],
+      "summary": "Constructs the adapter registry map, instantiating and boxing each built-in adapter (echo, linear, github) keyed by adapter id.",
+      "tags": [
+        "sync",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "type": "file",
+      "name": "collab_bridge.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "summary": "TS-bridge for the orgii_collab sync provider (design section 16.8). Shared projects/work items are native local rows under a project_orgs row aliased to the collab org; local mutations enqueue outbox rows with org_id set, routing them to this bridge instead of the in-process worker. Supabase HTTP and credentials never enter Rust -- the TS CollabSyncEngine drives three Tauri commands: drain_outbox, ack_outbox, and apply_remote.",
+      "tags": [
+        "sync",
+        "collab",
+        "tauri-command",
+        "rust"
+      ],
+      "complexity": "complex",
+      "languageNotes": "At 3008 lines this is the largest file in the batch; it is organized as three symmetric push/ack/apply phases mirroring a bidirectional OCC (optimistic concurrency control) sync protocol against Supabase, driven entirely from the TypeScript side."
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:is_collab_org",
+      "type": "function",
+      "name": "is_collab_org",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        167,
+        176
+      ],
+      "summary": "Checks whether a project_orgs row is aliased to the collab provider (source='collab', sync_provider='orgii_collab').",
+      "tags": [
+        "sync",
+        "collab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:collab_org_for_project",
+      "type": "function",
+      "name": "collab_org_for_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        180,
+        193
+      ],
+      "summary": "Resolves the collab project_orgs row (if any) that owns a given project slug.",
+      "tags": [
+        "sync",
+        "collab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:append_collab_row",
+      "type": "function",
+      "name": "append_collab_row",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        202,
+        252
+      ],
+      "summary": "Appends a row to outbox_entries scoped to a collab org_id, coalescing per-entity field_path trails, so it routes to the collab bridge instead of the in-process worker.",
+      "tags": [
+        "sync",
+        "collab",
+        "outbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_project_work_item_update",
+      "type": "function",
+      "name": "record_project_work_item_update",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        257,
+        288
+      ],
+      "summary": "Records a local field-level mutation on a work item as a pending collab outbox row when its project belongs to a collab org.",
+      "tags": [
+        "sync",
+        "collab",
+        "outbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_work_item_write",
+      "type": "function",
+      "name": "record_work_item_write",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        293,
+        316
+      ],
+      "summary": "Records a local work-item create/update/delete as a pending collab outbox row.",
+      "tags": [
+        "sync",
+        "collab",
+        "outbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_project_write",
+      "type": "function",
+      "name": "record_project_write",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        328,
+        347
+      ],
+      "summary": "Records a local project create/update as a pending collab outbox row.",
+      "tags": [
+        "sync",
+        "collab",
+        "outbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:outbox_pending_ids",
+      "type": "function",
+      "name": "outbox_pending_ids",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        356,
+        387
+      ],
+      "summary": "Lists the outbox_entries ids still pending push for a collab org, oldest first.",
+      "tags": [
+        "sync",
+        "collab",
+        "outbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:drain_outbox",
+      "type": "function",
+      "name": "drain_outbox",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        420,
+        525
+      ],
+      "summary": "Tauri command: claims pending collab outbox rows oldest-first, coalesces them per entity, and hydrates a full wire-shaped snapshot of each entity's current local state for the TS CollabSyncEngine to push to Supabase.",
+      "tags": [
+        "sync",
+        "collab",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:hydrate_project",
+      "type": "function",
+      "name": "hydrate_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        527,
+        625
+      ],
+      "summary": "Builds the wire-shaped snapshot (fields plus per-field mtime map) of a project's current local state for a collab push.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:read_project_remote_version",
+      "type": "function",
+      "name": "read_project_remote_version",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        627,
+        636
+      ],
+      "summary": "Reads the last-known remote OCC version stamped on a project row.",
+      "tags": [
+        "sync",
+        "collab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:hydrate_work_item",
+      "type": "function",
+      "name": "hydrate_work_item",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        638,
+        702
+      ],
+      "summary": "Builds the wire-shaped snapshot (fields plus per-field mtime map) of a work item's current local state for a collab push.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:work_item_wire",
+      "type": "function",
+      "name": "work_item_wire",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        708,
+        754
+      ],
+      "summary": "Assembles the wire payload for a work item from its frontmatter, body, and per-field revision sources.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:ack_outbox",
+      "type": "function",
+      "name": "ack_outbox",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        777,
+        809
+      ],
+      "summary": "Tauri command: acknowledges pushed collab outbox rows, recording each entity's new remote OCC version or surfacing push errors.",
+      "tags": [
+        "sync",
+        "collab",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:store_remote_version",
+      "type": "function",
+      "name": "store_remote_version",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        811,
+        832
+      ],
+      "summary": "Persists the remote OCC version returned by a successful collab push onto the local project/work-item row.",
+      "tags": [
+        "sync",
+        "collab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_remote",
+      "type": "function",
+      "name": "apply_remote",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        863,
+        902
+      ],
+      "summary": "Tauri command: applies a batch of remote collab entities (projects/work items) pushed down from Supabase realtime, upserting each as a native local row.",
+      "tags": [
+        "sync",
+        "collab",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:ensure_collab_project_org",
+      "type": "function",
+      "name": "ensure_collab_project_org",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        907,
+        931
+      ],
+      "summary": "Ensures a project_orgs row exists aliasing a given collab org id, creating it on first sight of a remote org.",
+      "tags": [
+        "sync",
+        "collab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:newer_pending_fields",
+      "type": "function",
+      "name": "newer_pending_fields",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        947,
+        989
+      ],
+      "summary": "Determines which fields have a newer pending local outbox mutation than the incoming remote change, so those fields are excluded from the remote merge.",
+      "tags": [
+        "sync",
+        "collab",
+        "conflict"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:has_pending_outbox_rows",
+      "type": "function",
+      "name": "has_pending_outbox_rows",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        998,
+        1021
+      ],
+      "summary": "Checks whether an entity still has any pending (unpushed) collab outbox rows.",
+      "tags": [
+        "sync",
+        "collab",
+        "outbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_project",
+      "type": "function",
+      "name": "apply_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1023,
+        1222
+      ],
+      "summary": "Merges a remote collab project entity into the local projects table field-by-field, skipping fields with newer pending local writes and reconciling the slug on conflict.",
+      "tags": [
+        "sync",
+        "collab",
+        "merge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:project_fields_from_wire",
+      "type": "function",
+      "name": "project_fields_from_wire",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1228,
+        1240
+      ],
+      "summary": "Extracts the flat field-value map from a project's wire payload.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_adopted_project_field",
+      "type": "function",
+      "name": "apply_adopted_project_field",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1248,
+        1302
+      ],
+      "summary": "Applies one adopted remote field value onto a ProjectMeta/description pair by field name.",
+      "tags": [
+        "sync",
+        "collab",
+        "merge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:unique_project_slug",
+      "type": "function",
+      "name": "unique_project_slug",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1306,
+        1331
+      ],
+      "summary": "Generates a project slug that doesn't collide with an existing project, disambiguating with a numeric suffix.",
+      "tags": [
+        "sync",
+        "collab",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:parse_wire_field_mtimes",
+      "type": "function",
+      "name": "parse_wire_field_mtimes",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1343,
+        1355
+      ],
+      "summary": "Parses the per-field mtime map out of a wire payload.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:work_item_fields_from_wire",
+      "type": "function",
+      "name": "work_item_fields_from_wire",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1359,
+        1371
+      ],
+      "summary": "Extracts the flat field-value map from a work item's wire payload.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:frontmatter_from_wire",
+      "type": "function",
+      "name": "frontmatter_from_wire",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1373,
+        1430
+      ],
+      "summary": "Builds a WorkItemFrontmatter from a remote work item's wire payload and project/work-item ids.",
+      "tags": [
+        "sync",
+        "collab",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_work_item",
+      "type": "function",
+      "name": "apply_work_item",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1432,
+        1664
+      ],
+      "summary": "Merges a remote collab work item entity into the local workitems table field-by-field, skipping fields with newer pending local writes.",
+      "tags": [
+        "sync",
+        "collab",
+        "merge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_wire_tail",
+      "type": "function",
+      "name": "apply_wire_tail",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1669,
+        1714
+      ],
+      "summary": "Merges non-conflicting tail fields (todos, comments, history, etc.) from a remote wire payload into a WorkItemPartialUpdate.",
+      "tags": [
+        "sync",
+        "collab",
+        "merge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_wire_tail_union",
+      "type": "function",
+      "name": "apply_wire_tail_union",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1723,
+        1757
+      ],
+      "summary": "Merges tail fields using set-union semantics (combining local and remote entries) instead of remote-wins.",
+      "tags": [
+        "sync",
+        "collab",
+        "merge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:union_by_key",
+      "type": "function",
+      "name": "union_by_key",
+      "filePath": "src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "lineRange": [
+        1761,
+        1777
+      ],
+      "summary": "Generic helper that unions two lists of keyed items, preferring the local entry on key collision.",
+      "tags": [
+        "sync",
+        "collab",
+        "utility"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::with_endpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::graphql",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:extract_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:truncate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::with_endpoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::graphql",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::pull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::descriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::pull_all",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::verify_webhook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::handle_webhook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "class:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter",
+      "target": "class:src-tauri/crates/project-management/src/sync/adapter.rs:SyncAdapter",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::push",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/client.rs:LinearClient::graphql",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:normalize_linear_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_issue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:build_issue_update_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_webhook_payload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:op_to_mutation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_issue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:build_issue_update_input",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_webhook_payload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:op_to_mutation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::pull",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:parse_linear_issue",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs:LinearAdapter::push",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/linear/parse.rs:build_issue_update_input",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/adapters/mod.rs:build_registry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapters/echo.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapters/github/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/adapters/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/adapters/linear/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:is_collab_org",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:is_collab_org",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:collab_org_for_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:collab_org_for_project",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:append_collab_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_project_work_item_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_project_work_item_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_work_item_write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_work_item_write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_project_write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:record_project_write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:outbox_pending_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:outbox_pending_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:drain_outbox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:drain_outbox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:hydrate_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:read_project_remote_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:hydrate_work_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:work_item_wire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:ack_outbox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:ack_outbox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:store_remote_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:ensure_collab_project_org",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:ensure_collab_project_org",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:newer_pending_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:has_pending_outbox_rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:project_fields_from_wire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_adopted_project_field",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:unique_project_slug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:parse_wire_field_mtimes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:work_item_fields_from_wire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:frontmatter_from_wire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_work_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_wire_tail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_wire_tail_union",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:union_by_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/io/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/types/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/collab_bridge.rs",
+      "target": "file:src-tauri/crates/project-management/src/projects/types/work_items.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_project",
+      "target": "class:src-tauri/crates/project-management/src/projects/types/project.rs:ProjectMeta",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "function:src-tauri/crates/project-management/src/sync/collab_bridge.rs:apply_work_item",
+      "target": "class:src-tauri/crates/project-management/src/projects/types/work_items.rs:WorkItemFrontmatter",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

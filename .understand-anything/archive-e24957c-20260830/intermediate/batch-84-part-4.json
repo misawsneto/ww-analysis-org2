@@ -1,0 +1,180 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "type": "file",
+      "name": "toolUsageCache.ts",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "summary": "Session-scoped LRU cache and mapping utilities for tool-usage and LLM-usage telemetry, joining Rust-reported usage spans onto EventStore events by call id / turn id for cost and token display.",
+      "tags": ["utility", "caching", "telemetry", "rust-agent"],
+      "complexity": "complex",
+      "languageNotes": "Uses a small hand-rolled LRU (Map insertion-order eviction) keyed by sessionId to bound memory for usage telemetry across many open sessions."
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:touchSessionCache",
+      "type": "function",
+      "name": "touchSessionCache",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [25, 38],
+      "summary": "Inserts or refreshes a session's usage-by-call-id map in the LRU cache, evicting the oldest entry when the cache exceeds its size bound.",
+      "tags": ["caching", "lru", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildRelatedCacheMap",
+      "type": "function",
+      "name": "buildRelatedCacheMap",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [52, 71],
+      "summary": "Builds a map from tool_call_id to the set of related tool_call_ids declared in each usage span's relatedToolCallIds field.",
+      "tags": ["utility", "telemetry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:toMetadata",
+      "type": "function",
+      "name": "toMetadata",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [73, 87],
+      "summary": "Converts a raw tool-usage attribution record plus its related-call cache entry into the normalized usage metadata shape stored per call id.",
+      "tags": ["utility", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildUsageMap",
+      "type": "function",
+      "name": "buildUsageMap",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [89, 126],
+      "summary": "Builds the full tool_call_id-to-usage-metadata map for a session from raw usage records and LLM usage spans, propagating usage onto related calls.",
+      "tags": ["telemetry", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildLlmUsageByTurnMap",
+      "type": "function",
+      "name": "buildLlmUsageByTurnMap",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [128, 146],
+      "summary": "Builds a map from turn id to aggregated LLM token-usage info from the session's raw LLM usage spans.",
+      "tags": ["telemetry", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withToolUsageArgs",
+      "type": "function",
+      "name": "withToolUsageArgs",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [148, 156],
+      "summary": "Returns a copy of a tool-call args object with the given tool-usage metadata merged in.",
+      "tags": ["utility", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withLlmUsageArgs",
+      "type": "function",
+      "name": "withLlmUsageArgs",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [158, 166],
+      "summary": "Returns a copy of an event's args object with the given LLM token-usage info merged in.",
+      "tags": ["utility", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:selectLlmUsageTargetEvents",
+      "type": "function",
+      "name": "selectLlmUsageTargetEvents",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [187, 203],
+      "summary": "Selects, per turn, the single assistant-message or thinking event that should receive the turn's aggregated LLM usage annotation.",
+      "tags": ["telemetry", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyLlmUsageToEvents",
+      "type": "function",
+      "name": "applyLlmUsageToEvents",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [205, 225],
+      "summary": "Applies per-turn LLM usage info onto the appropriate assistant/thinking events in an event list, returning a new list with usage args merged in.",
+      "tags": ["telemetry", "event-processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyToolUsageToEvents",
+      "type": "function",
+      "name": "applyToolUsageToEvents",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [227, 243],
+      "summary": "Applies per-call-id tool-usage metadata onto matching tool events in an event list, returning a new list with usage args merged in.",
+      "tags": ["telemetry", "event-processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry",
+      "type": "function",
+      "name": "loadUsageTelemetry",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [245, 256],
+      "summary": "Fetches tool-usage attributions and LLM-usage spans for a session from the Rust bridge, builds the usage maps, and caches them.",
+      "tags": ["telemetry", "tauri-ipc"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadAndCacheToolUsage",
+      "type": "function",
+      "name": "loadAndCacheToolUsage",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [258, 263],
+      "summary": "Public entry point that loads and caches usage telemetry for a session, ignoring the return value.",
+      "tags": ["telemetry", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:getCachedToolUsage",
+      "type": "function",
+      "name": "getCachedToolUsage",
+      "filePath": "src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts",
+      "lineRange": [265, 272],
+      "summary": "Returns the cached usage-by-call-id map for a session, if present, refreshing its LRU recency.",
+      "tags": ["caching", "telemetry"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:touchSessionCache", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildRelatedCacheMap", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:toMetadata", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildUsageMap", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildLlmUsageByTurnMap", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withToolUsageArgs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withLlmUsageArgs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:selectLlmUsageTargetEvents", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyLlmUsageToEvents", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyToolUsageToEvents", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadAndCacheToolUsage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:getCachedToolUsage", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildUsageMap", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildLlmUsageByTurnMap", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withToolUsageArgs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withLlmUsageArgs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyLlmUsageToEvents", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyToolUsageToEvents", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadAndCacheToolUsage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:getCachedToolUsage", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildUsageMap", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildRelatedCacheMap", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildUsageMap", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:toMetadata", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyLlmUsageToEvents", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:selectLlmUsageTargetEvents", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyLlmUsageToEvents", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withLlmUsageArgs", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:applyToolUsageToEvents", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:withToolUsageArgs", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildUsageMap", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:buildLlmUsageByTurnMap", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:touchSessionCache", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadAndCacheToolUsage", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:loadUsageTelemetry", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:getCachedToolUsage", "target": "function:src/engines/SessionCore/sync/adapters/rustAgent/toolUsageCache.ts:touchSessionCache", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

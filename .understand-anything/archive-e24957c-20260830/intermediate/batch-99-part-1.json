@@ -1,0 +1,2301 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "summary": "Tauri commands that let the frontend start, stop, pause, resume, and query the status of the agent browser automation controller, emitting `browser:status` events to keep the UI in sync.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/automation/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/browser/src/automation/mod.rs",
+      "summary": "Module barrel that exposes the browser automation Tauri command surface and re-exports `AgentBrowserController` from the shared_state crate for use by frontend commands and agent tools.",
+      "tags": [
+        "barrel",
+        "module-declaration",
+        "browser-automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/capture.rs",
+      "type": "file",
+      "name": "capture.rs",
+      "filePath": "src-tauri/crates/browser/src/capture.rs",
+      "summary": "Captures the visible contents of an inline webview as a PNG data URL for attaching to chat inputs, using WKWebView's native snapshot API on macOS.",
+      "tags": [
+        "api-handler",
+        "screenshot",
+        "platform-specific",
+        "macos"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses objc2/block2 FFI to call Cocoa's WKWebView snapshot API directly from Rust, wrapping the async Objective-C completion handler in an mpsc channel."
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/cookies.rs",
+      "type": "file",
+      "name": "cookies.rs",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "summary": "Provides native, platform-specific cookie access (including HttpOnly cookies invisible to JavaScript) via WKHTTPCookieStore and NSHTTPCookieStorage on macOS.",
+      "tags": [
+        "api-handler",
+        "cookies",
+        "platform-specific",
+        "macos"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of unsafe Objective-C interop via objc2 to bridge WKWebView/NSHTTPCookieStorage APIs that have no native Rust equivalent."
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "type": "file",
+      "name": "dom_editor.rs",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "summary": "Implements CRUD-style DOM editing commands (insert, delete, update, clone, move) plus undo/redo history and multi-element selection for inline webviews, enabling a visual DOM-based design editor.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "undo-redo",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/inline.rs",
+      "type": "file",
+      "name": "inline.rs",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "summary": "Manages the lifecycle of inline webviews embedded in the main application window -- creation, positioning, visibility, navigation, and teardown -- using a generation/ref-count scheme to guard against races from rapid create/close cycles.",
+      "tags": [
+        "api-handler",
+        "webview-management",
+        "state-management",
+        "concurrency"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses a per-label 'generation' counter plus reference counting to cancel stale async webview-creation tasks when a newer request for the same label arrives, preventing race conditions during rapid navigation."
+    },
+    {
+      "id": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "type": "file",
+      "name": "internal_browser_commands.rs",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "summary": "Exposes the `window.__PAGE_AGENT__` DOM-automation API injected into inline webviews as direct Tauri commands, letting the frontend click, type, select, and scroll within a webview for testing and debugging.",
+      "tags": [
+        "api-handler",
+        "browser-automation",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:emit_browser_status",
+      "type": "function",
+      "name": "emit_browser_status",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        34,
+        43
+      ],
+      "summary": "Emits a `browser:status` Tauri event to the frontend with the current automation status, port, and optional error.",
+      "tags": [
+        "event-handler",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_start",
+      "type": "function",
+      "name": "browser_automation_start",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        47,
+        85
+      ],
+      "summary": "Tauri command that starts the browser automation controller on the selected backend and emits status events as it launches.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_stop",
+      "type": "function",
+      "name": "browser_automation_stop",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        89,
+        104
+      ],
+      "summary": "Tauri command that stops the running browser automation controller and emits a stopped status event.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_status",
+      "type": "function",
+      "name": "browser_automation_status",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        108,
+        133
+      ],
+      "summary": "Tauri command that returns the current running/paused state, port, and URL of the browser automation controller.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_takeover",
+      "type": "function",
+      "name": "browser_automation_takeover",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        142,
+        159
+      ],
+      "summary": "Tauri command that pauses agent-driven automation so the user can manually take over the browser.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_screenshot_get",
+      "type": "function",
+      "name": "browser_screenshot_get",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        166,
+        174
+      ],
+      "summary": "Tauri command that retrieves a stored screenshot by id from the shared screenshot store.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "screenshot"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_resume",
+      "type": "function",
+      "name": "browser_automation_resume",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        185,
+        213
+      ],
+      "summary": "Tauri command that resumes agent-driven automation after a user takeover, restoring automated control of the browser.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/browser/src/automation/commands.rs:BrowserAutomationStatus",
+      "type": "class",
+      "name": "BrowserAutomationStatus",
+      "filePath": "src-tauri/crates/browser/src/automation/commands.rs",
+      "lineRange": [
+        16,
+        21
+      ],
+      "summary": "Serializable status payload (running, paused, port, current URL) returned by the browser automation status command.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/capture.rs:browser_inline_capture",
+      "type": "function",
+      "name": "browser_inline_capture",
+      "filePath": "src-tauri/crates/browser/src/capture.rs",
+      "lineRange": [
+        25,
+        42
+      ],
+      "summary": "Tauri command that captures a PNG snapshot of the named inline webview and returns it as a base64 data URL.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "screenshot"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/capture.rs:take_snapshot_macos",
+      "type": "function",
+      "name": "take_snapshot_macos",
+      "filePath": "src-tauri/crates/browser/src/capture.rs",
+      "lineRange": [
+        49,
+        165
+      ],
+      "summary": "macOS-only implementation that uses WKWebView's takeSnapshot Objective-C API via unsafe FFI to render the webview's visible viewport into a PNG buffer.",
+      "tags": [
+        "platform-specific",
+        "macos",
+        "unsafe",
+        "screenshot"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/cookies.rs:get_webview_cookies",
+      "type": "function",
+      "name": "get_webview_cookies",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "lineRange": [
+        28,
+        53
+      ],
+      "summary": "Tauri command that returns all cookies visible to a given webview, optionally filtered by URL, using platform-native cookie stores.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "cookies"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/cookies.rs:get_wkwebview_cookies",
+      "type": "function",
+      "name": "get_wkwebview_cookies",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "lineRange": [
+        61,
+        147
+      ],
+      "summary": "macOS implementation that reads cookies directly from a WKWebView's WKHTTPCookieStore via Objective-C runtime calls, including HttpOnly cookies.",
+      "tags": [
+        "platform-specific",
+        "macos",
+        "unsafe",
+        "cookies"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/cookies.rs:get_macos_shared_cookies",
+      "type": "function",
+      "name": "get_macos_shared_cookies",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "lineRange": [
+        158,
+        204
+      ],
+      "summary": "Falls back to the system-wide NSHTTPCookieStorage to retrieve cookies shared across all webviews on macOS.",
+      "tags": [
+        "platform-specific",
+        "macos",
+        "unsafe",
+        "cookies"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/cookies.rs:parse_cookie",
+      "type": "function",
+      "name": "parse_cookie",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "lineRange": [
+        217,
+        238
+      ],
+      "summary": "Parses a raw Objective-C NSHTTPCookie object into the crate's `CookieInfo` struct.",
+      "tags": [
+        "parsing",
+        "cookies",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/cookies.rs:matches_domain",
+      "type": "function",
+      "name": "matches_domain",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "lineRange": [
+        252,
+        259
+      ],
+      "summary": "Checks whether a cookie's domain matches an optional domain filter string.",
+      "tags": [
+        "utility",
+        "cookies",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/cookies.rs:nsstring_to_string",
+      "type": "function",
+      "name": "nsstring_to_string",
+      "filePath": "src-tauri/crates/browser/src/cookies.rs",
+      "lineRange": [
+        271,
+        285
+      ],
+      "summary": "Converts a raw Objective-C NSString pointer into an owned Rust String.",
+      "tags": [
+        "platform-specific",
+        "macos",
+        "unsafe",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_element",
+      "type": "function",
+      "name": "insert_element",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        38,
+        78
+      ],
+      "summary": "Tauri command that inserts a new DOM element with the given tag and attributes at a position relative to a parent element located by XPath.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_html",
+      "type": "function",
+      "name": "insert_html",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        93,
+        139
+      ],
+      "summary": "Tauri command that inserts raw HTML at a position relative to a parent element located by XPath.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:delete_element",
+      "type": "function",
+      "name": "delete_element",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        153,
+        182
+      ],
+      "summary": "Tauri command that removes the DOM element matched by XPath from the webview.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:update_element",
+      "type": "function",
+      "name": "update_element",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        197,
+        232
+      ],
+      "summary": "Tauri command that updates the attributes of a DOM element matched by XPath.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:clone_element",
+      "type": "function",
+      "name": "clone_element",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        246,
+        281
+      ],
+      "summary": "Tauri command that duplicates a DOM element matched by XPath, optionally performing a deep clone of its children.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:move_element",
+      "type": "function",
+      "name": "move_element",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        294,
+        331
+      ],
+      "summary": "Tauri command that relocates a DOM element to a new position relative to a target element.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:undo_dom_operation",
+      "type": "function",
+      "name": "undo_dom_operation",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        342,
+        366
+      ],
+      "summary": "Tauri command that reverts the most recent DOM edit for a webview using its operation history.",
+      "tags": [
+        "api-handler",
+        "undo-redo",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:redo_dom_operation",
+      "type": "function",
+      "name": "redo_dom_operation",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        373,
+        397
+      ],
+      "summary": "Tauri command that reapplies the most recently undone DOM edit for a webview.",
+      "tags": [
+        "api-handler",
+        "undo-redo",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/browser/src/dom_editor.rs:HistoryState",
+      "type": "class",
+      "name": "HistoryState",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        402,
+        407
+      ],
+      "summary": "Serializable payload describing undo/redo availability and counts for a webview's DOM edit history.",
+      "tags": [
+        "data-model",
+        "undo-redo",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:get_dom_history_state",
+      "type": "function",
+      "name": "get_dom_history_state",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        414,
+        434
+      ],
+      "summary": "Tauri command that reports how many undo/redo operations are available for a webview's DOM edit history.",
+      "tags": [
+        "api-handler",
+        "undo-redo",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:serialize_dom_to_html",
+      "type": "function",
+      "name": "serialize_dom_to_html",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        449,
+        478
+      ],
+      "summary": "Tauri command that serializes the current DOM (or a subtree rooted at an XPath) of a webview back to an HTML string.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_add",
+      "type": "function",
+      "name": "multi_select_add",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        486,
+        503
+      ],
+      "summary": "Tauri command that adds an element to the active multi-element selection set.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_remove",
+      "type": "function",
+      "name": "multi_select_remove",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        507,
+        524
+      ],
+      "summary": "Tauri command that removes an element from the active multi-element selection set.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_toggle",
+      "type": "function",
+      "name": "multi_select_toggle",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        528,
+        545
+      ],
+      "summary": "Tauri command that toggles an element's membership in the active multi-element selection set.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multi_selection",
+      "type": "function",
+      "name": "get_multi_selection",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        549,
+        561
+      ],
+      "summary": "Tauri command that returns the XPaths currently in the multi-element selection set.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:clear_multi_selection",
+      "type": "function",
+      "name": "clear_multi_selection",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        565,
+        577
+      ],
+      "summary": "Tauri command that clears the active multi-element selection set.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/browser/src/dom_editor.rs:ElementBounds",
+      "type": "class",
+      "name": "ElementBounds",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        585,
+        594
+      ],
+      "summary": "Serializable bounding-box payload (position and edges) for a DOM element.",
+      "tags": [
+        "data-model",
+        "layout",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:get_element_bounds",
+      "type": "function",
+      "name": "get_element_bounds",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        598,
+        619
+      ],
+      "summary": "Tauri command that returns the bounding rectangle of a DOM element matched by XPath.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multiple_bounds",
+      "type": "function",
+      "name": "get_multiple_bounds",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        623,
+        641
+      ],
+      "summary": "Tauri command that returns bounding rectangles for multiple DOM elements matched by their XPaths.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:resize_element",
+      "type": "function",
+      "name": "resize_element",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        649,
+        675
+      ],
+      "summary": "Tauri command that sets the width and height of a DOM element matched by XPath.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:set_element_position",
+      "type": "function",
+      "name": "set_element_position",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        679,
+        705
+      ],
+      "summary": "Tauri command that sets the x/y position of a DOM element matched by XPath.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:save_html_to_file",
+      "type": "function",
+      "name": "save_html_to_file",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        725,
+        777
+      ],
+      "summary": "Tauri command that serializes the DOM (or a subtree) to HTML and writes it to disk, optionally prefixing a doctype declaration.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "file-io"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/dom_editor.rs:get_full_html_document",
+      "type": "function",
+      "name": "get_full_html_document",
+      "filePath": "src-tauri/crates/browser/src/dom_editor.rs",
+      "lineRange": [
+        783,
+        801
+      ],
+      "summary": "Tauri command that returns the full serialized HTML document of a webview.",
+      "tags": [
+        "api-handler",
+        "dom-manipulation",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:frame_from_corners",
+      "type": "function",
+      "name": "frame_from_corners",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        44,
+        59
+      ],
+      "summary": "Computes a normalized x/y/width/height frame from two opposite corner points.",
+      "tags": [
+        "utility",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:set_generation",
+      "type": "function",
+      "name": "set_generation",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        73,
+        88
+      ],
+      "summary": "Records the current generation counter for a webview label, used to detect and cancel stale creation requests.",
+      "tags": [
+        "state-management",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:cancel_generation",
+      "type": "function",
+      "name": "cancel_generation",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        90,
+        100
+      ],
+      "summary": "Marks a specific generation of a webview label as cancelled so in-flight creation work can abort early.",
+      "tags": [
+        "state-management",
+        "concurrency"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:is_current_generation",
+      "type": "function",
+      "name": "is_current_generation",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        111,
+        120
+      ],
+      "summary": "Checks whether a given generation number is still the latest generation recorded for a webview label.",
+      "tags": [
+        "state-management",
+        "concurrency"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:decrement_ref",
+      "type": "function",
+      "name": "decrement_ref",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        135,
+        146
+      ],
+      "summary": "Decrements the reference count for a webview label, removing bookkeeping once it reaches zero.",
+      "tags": [
+        "state-management",
+        "concurrency"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:create_inline_webview",
+      "type": "function",
+      "name": "create_inline_webview",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        173,
+        348
+      ],
+      "summary": "Tauri command that creates (or reuses) an inline webview at a given position within the parent window, applying generation/ref-count guards so only the latest request for a label wins.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management",
+        "concurrency"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:update_inline_webview_position",
+      "type": "function",
+      "name": "update_inline_webview_position",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        355,
+        390
+      ],
+      "summary": "Tauri command that repositions and resizes an existing inline webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:set_inline_webview_visibility",
+      "type": "function",
+      "name": "set_inline_webview_visibility",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        396,
+        427
+      ],
+      "summary": "Tauri command that shows or hides an inline webview without destroying it.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:reposition_and_show_webview",
+      "type": "function",
+      "name": "reposition_and_show_webview",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        440,
+        470
+      ],
+      "summary": "Tauri command that repositions an inline webview and ensures it is visible in a single call.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:close_inline_webview",
+      "type": "function",
+      "name": "close_inline_webview",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        482,
+        523
+      ],
+      "summary": "Tauri command that tears down an inline webview for a label, guarded by generation checks so it does not close a webview recreated after the close was requested.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:hide_all_inline_webviews",
+      "type": "function",
+      "name": "hide_all_inline_webviews",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        533,
+        565
+      ],
+      "summary": "Tauri command that hides every currently tracked inline webview, typically when a full-screen overlay takes focus.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:close_all_inline_webviews",
+      "type": "function",
+      "name": "close_all_inline_webviews",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        582,
+        629
+      ],
+      "summary": "Tauri command that closes every currently tracked inline webview, clearing all generation and ref-count bookkeeping.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:navigate_inline_webview",
+      "type": "function",
+      "name": "navigate_inline_webview",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        635,
+        657
+      ],
+      "summary": "Tauri command that navigates an existing inline webview to a new URL.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/inline.rs:reload_inline_webview",
+      "type": "function",
+      "name": "reload_inline_webview",
+      "filePath": "src-tauri/crates/browser/src/inline.rs",
+      "lineRange": [
+        663,
+        681
+      ],
+      "summary": "Tauri command that reloads the current page in an existing inline webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "webview-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:eval_browser_call",
+      "type": "function",
+      "name": "eval_browser_call",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        53,
+        119
+      ],
+      "summary": "Evaluates a JavaScript expression against the injected browser automation bridge in a webview and deserializes the JSON result, retrying while the page agent script loads.",
+      "tags": [
+        "javascript-bridge",
+        "utility",
+        "browser-automation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:eval_page_agent_call",
+      "type": "function",
+      "name": "eval_page_agent_call",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        121,
+        144
+      ],
+      "summary": "Evaluates a call against the injected `__PAGE_AGENT__` object, returning a fallback value if the script has not yet initialized.",
+      "tags": [
+        "javascript-bridge",
+        "utility",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserState",
+      "type": "class",
+      "name": "InternalBrowserState",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        24,
+        30
+      ],
+      "summary": "Serializable snapshot of an internal browser webview's page state (URL, title, header/content/footer HTML).",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserActionResult",
+      "type": "class",
+      "name": "InternalBrowserActionResult",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        34,
+        37
+      ],
+      "summary": "Serializable success/message result payload returned by internal browser action commands.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserLocation",
+      "type": "class",
+      "name": "InternalBrowserLocation",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        41,
+        44
+      ],
+      "summary": "Serializable URL/title payload for an internal browser webview's current location.",
+      "tags": [
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_get_state",
+      "type": "function",
+      "name": "internal_browser_get_state",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        154,
+        182
+      ],
+      "summary": "Tauri command that returns the current page state (URL, title, header/content/footer HTML) of an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_get_location",
+      "type": "function",
+      "name": "internal_browser_get_location",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        185,
+        203
+      ],
+      "summary": "Tauri command that returns the current URL and title of an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_click",
+      "type": "function",
+      "name": "internal_browser_click",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        207,
+        223
+      ],
+      "summary": "Tauri command that clicks the element at a given index in an internal browser webview via the injected page agent.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_input",
+      "type": "function",
+      "name": "internal_browser_input",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        227,
+        247
+      ],
+      "summary": "Tauri command that types text into the element at a given index in an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_select",
+      "type": "function",
+      "name": "internal_browser_select",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        251,
+        271
+      ],
+      "summary": "Tauri command that selects an option in a dropdown element at a given index in an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_scroll",
+      "type": "function",
+      "name": "internal_browser_scroll",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        275,
+        301
+      ],
+      "summary": "Tauri command that scrolls an internal browser webview by a number of pages in a given direction, optionally targeting a specific element.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_show_mask",
+      "type": "function",
+      "name": "internal_browser_show_mask",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        305,
+        324
+      ],
+      "summary": "Tauri command that shows the visual overlay mask used to indicate automated interaction on an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_hide_mask",
+      "type": "function",
+      "name": "internal_browser_hide_mask",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        328,
+        347
+      ],
+      "summary": "Tauri command that hides the visual overlay mask on an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_clean_up",
+      "type": "function",
+      "name": "internal_browser_clean_up",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        351,
+        370
+      ],
+      "summary": "Tauri command that cleans up injected automation state in an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_is_ready",
+      "type": "function",
+      "name": "internal_browser_is_ready",
+      "filePath": "src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "lineRange": [
+        374,
+        386
+      ],
+      "summary": "Tauri command that reports whether the injected page agent script has finished initializing in an internal browser webview.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "browser-automation"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:emit_browser_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_stop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_stop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_takeover",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_takeover",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_screenshot_get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_screenshot_get",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_resume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "function:src-tauri/crates/browser/src/automation/commands.rs:browser_automation_resume",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "class:src-tauri/crates/browser/src/automation/commands.rs:BrowserAutomationStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "target": "class:src-tauri/crates/browser/src/automation/commands.rs:BrowserAutomationStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/capture.rs",
+      "target": "function:src-tauri/crates/browser/src/capture.rs:browser_inline_capture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/capture.rs",
+      "target": "function:src-tauri/crates/browser/src/capture.rs:browser_inline_capture",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/capture.rs",
+      "target": "function:src-tauri/crates/browser/src/capture.rs:take_snapshot_macos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:get_webview_cookies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:get_webview_cookies",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:get_wkwebview_cookies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:get_macos_shared_cookies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:parse_cookie",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:matches_domain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:matches_domain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:nsstring_to_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "function:src-tauri/crates/browser/src/cookies.rs:nsstring_to_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_html",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_html",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:delete_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:delete_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:update_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:update_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:clone_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:clone_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:move_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:move_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:undo_dom_operation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:undo_dom_operation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:redo_dom_operation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:redo_dom_operation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "class:src-tauri/crates/browser/src/dom_editor.rs:HistoryState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "class:src-tauri/crates/browser/src/dom_editor.rs:HistoryState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_dom_history_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_dom_history_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:serialize_dom_to_html",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:serialize_dom_to_html",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_add",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_remove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_toggle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_toggle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multi_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multi_selection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:clear_multi_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:clear_multi_selection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "class:src-tauri/crates/browser/src/dom_editor.rs:ElementBounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "class:src-tauri/crates/browser/src/dom_editor.rs:ElementBounds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_element_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_element_bounds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multiple_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multiple_bounds",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:resize_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:resize_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:set_element_position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:set_element_position",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:save_html_to_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:save_html_to_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_full_html_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/dom_editor.rs",
+      "target": "function:src-tauri/crates/browser/src/dom_editor.rs:get_full_html_document",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:frame_from_corners",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:set_generation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:cancel_generation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:is_current_generation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:decrement_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:create_inline_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:create_inline_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:update_inline_webview_position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:update_inline_webview_position",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:set_inline_webview_visibility",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:set_inline_webview_visibility",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:reposition_and_show_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:reposition_and_show_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:close_inline_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:close_inline_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:hide_all_inline_webviews",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:hide_all_inline_webviews",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:close_all_inline_webviews",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:close_all_inline_webviews",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:navigate_inline_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:navigate_inline_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:reload_inline_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "function:src-tauri/crates/browser/src/inline.rs:reload_inline_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:eval_browser_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:eval_page_agent_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserActionResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserActionResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserLocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "class:src-tauri/crates/browser/src/internal_browser_commands.rs:InternalBrowserLocation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_get_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_get_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_get_location",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_get_location",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_click",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_click",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_input",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_select",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_select",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_scroll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_scroll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_show_mask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_show_mask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_hide_mask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_hide_mask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_clean_up",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_clean_up",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_is_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/internal_browser_commands.rs",
+      "target": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:internal_browser_is_ready",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/automation/mod.rs",
+      "target": "file:src-tauri/crates/browser/src/automation/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_element",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:insert_html",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:delete_element",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:update_element",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:clone_element",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:move_element",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:undo_dom_operation",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:redo_dom_operation",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:get_dom_history_state",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:serialize_dom_to_html",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_add",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_remove",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:multi_select_toggle",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multi_selection",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:clear_multi_selection",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:get_element_bounds",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:get_multiple_bounds",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:resize_element",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:set_element_position",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:save_html_to_file",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/dom_editor.rs:get_full_html_document",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/browser/src/internal_browser_commands.rs:eval_browser_call",
+      "target": "function:src-tauri/crates/browser/src/logging.rs:eval_js_with_result_macos",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/cookies.rs",
+      "target": "file:src-tauri/crates/browser/src/types.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/browser/src/inline.rs",
+      "target": "file:src-tauri/crates/browser/src/scripts/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

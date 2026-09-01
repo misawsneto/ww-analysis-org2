@@ -1,0 +1,65 @@
+[
+  {
+    "order": 1,
+    "title": "Project Overview",
+    "description": "Start with README.md to understand ORG-2 as a local-first Rust and Tauri desktop application for running coding agents, capturing trajectories, and reviewing how work was built. This establishes the product context before the tour follows the native shell, agent runtime, and frontend surfaces.",
+    "nodeIds": ["file:README.md"]
+  },
+  {
+    "order": 2,
+    "title": "Tauri Application Entry",
+    "description": "The Tauri binary entry point selects between the session-provenance hook-capture CLI path and the normal desktop startup path through app_lib::run. This is the shell boundary that connects operating-system invocation to the application runtime introduced in the next steps.",
+    "nodeIds": ["file:src-tauri/src/main.rs"],
+    "languageLesson": "Rust match-style argument dispatch keeps distinct CLI and desktop startup paths explicit while preserving one binary entry point."
+  },
+  {
+    "order": 3,
+    "title": "Agent Core Architecture",
+    "description": "The agent-core crate root documents a four-layer architecture—foundation, core, intelligence and integrations, then state—and re-exports the public module surface. Its foundation and core barrels show how message buses, persistence, interaction, providers, sessions, and turn execution form the reusable headless engine behind the Tauri shell.",
+    "nodeIds": ["file:src-tauri/crates/agent-core/src/lib.rs", "file:src-tauri/crates/agent-core/src/foundation/mod.rs", "file:src-tauri/crates/agent-core/src/core/mod.rs"]
+  },
+  {
+    "order": 4,
+    "title": "Session Runtime Assembly",
+    "description": "Session initialization turns an agent definition, integrations configuration, and session overrides into a runtime with a provider, tool registry, policy, and MCP wiring. The session and initialization module surfaces explain how a request becomes an executable agent session rather than only a model call.",
+    "nodeIds": ["file:src-tauri/crates/agent-core/src/init/runtime_assemble.rs", "file:src-tauri/crates/agent-core/src/init/capabilities.rs", "file:src-tauri/crates/agent-core/src/core/session/mod.rs", "file:src-tauri/crates/agent-core/src/core/providers/mod.rs"],
+    "languageLesson": "Rust module barrels make subsystem boundaries visible while traits and factory functions let the runtime select among multiple LLM provider backends."
+  },
+  {
+    "order": 5,
+    "title": "State And Event Flow",
+    "description": "The state module groups Tauri commands, control flow, integration storage, session runtime, and unified state into the app-facing session layer. The event-pipeline types provide a compatibility re-export for canonical session events, giving frontend updates and persistence consumers a stable event vocabulary.",
+    "nodeIds": ["file:src-tauri/crates/agent-core/src/state/mod.rs", "file:src-tauri/crates/agent-core/src/state/session_runtime.rs", "file:src-tauri/src/agent_sessions/event_pipeline/types.rs"]
+  },
+  {
+    "order": 6,
+    "title": "Integrations And Imports",
+    "description": "IntegrationsConfig persists cross-agent settings for channels, databases, nodes, web search, embeddings, and MCP under ~/.orgii/integrations.json. The gateway routes channel messages into sessions, while external-import support converts Cursor, Claude Code, Codex, Copilot, and Kiro artifacts into ORGII primitives.",
+    "nodeIds": ["file:src-tauri/crates/agent-core/src/integrations/config.rs", "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs", "file:src-tauri/crates/agent-core/src/specialization/external_import/mod.rs"]
+  },
+  {
+    "order": 7,
+    "title": "Persistence Foundation",
+    "description": "The foundation persistence barrel gathers database helpers, images, session snapshots, and test schema support—the durable side of the session and event architecture. The database crate configuration makes SQLite connection plumbing explicit, including WAL mode, PRAGMA tuning, and registration-based schema initialization without a Tauri dependency.",
+    "nodeIds": ["file:src-tauri/crates/agent-core/src/foundation/persistence/mod.rs", "config:src-tauri/crates/database/Cargo.toml"]
+  },
+  {
+    "order": 8,
+    "title": "Frontend Application Shell",
+    "description": "AppBootstrap and AppProviders form the React-side application assembly point that consumes the native runtime and exposes shared application integration to screens. From this shell, the workstation and chat surfaces present the sessions, agent activity, and review experience described by the project overview.",
+    "nodeIds": ["file:src/app/root/AppBootstrap.tsx", "file:src/app/root/AppProviders.tsx", "file:src/engines/ChatPanel/index.tsx"]
+  },
+  {
+    "order": 9,
+    "title": "Workstation Contracts",
+    "description": "The unified tab-content contracts define the props, renderer entries, and registry used by workstation renderers to dispatch different views consistently. Repository atoms and storage provide the frontend persistence and state-update boundary that keeps those views aligned with native session data.",
+    "nodeIds": ["file:src/modules/WorkStation/TabContent/types.ts", "file:src/store/repo/atoms.ts", "file:src/store/repo/storage.ts"]
+  },
+  {
+    "order": 10,
+    "title": "Architecture And Configuration",
+    "description": "The agent-core architecture guide gives newcomers a compact message-send path from Tauri command through session runtime, turn executor, providers, and tool dispatch, tying together the runtime steps above. Cargo manifests and the environment template make the support architecture concrete: the agent engine declares its provider and tool dependencies, while local development and signing credentials remain configuration concerns.",
+    "nodeIds": ["document:src-tauri/crates/agent-core/src/ARCHITECTURE.md", "config:src-tauri/crates/agent-core/Cargo.toml", "config:.env.example"],
+    "languageLesson": "Cargo.toml expresses Rust crate boundaries and dependency contracts; environment templates keep deploy-time secrets and platform settings outside source code."
+  }
+]

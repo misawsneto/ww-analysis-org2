@@ -1,0 +1,1640 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "type": "file",
+   "name": "paths.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "summary": "Defines the `.orgtrack` directory layout and provides path-builder and JSON read/write/append helpers used throughout repo_sync to persist manifest, index, session, and commit files.",
+   "tags": [
+    "filesystem",
+    "utility",
+    "repo-sync",
+    "paths"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "type": "file",
+   "name": "types.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "summary": "Defines the serializable `.orgtrack` repo-shareable data model (scan progress/checkpoint, manifest, index, session/commit/provenance records, file timelines) written to and read from disk.",
+   "tags": [
+    "data-model",
+    "type-definition",
+    "repo-sync",
+    "serialization"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "type": "file",
+   "name": "resource_interaction.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "summary": "Derives file resource interactions (read/write/create/delete/rename outcomes) from agent tool calls and activity chunks, extracting file paths from tool arguments and unified-diff patches.",
+   "tags": [
+    "core-logic",
+    "file-tracking",
+    "tool-parsing"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "type": "file",
+   "name": "session_usage.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "summary": "Recomputes and backfills per-session token usage and billing cost by probing native/imported session owners and aggregating token totals across the store.",
+   "tags": [
+    "usage-tracking",
+    "billing",
+    "aggregation",
+    "sqlite"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "type": "file",
+   "name": "activity.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "summary": "Converts a generic activity-record input into a canonical ActivityRecord, mapping raw event-type strings to the ActivityKind enum.",
+   "tags": [
+    "adapter",
+    "normalization",
+    "activity"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "type": "file",
+   "name": "anthropic_jsonl.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "summary": "Source adapter that discovers, parses, and caches Anthropic API JSONL transcript files, converting message turns into normalized activity chunks and edit-impact artifacts via the shared imported_history pipeline.",
+   "tags": [
+    "adapter",
+    "source",
+    "jsonl-parsing",
+    "transcript-import"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "type": "file",
+   "name": "db.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "summary": "Reads and caches Claude Code's local SQLite session index (`sessions.json`/journal), performing delta sync of session metadata and building ClaudeCodeSession records.",
+   "tags": [
+    "adapter",
+    "source",
+    "sqlite",
+    "claude-code"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "type": "file",
+   "name": "history.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "summary": "Discovers and parses Claude Code JSONL transcript files from disk, converting them into cached history records and normalized activity chunks (messages, tool calls, edits) via the imported_history pipeline.",
+   "tags": [
+    "adapter",
+    "source",
+    "jsonl-parsing",
+    "transcript-import",
+    "claude-code"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "summary": "Barrel module for the Claude Code source adapter, exposing the db and history submodules and a helper to build the canonical `claudecodeapp-` prefixed session ID.",
+   "tags": [
+    "barrel",
+    "adapter",
+    "claude-code",
+    "entry-point"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "type": "file",
+   "name": "history.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "summary": "Discovers and parses Cline extension session history (both JSON files and SQLite database records), converting stored transcripts into normalized activity chunks and cached session metadata.",
+   "tags": [
+    "adapter",
+    "source",
+    "transcript-import",
+    "cline"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:ensure_orgtrack_dirs",
+   "type": "function",
+   "name": "ensure_orgtrack_dirs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "lineRange": [
+    133,
+    159
+   ],
+   "summary": "Creates the full `.orgtrack` directory tree (metadata, records, derived, state subdirectories) if it does not already exist.",
+   "tags": [
+    "filesystem",
+    "setup",
+    "repo-sync"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:append_json_line",
+   "type": "function",
+   "name": "append_json_line",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "lineRange": [
+    215,
+    235
+   ],
+   "summary": "Appends a JSON-serialized record as a new line to a JSONL file, creating the file and parent directories as needed.",
+   "tags": [
+    "filesystem",
+    "json",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:read_json_lines",
+   "type": "function",
+   "name": "read_json_lines",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "lineRange": [
+    244,
+    258
+   ],
+   "summary": "Reads and deserializes every line of a JSONL file into a vector of typed records, skipping blank lines.",
+   "tags": [
+    "filesystem",
+    "json",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:safe_file_stem",
+   "type": "function",
+   "name": "safe_file_stem",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "lineRange": [
+    266,
+    277
+   ],
+   "summary": "Sanitizes an arbitrary string into a filesystem-safe file stem for use in `.orgtrack` record filenames.",
+   "tags": [
+    "filesystem",
+    "utility",
+    "sanitization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:repo_relative_path",
+   "type": "function",
+   "name": "repo_relative_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "lineRange": [
+    289,
+    298
+   ],
+   "summary": "Computes a file's path relative to the repo root, used to key `.orgtrack` file-timeline records.",
+   "tags": [
+    "filesystem",
+    "utility",
+    "paths"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:clear_derived_outputs",
+   "type": "function",
+   "name": "clear_derived_outputs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "lineRange": [
+    300,
+    314
+   ],
+   "summary": "Deletes previously generated derived `.orgtrack` output files so they can be regenerated cleanly on the next sync.",
+   "tags": [
+    "filesystem",
+    "cleanup",
+    "repo-sync"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackScanProgress",
+   "type": "class",
+   "name": "OrgtrackScanProgress",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "lineRange": [
+    40,
+    55
+   ],
+   "summary": "Serializable progress record tracking an in-flight `.orgtrack` repo scan's counts and phase, with a default constructor.",
+   "tags": [
+    "data-model",
+    "repo-sync",
+    "progress"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackProvenanceRecord",
+   "type": "class",
+   "name": "OrgtrackProvenanceRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "lineRange": [
+    240,
+    257
+   ],
+   "summary": "Serializable record linking a file change to its originating session/commit provenance for the `.orgtrack` export.",
+   "tags": [
+    "data-model",
+    "repo-sync",
+    "provenance"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackFileTimelineEntry",
+   "type": "class",
+   "name": "OrgtrackFileTimelineEntry",
+   "filePath": "src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "lineRange": [
+    280,
+    297
+   ],
+   "summary": "Serializable entry in a file's `.orgtrack` timeline describing one historical change event for that file.",
+   "tags": [
+    "data-model",
+    "repo-sync",
+    "timeline"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_activity_chunk",
+   "type": "function",
+   "name": "file_interactions_from_activity_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    20,
+    36
+   ],
+   "summary": "Derives file resource interactions (read/write/etc.) from a single normalized activity chunk.",
+   "tags": [
+    "file-tracking",
+    "parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:interaction_outcome_from_tool_result",
+   "type": "function",
+   "name": "interaction_outcome_from_tool_result",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    47,
+    67
+   ],
+   "summary": "Determines the outcome (success/failure/partial) of a file resource interaction from a tool call's result payload.",
+   "tags": [
+    "file-tracking",
+    "tool-result"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:activity_chunk_source_event_id",
+   "type": "function",
+   "name": "activity_chunk_source_event_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    69,
+    85
+   ],
+   "summary": "Extracts the originating source event ID from an activity chunk for correlating derived resource interactions back to their source event.",
+   "tags": [
+    "utility",
+    "activity"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_tool",
+   "type": "function",
+   "name": "file_interactions_from_tool",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    91,
+    139
+   ],
+   "summary": "Central dispatcher that derives a list of FileInteractionCandidate entries from a tool name, its arguments, and optional result, covering read/write/search/patch tools.",
+   "tags": [
+    "core-logic",
+    "file-tracking",
+    "tool-parsing"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:action_for_tool_name",
+   "type": "function",
+   "name": "action_for_tool_name",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    141,
+    173
+   ],
+   "summary": "Maps a known tool function name (e.g. read/edit/write file tools) to its corresponding ResourceAction classification.",
+   "tags": [
+    "mapping",
+    "tool-parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:explicit_file_paths",
+   "type": "function",
+   "name": "explicit_file_paths",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    175,
+    205
+   ],
+   "summary": "Extracts explicitly-referenced file paths from a tool call's argument JSON (e.g. file_path/path fields).",
+   "tags": [
+    "parsing",
+    "file-tracking"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:patch_file_interactions",
+   "type": "function",
+   "name": "patch_file_interactions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "lineRange": [
+    262,
+    288
+   ],
+   "summary": "Derives file interactions from a multi-file unified-diff patch tool call by parsing the patch text for touched paths.",
+   "tags": [
+    "diffing",
+    "file-tracking"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/session_usage.rs:recompute_session_usage",
+   "type": "function",
+   "name": "recompute_session_usage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "lineRange": [
+    289,
+    355
+   ],
+   "summary": "Recomputes a session's aggregate token usage and estimated cost by probing native and imported usage sources and summing native totals.",
+   "tags": [
+    "usage-tracking",
+    "aggregation",
+    "billing"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/session_usage.rs:backfill_session_usage",
+   "type": "function",
+   "name": "backfill_session_usage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "lineRange": [
+    364,
+    415
+   ],
+   "summary": "Backfills missing session_usage rows for historical sessions that predate usage tracking, by recomputing usage for each affected session.",
+   "tags": [
+    "usage-tracking",
+    "backfill",
+    "sqlite"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/session_usage.rs:SessionUsageRecord",
+   "type": "class",
+   "name": "SessionUsageRecord",
+   "filePath": "src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "lineRange": [
+    46,
+    64
+   ],
+   "summary": "Record of a session's aggregate token usage (input/output/cache) and billable-token computation used for cost estimation and reporting.",
+   "tags": [
+    "data-model",
+    "usage-tracking",
+    "billing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/activity.rs:activity_record_from_input",
+   "type": "function",
+   "name": "activity_record_from_input",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "lineRange": [
+    21,
+    38
+   ],
+   "summary": "Converts a generic ActivityRecordInput into a canonical ActivityRecord ready for storage.",
+   "tags": [
+    "adapter",
+    "normalization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/activity.rs:activity_kind_from_event_type",
+   "type": "function",
+   "name": "activity_kind_from_event_type",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "lineRange": [
+    40,
+    51
+   ],
+   "summary": "Maps a raw event-type string from a source adapter into the canonical ActivityKind enum variant.",
+   "tags": [
+    "mapping",
+    "normalization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/activity.rs:ActivityRecordInput",
+   "type": "class",
+   "name": "ActivityRecordInput",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "lineRange": [
+    5,
+    19
+   ],
+   "summary": "Provider-neutral input struct capturing the raw fields needed to build a canonical ActivityRecord from any source adapter.",
+   "tags": [
+    "data-model",
+    "adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:load_session",
+   "type": "function",
+   "name": "load_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "lineRange": [
+    102,
+    117
+   ],
+   "summary": "Loads and parses a single Anthropic JSONL transcript file from disk into normalized activity chunks for a session.",
+   "tags": [
+    "source",
+    "jsonl-parsing",
+    "transcript-import"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:parse_session_meta",
+   "type": "function",
+   "name": "parse_session_meta",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "lineRange": [
+    216,
+    302
+   ],
+   "summary": "Parses an Anthropic JSONL transcript file's lines into session metadata (title, timestamps, token usage, edit-impact stats) for caching.",
+   "tags": [
+    "jsonl-parsing",
+    "session-metadata",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:read_turns",
+   "type": "function",
+   "name": "read_turns",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "lineRange": [
+    342,
+    387
+   ],
+   "summary": "Reads a JSONL file's lines and groups them into TranscriptTurn structures representing a message and its associated events.",
+   "tags": [
+    "jsonl-parsing",
+    "transcript-import"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:messages_to_chunks",
+   "type": "function",
+   "name": "messages_to_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "lineRange": [
+    389,
+    514
+   ],
+   "summary": "Converts parsed Anthropic transcript turns into the shared imported_history activity chunk format (user/assistant/thinking/tool-call chunks).",
+   "tags": [
+    "normalization",
+    "transcript-import",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:delta_sync",
+   "type": "function",
+   "name": "delta_sync",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "lineRange": [
+    149,
+    221
+   ],
+   "summary": "Performs an incremental sync of Claude Code's local sessions index against the cache, fetching only sessions whose mtimes changed since the last sync.",
+   "tags": [
+    "sqlite",
+    "sync",
+    "claude-code",
+    "core-logic"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:parse_session_jsonl",
+   "type": "function",
+   "name": "parse_session_jsonl",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "lineRange": [
+    277,
+    334
+   ],
+   "summary": "Parses a Claude Code session's JSONL journal file to extract assistant messages and token usage for building a ClaudeCodeSession record.",
+   "tags": [
+    "jsonl-parsing",
+    "claude-code"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:query_cache",
+   "type": "function",
+   "name": "query_cache",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "lineRange": [
+    392,
+    432
+   ],
+   "summary": "Queries the local session cache database for previously indexed Claude Code sessions matching given filters.",
+   "tags": [
+    "sqlite",
+    "query",
+    "claude-code"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:ClaudeCodeSession",
+   "type": "class",
+   "name": "ClaudeCodeSession",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "lineRange": [
+    99,
+    119
+   ],
+   "summary": "Struct representing a Claude Code session as read from its local SQLite/JSON index, including metadata needed for canonical import.",
+   "tags": [
+    "data-model",
+    "claude-code"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:stat_claude_code_history_for_session",
+   "type": "function",
+   "name": "stat_claude_code_history_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    183,
+    201
+   ],
+   "summary": "Retrieves file-stat metadata (size, mtime) for a Claude Code session's transcript file without fully parsing it.",
+   "tags": [
+    "filesystem",
+    "claude-code"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:sync_claude_code_history_cache",
+   "type": "function",
+   "name": "sync_claude_code_history_cache",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    203,
+    249
+   ],
+   "summary": "Syncs the imported-history cache with newly discovered or changed Claude Code transcript files on disk.",
+   "tags": [
+    "sync",
+    "cache",
+    "claude-code"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_session_titles",
+   "type": "function",
+   "name": "load_claude_session_titles",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    310,
+    351
+   ],
+   "summary": "Loads session title metadata for Claude Code sessions from their project directories, used to populate sidebar/history listings.",
+   "tags": [
+    "claude-code",
+    "metadata"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:parse_claude_session_meta",
+   "type": "function",
+   "name": "parse_claude_session_meta",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    391,
+    586
+   ],
+   "summary": "Parses a Claude Code transcript file end-to-end to derive session metadata (title, timestamps, token usage, edit impact) for caching, calling into the shared imported_history normalization helpers.",
+   "tags": [
+    "jsonl-parsing",
+    "session-metadata",
+    "core-logic",
+    "claude-code"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:collect_claude_impact_from_item",
+   "type": "function",
+   "name": "collect_claude_impact_from_item",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    652,
+    697
+   ],
+   "summary": "Accumulates edit-impact statistics (lines changed) from a single Claude Code transcript item's tool result.",
+   "tags": [
+    "parsing",
+    "edit-extraction",
+    "claude-code"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "type": "function",
+   "name": "load_claude_code_history_from_path",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    716,
+    836
+   ],
+   "summary": "Fully loads and normalizes a Claude Code transcript file into the shared activity-chunk format (user/assistant/thinking/tool-call chunks) for a given session path.",
+   "tags": [
+    "jsonl-parsing",
+    "transcript-import",
+    "core-logic",
+    "claude-code"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:claude_projects_dir_candidates",
+   "type": "function",
+   "name": "claude_projects_dir_candidates",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    1078,
+    1123
+   ],
+   "summary": "Enumerates candidate filesystem locations for Claude Code's `projects` directory across supported OS/install layouts.",
+   "tags": [
+    "filesystem",
+    "discovery",
+    "claude-code"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:ClaudeJsonlLine",
+   "type": "class",
+   "name": "ClaudeJsonlLine",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "lineRange": [
+    69,
+    105
+   ],
+   "summary": "Struct modeling a single line of a Claude Code transcript JSONL file (message, metadata, tool events).",
+   "tags": [
+    "data-model",
+    "claude-code",
+    "jsonl"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs:canonical_session_id",
+   "type": "function",
+   "name": "canonical_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "lineRange": [
+    8,
+    10
+   ],
+   "summary": "Builds the canonical `claudecodeapp-`-prefixed session ID from a Claude Code source session ID, used to correlate hook events with imported history.",
+   "tags": [
+    "normalization",
+    "claude-code",
+    "session"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:discover_cline_history_records",
+   "type": "function",
+   "name": "discover_cline_history_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "lineRange": [
+    198,
+    249
+   ],
+   "summary": "Discovers Cline session history files on disk (JSON transcripts) and produces discovered-record descriptors for cache syncing.",
+   "tags": [
+    "discovery",
+    "cline",
+    "filesystem"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:discover_cline_db_records",
+   "type": "function",
+   "name": "discover_cline_db_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "lineRange": [
+    251,
+    315
+   ],
+   "summary": "Discovers Cline sessions stored in its SQLite database and produces discovered-record descriptors for cache syncing.",
+   "tags": [
+    "discovery",
+    "cline",
+    "sqlite"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:parse_cline_session_meta",
+   "type": "function",
+   "name": "parse_cline_session_meta",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "lineRange": [
+    335,
+    481
+   ],
+   "summary": "Parses a Cline session transcript to derive session metadata (title, timestamps, token usage, edit impact) for caching, using the shared imported_history normalization helpers.",
+   "tags": [
+    "parsing",
+    "session-metadata",
+    "core-logic",
+    "cline"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:transcript_to_chunks",
+   "type": "function",
+   "name": "transcript_to_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "lineRange": [
+    517,
+    647
+   ],
+   "summary": "Converts a parsed Cline transcript into the shared imported_history activity chunk format (user/assistant/tool-call chunks), stripping Cline-specific read-tool gutter formatting.",
+   "tags": [
+    "normalization",
+    "transcript-import",
+    "core-logic",
+    "cline"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:expand_cline_tool_call",
+   "type": "function",
+   "name": "expand_cline_tool_call",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "lineRange": [
+    658,
+    714
+   ],
+   "summary": "Expands a compact Cline tool-call representation into its full normalized tool-call chunk with input/output details.",
+   "tags": [
+    "parsing",
+    "tool-parsing",
+    "cline"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:ensure_orgtrack_dirs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:ensure_orgtrack_dirs",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:append_json_line",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:append_json_line",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:read_json_lines",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:read_json_lines",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:safe_file_stem",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:safe_file_stem",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:repo_relative_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:repo_relative_path",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:clear_derived_outputs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs:clear_derived_outputs",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackScanProgress",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackScanProgress",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackProvenanceRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackProvenanceRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackFileTimelineEntry",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs:OrgtrackFileTimelineEntry",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_activity_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_activity_chunk",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:interaction_outcome_from_tool_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:interaction_outcome_from_tool_result",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:activity_chunk_source_event_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:activity_chunk_source_event_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_tool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:file_interactions_from_tool",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:action_for_tool_name",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:action_for_tool_name",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:explicit_file_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:explicit_file_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:patch_file_interactions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/resource_interaction.rs:patch_file_interactions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/session_usage.rs:recompute_session_usage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/session_usage.rs:recompute_session_usage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/session_usage.rs:backfill_session_usage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/session_usage.rs:backfill_session_usage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/session_usage.rs:SessionUsageRecord",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/session_usage.rs:SessionUsageRecord",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/activity.rs:activity_record_from_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/activity.rs:activity_record_from_input",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/activity.rs:activity_kind_from_event_type",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/activity.rs:activity_kind_from_event_type",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/activity.rs:ActivityRecordInput",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/activity.rs:ActivityRecordInput",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:load_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:load_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:parse_session_meta",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:read_turns",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:messages_to_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:delta_sync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:parse_session_jsonl",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:query_cache",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:ClaudeCodeSession",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs:ClaudeCodeSession",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:stat_claude_code_history_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:stat_claude_code_history_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:sync_claude_code_history_cache",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_session_titles",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:parse_claude_session_meta",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:collect_claude_impact_from_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:claude_projects_dir_candidates",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:ClaudeJsonlLine",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs:canonical_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs:canonical_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:discover_cline_history_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:discover_cline_db_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:parse_cline_session_meta",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:transcript_to_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:expand_cline_tool_call",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/paths.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/repo_sync/types.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/resource_interaction.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/pricing.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/activity.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/privacy/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/db.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:parse_claude_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/mod.rs:canonical_session_id",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:messages_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:assistant_message_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:messages_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:thinking_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:messages_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:tool_call_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:messages_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:user_message_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:parse_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:impact_from_edit_chunks",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/anthropic_jsonl.rs:parse_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:truncate_name",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:assistant_message_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:normalize_created_at",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:strip_orgii_exec_mode_bridge",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:thinking_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:tool_call_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:load_claude_code_history_from_path",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:user_message_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:parse_claude_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:parse_iso_to_epoch_ms_opt",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:parse_claude_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:strip_orgii_exec_mode_bridge",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/claude_code/history.rs:parse_claude_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:truncate_name",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:parse_cline_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:impact_from_edit_chunks",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:parse_cline_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:parse_iso_to_epoch_ms_opt",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:parse_cline_session_meta",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:truncate_name",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:transcript_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:assistant_message_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:transcript_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:epoch_ms_to_iso",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:transcript_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:tool_call_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/orgtrack-core/src/sources/cline/history.rs:transcript_to_chunks",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs:user_message_chunk",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

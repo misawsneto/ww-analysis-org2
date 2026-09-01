@@ -1,0 +1,1110 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "type": "file",
+   "name": "agent_org_plan_approvals.rs",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "summary": "Implements the plan-approval workflow for agent orgs: creating pending approvals, approving/requesting changes, and notifying participants via the inbox, backed by a transactional SQLite store.",
+   "tags": [
+    "data-model",
+    "database",
+    "coordination",
+    "workflow"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:enqueue_post_approval_messages",
+   "type": "function",
+   "name": "enqueue_post_approval_messages",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    124,
+    196
+   ],
+   "summary": "Enqueues inbox notification messages to the relevant participants once a plan approval decision (approve/request-changes) has been made.",
+   "tags": [
+    "messaging",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:init_schema",
+   "type": "function",
+   "name": "init_schema",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    198,
+    225
+   ],
+   "summary": "Creates the database table(s)/indexes for this module if they do not already exist (the agent org plan-approval workflow store).",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending",
+   "type": "function",
+   "name": "create_pending",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    230,
+    246
+   ],
+   "summary": "Creates a new record via create pending (the agent org plan-approval workflow store).",
+   "tags": [
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending_with_request",
+   "type": "function",
+   "name": "create_pending_with_request",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    248,
+    280
+   ],
+   "summary": "Creates a pending plan-approval record together with its associated inbox delivery request, in a single transaction.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_and_approve_automatic",
+   "type": "function",
+   "name": "create_and_approve_automatic",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    282,
+    304
+   ],
+   "summary": "Creates a plan approval and immediately auto-approves it, used when the approval policy does not require human review.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:list_pending_by_run",
+   "type": "function",
+   "name": "list_pending_by_run",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    306,
+    326
+   ],
+   "summary": "Lists pending by run (the agent org plan-approval workflow store).",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:get_pending_by_request_id",
+   "type": "function",
+   "name": "get_pending_by_request_id",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    328,
+    338
+   ],
+   "summary": "Retrieves pending by request id (the agent org plan-approval workflow store).",
+   "tags": [
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:approve",
+   "type": "function",
+   "name": "approve",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    340,
+    394
+   ],
+   "summary": "Approves a pending plan approval, recording the decision-maker and optionally an edited plan content, and enqueues follow-up messages.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:request_changes",
+   "type": "function",
+   "name": "request_changes",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    396,
+    485
+   ],
+   "summary": "Records a 'request changes' decision on a pending plan approval with feedback, and notifies the plan's author via the inbox.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:get",
+   "type": "function",
+   "name": "get",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    487,
+    490
+   ],
+   "summary": "Retrieves get (the agent org plan-approval workflow store).",
+   "tags": [
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:cancel_pending_for_non_running_runs",
+   "type": "function",
+   "name": "cancel_pending_for_non_running_runs",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    492,
+    539
+   ],
+   "summary": "Cancels any pending plan approvals whose parent agent org run is no longer in the Running state.",
+   "tags": [
+    "database",
+    "workflow",
+    "recovery"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending_in_tx",
+   "type": "function",
+   "name": "create_pending_in_tx",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    542,
+    641
+   ],
+   "summary": "Inserts a new pending plan-approval row within a transaction, validating creation parameters first.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:approve_pending_in_tx",
+   "type": "function",
+   "name": "approve_pending_in_tx",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    643,
+    706
+   ],
+   "summary": "Applies an approval/changes-requested transition to a pending plan-approval row within a transaction.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:plan_approval_request_message",
+   "type": "function",
+   "name": "plan_approval_request_message",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    708,
+    727
+   ],
+   "summary": "Builds the inbox message payload requesting plan approval from the relevant participant.",
+   "tags": [
+    "messaging",
+    "workflow"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:validate_create_params",
+   "type": "function",
+   "name": "validate_create_params",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    737,
+    757
+   ],
+   "summary": "Validates create params (the agent org plan-approval workflow store).",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:authorize_decision",
+   "type": "function",
+   "name": "authorize_decision",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    759,
+    784
+   ],
+   "summary": "Checks that the given decision-maker is authorized to decide on a plan approval according to its policy.",
+   "tags": [
+    "validation",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:insert_record",
+   "type": "function",
+   "name": "insert_record",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    786,
+    816
+   ],
+   "summary": "Inserts a plan-approval row into SQLite from an AgentOrgPlanApproval record.",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:query_record",
+   "type": "function",
+   "name": "query_record",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    818,
+    833
+   ],
+   "summary": "Runs a parameterized SELECT against the plan_approvals table and maps the result to a record.",
+   "tags": [
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:row_to_record",
+   "type": "function",
+   "name": "row_to_record",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    835,
+    872
+   ],
+   "summary": "Maps a database row into a record value (the agent org plan-approval workflow store).",
+   "tags": [
+    "database",
+    "serialization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApprovalStatus",
+   "type": "class",
+   "name": "AgentOrgPlanApprovalStatus",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    25,
+    31
+   ],
+   "summary": "Enum type with variants: Pending, Approved, ChangesRequested, Superseded, Cancelled (the agent org plan-approval workflow store).",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanDecisionBy",
+   "type": "class",
+   "name": "AgentOrgPlanDecisionBy",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    57,
+    61
+   ],
+   "summary": "Enum type with variants: User, Coordinator, System (the agent org plan-approval workflow store).",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApproval",
+   "type": "class",
+   "name": "AgentOrgPlanApproval",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    75,
+    93
+   ],
+   "summary": "Record of a plan submitted by an agent org member for approval, including its policy, status, content, and resolution.",
+   "tags": [
+    "data-model",
+    "workflow"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:CreateAgentOrgPlanApprovalParams",
+   "type": "class",
+   "name": "CreateAgentOrgPlanApprovalParams",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    96,
+    107
+   ],
+   "summary": "Data record with fields: request_id, org_run_id, source_task_id, source_member_id, source_session_id, root_session_id, policy, plan_title (the agent org plan-approval workflow store).",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:ApprovedAgentOrgPlan",
+   "type": "class",
+   "name": "ApprovedAgentOrgPlan",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    110,
+    113
+   ],
+   "summary": "Data record with fields: approval, task_outcome (the agent org plan-approval workflow store).",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanInboxDelivery",
+   "type": "class",
+   "name": "AgentOrgPlanInboxDelivery",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    116,
+    120
+   ],
+   "summary": "Data record with fields: recipient_agent_id, sender_agent_id, sender_member_id (the agent org plan-approval workflow store).",
+   "tags": [
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApprovalStore",
+   "type": "class",
+   "name": "AgentOrgPlanApprovalStore",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "lineRange": [
+    227,
+    227
+   ],
+   "summary": "SQLite-backed store implementing the full plan-approval lifecycle (create, approve, request changes, cancel) for agent org runs.",
+   "tags": [
+    "database",
+    "workflow"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "type": "file",
+   "name": "agent_org_run_events.rs",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "summary": "Emits Tauri events to the frontend when an agent org run or its underlying session changes state, used to drive UI live-updates.",
+   "tags": [
+    "event-handler",
+    "coordination",
+    "tauri"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs:notify_agent_org_run_changed",
+   "type": "function",
+   "name": "notify_agent_org_run_changed",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "lineRange": [
+    21,
+    29
+   ],
+   "summary": "Emits a Tauri event notifying the frontend that a given agent org run's state has changed.",
+   "tags": [
+    "event-handler",
+    "tauri"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs:notify_agent_org_session_changed",
+   "type": "function",
+   "name": "notify_agent_org_session_changed",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "lineRange": [
+    35,
+    48
+   ],
+   "summary": "Resolves the owning agent org run for a session and emits a run-changed event, used when only a session id is known.",
+   "tags": [
+    "event-handler",
+    "tauri"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "type": "file",
+   "name": "helpers.rs",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "summary": "Helper functions for loading and mapping agent org run records (by id or root session), building run context objects, and validating run-related enum wire values.",
+   "tags": [
+    "utility",
+    "database",
+    "coordination"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:parent_session_id_of",
+   "type": "function",
+   "name": "parent_session_id_of",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    19,
+    40
+   ],
+   "summary": "Looks up the parent session id of a given session, used for walking up the session hierarchy.",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:load_by_id",
+   "type": "function",
+   "name": "load_by_id",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    42,
+    67
+   ],
+   "summary": "Loads a single agent org run record by its id.",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:load_by_root_session",
+   "type": "function",
+   "name": "load_by_root_session",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    69,
+    97
+   ],
+   "summary": "Loads the agent org run record associated with a given root session id.",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:row_to_run",
+   "type": "function",
+   "name": "row_to_run",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    99,
+    133
+   ],
+   "summary": "Maps a raw SQLite row into an AgentOrgRunRecord struct.",
+   "tags": [
+    "database",
+    "serialization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:context_for_run_record",
+   "type": "function",
+   "name": "context_for_run_record",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    135,
+    151
+   ],
+   "summary": "Builds an AgentOrgRunContext (participants, routing info) from a run record plus the org store snapshot.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:context_from_run_and_org",
+   "type": "function",
+   "name": "context_from_run_and_org",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    153,
+    170
+   ],
+   "summary": "Builds an AgentOrgRunContext directly from an already-loaded run and org snapshot, without a DB roundtrip.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:flatten_members",
+   "type": "function",
+   "name": "flatten_members",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    179,
+    195
+   ],
+   "summary": "Recursively flattens a nested org member hierarchy into a flat list of AgentOrgContextMember entries with parent links.",
+   "tags": [
+    "algorithm",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:insert_run",
+   "type": "function",
+   "name": "insert_run",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    197,
+    235
+   ],
+   "summary": "Inserts a new agent org run row into SQLite from a run record.",
+   "tags": [
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:validate_entry_mode",
+   "type": "function",
+   "name": "validate_entry_mode",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    237,
+    240
+   ],
+   "summary": "Validates entry mode (agent org run helper/mapping functions).",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:validate_status",
+   "type": "function",
+   "name": "validate_status",
+   "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "lineRange": [
+    242,
+    245
+   ],
+   "summary": "Validates status (agent org run helper/mapping functions).",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:enqueue_post_approval_messages",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:enqueue_post_approval_messages",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:init_schema",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:init_schema",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending_with_request",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending_with_request",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_and_approve_automatic",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_and_approve_automatic",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:list_pending_by_run",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:list_pending_by_run",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:get_pending_by_request_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:get_pending_by_request_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:approve",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:approve",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:request_changes",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:request_changes",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:get",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:get",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:cancel_pending_for_non_running_runs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:cancel_pending_for_non_running_runs",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:create_pending_in_tx",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:approve_pending_in_tx",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:plan_approval_request_message",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:validate_create_params",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:authorize_decision",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:insert_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:query_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:row_to_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApprovalStatus",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApprovalStatus",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanDecisionBy",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanDecisionBy",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApproval",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApproval",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:CreateAgentOrgPlanApprovalParams",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:CreateAgentOrgPlanApprovalParams",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:ApprovedAgentOrgPlan",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:ApprovedAgentOrgPlan",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanInboxDelivery",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanInboxDelivery",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApprovalStore",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs",
+   "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_plan_approvals.rs:AgentOrgPlanApprovalStore",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs:notify_agent_org_run_changed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs:notify_agent_org_run_changed",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs:notify_agent_org_session_changed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_run_events.rs:notify_agent_org_session_changed",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:parent_session_id_of",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:parent_session_id_of",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:load_by_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:load_by_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:load_by_root_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:load_by_root_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:row_to_run",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:row_to_run",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:context_for_run_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:context_for_run_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:context_from_run_and_org",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:context_from_run_and_org",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:flatten_members",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:flatten_members",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:insert_run",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:insert_run",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:validate_entry_mode",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:validate_entry_mode",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:validate_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+   "target": "function:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs:validate_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

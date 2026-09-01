@@ -1,0 +1,397 @@
+.wp__chat__history,
+.session-replay-messages,
+.chat-history-portal {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+
+  background: transparent;
+
+  // CSS Variables for customization (set via inline style)
+  // --chat-font-size: 13px;        (main body text)
+  // --chat-code-font-size: 13px;   (code/mono content)
+  // --chat-line-height: 1.6;
+
+  // Derived font-size tokens — all relative to --chat-font-size
+  --chat-block-xs-size: calc(
+    var(--chat-font-size, 13px) - 2px
+  ); // labels, badges, section headers
+  --chat-block-content-size: var(
+    --chat-code-font-size,
+    13px
+  ); // code/content areas
+  --chat-block-title-size: var(
+    --chat-font-size,
+    13px
+  ); // block headers, meta (same as base)
+  --chat-block-md-size: var(--chat-font-size, 13px); // main body text
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chat-font-size-wrapper,
+  .chat-font-size-wrapper > *,
+  [class*="bg-event-block"],
+  [class*="bg-event-block"] > *,
+  .chat-block-header,
+  .chat-block-header *,
+  .chat-block-icon,
+  .chat-block-icon *,
+  .event-block-content,
+  .event-block-content > *,
+  .event-block-shell,
+  .event-block-shell > * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  .chat-font-size-wrapper::selection,
+  .chat-font-size-wrapper *::selection,
+  [class*="bg-event-block"]::selection,
+  [class*="bg-event-block"] *::selection,
+  .chat-block-header::selection,
+  .chat-block-header *::selection,
+  .chat-block-icon::selection,
+  .chat-block-icon *::selection,
+  .event-block-content::selection,
+  .event-block-content *::selection,
+  .event-block-shell::selection,
+  .event-block-shell *::selection {
+    background: transparent !important;
+    background-color: transparent !important;
+  }
+
+  .chat-markdown-body
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th
+    ),
+  .markdown-container
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th
+    ),
+  .resultBgc
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th
+    ),
+  .allow-select-deep
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th,
+      pre,
+      code,
+      time
+    ),
+  .question-text,
+  .question-text :is(span, strong, em, b, i, a),
+  .terminal-output__pre,
+  .terminal-output__pre span,
+  .terminal-output__error,
+  .terminal-output__error span,
+  .simulator-shell-plain-pre,
+  .simulator-shell-plain-pre span,
+  pre,
+  pre span,
+  code,
+  code span {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+
+  // Keep flex/grid/layout wrappers out of the selection range so WebKit does
+  // not paint empty message boxes as full-width lines or U-shaped outlines.
+  // Real text elements opt back in through the semantic allowlist above.
+  .allow-select-deep {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  .allow-select-deep * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  .allow-select-deep .select-none,
+  .allow-select-deep .select-none * {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+  }
+
+  .chat-markdown-body
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th
+    )::selection,
+  .markdown-container
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th
+    )::selection,
+  .resultBgc
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th
+    )::selection,
+  .question-text::selection,
+  .question-text :is(span, strong, em, b, i, a)::selection,
+  .terminal-output__pre::selection,
+  .terminal-output__pre span::selection,
+  .terminal-output__error::selection,
+  .terminal-output__error span::selection,
+  .simulator-shell-plain-pre::selection,
+  .simulator-shell-plain-pre span::selection,
+  pre::selection,
+  pre span::selection,
+  code::selection,
+  code span::selection {
+    background: var(--text-selection, var(--color-primary-2)) !important;
+    background-color: var(--text-selection, var(--color-primary-2)) !important;
+  }
+
+  .allow-select-deep
+    :is(
+      p,
+      span,
+      strong,
+      em,
+      b,
+      i,
+      a,
+      li,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      blockquote,
+      td,
+      th,
+      pre,
+      code,
+      time
+    )::selection {
+    background: var(--text-selection, var(--color-primary-2)) !important;
+    background-color: var(--text-selection, var(--color-primary-2)) !important;
+  }
+
+  .chat-markdown-body {
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto; // Internal scrolling allowed for wide content
+    overflow-y: visible;
+    line-height: var(--chat-line-height, 1.6);
+
+    > pre {
+      max-width: 100%;
+      width: 100%;
+      overflow-x: auto;
+      min-width: 0;
+    }
+
+    // Code blocks use code font size
+    pre,
+    code {
+      font-size: var(--chat-code-font-size, 13px) !important;
+    }
+  }
+
+  // Chat font size wrapper - applies to all chat message content
+  // Font size is set via inline style on parent .wp__chat__history
+  .chat-font-size-wrapper {
+    font-size: inherit;
+    line-height: var(--chat-line-height, 1.6);
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: visible; // Allow horizontal scroll for wide content (code blocks, tables)
+    // Note: vertical spacing is handled by CHAT_ITEM_GAP token in ChatItemWrap.
+    // Do NOT add padding-bottom here — it conflicts with the Tailwind gap classes.
+
+    &.chat-item-wrap--activity:has(> .activity-chat-item:empty) {
+      display: none;
+    }
+
+    // Selection paint is restricted above so drag-selecting across cards
+    // does not highlight block chrome/background shapes.
+
+    // Main message content areas
+    .resultBgc,
+    .question-text,
+    .markdown-container {
+      font-size: inherit !important;
+      line-height: var(--chat-line-height, 1.6);
+    }
+
+    // User message content - the div with dangerouslySetInnerHTML
+    //
+    // ⚠️ The bare `.group` selector below is a footgun: Tailwind's generic
+    // `group` utility is used by many Chat blocks for hover-reveal children.
+    // Any Block whose outer wrapper uses bare `className="group …"` will
+    // match this rule and lose the `.chat-block-header` 16px size (falling
+    // back to the parent's 17px `--chat-font-size`).
+    //
+    // Rule: Chat blocks MUST use NAMED Tailwind group variants on their outer
+    // wrapper (`group/explore`, `group/shell`, `group/chat-block-header`, …).
+    // See `.cursor/rules/session-rendering.mdc` → "Tailwind `group` class —
+    // use named variants".
+    > div > .group > div,
+    .group > div[style] {
+      font-size: inherit !important;
+      line-height: var(--chat-line-height, 1.6);
+    }
+
+    // Agent message content in Markdown
+    .chat-markdown-body {
+      font-size: inherit !important;
+      line-height: var(--chat-line-height, 1.6);
+
+      // Code blocks use code font size
+      pre,
+      code {
+        font-size: var(--chat-code-font-size, 13px) !important;
+      }
+    }
+
+    // Ask user chat item text
+    .ask-user-chat-item {
+      .question-text {
+        font-size: inherit !important;
+        line-height: var(--chat-line-height, 1.6);
+      }
+    }
+  }
+
+  // Chat block header — uses --chat-block-title-size (same as main text)
+  .chat-block-header {
+    font-size: var(--chat-block-title-size, 13px);
+  }
+
+  // Chat block icon — sized to match block title text
+  .chat-block-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    align-self: center;
+    width: var(--chat-block-title-size, 13px);
+    height: var(--chat-block-title-size, 13px);
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  }
+}
+
+// Text highlight for search matches (shared with Communication / Station)
+@import "../../../styles/chat-search-highlight";

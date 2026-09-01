@@ -1,0 +1,470 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src-tauri/crates/inbox/src/commands.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 41,
+      "functions": [
+        {
+          "name": "inbox_list",
+          "startLine": 7,
+          "endLine": 13,
+          "params": []
+        },
+        {
+          "name": "inbox_upsert",
+          "startLine": 17,
+          "endLine": 24,
+          "params": [
+            "message"
+          ]
+        },
+        {
+          "name": "inbox_update_status",
+          "startLine": 28,
+          "endLine": 35,
+          "params": [
+            "id",
+            "status"
+          ]
+        },
+        {
+          "name": "inbox_delete",
+          "startLine": 39,
+          "endLine": 46,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "inbox_list",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "inbox_upsert",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "inbox_update_status",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "inbox_delete",
+          "line": 39,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "inbox_list",
+          "callee": "tokio::task::spawn_blocking(|| {\n        persistence::list_messages().map_err(|e| format!(\"Failed to list inbox: {}\", e))\n    })\n    .await.map_err",
+          "lineNumber": 8
+        },
+        {
+          "caller": "inbox_list",
+          "callee": "tokio::task::spawn_blocking",
+          "lineNumber": 8
+        },
+        {
+          "caller": "inbox_list",
+          "callee": "persistence::list_messages().map_err",
+          "lineNumber": 9
+        },
+        {
+          "caller": "inbox_list",
+          "callee": "persistence::list_messages",
+          "lineNumber": 9
+        },
+        {
+          "caller": "inbox_upsert",
+          "callee": "tokio::task::spawn_blocking(move || {\n        persistence::upsert_message(&message)\n            .map_err(|e| format!(\"Failed to upsert inbox message: {}\", e))\n    })\n    .await.map_err",
+          "lineNumber": 18
+        },
+        {
+          "caller": "inbox_upsert",
+          "callee": "tokio::task::spawn_blocking",
+          "lineNumber": 18
+        },
+        {
+          "caller": "inbox_upsert",
+          "callee": "persistence::upsert_message(&message).map_err",
+          "lineNumber": 19
+        },
+        {
+          "caller": "inbox_upsert",
+          "callee": "persistence::upsert_message",
+          "lineNumber": 19
+        },
+        {
+          "caller": "inbox_update_status",
+          "callee": "tokio::task::spawn_blocking(move || {\n        persistence::update_status(&id, &status)\n            .map_err(|e| format!(\"Failed to update inbox status: {}\", e))\n    })\n    .await.map_err",
+          "lineNumber": 29
+        },
+        {
+          "caller": "inbox_update_status",
+          "callee": "tokio::task::spawn_blocking",
+          "lineNumber": 29
+        },
+        {
+          "caller": "inbox_update_status",
+          "callee": "persistence::update_status(&id, &status).map_err",
+          "lineNumber": 30
+        },
+        {
+          "caller": "inbox_update_status",
+          "callee": "persistence::update_status",
+          "lineNumber": 30
+        },
+        {
+          "caller": "inbox_delete",
+          "callee": "tokio::task::spawn_blocking(move || {\n        persistence::delete_message(&id)\n            .map_err(|e| format!(\"Failed to delete inbox message: {}\", e))\n    })\n    .await.map_err",
+          "lineNumber": 40
+        },
+        {
+          "caller": "inbox_delete",
+          "callee": "tokio::task::spawn_blocking",
+          "lineNumber": 40
+        },
+        {
+          "caller": "inbox_delete",
+          "callee": "persistence::delete_message(&id).map_err",
+          "lineNumber": 41
+        },
+        {
+          "caller": "inbox_delete",
+          "callee": "persistence::delete_message",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src-tauri/crates/inbox/src/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "init_inbox_tables",
+          "startLine": 19,
+          "endLine": 41,
+          "params": [
+            "conn"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "init_inbox_tables",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "init_inbox_tables",
+          "callee": "conn.execute_batch",
+          "lineNumber": 20
+        },
+        {
+          "caller": "init_inbox_tables",
+          "callee": "Ok",
+          "lineNumber": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src-tauri/crates/inbox/src/persistence.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 132,
+      "nonEmptyLines": 119,
+      "functions": [
+        {
+          "name": "now_iso",
+          "startLine": 36,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "upsert_message",
+          "startLine": 41,
+          "endLine": 74,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "list_messages",
+          "startLine": 77,
+          "endLine": 105,
+          "params": []
+        },
+        {
+          "name": "update_status",
+          "startLine": 108,
+          "endLine": 115,
+          "params": [
+            "id",
+            "status"
+          ]
+        },
+        {
+          "name": "delete_message",
+          "startLine": 118,
+          "endLine": 122,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "delete_by_status",
+          "startLine": 125,
+          "endLine": 132,
+          "params": [
+            "status"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "InboxMessage",
+          "startLine": 15,
+          "endLine": 30,
+          "methods": [],
+          "properties": [
+            "id",
+            "title",
+            "preview",
+            "content",
+            "category",
+            "priority",
+            "status",
+            "sender_name",
+            "metadata",
+            "labels",
+            "created_at",
+            "updated_at"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "InboxMessage",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "upsert_message",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "list_messages",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "update_status",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "delete_message",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "delete_by_status",
+          "line": 125,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "now_iso",
+          "callee": "Utc::now().to_rfc3339",
+          "lineNumber": 37
+        },
+        {
+          "caller": "now_iso",
+          "callee": "Utc::now",
+          "lineNumber": 37
+        },
+        {
+          "caller": "upsert_message",
+          "callee": "get_connection",
+          "lineNumber": 42
+        },
+        {
+          "caller": "upsert_message",
+          "callee": "conn.execute",
+          "lineNumber": 43
+        },
+        {
+          "caller": "upsert_message",
+          "callee": "Ok",
+          "lineNumber": 73
+        },
+        {
+          "caller": "list_messages",
+          "callee": "get_connection",
+          "lineNumber": 78
+        },
+        {
+          "caller": "list_messages",
+          "callee": "conn.prepare",
+          "lineNumber": 79
+        },
+        {
+          "caller": "list_messages",
+          "callee": "stmt.query_map",
+          "lineNumber": 87
+        },
+        {
+          "caller": "list_messages",
+          "callee": "Ok",
+          "lineNumber": 88
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 89
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 90
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 91
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 92
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 93
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 94
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 95
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 96
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 97
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 98
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 99
+        },
+        {
+          "caller": "list_messages",
+          "callee": "row.get",
+          "lineNumber": 100
+        },
+        {
+          "caller": "list_messages",
+          "callee": "rows.collect",
+          "lineNumber": 104
+        },
+        {
+          "caller": "update_status",
+          "callee": "get_connection",
+          "lineNumber": 109
+        },
+        {
+          "caller": "update_status",
+          "callee": "conn.execute",
+          "lineNumber": 110
+        },
+        {
+          "caller": "update_status",
+          "callee": "Ok",
+          "lineNumber": 114
+        },
+        {
+          "caller": "delete_message",
+          "callee": "get_connection",
+          "lineNumber": 119
+        },
+        {
+          "caller": "delete_message",
+          "callee": "conn.execute",
+          "lineNumber": 120
+        },
+        {
+          "caller": "delete_message",
+          "callee": "Ok",
+          "lineNumber": 121
+        },
+        {
+          "caller": "delete_by_status",
+          "callee": "get_connection",
+          "lineNumber": 126
+        },
+        {
+          "caller": "delete_by_status",
+          "callee": "conn.execute",
+          "lineNumber": 127
+        },
+        {
+          "caller": "delete_by_status",
+          "callee": "Ok",
+          "lineNumber": 131
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    }
+  ]
+}

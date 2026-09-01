@@ -1,0 +1,782 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "orgii",
+    "languages": ["rust", "typescript", "javascript", "python", "shell"],
+    "frameworks": ["React", "Tailwind CSS", "Vitest"],
+    "description": "Self-evolving agentic development framework — ORGII desktop app.",
+    "analyzedAt": "2026-08-30T16:05:46.975Z",
+    "gitCommitHash": "b315ba4f82fb1fe294496793d7322095e7efe262"
+  },
+  "nodes": [
+    {
+      "id": "domain:session-runtime",
+      "type": "domain",
+      "name": "Agent Session Runtime",
+      "summary": "This domain initializes workspace-backed agent sessions, assembles providers and tool registries, and executes turns. It also preserves session continuity when context compaction forks or rewrites history.",
+      "tags": ["agents", "sessions", "runtime"],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": ["agent session", "agent definition", "provider", "turn", "workspace"],
+        "businessRules": ["A session receives an assembled provider, registry, and policy before execution.", "Compaction must preserve active plan state."],
+        "crossDomainInteractions": ["Channel messages dispatch into the session runtime.", "Agent-org members execute through sessions."]
+      }
+    },
+    {
+      "id": "flow:start-workspace-session",
+      "type": "flow",
+      "name": "Start Workspace Session",
+      "summary": "Create initial state for a workspace-based agent session and install its executable runtime before the first turn.",
+      "tags": ["session-launch", "workspace", "initialization"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "workspace session launch", "entryType": "manual"}
+    },
+    {
+      "id": "step:start-workspace-session:init-workspace-session",
+      "type": "step",
+      "name": "Initialize Workspace Session",
+      "summary": "Resolve the workspace path, apply model and account defaults, and set initial session state.",
+      "tags": ["workspace", "session-launch"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/project_init.rs",
+      "lineRange": [24, 135]
+    },
+    {
+      "id": "step:start-workspace-session:load-or-recover-definition",
+      "type": "step",
+      "name": "Load Or Recover Agent Definition",
+      "summary": "Load the session agent definition and backfill its definition id when the session record lacks one.",
+      "tags": ["agent-definition", "session"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/init/runtime_assemble.rs",
+      "lineRange": [71, 94]
+    },
+    {
+      "id": "step:start-workspace-session:install-runtime",
+      "type": "step",
+      "name": "Install Assembled Runtime",
+      "summary": "Install the assembled provider, tool registry, and policy into the session handle state.",
+      "tags": ["provider", "tools", "policy"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/init/runtime_assemble.rs",
+      "lineRange": [120, 145]
+    },
+    {
+      "id": "flow:execute-agent-turn",
+      "type": "flow",
+      "name": "Execute Agent Turn",
+      "summary": "Prepare one turn's input and provider request, then stream the request through the selected provider.",
+      "tags": ["turn", "provider", "streaming"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "session turn request", "entryType": "event"}
+    },
+    {
+      "id": "step:execute-agent-turn:prepare-iteration-input",
+      "type": "step",
+      "name": "Prepare Iteration Input",
+      "summary": "Build the input for a turn iteration and drain queued steering input before provider execution.",
+      "tags": ["turn", "input", "iteration"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/execute/iteration_input.rs",
+      "lineRange": [14, 144]
+    },
+    {
+      "id": "step:execute-agent-turn:prepare-provider-request",
+      "type": "step",
+      "name": "Prepare Provider Request",
+      "summary": "Assemble the provider request from the prepared turn iteration.",
+      "tags": ["provider", "request"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/execute/provider_iteration.rs",
+      "lineRange": [27, 75]
+    },
+    {
+      "id": "step:execute-agent-turn:call-provider",
+      "type": "step",
+      "name": "Call Provider",
+      "summary": "Invoke the configured provider for the current turn iteration and consume its stream.",
+      "tags": ["provider", "streaming", "llm"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/execute/provider_iteration.rs",
+      "lineRange": [78, 177]
+    },
+    {
+      "id": "flow:compact-session-context",
+      "type": "flow",
+      "name": "Compact Session Context",
+      "summary": "Run user-triggered context compaction while preserving session history, active plans, and fork semantics.",
+      "tags": ["compaction", "context", "session"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "manual session compaction", "entryType": "manual"}
+    },
+    {
+      "id": "step:compact-session-context:run-manual-compact",
+      "type": "step",
+      "name": "Run Manual Compaction",
+      "summary": "Load session state, run the compactor, persist the result, and return a compaction summary.",
+      "tags": ["compaction", "persistence"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/manual.rs",
+      "lineRange": [111, 280]
+    },
+    {
+      "id": "step:compact-session-context:fork-session-if-needed",
+      "type": "step",
+      "name": "Fork Session For Compaction",
+      "summary": "Write a forked session record so compaction can proceed without mutating the original history in place.",
+      "tags": ["session-fork", "persistence"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/compaction/fork.rs",
+      "lineRange": [83, 331]
+    },
+    {
+      "id": "step:compact-session-context:reinject-active-plan",
+      "type": "step",
+      "name": "Reinject Active Plan",
+      "summary": "Re-inject the most recent active plan into the compacted message history.",
+      "tags": ["plan-mode", "context-preservation"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/model_context/plan_preservation.rs",
+      "lineRange": [84, 114]
+    },
+
+    {
+      "id": "domain:agent-org-coordination",
+      "type": "domain",
+      "name": "Agent Organization Coordination",
+      "summary": "This domain models agent teams, their members, delegated tasks, inbox delivery, and run finality. It persists run state and exposes routing and recovery decisions for coordinated agent work.",
+      "tags": ["agent-org", "coordination", "tasks"],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": ["organization", "member", "agent org run", "task", "inbox message"],
+        "businessRules": ["Task routing is constrained by the organization hierarchy.", "Run finality is assessed before a run reaches a terminal state."],
+        "crossDomainInteractions": ["Members run as agent sessions.", "Run state changes notify the frontend."]
+      }
+    },
+    {
+      "id": "flow:create-agent-org-run",
+      "type": "flow",
+      "name": "Create Agent Org Run",
+      "summary": "Build participant and routing context from an organization snapshot and persist a new organization run.",
+      "tags": ["organization", "run", "persistence"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "agent-org run creation", "entryType": "manual"}
+    },
+    {
+      "id": "step:create-agent-org-run:build-run-context",
+      "type": "step",
+      "name": "Build Run Context",
+      "summary": "Build participants and routing information from a run record and organization store snapshot.",
+      "tags": ["participants", "routing"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "lineRange": [135, 151]
+    },
+    {
+      "id": "step:create-agent-org-run:flatten-member-hierarchy",
+      "type": "step",
+      "name": "Flatten Member Hierarchy",
+      "summary": "Flatten nested organization members into context entries with parent links.",
+      "tags": ["organization", "members", "hierarchy"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "lineRange": [179, 195]
+    },
+    {
+      "id": "step:create-agent-org-run:insert-run-record",
+      "type": "step",
+      "name": "Persist Run Record",
+      "summary": "Insert the new agent organization run record into SQLite.",
+      "tags": ["run", "sqlite", "persistence"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "lineRange": [197, 235]
+    },
+    {
+      "id": "flow:route-org-task",
+      "type": "flow",
+      "name": "Route Organization Task",
+      "summary": "Check hierarchy routing, stage coordinator work, and resolve the member recipient for delegated work.",
+      "tags": ["task", "routing", "delegation"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "coordinator task assignment", "entryType": "event"}
+    },
+    {
+      "id": "step:route-org-task:check-routing",
+      "type": "step",
+      "name": "Check Member Routing",
+      "summary": "Validate that organization routing rules allow the requested member relationship.",
+      "tags": ["routing", "hierarchy"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "lineRange": [376, 389]
+    },
+    {
+      "id": "step:route-org-task:stage-coordinator-work",
+      "type": "step",
+      "name": "Stage Coordinator Work Revision",
+      "summary": "Stage a coordinator work revision and load the associated tasks for processing.",
+      "tags": ["coordinator", "tasks", "revision"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "lineRange": [331, 349]
+    },
+    {
+      "id": "step:route-org-task:resolve-recipient-member",
+      "type": "step",
+      "name": "Resolve Recipient Member",
+      "summary": "Resolve the organization member id associated with the recipient agent id for inbox delivery.",
+      "tags": ["inbox", "recipient", "routing"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/processor/inbox_drain/routing.rs",
+      "lineRange": [9, 55]
+    },
+    {
+      "id": "flow:finalize-agent-org-run",
+      "type": "flow",
+      "name": "Finalize Agent Org Run",
+      "summary": "Request completion, assess run state, reconcile finality, and notify the frontend of the resulting run state.",
+      "tags": ["run", "finality", "status"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "coordinator completion request", "entryType": "event"}
+    },
+    {
+      "id": "step:finalize-agent-org-run:request-completion",
+      "type": "step",
+      "name": "Request Run Completion",
+      "summary": "Record a completion request for the organization run before finality assessment.",
+      "tags": ["completion", "run-state"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "lineRange": [368, 424]
+    },
+    {
+      "id": "step:finalize-agent-org-run:assess-run-finality",
+      "type": "step",
+      "name": "Assess Run Finality",
+      "summary": "Assess whether the organization run has reached a consistent terminal condition.",
+      "tags": ["finality", "invariants"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/finality.rs",
+      "lineRange": [515, 652]
+    },
+    {
+      "id": "step:finalize-agent-org-run:reconcile-run-finality",
+      "type": "step",
+      "name": "Reconcile Run Finality",
+      "summary": "Persist the reconciled final run state after finality assessment.",
+      "tags": ["finality", "persistence"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "lineRange": [436, 502]
+    },
+
+    {
+      "id": "domain:channel-gateway",
+      "type": "domain",
+      "name": "Channel Gateway",
+      "summary": "This domain connects external channel accounts to singleton-per-chat OS agent sessions. It manages channel workers, persistent chat bindings, slash commands, and idle-session resets.",
+      "tags": ["gateway", "channels", "messaging"],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": ["channel account", "chat", "session binding", "inbound message", "gateway command"],
+        "businessRules": ["A channel chat maps to a persisted OS session binding.", "Idle reset archives a stale session before minting a fresh one."],
+        "crossDomainInteractions": ["Inbound messages dispatch to the agent session runtime."]
+      }
+    },
+    {
+      "id": "flow:start-channel-gateway",
+      "type": "flow",
+      "name": "Start Channel Gateway",
+      "summary": "Register enabled channels, start gateway processors, and restore persisted channel bindings.",
+      "tags": ["gateway", "channels", "startup"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "gateway service startup", "entryType": "manual"}
+    },
+    {
+      "id": "step:start-channel-gateway:start-gateway-service",
+      "type": "step",
+      "name": "Start Gateway Service",
+      "summary": "Register enabled channels, spawn inbound and outbound workers, and start the automation engine.",
+      "tags": ["gateway", "workers", "automation"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "lineRange": [61, 93]
+    },
+    {
+      "id": "step:start-channel-gateway:register-enabled-channels",
+      "type": "step",
+      "name": "Register Enabled Channels",
+      "summary": "Iterate channel configuration and register each enabled channel account with the channel manager.",
+      "tags": ["channels", "configuration"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "lineRange": [11, 61]
+    },
+    {
+      "id": "step:start-channel-gateway:hydrate-bindings",
+      "type": "step",
+      "name": "Hydrate Chat Bindings",
+      "summary": "Load persisted channel-to-session bindings from SQLite into the in-memory binding map.",
+      "tags": ["bindings", "sqlite", "sessions"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [102, 137]
+    },
+    {
+      "id": "flow:route-inbound-channel-message",
+      "type": "flow",
+      "name": "Route Inbound Channel Message",
+      "summary": "Parse an inbound channel message, resolve its chat session, and dispatch content to the session runtime.",
+      "tags": ["inbound", "routing", "session"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "channel inbound message", "entryType": "event"}
+    },
+    {
+      "id": "step:route-inbound-channel-message:handle-message",
+      "type": "step",
+      "name": "Handle Inbound Message",
+      "summary": "Resolve the target OS session, process idle reset and slash-command cases, and continue dispatch for ordinary content.",
+      "tags": ["inbound", "commands", "session-routing"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/dispatch.rs",
+      "lineRange": [68, 230]
+    },
+    {
+      "id": "step:route-inbound-channel-message:parse-gateway-command",
+      "type": "step",
+      "name": "Parse Gateway Command",
+      "summary": "Parse the first line of a channel message into a recognized gateway slash command when applicable.",
+      "tags": ["slash-command", "validation"],
+      "complexity": "simple",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "lineRange": [58, 78]
+    },
+    {
+      "id": "step:route-inbound-channel-message:dispatch-to-session",
+      "type": "step",
+      "name": "Dispatch To Session",
+      "summary": "Reinject content into an active turn or start a new turn for the resolved channel session.",
+      "tags": ["session", "dispatch", "reinjection"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/dispatch.rs",
+      "lineRange": [282, 411]
+    },
+    {
+      "id": "flow:reset-idle-channel-session",
+      "type": "flow",
+      "name": "Reset Idle Channel Session",
+      "summary": "Archive an idle channel-bound session, clear its binding, and queue a reset notice for the next outbound message.",
+      "tags": ["idle-reset", "session-lifecycle", "gateway"],
+      "complexity": "moderate",
+      "domainMeta": {"entryPoint": "idle channel binding policy", "entryType": "event"}
+    },
+    {
+      "id": "step:reset-idle-channel-session:perform-idle-reset",
+      "type": "step",
+      "name": "Perform Idle Reset",
+      "summary": "Archive the idle session, mint a fresh session for the chat, and queue a user-facing reset notice.",
+      "tags": ["idle-reset", "session"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/idle_reset.rs",
+      "lineRange": [65, 134]
+    },
+    {
+      "id": "step:reset-idle-channel-session:clear-binding",
+      "type": "step",
+      "name": "Clear Chat Binding",
+      "summary": "Invalidate the channel chat binding in memory and SQLite for reset handling.",
+      "tags": ["bindings", "reset", "sqlite"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [252, 271]
+    },
+    {
+      "id": "step:reset-idle-channel-session:prepend-reset-notice",
+      "type": "step",
+      "name": "Prepend Reset Notice",
+      "summary": "Prepend the queued idle-reset notice to the next outbound chat message.",
+      "tags": ["outbound", "notice", "reset"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/dispatch.rs",
+      "lineRange": [413, 449]
+    },
+
+    {
+      "id": "domain:external-artifact-import",
+      "type": "domain",
+      "name": "External Artifact Import",
+      "summary": "This domain detects configuration and instruction artifacts from Claude Code, Codex, Copilot, Cursor, Kiro, MCP tools, and vendor agents. It applies selected rules, skills, MCP servers, and agent definitions to ORGII primitives.",
+      "tags": ["external-import", "migration", "configuration"],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": ["detected item", "policy", "skill", "MCP server", "agent definition"],
+        "businessRules": ["Already-imported artifacts are identified during detection.", "Each selected item receives a per-item import report."],
+        "crossDomainInteractions": ["Imported agent definitions become available to session runtime assembly."]
+      }
+    },
+    {
+      "id": "flow:detect-external-artifacts",
+      "type": "flow",
+      "name": "Detect External Artifacts",
+      "summary": "Run the supported per-tool detectors and return importable artifact previews.",
+      "tags": ["detection", "external-tools", "preview"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "external_import_detect", "entryType": "manual"}
+    },
+    {
+      "id": "step:detect-external-artifacts:external-import-detect",
+      "type": "step",
+      "name": "Request External Import Detection",
+      "summary": "Expose the Tauri command that runs detection across supported external tools.",
+      "tags": ["tauri-command", "detection"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [27, 36]
+    },
+    {
+      "id": "step:detect-external-artifacts:detect-all-tools",
+      "type": "step",
+      "name": "Detect All Supported Tools",
+      "summary": "Aggregate detectors for memory files, agents, skills, MCP servers, and vendor definitions.",
+      "tags": ["detection", "orchestration"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/mod.rs",
+      "lineRange": [34, 52]
+    },
+    {
+      "id": "step:detect-external-artifacts:detect-mcp-servers",
+      "type": "step",
+      "name": "Detect MCP Servers",
+      "summary": "Inspect known external tool configuration files and build MCP server import candidates.",
+      "tags": ["mcp", "detection", "configuration"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/detect/mcp.rs",
+      "lineRange": [13, 71]
+    },
+    {
+      "id": "flow:apply-external-selections",
+      "type": "flow",
+      "name": "Apply External Selections",
+      "summary": "Apply a user-selected batch of detected external artifacts and collect an itemized report.",
+      "tags": ["import", "selection", "reporting"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "external_import_apply", "entryType": "manual"}
+    },
+    {
+      "id": "step:apply-external-selections:external-import-apply",
+      "type": "step",
+      "name": "Request External Import",
+      "summary": "Expose the Tauri command that applies selected external import items.",
+      "tags": ["tauri-command", "import"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [48, 53]
+    },
+    {
+      "id": "step:apply-external-selections:apply-selections",
+      "type": "step",
+      "name": "Apply Import Selections",
+      "summary": "Apply selected items one at a time and collect the report for each item.",
+      "tags": ["batch", "import", "reporting"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [58, 76]
+    },
+    {
+      "id": "step:apply-external-selections:dispatch-item-import",
+      "type": "step",
+      "name": "Dispatch Item Import",
+      "summary": "Dispatch each item to the policy, skill, MCP, or agent-definition importer based on its kind.",
+      "tags": ["dispatch", "policy", "skill", "mcp"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [78, 164]
+    },
+    {
+      "id": "flow:import-specialized-artifacts",
+      "type": "flow",
+      "name": "Import Specialized Artifacts",
+      "summary": "Persist imported skills, MCP servers, and YAML-frontmatter agent definitions in ORGII formats.",
+      "tags": ["policy", "skill", "mcp", "agent-definition"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "selected specialized import item", "entryType": "manual"}
+    },
+    {
+      "id": "step:import-specialized-artifacts:import-skill",
+      "type": "step",
+      "name": "Import Skill Bundle",
+      "summary": "Copy an external skill directory, including SKILL.md and assets, into ORGII's skills directory.",
+      "tags": ["skill", "filesystem", "import"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [274, 339]
+    },
+    {
+      "id": "step:import-specialized-artifacts:import-mcp-server",
+      "type": "step",
+      "name": "Import MCP Server",
+      "summary": "Write a detected external MCP server entry into ORGII's MCP server configuration.",
+      "tags": ["mcp", "configuration", "import"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [415, 458]
+    },
+    {
+      "id": "step:import-specialized-artifacts:import-agent-definition",
+      "type": "step",
+      "name": "Import Agent Definition",
+      "summary": "Split YAML frontmatter from markdown body and persist the external agent definition in the agent store.",
+      "tags": ["agent-definition", "frontmatter", "import"],
+      "complexity": "complex",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/external_import/commands.rs",
+      "lineRange": [475, 551]
+    },
+
+    {
+      "id": "domain:session-event-pipeline",
+      "type": "domain",
+      "name": "Session Event Pipeline",
+      "summary": "This domain transforms raw agent activity chunks into normalized session events and exposes event-store query operations. It supports filtered pagination, full-text search, and session analytics for the review UI.",
+      "tags": ["events", "ingestion", "analytics"],
+      "complexity": "complex",
+      "domainMeta": {
+        "entities": ["activity chunk", "session event", "event store", "search result", "session statistics"],
+        "businessRules": ["Streaming deltas are consolidated before storage.", "Event queries support combined source, variant, text, and time filters."],
+        "crossDomainInteractions": ["The pipeline renders and analyzes events emitted by session turns."]
+      }
+    },
+    {
+      "id": "flow:ingest-session-activity",
+      "type": "flow",
+      "name": "Ingest Session Activity",
+      "summary": "Convert raw activity chunks into consolidated, canonical session events with tool-call and prompt enrichment.",
+      "tags": ["ingestion", "streaming", "normalization"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "raw activity chunk stream", "entryType": "event"}
+    },
+    {
+      "id": "step:ingest-session-activity:ingest-raw-chunks",
+      "type": "step",
+      "name": "Ingest Raw Chunks",
+      "summary": "Orchestrate consolidation, normalization, tool-call merging, and subagent prompt backfill for raw chunks.",
+      "tags": ["ingestion", "pipeline"],
+      "complexity": "complex",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/ingestion/mod.rs",
+      "lineRange": [40, 64]
+    },
+    {
+      "id": "step:ingest-session-activity:consolidate-activity-chunks",
+      "type": "step",
+      "name": "Consolidate Activity Chunks",
+      "summary": "Merge streaming thinking and message deltas into events at stream boundaries.",
+      "tags": ["streaming", "chunk-merging"],
+      "complexity": "complex",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/ingestion/consolidator.rs",
+      "lineRange": [21, 148]
+    },
+    {
+      "id": "step:ingest-session-activity:merge-tool-call-pairs",
+      "type": "step",
+      "name": "Merge Tool Call Pairs",
+      "summary": "Merge matching tool-call and tool-result event pairs into the canonical event representation.",
+      "tags": ["tools", "events", "merge"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/ingestion/tool_call_merger.rs",
+      "lineRange": [22, 97]
+    },
+    {
+      "id": "flow:browse-session-events",
+      "type": "flow",
+      "name": "Browse Session Events",
+      "summary": "Return a cursor-paginated event page while applying combined event filters and exposing distinct tool functions.",
+      "tags": ["pagination", "filters", "event-store"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "event-store pagination command", "entryType": "manual"}
+    },
+    {
+      "id": "step:browse-session-events:paginate-events",
+      "type": "step",
+      "name": "Paginate Events",
+      "summary": "Return a filtered event slice with next and previous cursors and a total match count.",
+      "tags": ["pagination", "cursor", "events"],
+      "complexity": "complex",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [99, 181]
+    },
+    {
+      "id": "step:browse-session-events:apply-event-filters",
+      "type": "step",
+      "name": "Apply Event Filters",
+      "summary": "Evaluate source, variant, function, path, text, and time-range filters for each event.",
+      "tags": ["filtering", "events", "query"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [222, 276]
+    },
+    {
+      "id": "step:browse-session-events:list-distinct-functions",
+      "type": "step",
+      "name": "List Distinct Tool Functions",
+      "summary": "Compute distinct function names and usage counts to populate event filter controls.",
+      "tags": ["tools", "filters", "aggregation"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/pagination.rs",
+      "lineRange": [192, 208]
+    },
+    {
+      "id": "flow:search-session-events",
+      "type": "flow",
+      "name": "Search Session Events",
+      "summary": "Build a configured matcher, search chat-visible events, and return bounded ranked snippets.",
+      "tags": ["search", "full-text", "snippets"],
+      "complexity": "moderate",
+      "domainMeta": {"entryPoint": "session event search command", "entryType": "manual"}
+    },
+    {
+      "id": "step:search-session-events:build-search-matcher",
+      "type": "step",
+      "name": "Build Search Matcher",
+      "summary": "Construct a plain-substring or regular-expression matcher from query options.",
+      "tags": ["search", "regex", "query"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [197, 235]
+    },
+    {
+      "id": "step:search-session-events:search-chat-events",
+      "type": "step",
+      "name": "Search Chat Events",
+      "summary": "Search chat-visible events and return ranked results up to the configured maximum.",
+      "tags": ["search", "events", "ranking"],
+      "complexity": "complex",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [238, 275]
+    },
+    {
+      "id": "step:search-session-events:create-result-snippet",
+      "type": "step",
+      "name": "Create Result Snippet",
+      "summary": "Build a bounded snippet around the match while preserving valid character boundaries.",
+      "tags": ["search", "snippet", "text"],
+      "complexity": "simple",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/search.rs",
+      "lineRange": [129, 165]
+    },
+    {
+      "id": "flow:compute-session-analytics",
+      "type": "flow",
+      "name": "Compute Session Analytics",
+      "summary": "Expose single-session, cached-session, and multi-session analytics over session records and event data.",
+      "tags": ["analytics", "statistics", "sessions"],
+      "complexity": "complex",
+      "domainMeta": {"entryPoint": "session analytics command", "entryType": "manual"}
+    },
+    {
+      "id": "step:compute-session-analytics:compute-analytics-command",
+      "type": "step",
+      "name": "Compute Analytics For Session",
+      "summary": "Compute and return analytics for the currently loaded events of a session.",
+      "tags": ["analytics", "session", "tauri-command"],
+      "complexity": "moderate",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/commands/analytics.rs",
+      "lineRange": [18, 28]
+    },
+    {
+      "id": "step:compute-session-analytics:aggregate-session-statistics",
+      "type": "step",
+      "name": "Aggregate Session Statistics",
+      "summary": "Aggregate status, type, file-change, repository, model, daily, and impactful-session statistics.",
+      "tags": ["statistics", "aggregation", "sessions"],
+      "complexity": "complex",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/statistics.rs",
+      "lineRange": [103, 260]
+    },
+    {
+      "id": "step:compute-session-analytics:compute-multi-session-analytics",
+      "type": "step",
+      "name": "Compute Multi-Session Analytics",
+      "summary": "Compute aggregated analytics across a supplied list of session ids.",
+      "tags": ["analytics", "multi-session", "aggregation"],
+      "complexity": "complex",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/commands/analytics.rs",
+      "lineRange": [46, 71]
+    }
+  ],
+  "edges": [
+    {"source": "domain:session-runtime", "target": "flow:start-workspace-session", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:start-workspace-session", "target": "step:start-workspace-session:init-workspace-session", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:start-workspace-session", "target": "step:start-workspace-session:load-or-recover-definition", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:start-workspace-session", "target": "step:start-workspace-session:install-runtime", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:session-runtime", "target": "flow:execute-agent-turn", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:execute-agent-turn", "target": "step:execute-agent-turn:prepare-iteration-input", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:execute-agent-turn", "target": "step:execute-agent-turn:prepare-provider-request", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:execute-agent-turn", "target": "step:execute-agent-turn:call-provider", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:session-runtime", "target": "flow:compact-session-context", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:compact-session-context", "target": "step:compact-session-context:run-manual-compact", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:compact-session-context", "target": "step:compact-session-context:fork-session-if-needed", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:compact-session-context", "target": "step:compact-session-context:reinject-active-plan", "type": "flow_step", "direction": "forward", "weight": 0.9},
+
+    {"source": "domain:agent-org-coordination", "target": "flow:create-agent-org-run", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:create-agent-org-run", "target": "step:create-agent-org-run:build-run-context", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:create-agent-org-run", "target": "step:create-agent-org-run:flatten-member-hierarchy", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:create-agent-org-run", "target": "step:create-agent-org-run:insert-run-record", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:agent-org-coordination", "target": "flow:route-org-task", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:route-org-task", "target": "step:route-org-task:check-routing", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:route-org-task", "target": "step:route-org-task:stage-coordinator-work", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:route-org-task", "target": "step:route-org-task:resolve-recipient-member", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:agent-org-coordination", "target": "flow:finalize-agent-org-run", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:finalize-agent-org-run", "target": "step:finalize-agent-org-run:request-completion", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:finalize-agent-org-run", "target": "step:finalize-agent-org-run:assess-run-finality", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:finalize-agent-org-run", "target": "step:finalize-agent-org-run:reconcile-run-finality", "type": "flow_step", "direction": "forward", "weight": 0.9},
+
+    {"source": "domain:channel-gateway", "target": "flow:start-channel-gateway", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:start-channel-gateway", "target": "step:start-channel-gateway:start-gateway-service", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:start-channel-gateway", "target": "step:start-channel-gateway:register-enabled-channels", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:start-channel-gateway", "target": "step:start-channel-gateway:hydrate-bindings", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:channel-gateway", "target": "flow:route-inbound-channel-message", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:route-inbound-channel-message", "target": "step:route-inbound-channel-message:handle-message", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:route-inbound-channel-message", "target": "step:route-inbound-channel-message:parse-gateway-command", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:route-inbound-channel-message", "target": "step:route-inbound-channel-message:dispatch-to-session", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:channel-gateway", "target": "flow:reset-idle-channel-session", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:reset-idle-channel-session", "target": "step:reset-idle-channel-session:perform-idle-reset", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:reset-idle-channel-session", "target": "step:reset-idle-channel-session:clear-binding", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:reset-idle-channel-session", "target": "step:reset-idle-channel-session:prepend-reset-notice", "type": "flow_step", "direction": "forward", "weight": 0.9},
+
+    {"source": "domain:external-artifact-import", "target": "flow:detect-external-artifacts", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:detect-external-artifacts", "target": "step:detect-external-artifacts:external-import-detect", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:detect-external-artifacts", "target": "step:detect-external-artifacts:detect-all-tools", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:detect-external-artifacts", "target": "step:detect-external-artifacts:detect-mcp-servers", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:external-artifact-import", "target": "flow:apply-external-selections", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:apply-external-selections", "target": "step:apply-external-selections:external-import-apply", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:apply-external-selections", "target": "step:apply-external-selections:apply-selections", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:apply-external-selections", "target": "step:apply-external-selections:dispatch-item-import", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:external-artifact-import", "target": "flow:import-specialized-artifacts", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:import-specialized-artifacts", "target": "step:import-specialized-artifacts:import-skill", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:import-specialized-artifacts", "target": "step:import-specialized-artifacts:import-mcp-server", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:import-specialized-artifacts", "target": "step:import-specialized-artifacts:import-agent-definition", "type": "flow_step", "direction": "forward", "weight": 0.9},
+
+    {"source": "domain:session-event-pipeline", "target": "flow:ingest-session-activity", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:ingest-session-activity", "target": "step:ingest-session-activity:ingest-raw-chunks", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:ingest-session-activity", "target": "step:ingest-session-activity:consolidate-activity-chunks", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:ingest-session-activity", "target": "step:ingest-session-activity:merge-tool-call-pairs", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:session-event-pipeline", "target": "flow:browse-session-events", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:browse-session-events", "target": "step:browse-session-events:paginate-events", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:browse-session-events", "target": "step:browse-session-events:apply-event-filters", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:browse-session-events", "target": "step:browse-session-events:list-distinct-functions", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:session-event-pipeline", "target": "flow:search-session-events", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:search-session-events", "target": "step:search-session-events:build-search-matcher", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:search-session-events", "target": "step:search-session-events:search-chat-events", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:search-session-events", "target": "step:search-session-events:create-result-snippet", "type": "flow_step", "direction": "forward", "weight": 0.9},
+    {"source": "domain:session-event-pipeline", "target": "flow:compute-session-analytics", "type": "contains_flow", "direction": "forward", "weight": 1.0},
+    {"source": "flow:compute-session-analytics", "target": "step:compute-session-analytics:compute-analytics-command", "type": "flow_step", "direction": "forward", "weight": 0.3},
+    {"source": "flow:compute-session-analytics", "target": "step:compute-session-analytics:aggregate-session-statistics", "type": "flow_step", "direction": "forward", "weight": 0.6},
+    {"source": "flow:compute-session-analytics", "target": "step:compute-session-analytics:compute-multi-session-analytics", "type": "flow_step", "direction": "forward", "weight": 0.9},
+
+    {"source": "domain:channel-gateway", "target": "domain:session-runtime", "type": "cross_domain", "direction": "forward", "description": "The channel handler dispatches inbound chat content to a singleton-per-chat OS agent session.", "weight": 0.8},
+    {"source": "domain:agent-org-coordination", "target": "domain:session-runtime", "type": "cross_domain", "direction": "forward", "description": "Organization members use session turns while run coordination tracks their state and completion.", "weight": 0.8},
+    {"source": "domain:session-runtime", "target": "domain:session-event-pipeline", "type": "cross_domain", "direction": "forward", "description": "Turn execution emits activity that the event pipeline ingests, normalizes, and exposes for review.", "weight": 0.7}
+  ],
+  "layers": [],
+  "tour": []
+}

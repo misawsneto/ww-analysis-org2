@@ -1,0 +1,182 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx",
+      "type": "file",
+      "name": "DeferredGitStatusProvider.tsx",
+      "filePath": "src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx",
+      "summary": "Performance-optimization wrapper that defers mounting the real GitStatusProvider until after first paint, rendering a placeholder loading context via requestIdleCallback (with a setTimeout fallback) so initial render isn't blocked by git status setup.",
+      "tags": ["component", "performance", "git", "context-provider"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx",
+      "type": "file",
+      "name": "GitStatusProvider.tsx",
+      "filePath": "src/contexts/git/GitStatusContext/GitStatusProvider.tsx",
+      "summary": "Core React context provider that owns git status state for the selected repository, orchestrating status fetches, file-watcher registration, and websocket-driven git event listeners, and exposing forceRefresh/currentGitStatus/gitSuggestedAction to consumers.",
+      "tags": ["context-provider", "state-management", "git", "react-hooks"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/constants.ts",
+      "type": "file",
+      "name": "constants.ts",
+      "filePath": "src/contexts/git/GitStatusContext/constants.ts",
+      "summary": "Centralizes timing and concurrency constants (debounce delays, watcher-registration delay, idle-callback timeouts) shared by the GitStatusContext provider and its hooks.",
+      "tags": ["constants", "configuration", "git", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts",
+      "type": "file",
+      "name": "useGitEventListeners.ts",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts",
+      "summary": "Hook that subscribes to the code-editor websocket for real-time git status, suggested-action, and operation-progress events, decoding octal-encoded file paths and syncing refs/atoms, with listener cleanup on unmount.",
+      "tags": ["hook", "websocket", "event-handler", "git"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts",
+      "type": "file",
+      "name": "useGitStatusFetch.ts",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts",
+      "summary": "Hook implementing the debounced, abortable fetch logic that retrieves git status for the active repository, normalizes octal-encoded file paths, computes suggested actions, and guards against race conditions between concurrent or superseded fetches.",
+      "tags": ["hook", "data-fetching", "git", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts",
+      "type": "file",
+      "name": "useWatcherRegistration.ts",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts",
+      "summary": "Hook managing registration and unregistration of the Rust-backed file watcher for the active repo, debouncing registration and ensuring only one repo's watcher is active at a time via Tauri invoke calls.",
+      "tags": ["hook", "tauri", "file-watcher", "git"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/contexts/git/GitStatusContext/index.tsx",
+      "summary": "Public entry point for the git status feature, exporting the useGitStatus consumer hook plus the provider components and shared types as the single source of truth for git status across the app.",
+      "tags": ["entry-point", "barrel", "context", "git"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/contexts/git/GitStatusContext/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/contexts/git/GitStatusContext/types.ts",
+      "summary": "Shared TypeScript types for the git status context, including the public context-value shape, a startup-state enum, operation-signal config, and the ref bundle passed between the provider's internal hooks.",
+      "tags": ["type-definition", "git", "shared-types"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx:DeferredGitStatusProvider",
+      "type": "function",
+      "name": "DeferredGitStatusProvider",
+      "filePath": "src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx",
+      "lineRange": [36, 67],
+      "summary": "React component that renders a placeholder git-status context until requestIdleCallback (or a timeout fallback) fires, then swaps in the real GitStatusProvider.",
+      "tags": ["component", "performance", "deferred-mount"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider",
+      "type": "function",
+      "name": "GitStatusProvider",
+      "filePath": "src/contexts/git/GitStatusContext/GitStatusProvider.tsx",
+      "lineRange": [68, 430],
+      "summary": "Main provider component wiring together atoms, refs, the watcher-registration hook, the status-fetch hook, and the git-event-listener hook to maintain and expose current git status, scoped status, and suggested actions.",
+      "tags": ["component", "state-management", "orchestration", "git"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts:useGitEventListeners",
+      "type": "function",
+      "name": "useGitEventListeners",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts",
+      "lineRange": [43, 261],
+      "summary": "Sets up and tears down websocket event listeners (status change, suggested action, operation progress) for the selected repo, keeping refs in sync to avoid stale closures.",
+      "tags": ["hook", "websocket", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:shouldStartGitStatusFetch",
+      "type": "function",
+      "name": "shouldStartGitStatusFetch",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts",
+      "lineRange": [29, 39],
+      "summary": "Pure guard function determining whether a new git status fetch should begin, based on in-progress state, the active fetch's repo id, and the currently selected repo id.",
+      "tags": ["utility", "guard", "git"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:useGitStatusFetch",
+      "type": "function",
+      "name": "useGitStatusFetch",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts",
+      "lineRange": [75, 290],
+      "summary": "Hook implementing the abortable, race-condition-safe fetch flow that calls the git status API, decodes file paths, computes suggested actions, and updates status/atoms/loading/error state.",
+      "tags": ["hook", "data-fetching", "async", "git"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts:useWatcherRegistration",
+      "type": "function",
+      "name": "useWatcherRegistration",
+      "filePath": "src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts",
+      "lineRange": [28, 106],
+      "summary": "Hook exposing scheduleWatcherRegistration and unwatchRegisteredReposExcept callbacks that debounce and manage registering/unregistering the active repo with the Rust file watcher via Tauri invoke.",
+      "tags": ["hook", "tauri", "file-watcher"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/contexts/git/GitStatusContext/index.tsx:useGitStatus",
+      "type": "function",
+      "name": "useGitStatus",
+      "filePath": "src/contexts/git/GitStatusContext/index.tsx",
+      "lineRange": [25, 31],
+      "summary": "Consumer hook that reads GitStatusContext and throws if used outside a GitStatusProvider, giving components typed access to git status and forceRefresh.",
+      "tags": ["hook", "context-consumer", "git"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx", "target": "function:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx:DeferredGitStatusProvider", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts:useGitEventListeners", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:shouldStartGitStatusFetch", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:useGitStatusFetch", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts:useWatcherRegistration", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/index.tsx", "target": "function:src/contexts/git/GitStatusContext/index.tsx:useGitStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx", "target": "function:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx:DeferredGitStatusProvider", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts:useGitEventListeners", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:shouldStartGitStatusFetch", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:useGitStatusFetch", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts", "target": "function:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts:useWatcherRegistration", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/index.tsx", "target": "function:src/contexts/git/GitStatusContext/index.tsx:useGitStatus", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/constants.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/constants.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "target": "file:src/contexts/git/GitStatusContext/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts", "target": "file:src/contexts/git/GitStatusContext/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "target": "file:src/contexts/git/GitStatusContext/constants.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts", "target": "file:src/contexts/git/GitStatusContext/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts", "target": "file:src/contexts/git/GitStatusContext/constants.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts", "target": "file:src/contexts/git/GitStatusContext/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/index.tsx", "target": "file:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/index.tsx", "target": "file:src/contexts/git/GitStatusContext/GitStatusProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/contexts/git/GitStatusContext/index.tsx", "target": "file:src/contexts/git/GitStatusContext/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider", "target": "function:src/contexts/git/GitStatusContext/hooks/useWatcherRegistration.ts:useWatcherRegistration", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitStatusFetch.ts:useGitStatusFetch", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider", "target": "function:src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts:useGitEventListeners", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/contexts/git/GitStatusContext/DeferredGitStatusProvider.tsx:DeferredGitStatusProvider", "target": "function:src/contexts/git/GitStatusContext/GitStatusProvider.tsx:GitStatusProvider", "type": "contains", "direction": "forward", "weight": 1.0 }
+  ]
+}

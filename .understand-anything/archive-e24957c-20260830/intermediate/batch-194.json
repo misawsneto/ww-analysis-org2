@@ -1,0 +1,225 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/settings/settingsAtom.ts",
+      "type": "file",
+      "name": "settingsAtom.ts",
+      "filePath": "src/store/settings/settingsAtom.ts",
+      "summary": "Central Jotai atom store for user settings, backed by ~/.orgii/settings.jsonc via Tauri RPC; provides read/write/reset atoms, a per-key derived atom factory, and handlers for external file-change and deletion events.",
+      "tags": ["state-management", "settings", "jotai-atom", "persistence", "tauri-rpc"],
+      "complexity": "complex",
+      "languageNotes": "Uses a serialized promise queue (settingsWriteQueue) to avoid concurrent partial writes racing against each other on disk."
+    },
+    {
+      "id": "file:src/store/settings/settingsSync.ts",
+      "type": "file",
+      "name": "settingsSync.ts",
+      "filePath": "src/store/settings/settingsSync.ts",
+      "summary": "React hook that initializes the settings system on app startup and listens for Tauri file-watcher events to sync settings, theme, and language preferences.",
+      "tags": ["hook", "settings", "event-handler", "theme", "i18n"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/ui/overlayAtom.ts",
+      "type": "file",
+      "name": "overlayAtom.ts",
+      "filePath": "src/store/ui/overlayAtom.ts",
+      "summary": "Jotai atoms tracking modal/dropdown/overlay visibility state used to determine when native Tauri webviews should be hidden behind React overlays.",
+      "tags": ["state-management", "jotai-atom", "overlay", "webview", "ui-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/ui/overlayLayerAtom.ts",
+      "type": "file",
+      "name": "overlayLayerAtom.ts",
+      "filePath": "src/store/ui/overlayLayerAtom.ts",
+      "summary": "Reference-counted atom and hook tracking how many React overlays are currently mounted, used to reorder native Tauri webviews behind portal-rendered overlays on macOS.",
+      "tags": ["state-management", "jotai-atom", "hook", "webview", "macos"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/ui/simulatorAtom.ts",
+      "type": "file",
+      "name": "simulatorAtom.ts",
+      "filePath": "src/store/ui/simulatorAtom.ts",
+      "summary": "Large collection of Jotai atoms, many persisted via localStorage, controlling Activity Simulator UI state such as grid layout, replay state, sidebar sizing, playback speed, station mode, and subagent panel behavior.",
+      "tags": ["state-management", "jotai-atom", "simulator", "persistence", "ui-state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/ui/uiAtom.ts",
+      "type": "file",
+      "name": "uiAtom.ts",
+      "filePath": "src/store/ui/uiAtom.ts",
+      "summary": "Core UI-only Jotai atoms for theme/appearance, terminal display settings, login/session modals, and window state, layered on top of the central settings atom.",
+      "tags": ["state-management", "jotai-atom", "theme", "ui-state", "session"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/ui/viewModeAtom.ts",
+      "type": "file",
+      "name": "viewModeAtom.ts",
+      "filePath": "src/store/ui/viewModeAtom.ts",
+      "summary": "Atoms tracking the current app/session/workstation view mode and related navigation return-routes, used internally by the ViewModeSync bidirectional sync mechanism.",
+      "tags": ["state-management", "jotai-atom", "navigation", "view-mode"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/settings/settingsAtom.ts:enqueueSettingsPartialWrite",
+      "type": "function",
+      "name": "enqueueSettingsPartialWrite",
+      "filePath": "src/store/settings/settingsAtom.ts",
+      "lineRange": [71, 82],
+      "summary": "Serializes concurrent partial settings writes into a single promise chain to avoid race conditions when writing to the settings file.",
+      "tags": ["utility", "async", "queue", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/settings/settingsAtom.ts:settingAtom",
+      "type": "function",
+      "name": "settingAtom",
+      "filePath": "src/store/settings/settingsAtom.ts",
+      "lineRange": [100, 113],
+      "summary": "Factory that creates and caches a derived read-only Jotai atom for a single settings key, ensuring stable atom identity across calls.",
+      "tags": ["factory", "jotai-atom", "cache", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/settings/settingsSync.ts:useSettingsSync",
+      "type": "function",
+      "name": "useSettingsSync",
+      "filePath": "src/store/settings/settingsSync.ts",
+      "lineRange": [57, 180],
+      "summary": "Root-level hook that initializes settings on mount, listens for external settings file changes/deletions, and synchronizes theme and language preferences to the DOM and i18next.",
+      "tags": ["hook", "event-handler", "settings", "theme", "i18n"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/ui/overlayLayerAtom.ts:useOverlayLayer",
+      "type": "function",
+      "name": "useOverlayLayer",
+      "filePath": "src/store/ui/overlayLayerAtom.ts",
+      "lineRange": [38, 48],
+      "summary": "Hook that increments/decrements the global active-overlay reference count while a given overlay is mounted and active.",
+      "tags": ["hook", "jotai-atom", "overlay", "webview"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/ui/uiAtom.ts:triggerSessionExpired",
+      "type": "function",
+      "name": "triggerSessionExpired",
+      "filePath": "src/store/ui/uiAtom.ts",
+      "lineRange": [219, 228],
+      "summary": "Clears persisted auth/session data from localStorage and dispatches a session-expired window event.",
+      "tags": ["event-handler", "session", "auth", "utility"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/settings/settingsSync.ts",
+      "target": "file:src/store/settings/settingsAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/settings/settingsSync.ts",
+      "target": "file:src/store/ui/uiAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/overlayAtom.ts",
+      "target": "file:src/store/ui/overlayLayerAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/overlayAtom.ts",
+      "target": "file:src/store/ui/simulatorAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/overlayAtom.ts",
+      "target": "file:src/store/ui/uiAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/ui/overlayAtom.ts",
+      "target": "file:src/store/ui/viewModeAtom.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/settings/settingsAtom.ts",
+      "target": "function:src/store/settings/settingsAtom.ts:enqueueSettingsPartialWrite",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/settings/settingsAtom.ts",
+      "target": "function:src/store/settings/settingsAtom.ts:settingAtom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/settings/settingsSync.ts",
+      "target": "function:src/store/settings/settingsSync.ts:useSettingsSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/ui/overlayLayerAtom.ts",
+      "target": "function:src/store/ui/overlayLayerAtom.ts:useOverlayLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/ui/uiAtom.ts",
+      "target": "function:src/store/ui/uiAtom.ts:triggerSessionExpired",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/settings/settingsAtom.ts",
+      "target": "function:src/store/settings/settingsAtom.ts:settingAtom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/settings/settingsSync.ts",
+      "target": "function:src/store/settings/settingsSync.ts:useSettingsSync",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/overlayLayerAtom.ts",
+      "target": "function:src/store/ui/overlayLayerAtom.ts:useOverlayLayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/ui/uiAtom.ts",
+      "target": "function:src/store/ui/uiAtom.ts:triggerSessionExpired",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

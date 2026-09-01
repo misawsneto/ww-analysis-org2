@@ -1,0 +1,587 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "type": "file",
+      "name": "utils.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/utils.rs",
+      "summary": "Small git command helpers: computes ahead/behind counts against upstream, lists conflicted files, and runs an arbitrary git CLI command, re-exporting get_current_branch from the git core crate.",
+      "tags": [
+        "utility",
+        "git",
+        "cli-wrapper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "file",
+      "name": "error.rs",
+      "filePath": "src-tauri/crates/git-api/src/error.rs",
+      "summary": "Defines GitApiError, a thiserror enum covering repo/branch/commit/merge/remote error categories with HTTP status code and error-type mapping, plus a lightweight ApiError envelope used by the file blob endpoints.",
+      "tags": [
+        "error-handling",
+        "api-handler",
+        "middleware"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses thiserror derive plus axum's IntoResponse trait to convert domain errors directly into structured JSON HTTP responses."
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "file",
+      "name": "extractors.rs",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "summary": "Axum extractors and path-validation helpers that resolve a repo_id path param to a filesystem path, guarding against path traversal and enforcing an allow-list of permitted repository roots.",
+      "tags": [
+        "validation",
+        "middleware",
+        "security",
+        "axum-extractor"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements axum's FromRequestParts trait twice (RepoPath, RepoPathWithQuery) to inject validated repo paths into route handlers."
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/file_types.rs",
+      "type": "file",
+      "name": "file_types.rs",
+      "filePath": "src-tauri/crates/git-api/src/file_types.rs",
+      "summary": "Request/response DTOs for the git file-status and file-mtime endpoints (GitFileStatus, GitFileStatusResponse, FileMtimeResponse).",
+      "tags": [
+        "type-definition",
+        "data-model",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/git-api/src/lib.rs",
+      "summary": "Crate root for the git-api crate; declares the module layout (error, extractors, types, routes, commands, lineage_bridge, file_types) that together form the Axum-based Git HTTP API.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "crate-root"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust crate root (src/lib.rs) \u2014 module declarations only, no executable logic."
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "type": "file",
+      "name": "lineage_bridge.rs",
+      "filePath": "src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "summary": "Wire-side adapter that registers a commit-diff callback with project_management::lineage::git_bridge at app startup, letting the lineage tracker consume git2-backed commit diffs without depending on the app crate.",
+      "tags": [
+        "adapter",
+        "integration",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_ahead_behind_counts",
+      "type": "function",
+      "name": "get_ahead_behind_counts",
+      "filePath": "src-tauri/crates/git-api/src/commands/utils.rs",
+      "lineRange": [
+        22,
+        66
+      ],
+      "summary": "Computes how many commits the current branch is ahead/behind its upstream by running git rev-list, retrying transient failures via run_git_with_retry.",
+      "tags": [
+        "git",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "function",
+      "name": "get_conflicted_files",
+      "filePath": "src-tauri/crates/git-api/src/commands/utils.rs",
+      "lineRange": [
+        69,
+        77
+      ],
+      "summary": "Runs git diff --name-only --diff-filter=U to list files currently in merge conflict.",
+      "tags": [
+        "git",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/utils.rs:run_git_command",
+      "type": "function",
+      "name": "run_git_command",
+      "filePath": "src-tauri/crates/git-api/src/commands/utils.rs",
+      "lineRange": [
+        81,
+        89
+      ],
+      "summary": "Generic helper that runs an arbitrary git CLI command with given args and returns stdout on success or stderr as an error string.",
+      "tags": [
+        "git",
+        "utility",
+        "cli-wrapper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/error.rs:GitApiError",
+      "type": "class",
+      "name": "GitApiError",
+      "filePath": "src-tauri/crates/git-api/src/error.rs",
+      "lineRange": [
+        18,
+        108
+      ],
+      "summary": "thiserror enum enumerating every Git API failure mode (repo, path, branch, commit, merge, remote, network, validation, internal, io, timeout) with methods mapping each variant to an HTTP StatusCode and a stable error_type string, and an IntoResponse impl for direct use as an axum handler error.",
+      "tags": [
+        "error-handling",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/error.rs:ApiError",
+      "type": "class",
+      "name": "ApiError",
+      "filePath": "src-tauri/crates/git-api/src/error.rs",
+      "lineRange": [
+        254,
+        279
+      ],
+      "summary": "Lightweight error envelope (message + optional error_type) used by the non-git2 routes::file endpoints, with constructors new/with_type and an IntoResponse impl.",
+      "tags": [
+        "error-handling",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/extractors.rs:has_windows_users_prefix",
+      "type": "function",
+      "name": "has_windows_users_prefix",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        27,
+        30
+      ],
+      "summary": "Detects whether a path string starts with a Windows C:\\Users prefix, used when normalizing extended-length path prefixes.",
+      "tags": [
+        "validation",
+        "cross-platform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/extractors.rs:is_path_allowed",
+      "type": "function",
+      "name": "is_path_allowed",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        38,
+        74
+      ],
+      "summary": "Checks a canonicalized filesystem path against the configured allow-list of permitted repository roots, rejecting anything outside them.",
+      "tags": [
+        "security",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/extractors.rs:validate_path",
+      "type": "function",
+      "name": "validate_path",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        77,
+        104
+      ],
+      "summary": "Validates and canonicalizes a caller-supplied repository path, guarding against path traversal and enforcing the allow-list via is_path_allowed.",
+      "tags": [
+        "security",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/extractors.rs:validate_file_path",
+      "type": "function",
+      "name": "validate_file_path",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        107,
+        130
+      ],
+      "summary": "Validates a file path relative to a repository, rejecting absolute paths, parent-directory traversal, and disallowed locations.",
+      "tags": [
+        "security",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/extractors.rs:RepoPath",
+      "type": "class",
+      "name": "RepoPath",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        161,
+        208
+      ],
+      "summary": "Axum FromRequestParts extractor that resolves the repo_id path parameter to a validated filesystem PathBuf, used by handlers needing only a query-string path.",
+      "tags": [
+        "axum-extractor",
+        "middleware"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/extractors.rs:RepoPathWithQuery",
+      "type": "class",
+      "name": "RepoPathWithQuery",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        219,
+        277
+      ],
+      "summary": "Axum FromRequestParts extractor combining a resolved repository path with an arbitrary deserialized query struct in a single extraction step.",
+      "tags": [
+        "axum-extractor",
+        "middleware"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/extractors.rs:lookup_repo_path",
+      "type": "function",
+      "name": "lookup_repo_path",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        290,
+        316
+      ],
+      "summary": "Resolves a repo_id (UUID or name) to its registered filesystem path via the repo registry/watch manager state.",
+      "tags": [
+        "git",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/extractors.rs:decode_file_path",
+      "type": "function",
+      "name": "decode_file_path",
+      "filePath": "src-tauri/crates/git-api/src/extractors.rs",
+      "lineRange": [
+        319,
+        325
+      ],
+      "summary": "URL-decodes a percent-encoded file path segment from a route parameter.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/lineage_bridge.rs:commit_diff_for_lineage",
+      "type": "function",
+      "name": "commit_diff_for_lineage",
+      "filePath": "src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "lineRange": [
+        20,
+        43
+      ],
+      "summary": "Converts a git2-backed CommitDiffResult into the LineageCommitDiff projection type expected by project_management's git-aware commit tracker.",
+      "tags": [
+        "adapter",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/lineage_bridge.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "lineRange": [
+        46,
+        48
+      ],
+      "summary": "Called from app::run() at startup to populate lineage::git_bridge's OnceLock callback slot with commit_diff_for_lineage.",
+      "tags": [
+        "adapter",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_ahead_behind_counts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:run_git_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/error.rs",
+      "target": "class:src-tauri/crates/git-api/src/error.rs:GitApiError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/error.rs",
+      "target": "class:src-tauri/crates/git-api/src/error.rs:ApiError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:has_windows_users_prefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:is_path_allowed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:validate_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:validate_file_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "class:src-tauri/crates/git-api/src/extractors.rs:RepoPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "class:src-tauri/crates/git-api/src/extractors.rs:RepoPathWithQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:lookup_repo_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:decode_file_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "target": "function:src-tauri/crates/git-api/src/lineage_bridge.rs:commit_diff_for_lineage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "target": "function:src-tauri/crates/git-api/src/lineage_bridge.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_ahead_behind_counts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:run_git_command",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/error.rs",
+      "target": "class:src-tauri/crates/git-api/src/error.rs:GitApiError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/error.rs",
+      "target": "class:src-tauri/crates/git-api/src/error.rs:ApiError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:has_windows_users_prefix",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:validate_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:validate_file_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "class:src-tauri/crates/git-api/src/extractors.rs:RepoPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "class:src-tauri/crates/git-api/src/extractors.rs:RepoPathWithQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:lookup_repo_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "target": "function:src-tauri/crates/git-api/src/extractors.rs:decode_file_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "target": "function:src-tauri/crates/git-api/src/lineage_bridge.rs:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/extractors.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/file_types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/routes/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lib.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/lineage_bridge.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/lineage_bridge.rs:commit_diff_for_lineage",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/commit.rs:get_commit_diff",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

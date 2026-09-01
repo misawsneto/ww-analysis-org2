@@ -1,0 +1,81 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/architecture/agentsview-lessons-orgtrack-session-analytics--0624.md",
+      "type": "document",
+      "name": "agentsview-lessons-orgtrack-session-analytics--0624.md",
+      "filePath": "docs/architecture/agentsview-lessons-orgtrack-session-analytics--0624.md",
+      "summary": "Design note explaining how agentsview's parsing and analytics patterns were selectively folded into ORGII's existing orgtrack/unified_stats pipeline — adding prompt-cache-aware token accounting, a session heatmap endpoint, and a chat start-page Heat map tab — without introducing a parallel analytics system or database.",
+      "tags": ["documentation", "architecture", "session-analytics", "telemetry", "decision-record"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/architecture/frontend-engines.md",
+      "type": "document",
+      "name": "frontend-engines.md",
+      "filePath": "docs/architecture/frontend-engines.md",
+      "summary": "Architecture reference for the `src/engines/` subsystem: seven self-contained runtime engines (SessionCore, ChatPanel, Simulator, BrowserCore, TerminalCore, DatabaseCore, GitWorkflow), how they communicate via Jotai atoms, Tauri IPC, and events, and the conventions for isolating and adding a new engine.",
+      "tags": ["documentation", "architecture", "frontend", "tauri-ipc", "state-management"],
+      "complexity": "complex",
+      "languageNotes": "Documents a deliberate no-cross-import isolation rule between engines, enforced only through Jotai atoms, Tauri IPC, and a lightweight event bus rather than the module boundary itself."
+    },
+    {
+      "id": "document:docs/architecture/managed-cloud-collaboration.md",
+      "type": "document",
+      "name": "managed-cloud-collaboration.md",
+      "filePath": "docs/architecture/managed-cloud-collaboration.md",
+      "summary": "Canonical design contract for ORGII's managed-cloud collaboration feature: the Personal/Organization/Link-capability scope model, backend-authoritative ownership and authorization, durable sync of Projects/Work Items via an SQLite outbox, comments and agent-task handling, presence, execution locks, desktop instance isolation, the backend migration contract, and the required verification gates.",
+      "tags": ["documentation", "architecture", "collaboration", "cloud-sync", "authorization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/architecture/rust-crates.md",
+      "type": "document",
+      "name": "rust-crates.md",
+      "filePath": "docs/architecture/rust-crates.md",
+      "summary": "Comprehensive map of the Rust workspace under `src-tauri/` — a mermaid dependency graph plus per-domain descriptions of roughly 40 library crates (foundation, storage, VCS, agent runtime, IDE tooling, browser automation, system/platform, testing) and the responsibilities of the root `app` binary crate.",
+      "tags": ["documentation", "architecture", "rust", "backend", "dependency-graph"],
+      "complexity": "complex",
+      "languageNotes": "agent_core acts as an aggregator crate that most domain crates funnel into, with the app binary crate wiring Tauri command handlers via a generated handler_list.inc rather than exposing its own library API."
+    },
+    {
+      "id": "document:docs/architecture/warp-imported-history.md",
+      "type": "document",
+      "name": "warp-imported-history.md",
+      "filePath": "docs/architecture/warp-imported-history.md",
+      "summary": "Describes ORGII's read-only importer for Warp's locally stored Agent conversations: the SQLite/protobuf source contract, per-platform database discovery order, mapping of Warp events into ORGII replay chunks, metadata fallback rules, caching/compatibility handling, and privacy limitations.",
+      "tags": ["documentation", "architecture", "data-import", "session-history", "sqlite"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:docs/architecture/frontend-engines.md",
+      "target": "document:docs/architecture/rust-crates.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/architecture/managed-cloud-collaboration.md",
+      "target": "document:docs/architecture/rust-crates.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/architecture/agentsview-lessons-orgtrack-session-analytics--0624.md",
+      "target": "document:docs/architecture/rust-crates.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/architecture/warp-imported-history.md",
+      "target": "document:docs/architecture/frontend-engines.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

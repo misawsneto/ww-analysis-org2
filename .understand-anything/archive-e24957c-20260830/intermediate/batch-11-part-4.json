@@ -1,0 +1,1600 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "type": "file",
+      "name": "lifecycle.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "summary": "Bootstraps the channel inbound/outbound processors and hydrates the binding cache from SQLite, plus the Tauri commands the frontend uses to toggle a channel on/off and change the default channel-launch model.",
+      "tags": [
+        "gateway",
+        "lifecycle",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "summary": "Barrel module for the channel inbound handler: routes external channel messages to the OS singleton-per-chat session, re-exporting the lifecycle Tauri commands and their generated __cmd__ siblings.",
+      "tags": [
+        "barrel",
+        "gateway",
+        "entry-point"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Doc comment records an Apr-2026 design pivot away from a pure LLM router to a conversation-first OS agent that delegates coding work via a unified subagent tool."
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "type": "file",
+      "name": "slash.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "summary": "Handles explicit gateway slash commands (/help, /new, /status, /model, /compact) for channel-bound chats, including model-alias resolution against the account's available models.",
+      "tags": [
+        "gateway",
+        "command-parsing",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "type": "file",
+      "name": "desktop.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "summary": "Tauri commands and config model for desktop automation safety settings (hide-before-action, anti-detection, escape-abort) plus native macOS Accessibility/ScreenCaptureKit permission checking and request flows.",
+      "tags": [
+        "desktop-automation",
+        "permissions",
+        "config",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "summary": "Barrel module declaring the agent Tauri command submodules (automation, channel_handler, desktop, routines, session, tools) and flat-re-exporting routines and session commands for `generate_handler!` resolution.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "type": "file",
+      "name": "routines.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "summary": "Direct-run commands for scheduled/manual routine firing: resolves a pending fire, creates or updates the associated project work item, converts the routine into an orchestrator launch request, and emits routine-changed events to the frontend.",
+      "tags": [
+        "automation",
+        "project-management",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "type": "file",
+      "name": "channel.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "summary": "Tauri commands for channel-bound agent messaging: routes a user-submitted channel message into the session runtime with attached repo/branch/image context, probes channel credentials, and relays IDE action-bridge results.",
+      "tags": [
+        "gateway",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "type": "file",
+      "name": "coding.rs",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "summary": "Tauri commands for the coding-session lifecycle: workspace file listing, snapshot creation/listing/restore, per-file and whole-session revert, todo retrieval, mode listing, and file-review resolution tracking.",
+      "tags": [
+        "coding-session",
+        "snapshots",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:ensure_gateway_infra",
+      "type": "function",
+      "name": "ensure_gateway_infra",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "lineRange": [
+        20,
+        31
+      ],
+      "summary": "Starts the channel inbound/outbound processors and hydrates the channel-binding cache from SQLite; idempotent no-op if already running.",
+      "tags": [
+        "gateway",
+        "bootstrap",
+        "async"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:restore_enabled_channels",
+      "type": "function",
+      "name": "restore_enabled_channels",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "lineRange": [
+        33,
+        44
+      ],
+      "summary": "Restores previously enabled channel bindings from persistence on app startup.",
+      "tags": [
+        "gateway",
+        "bootstrap"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:agent_toggle_channel",
+      "type": "function",
+      "name": "agent_toggle_channel",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "lineRange": [
+        47,
+        74
+      ],
+      "summary": "Tauri command that enables or disables a channel integration for an account.",
+      "tags": [
+        "gateway",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:init_channel_session",
+      "type": "function",
+      "name": "init_channel_session",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "lineRange": [
+        78,
+        94
+      ],
+      "summary": "Initializes a new channel-bound session with the given account and optional model override.",
+      "tags": [
+        "gateway",
+        "session-lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:agent_set_gateway_model",
+      "type": "function",
+      "name": "agent_set_gateway_model",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "lineRange": [
+        105,
+        124
+      ],
+      "summary": "Tauri command that sets the default model used for new channel-launched sessions on an account.",
+      "tags": [
+        "gateway",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:handle_command",
+      "type": "function",
+      "name": "handle_command",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "lineRange": [
+        15,
+        126
+      ],
+      "summary": "Dispatches a parsed gateway slash command (/help, /new, /status, /model, /compact) to its handler and writes an acknowledgment to the outbound bus.",
+      "tags": [
+        "gateway",
+        "command-parsing",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:handle_model_command",
+      "type": "function",
+      "name": "handle_model_command",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "lineRange": [
+        128,
+        189
+      ],
+      "summary": "Handles /model: resolves the requested model alias against the account's available models and updates the session/channel binding.",
+      "tags": [
+        "gateway",
+        "command-parsing",
+        "async"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:resolve_model_target",
+      "type": "function",
+      "name": "resolve_model_target",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "lineRange": [
+        191,
+        242
+      ],
+      "summary": "Resolves a user-supplied model alias string to a canonical model id for the given account.",
+      "tags": [
+        "gateway",
+        "config-resolution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:best_candidate_for_alias",
+      "type": "function",
+      "name": "best_candidate_for_alias",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "lineRange": [
+        244,
+        256
+      ],
+      "summary": "Picks the best-matching model candidate for an alias from a list, preferring exact canonical-target matches.",
+      "tags": [
+        "gateway",
+        "matching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:normalize_model_key",
+      "type": "function",
+      "name": "normalize_model_key",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "lineRange": [
+        258,
+        264
+      ],
+      "summary": "Normalizes a model identifier string (case/whitespace) for alias comparison.",
+      "tags": [
+        "gateway",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:build_help_text",
+      "type": "function",
+      "name": "build_help_text",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "lineRange": [
+        278,
+        288
+      ],
+      "summary": "Builds the static help text listing available slash commands.",
+      "tags": [
+        "gateway",
+        "text-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:default",
+      "type": "function",
+      "name": "default",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        33,
+        40
+      ],
+      "summary": "Default DesktopConfig: safety features enabled, standard human-input timing.",
+      "tags": [
+        "desktop-automation",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:load_desktop_config_from",
+      "type": "function",
+      "name": "load_desktop_config_from",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        52,
+        62
+      ],
+      "summary": "Parses a DesktopConfig from a specific file path, returning defaults if the file is absent or invalid.",
+      "tags": [
+        "desktop-automation",
+        "config",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:save_desktop_config",
+      "type": "function",
+      "name": "save_desktop_config",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        70,
+        78
+      ],
+      "summary": "Persists a DesktopConfig to its well-known JSON config path.",
+      "tags": [
+        "desktop-automation",
+        "config",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_set_desktop_config",
+      "type": "function",
+      "name": "agent_set_desktop_config",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        86,
+        100
+      ],
+      "summary": "Tauri command that validates and persists an updated DesktopConfig.",
+      "tags": [
+        "desktop-automation",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:as_str",
+      "type": "function",
+      "name": "as_str",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        119,
+        124
+      ],
+      "summary": "Returns the wire string identifier for a DesktopPermissionName variant.",
+      "tags": [
+        "desktop-automation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:from_wire",
+      "type": "function",
+      "name": "from_wire",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        126,
+        132
+      ],
+      "summary": "Parses a DesktopPermissionName from its wire string identifier.",
+      "tags": [
+        "desktop-automation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:grant_instructions",
+      "type": "function",
+      "name": "grant_instructions",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        135,
+        144
+      ],
+      "summary": "Returns the OS-specific user instructions for granting a given desktop permission.",
+      "tags": [
+        "desktop-automation",
+        "permissions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:permission_status_json",
+      "type": "function",
+      "name": "permission_status_json",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        148,
+        155
+      ],
+      "summary": "Builds the JSON status object reported to the frontend for a single permission (name + granted flag).",
+      "tags": [
+        "desktop-automation",
+        "permissions",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_check_desktop_permissions",
+      "type": "function",
+      "name": "agent_check_desktop_permissions",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        158,
+        178
+      ],
+      "summary": "Tauri command that checks the current grant status of Accessibility and ScreenRecording permissions on macOS.",
+      "tags": [
+        "desktop-automation",
+        "permissions",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_request_desktop_permissions",
+      "type": "function",
+      "name": "agent_request_desktop_permissions",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        181,
+        241
+      ],
+      "summary": "Tauri command that triggers the native OS prompt to request a specific desktop automation permission.",
+      "tags": [
+        "desktop-automation",
+        "permissions",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/state/commands/desktop.rs:DesktopConfig",
+      "type": "class",
+      "name": "DesktopConfig",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        12,
+        30
+      ],
+      "summary": "Desktop automation safety configuration: whether to hide the app before acting, anti-detection mode, human-input timing profile, and escape-key abort.",
+      "tags": [
+        "desktop-automation",
+        "config",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/state/commands/desktop.rs:DesktopPermissionName",
+      "type": "class",
+      "name": "DesktopPermissionName",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "lineRange": [
+        111,
+        116
+      ],
+      "summary": "Enum of native macOS permissions (Accessibility, ScreenRecording) the desktop automation feature depends on.",
+      "tags": [
+        "desktop-automation",
+        "permissions",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:project_fire_routine",
+      "type": "function",
+      "name": "project_fire_routine",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        17,
+        32
+      ],
+      "summary": "Tauri command that manually fires a project routine by id, delegating to the internal fire pipeline.",
+      "tags": [
+        "automation",
+        "project-management",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:fire_routine_internal",
+      "type": "function",
+      "name": "fire_routine_internal",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        40,
+        69
+      ],
+      "summary": "Resolves an idempotency-guarded pending fire record for a routine and executes it.",
+      "tags": [
+        "automation",
+        "project-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:execute_pending_fire",
+      "type": "function",
+      "name": "execute_pending_fire",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        73,
+        125
+      ],
+      "summary": "Executes a pending routine fire: creates or updates the associated work item and launches the routine's agent session directly.",
+      "tags": [
+        "automation",
+        "project-management",
+        "session-launch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:fire_status_str",
+      "type": "function",
+      "name": "fire_status_str",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        127,
+        137
+      ],
+      "summary": "Maps a routine fire outcome enum to its persisted/display status string.",
+      "tags": [
+        "automation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:emit_routine_changed",
+      "type": "function",
+      "name": "emit_routine_changed",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        141,
+        156
+      ],
+      "summary": "Emits a routine-changed event to the frontend with the fire id and resulting status.",
+      "tags": [
+        "automation",
+        "events"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:launch_routine_direct_session",
+      "type": "function",
+      "name": "launch_routine_direct_session",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        158,
+        191
+      ],
+      "summary": "Launches a direct (non-orchestrator) agent session for a routine's pending fire.",
+      "tags": [
+        "automation",
+        "session-launch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:create_work_item_from_routine",
+      "type": "function",
+      "name": "create_work_item_from_routine",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        193,
+        335
+      ],
+      "summary": "Creates a new project work item populated from a routine definition and its pending fire, wiring in agent assignment and provenance.",
+      "tags": [
+        "automation",
+        "project-management",
+        "complex"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:update_existing_work_item_from_routine",
+      "type": "function",
+      "name": "update_existing_work_item_from_routine",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        340,
+        431
+      ],
+      "summary": "Updates an existing project work item's fields to reflect a re-fired routine's latest configuration.",
+      "tags": [
+        "automation",
+        "project-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:routine_to_orchestrator_config",
+      "type": "function",
+      "name": "routine_to_orchestrator_config",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        433,
+        456
+      ],
+      "summary": "Converts a routine definition into the orchestrator launch configuration shape.",
+      "tags": [
+        "automation",
+        "session-launch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:routine_workspace_path",
+      "type": "function",
+      "name": "routine_workspace_path",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        458,
+        472
+      ],
+      "summary": "Resolves the on-disk workspace path a routine should run against.",
+      "tags": [
+        "automation",
+        "path-resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:routine_to_launch_request",
+      "type": "function",
+      "name": "routine_to_launch_request",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "lineRange": [
+        474,
+        548
+      ],
+      "summary": "Builds the full AgentRunLaunchRequest for firing a routine, including provenance and resource selection.",
+      "tags": [
+        "automation",
+        "session-launch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:channel_process_message",
+      "type": "function",
+      "name": "channel_process_message",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "lineRange": [
+        12,
+        158
+      ],
+      "summary": "Tauri command that routes a user-submitted channel message (with optional repo/branch/image context) into the session runtime for processing.",
+      "tags": [
+        "gateway",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:agent_probe_channel",
+      "type": "function",
+      "name": "agent_probe_channel",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "lineRange": [
+        161,
+        167
+      ],
+      "summary": "Tauri command that validates a channel's credentials without fully enabling it.",
+      "tags": [
+        "gateway",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:agent_ade_action_result",
+      "type": "function",
+      "name": "agent_ade_action_result",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "lineRange": [
+        170,
+        192
+      ],
+      "summary": "Tauri command that relays an IDE (ADE) action-bridge result back into the correlating session.",
+      "tags": [
+        "gateway",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:invalidate_cli_resume_state_best_effort",
+      "type": "function",
+      "name": "invalidate_cli_resume_state_best_effort",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        12,
+        23
+      ],
+      "summary": "Best-effort invalidation of a session's CLI resume state after a mutating operation, logging but not failing on error.",
+      "tags": [
+        "coding-session",
+        "cache-invalidation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_session_files",
+      "type": "function",
+      "name": "agent_get_session_files",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        27,
+        62
+      ],
+      "summary": "Tauri command listing the workspace files touched or tracked by a coding session.",
+      "tags": [
+        "coding-session",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_snapshots",
+      "type": "function",
+      "name": "agent_get_snapshots",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        66,
+        93
+      ],
+      "summary": "Tauri command listing the file snapshots recorded for a coding session.",
+      "tags": [
+        "coding-session",
+        "snapshots",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert",
+      "type": "function",
+      "name": "agent_revert",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        100,
+        174
+      ],
+      "summary": "Tauri command that reverts a session's workspace to its state at a given timestamp, restoring snapshot content across affected files.",
+      "tags": [
+        "coding-session",
+        "snapshots",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_restore_snapshot",
+      "type": "function",
+      "name": "agent_restore_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        179,
+        200
+      ],
+      "summary": "Tauri command that restores a specific named snapshot for a session.",
+      "tags": [
+        "coding-session",
+        "snapshots",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert_file_review",
+      "type": "function",
+      "name": "agent_revert_file_review",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        203,
+        242
+      ],
+      "summary": "Tauri command that computes a review diff for reverting a single file to its pre-session snapshot state.",
+      "tags": [
+        "coding-session",
+        "snapshots",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert_file",
+      "type": "function",
+      "name": "agent_revert_file",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        248,
+        266
+      ],
+      "summary": "Tauri command that reverts a single file to a specific snapshot hash.",
+      "tags": [
+        "coding-session",
+        "snapshots",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_todos",
+      "type": "function",
+      "name": "agent_get_todos",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        270,
+        296
+      ],
+      "summary": "Tauri command returning the session's current todo list.",
+      "tags": [
+        "coding-session",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_list_modes",
+      "type": "function",
+      "name": "agent_list_modes",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        303,
+        327
+      ],
+      "summary": "Tauri command listing the available agent operating modes.",
+      "tags": [
+        "coding-session",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_resolve_review",
+      "type": "function",
+      "name": "agent_resolve_review",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        331,
+        341
+      ],
+      "summary": "Tauri command marking a session's file review as resolved.",
+      "tags": [
+        "coding-session",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_save_file_resolution",
+      "type": "function",
+      "name": "agent_save_file_resolution",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        345,
+        354
+      ],
+      "summary": "Tauri command persisting a per-file review resolution decision for a session.",
+      "tags": [
+        "coding-session",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_file_resolutions",
+      "type": "function",
+      "name": "agent_get_file_resolutions",
+      "filePath": "src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "lineRange": [
+        358,
+        374
+      ],
+      "summary": "Tauri command returning all saved per-file review resolutions for a session.",
+      "tags": [
+        "coding-session",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:ensure_gateway_infra",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:ensure_gateway_infra",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:restore_enabled_channels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:restore_enabled_channels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:agent_toggle_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:agent_toggle_channel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:init_channel_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:init_channel_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:agent_set_gateway_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs:agent_set_gateway_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:handle_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:handle_command",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:handle_model_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:resolve_model_target",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:best_candidate_for_alias",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:normalize_model_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs:build_help_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:default",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:load_desktop_config_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:save_desktop_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_set_desktop_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_set_desktop_config",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:as_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:as_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:from_wire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:from_wire",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:grant_instructions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:permission_status_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_check_desktop_permissions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_check_desktop_permissions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_request_desktop_permissions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/desktop.rs:agent_request_desktop_permissions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/state/commands/desktop.rs:DesktopConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/state/commands/desktop.rs:DesktopConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/state/commands/desktop.rs:DesktopPermissionName",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "target": "class:src-tauri/crates/agent-core/src/state/commands/desktop.rs:DesktopPermissionName",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:project_fire_routine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:project_fire_routine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:fire_routine_internal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:fire_routine_internal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:execute_pending_fire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:execute_pending_fire",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:fire_status_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:emit_routine_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:emit_routine_changed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:launch_routine_direct_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:create_work_item_from_routine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:update_existing_work_item_from_routine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:routine_to_orchestrator_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:routine_workspace_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/routines.rs:routine_to_launch_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:channel_process_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:channel_process_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:agent_probe_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:agent_probe_channel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:agent_ade_action_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/channel.rs:agent_ade_action_result",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:invalidate_cli_resume_state_best_effort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_session_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_session_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_snapshots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_snapshots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_restore_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_restore_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert_file_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert_file_review",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_revert_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_todos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_todos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_list_modes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_list_modes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_resolve_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_resolve_review",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_save_file_resolution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_save_file_resolution",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_file_resolutions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/state/commands/session/coding.rs:agent_get_file_resolutions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/dispatch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/idle_reset.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/lifecycle.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/slash.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/automation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/channel_handler/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/desktop.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/session/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/commands/tools.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/routines.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/channel.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/state/commands/session/coding.rs",
+      "target": "file:src-tauri/crates/agent-core/src/foundation/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

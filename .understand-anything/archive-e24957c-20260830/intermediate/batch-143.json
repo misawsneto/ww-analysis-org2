@@ -1,0 +1,523 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/dev/tauri-dev-processes.cjs",
+      "type": "file",
+      "name": "tauri-dev-processes.cjs",
+      "filePath": "scripts/dev/tauri-dev-processes.cjs",
+      "summary": "Helper module for the Tauri dev orchestration script providing CLI arg construction, ANSI-aware log line classification, and HTTP polling for dev-server readiness.",
+      "tags": ["utility", "dev-tooling", "process-management", "networking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/dev/tauri.js",
+      "type": "file",
+      "name": "tauri.js",
+      "filePath": "scripts/dev/tauri.js",
+      "summary": "Main Tauri dev-mode orchestration CLI that spawns and coordinates the webpack frontend dev server and the Tauri/Rust process, rendering a live status banner and routing their combined log output.",
+      "tags": ["entry-point", "dev-tooling", "process-management", "cli"],
+      "complexity": "complex",
+      "languageNotes": "Uses raw ANSI escape codes to render a persistent two-line status bar above scrolling log output in the terminal."
+    },
+    {
+      "id": "file:scripts/tauri/build-fast-local.cjs",
+      "type": "file",
+      "name": "build-fast-local.cjs",
+      "filePath": "scripts/tauri/build-fast-local.cjs",
+      "summary": "CLI script that runs a fast local Tauri production-profile build with a config override that disables code signing and updater artifact generation.",
+      "tags": ["build-system", "cli", "dev-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/tauri/build-fast-open.cjs",
+      "type": "file",
+      "name": "build-fast-open.cjs",
+      "filePath": "scripts/tauri/build-fast-open.cjs",
+      "summary": "CLI script that performs a fast Tauri dev-build and then opens the resulting macOS .app bundle via the `open` command.",
+      "tags": ["build-system", "cli", "dev-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/tauri/build-fast-parallel.cjs",
+      "type": "file",
+      "name": "build-fast-parallel.cjs",
+      "filePath": "scripts/tauri/build-fast-parallel.cjs",
+      "summary": "CLI script that builds the webpack frontend once and runs a single Tauri dev-build/bundle pass to avoid duplicate Rust compiles, optionally targeting a custom output path or a numbered app instance.",
+      "tags": ["build-system", "cli", "dev-tooling", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/tauri/diagnostics-endpoint.cjs",
+      "type": "file",
+      "name": "diagnostics-endpoint.cjs",
+      "filePath": "scripts/tauri/diagnostics-endpoint.cjs",
+      "summary": "Builds the default Cloudflare Workers diagnostics endpoint URL and injects diagnostics endpoint/token/app-version defaults into a child process environment.",
+      "tags": ["utility", "configuration", "diagnostics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/tauri/diagnostics-host-parts.cjs",
+      "type": "file",
+      "name": "diagnostics-host-parts.cjs",
+      "filePath": "scripts/tauri/diagnostics-host-parts.cjs",
+      "summary": "Static string-array constants (worker name, account subdomain, workers.dev domain) used to assemble the diagnostics worker hostname.",
+      "tags": ["configuration", "data", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/tauri/diagnostics-route-parts.cjs",
+      "type": "file",
+      "name": "diagnostics-route-parts.cjs",
+      "filePath": "scripts/tauri/diagnostics-route-parts.cjs",
+      "summary": "Static constants for the diagnostics endpoint's protocol, URL path segments, and analytics dataset name.",
+      "tags": ["configuration", "data", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/tauri/features.cjs",
+      "type": "file",
+      "name": "features.cjs",
+      "filePath": "scripts/tauri/features.cjs",
+      "summary": "Computes the Cargo `--features` flag list/string for Tauri builds based on the WEBDRIVER env var and an optional semantic-search flag.",
+      "tags": ["configuration", "build-system", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/tauri/instance-profile.cjs",
+      "type": "file",
+      "name": "instance-profile.cjs",
+      "filePath": "scripts/tauri/instance-profile.cjs",
+      "summary": "Derives a named multi-instance profile (product name, bundle identifier, deep-link schemes, IDE/CLI proxy ports, data home directory) from a numeric instance id, enabling multiple ORG2 app copies to run side by side.",
+      "tags": ["configuration", "utility", "multi-instance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/tauri/open-instance.cjs",
+      "type": "file",
+      "name": "open-instance.cjs",
+      "filePath": "scripts/tauri/open-instance.cjs",
+      "summary": "CLI script that launches a built ORG2 instance .app bundle with isolated ORGII_HOME/port environment variables for a given --instance id.",
+      "tags": ["cli", "dev-tooling", "multi-instance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/tauri/run-with-features.cjs",
+      "type": "file",
+      "name": "run-with-features.cjs",
+      "filePath": "scripts/tauri/run-with-features.cjs",
+      "summary": "Thin CLI wrapper that runs `tauri <subcommand>` with the OS-appropriate Cargo feature flags and default diagnostics environment variables applied.",
+      "tags": ["cli", "build-system", "dev-tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri-dev-processes.cjs:createTauriArgs",
+      "type": "function",
+      "name": "createTauriArgs",
+      "filePath": "scripts/dev/tauri-dev-processes.cjs",
+      "lineRange": [4, 25],
+      "summary": "Builds the `tauri dev` CLI argument list, adding `--features` and a `--config` override that points the dev-server URL at the running frontend.",
+      "tags": ["cli", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri-dev-processes.cjs:fetchHttpAsset",
+      "type": "function",
+      "name": "fetchHttpAsset",
+      "filePath": "scripts/dev/tauri-dev-processes.cjs",
+      "lineRange": [84, 111],
+      "summary": "Performs a single HTTP/HTTPS GET request and resolves true/false based on whether the asset responds successfully.",
+      "tags": ["networking", "utility", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri-dev-processes.cjs:waitForDevServerAsset",
+      "type": "function",
+      "name": "waitForDevServerAsset",
+      "filePath": "scripts/dev/tauri-dev-processes.cjs",
+      "lineRange": [113, 138],
+      "summary": "Polls a dev server URL with fetchHttpAsset until the asset becomes available or a timeout elapses, used to detect when the webpack dev server is ready.",
+      "tags": ["networking", "polling", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:printBanner",
+      "type": "function",
+      "name": "printBanner",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [86, 115],
+      "summary": "Prints the ORG2 ASCII-art startup banner along with the active Cargo feature list.",
+      "tags": ["cli", "logging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:writeStatusBar",
+      "type": "function",
+      "name": "writeStatusBar",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [117, 137],
+      "summary": "Renders the live two-line Rust/Webpack status bar to the terminal using ANSI cursor and truncation escape codes.",
+      "tags": ["cli", "terminal-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:printLog",
+      "type": "function",
+      "name": "printLog",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [139, 151],
+      "summary": "Writes a log line above the persistent status bar, repositioning the terminal cursor when the status bar is active.",
+      "tags": ["cli", "logging", "terminal-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:appendStartupMetrics",
+      "type": "function",
+      "name": "appendStartupMetrics",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [159, 168],
+      "summary": "Appends a TSV row of startup timing milestones to the startup-metrics log file when ORGII_LOG_STARTUP_METRICS is enabled.",
+      "tags": ["logging", "metrics", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:shouldSuppressLine",
+      "type": "function",
+      "name": "shouldSuppressLine",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [187, 215],
+      "summary": "Determines whether a cleaned log line from webpack/cargo is noise that should be filtered out of the dev console output.",
+      "tags": ["logging", "filtering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:routeLine",
+      "type": "function",
+      "name": "routeLine",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [219, 335],
+      "summary": "Central log-line router that parses raw webpack and cargo output, updates the Rust/Webpack status bar, records startup milestones, and forwards non-suppressed lines to the console.",
+      "tags": ["logging", "parser", "state-machine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:cleanupOrphanedProcesses",
+      "type": "function",
+      "name": "cleanupOrphanedProcesses",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [339, 349],
+      "summary": "Kills any dev-server or cargo processes left over from a previous crashed dev session before starting a new one.",
+      "tags": ["process-management", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:killDescendants",
+      "type": "function",
+      "name": "killDescendants",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [353, 384],
+      "summary": "Recursively finds and signals all descendant processes of a given PID via pgrep, used to fully tear down spawned dev processes.",
+      "tags": ["process-management", "recursion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:createBinPath",
+      "type": "function",
+      "name": "createBinPath",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [400, 409],
+      "summary": "Resolves the path to a locally installed node_modules/.bin executable, checking for the .cmd variant on Windows.",
+      "tags": ["utility", "cross-platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:createNodePackageCliCommand",
+      "type": "function",
+      "name": "createNodePackageCliCommand",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [411, 435],
+      "summary": "Builds a cross-platform command/args pair to invoke a package's CLI binary directly via node, falling back to the local .bin path when require.resolve fails.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:createPnpmCliCommand",
+      "type": "function",
+      "name": "createPnpmCliCommand",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [441, 484],
+      "summary": "Locates a usable pnpm executable across common install locations (local .bin, PNPM_HOME, npm global, pnpm global) and returns the command to invoke it.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:startFrontendDev",
+      "type": "function",
+      "name": "startFrontendDev",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [496, 563],
+      "summary": "Spawns the pnpm webpack dev-server process, wires its output through routeLine, and resolves once the frontend's main.js is confirmed reachable over HTTP.",
+      "tags": ["process-management", "async", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:startTauriDev",
+      "type": "function",
+      "name": "startTauriDev",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [565, 589],
+      "summary": "Spawns the `tauri dev` Rust process pointed at the running frontend dev server URL and wires its output through the log router.",
+      "tags": ["process-management", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:shutdownProcesses",
+      "type": "function",
+      "name": "shutdownProcesses",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [591, 610],
+      "summary": "Gracefully signals all managed child processes to exit, force-killing any still alive after a 3-second grace period.",
+      "tags": ["process-management", "cleanup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:startDev",
+      "type": "function",
+      "name": "startDev",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [612, 678],
+      "summary": "Top-level dev-mode orchestrator that starts the frontend dev server, then the Tauri process once ready, wiring signal handlers and cross-process shutdown/exit propagation.",
+      "tags": ["orchestration", "process-management", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dev/tauri.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/dev/tauri.js",
+      "lineRange": [682, 689],
+      "summary": "Script entry point that computes Cargo features, prints the startup banner, cleans up orphaned processes, and kicks off startDev.",
+      "tags": ["entry-point", "cli"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-local.cjs:createNodePackageCliCommand",
+      "type": "function",
+      "name": "createNodePackageCliCommand",
+      "filePath": "scripts/tauri/build-fast-local.cjs",
+      "lineRange": [25, 49],
+      "summary": "Builds a cross-platform command/args pair to invoke a package's CLI binary directly via node for the local fast-build script.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-local.cjs:createPnpmCliCommand",
+      "type": "function",
+      "name": "createPnpmCliCommand",
+      "filePath": "scripts/tauri/build-fast-local.cjs",
+      "lineRange": [51, 92],
+      "summary": "Locates a usable pnpm executable across common install locations for the local fast-build script.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-open.cjs:createNodePackageCliCommand",
+      "type": "function",
+      "name": "createNodePackageCliCommand",
+      "filePath": "scripts/tauri/build-fast-open.cjs",
+      "lineRange": [25, 49],
+      "summary": "Builds a cross-platform command/args pair to invoke a package's CLI binary directly via node for the fast build-and-open script.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-open.cjs:createPnpmCliCommand",
+      "type": "function",
+      "name": "createPnpmCliCommand",
+      "filePath": "scripts/tauri/build-fast-open.cjs",
+      "lineRange": [51, 92],
+      "summary": "Locates a usable pnpm executable across common install locations for the fast build-and-open script.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-open.cjs:resolveCargoTargetDir",
+      "type": "function",
+      "name": "resolveCargoTargetDir",
+      "filePath": "scripts/tauri/build-fast-open.cjs",
+      "lineRange": [101, 115],
+      "summary": "Runs `cargo metadata` to resolve the workspace's Cargo target directory, exiting with an error if the command fails.",
+      "tags": ["build-system", "cargo", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-parallel.cjs:createNodePackageCliCommand",
+      "type": "function",
+      "name": "createNodePackageCliCommand",
+      "filePath": "scripts/tauri/build-fast-parallel.cjs",
+      "lineRange": [60, 84],
+      "summary": "Builds a cross-platform command/args pair to invoke a package's CLI binary directly via node for the parallel fast-build script.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-parallel.cjs:createPnpmCliCommand",
+      "type": "function",
+      "name": "createPnpmCliCommand",
+      "filePath": "scripts/tauri/build-fast-parallel.cjs",
+      "lineRange": [86, 126],
+      "summary": "Locates a usable pnpm executable across common install locations for the parallel fast-build script.",
+      "tags": ["cli", "cross-platform", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-parallel.cjs:resolveCargoTargetDir",
+      "type": "function",
+      "name": "resolveCargoTargetDir",
+      "filePath": "scripts/tauri/build-fast-parallel.cjs",
+      "lineRange": [136, 156],
+      "summary": "Runs `cargo metadata` to resolve the workspace's Cargo target directory, exiting with an error if the command fails.",
+      "tags": ["build-system", "cargo", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-parallel.cjs:copyBuiltApp",
+      "type": "function",
+      "name": "copyBuiltApp",
+      "filePath": "scripts/tauri/build-fast-parallel.cjs",
+      "lineRange": [165, 188],
+      "summary": "Locates the built dev-build .app bundle under the Cargo target directory and copies it to a caller-specified output path, renaming it if a custom app name/extension was given.",
+      "tags": ["build-system", "filesystem", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tauri/build-fast-parallel.cjs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/tauri/build-fast-parallel.cjs",
+      "lineRange": [218, 323],
+      "summary": "Orchestrates the parallel-avoidance fast build: runs webpack once, invokes `tauri build` for the dev-build bundle profile (optionally with per-instance identifiers), and copies the resulting .app to the requested output path.",
+      "tags": ["build-system", "orchestration", "cli"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/tauri/diagnostics-endpoint.cjs:defaultDiagnosticsEndpoint",
+      "type": "function",
+      "name": "defaultDiagnosticsEndpoint",
+      "filePath": "scripts/tauri/diagnostics-endpoint.cjs",
+      "lineRange": [14, 24],
+      "summary": "Assembles the default Cloudflare Workers diagnostics endpoint URL from the worker name, account subdomain, and route path constants.",
+      "tags": ["configuration", "diagnostics", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/diagnostics-endpoint.cjs:readLocalDiagnosticsToken",
+      "type": "function",
+      "name": "readLocalDiagnosticsToken",
+      "filePath": "scripts/tauri/diagnostics-endpoint.cjs",
+      "lineRange": [34, 45],
+      "summary": "Reads a local, gitignored diagnostics auth token file (if present) and returns it as a dot-joined string.",
+      "tags": ["configuration", "diagnostics", "filesystem"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/diagnostics-endpoint.cjs:applyDefaultDiagnosticsEndpoint",
+      "type": "function",
+      "name": "applyDefaultDiagnosticsEndpoint",
+      "filePath": "scripts/tauri/diagnostics-endpoint.cjs",
+      "lineRange": [47, 64],
+      "summary": "Fills in missing ORGII_DIAGNOSTICS_ENDPOINT, ORGII_DIAGNOSTICS_TOKEN, and ORGII_APP_VERSION environment variables on a given env object with computed defaults.",
+      "tags": ["configuration", "diagnostics", "environment"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/features.cjs:tauriFeatureList",
+      "type": "function",
+      "name": "tauriFeatureList",
+      "filePath": "scripts/tauri/features.cjs",
+      "lineRange": [9, 18],
+      "summary": "Returns the list of Cargo feature flags to pass to the Tauri CLI, enabling `webdriver` when WEBDRIVER=1 and `semantic-search` when requested.",
+      "tags": ["configuration", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tauri/instance-profile.cjs:createInstanceProfile",
+      "type": "function",
+      "name": "createInstanceProfile",
+      "filePath": "scripts/tauri/instance-profile.cjs",
+      "lineRange": [15, 28],
+      "summary": "Builds a full multi-instance profile (product name, bundle id, deep-link schemes, IDE/CLI proxy ports, data home path) from a validated numeric instance id.",
+      "tags": ["configuration", "multi-instance", "utility"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:scripts/dev/tauri-dev-processes.cjs", "target": "function:scripts/dev/tauri-dev-processes.cjs:createTauriArgs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri-dev-processes.cjs", "target": "function:scripts/dev/tauri-dev-processes.cjs:fetchHttpAsset", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri-dev-processes.cjs", "target": "function:scripts/dev/tauri-dev-processes.cjs:waitForDevServerAsset", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri-dev-processes.cjs", "target": "function:scripts/dev/tauri-dev-processes.cjs:createTauriArgs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:scripts/dev/tauri-dev-processes.cjs", "target": "function:scripts/dev/tauri-dev-processes.cjs:waitForDevServerAsset", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:printBanner", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:writeStatusBar", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:printLog", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:appendStartupMetrics", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:shouldSuppressLine", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:routeLine", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:cleanupOrphanedProcesses", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:killDescendants", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:createBinPath", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:createNodePackageCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:createPnpmCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:startFrontendDev", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:startTauriDev", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:shutdownProcesses", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:startDev", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/dev/tauri.js", "target": "function:scripts/dev/tauri.js:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/tauri/build-fast-local.cjs", "target": "function:scripts/tauri/build-fast-local.cjs:createNodePackageCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-local.cjs", "target": "function:scripts/tauri/build-fast-local.cjs:createPnpmCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/tauri/build-fast-open.cjs", "target": "function:scripts/tauri/build-fast-open.cjs:createNodePackageCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-open.cjs", "target": "function:scripts/tauri/build-fast-open.cjs:createPnpmCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-open.cjs", "target": "function:scripts/tauri/build-fast-open.cjs:resolveCargoTargetDir", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "function:scripts/tauri/build-fast-parallel.cjs:createNodePackageCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "function:scripts/tauri/build-fast-parallel.cjs:createPnpmCliCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "function:scripts/tauri/build-fast-parallel.cjs:resolveCargoTargetDir", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "function:scripts/tauri/build-fast-parallel.cjs:copyBuiltApp", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "function:scripts/tauri/build-fast-parallel.cjs:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "function:scripts/tauri/diagnostics-endpoint.cjs:defaultDiagnosticsEndpoint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "function:scripts/tauri/diagnostics-endpoint.cjs:readLocalDiagnosticsToken", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "function:scripts/tauri/diagnostics-endpoint.cjs:applyDefaultDiagnosticsEndpoint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "function:scripts/tauri/diagnostics-endpoint.cjs:defaultDiagnosticsEndpoint", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "function:scripts/tauri/diagnostics-endpoint.cjs:readLocalDiagnosticsToken", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "function:scripts/tauri/diagnostics-endpoint.cjs:applyDefaultDiagnosticsEndpoint", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:scripts/tauri/features.cjs", "target": "function:scripts/tauri/features.cjs:tauriFeatureList", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/features.cjs", "target": "function:scripts/tauri/features.cjs:tauriFeatureList", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:scripts/tauri/instance-profile.cjs", "target": "function:scripts/tauri/instance-profile.cjs:createInstanceProfile", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/tauri/instance-profile.cjs", "target": "function:scripts/tauri/instance-profile.cjs:createInstanceProfile", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:scripts/dev/tauri.js", "target": "file:scripts/dev/tauri-dev-processes.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/dev/tauri.js", "target": "file:scripts/tauri/diagnostics-endpoint.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/dev/tauri.js", "target": "file:scripts/tauri/features.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-local.cjs", "target": "file:scripts/tauri/diagnostics-endpoint.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-local.cjs", "target": "file:scripts/tauri/features.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-open.cjs", "target": "file:scripts/tauri/diagnostics-endpoint.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-open.cjs", "target": "file:scripts/tauri/features.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "file:scripts/tauri/diagnostics-endpoint.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "file:scripts/tauri/features.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/build-fast-parallel.cjs", "target": "file:scripts/tauri/instance-profile.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "file:scripts/tauri/diagnostics-host-parts.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/diagnostics-endpoint.cjs", "target": "file:scripts/tauri/diagnostics-route-parts.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/open-instance.cjs", "target": "file:scripts/tauri/instance-profile.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/run-with-features.cjs", "target": "file:scripts/tauri/diagnostics-endpoint.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:scripts/tauri/run-with-features.cjs", "target": "file:scripts/tauri/features.cjs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:scripts/dev/tauri.js:startFrontendDev", "target": "function:scripts/dev/tauri-dev-processes.cjs:waitForDevServerAsset", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:scripts/dev/tauri.js:startTauriDev", "target": "function:scripts/dev/tauri-dev-processes.cjs:createTauriArgs", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:scripts/dev/tauri.js:main", "target": "function:scripts/tauri/features.cjs:tauriFeatureList", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

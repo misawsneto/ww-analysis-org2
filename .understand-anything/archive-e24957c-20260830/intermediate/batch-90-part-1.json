@@ -1,0 +1,1340 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/cursorIde/index.ts",
+      "summary": "Tauri API wrappers exposing Cursor IDE chat history (read from Cursor's state.vscdb) as read-only sessions: full transcript loads, a cheap composer freshness probe, and windowed initial/turn loading for the chat view.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Every session id surfaced to the frontend is prefixed with `cursoride-` so the UI never sees the bare composer UUID."
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/detection.ts",
+      "type": "file",
+      "name": "detection.ts",
+      "filePath": "src/api/tauri/externalHistory/detection.ts",
+      "summary": "Tauri API wrappers for detecting which external CLI agent sources (Cursor CLI, Codex, etc.) are installed/running on the machine and probing an individual source's capabilities.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "detection",
+        "external-integration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/imported/descriptors.ts",
+      "type": "file",
+      "name": "descriptors.ts",
+      "filePath": "src/api/tauri/externalHistory/imported/descriptors.ts",
+      "summary": "Static, ordered registry of descriptor metadata (display name, icon, session-id prefix, list category, replay support) for every external CLI history source ORGII can import.",
+      "tags": [
+        "data-model",
+        "config-registry",
+        "external-integration",
+        "static-data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "summary": "Central adapter registry that composes each source's descriptor with its preview/full-transcript loader and freshness probe into unified ImportedHistorySource objects, plus lookup helpers used to route session ids and list categories to their source.",
+      "tags": [
+        "aggregator",
+        "registry",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses object-spread composition (`...descriptorFor(id)`) to merge static descriptor data with per-source function references into a single adapter interface."
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/imported/stat.ts",
+      "type": "file",
+      "name": "stat.ts",
+      "filePath": "src/api/tauri/externalHistory/imported/stat.ts",
+      "summary": "Source-agnostic Tauri wrapper that stats an imported session's backing transcript file (including the SQLite -wal sibling) to cheaply detect changes for auto-refresh without a full reload.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "freshness-probe",
+        "external-integration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/rescan.ts",
+      "type": "file",
+      "name": "rescan.ts",
+      "filePath": "src/api/tauri/externalHistory/rescan.ts",
+      "summary": "Tauri API wrappers to rescan one or more external history sources, re-reading their on-disk stores and repopulating ORGII's cached session metadata (incremental update or full clear+rescan).",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "cache-management",
+        "external-integration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "type": "file",
+      "name": "sourceStats.ts",
+      "filePath": "src/api/tauri/externalHistory/sourceStats.ts",
+      "summary": "Aggregates per-source session/sub-agent counts and last-used timestamps across all external history sources, fanning out to each source's recent-paths fetcher (or the Cursor IDE session pipeline) in parallel.",
+      "tags": [
+        "aggregator",
+        "api-handler",
+        "statistics",
+        "external-integration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "summary": "Tauri API wrappers for Claude Code CLI imported history: recent project paths, full transcript chunks, and a freshness stat probe.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/sources/cline/index.ts",
+      "summary": "Tauri API wrappers for Cline imported history: recent project paths and transcript chunk loading.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "summary": "Tauri API wrappers for Codex App imported history: recent project paths and transcript chunk loading.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "summary": "Tauri API wrappers for Cursor CLI imported history: recent project paths and transcript chunk loading.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "summary": "Tauri API wrappers for Mimo Code imported history: recent project paths and transcript chunk loading.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge",
+        "external-integration",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeChunks",
+      "type": "function",
+      "name": "cursorIdeChunks",
+      "filePath": "src/api/tauri/externalHistory/cursorIde/index.ts",
+      "lineRange": [
+        53,
+        57
+      ],
+      "summary": "Reads all bubbles for one Cursor IDE composer and returns them as ActivityChunk[] ready for the standard event pipeline.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeComposerLastUpdatedAt",
+      "type": "function",
+      "name": "cursorIdeComposerLastUpdatedAt",
+      "filePath": "src/api/tauri/externalHistory/cursorIde/index.ts",
+      "lineRange": [
+        64,
+        70
+      ],
+      "summary": "Fetches a Cursor IDE composer's last-updated timestamp from state.vscdb as a cheap freshness signal for reloading an open session.",
+      "tags": [
+        "api-handler",
+        "freshness-probe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeInitialWindow",
+      "type": "function",
+      "name": "cursorIdeInitialWindow",
+      "filePath": "src/api/tauri/externalHistory/cursorIde/index.ts",
+      "lineRange": [
+        72,
+        80
+      ],
+      "summary": "Loads the initial windowed view of a Cursor IDE session: recent chunks, turn summaries, and pagination cursors.",
+      "tags": [
+        "api-handler",
+        "pagination"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeFullRefresh",
+      "type": "function",
+      "name": "cursorIdeFullRefresh",
+      "filePath": "src/api/tauri/externalHistory/cursorIde/index.ts",
+      "lineRange": [
+        82,
+        86
+      ],
+      "summary": "Loads the complete chunk and turn history for a Cursor IDE session, used for a full transcript refresh.",
+      "tags": [
+        "api-handler",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeTurnWindow",
+      "type": "function",
+      "name": "cursorIdeTurnWindow",
+      "filePath": "src/api/tauri/externalHistory/cursorIde/index.ts",
+      "lineRange": [
+        88,
+        96
+      ],
+      "summary": "Loads a windowed range of bubbles around a given user turn in a Cursor IDE session for incremental history expansion.",
+      "tags": [
+        "api-handler",
+        "pagination"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/detection.ts:externalCliSourcesDetect",
+      "type": "function",
+      "name": "externalCliSourcesDetect",
+      "filePath": "src/api/tauri/externalHistory/detection.ts",
+      "lineRange": [
+        29,
+        33
+      ],
+      "summary": "Invokes the backend to detect all installed/running external CLI agent sources and their capabilities.",
+      "tags": [
+        "api-handler",
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/detection.ts:externalCliSourceProbe",
+      "type": "function",
+      "name": "externalCliSourceProbe",
+      "filePath": "src/api/tauri/externalHistory/detection.ts",
+      "lineRange": [
+        35,
+        41
+      ],
+      "summary": "Invokes the backend to probe a single external CLI source by id, returning its capabilities or null if unknown.",
+      "tags": [
+        "api-handler",
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:descriptorFor",
+      "type": "function",
+      "name": "descriptorFor",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        58,
+        68
+      ],
+      "summary": "Looks up a source's static descriptor by id in IMPORTED_HISTORY_SOURCE_DESCRIPTORS, throwing if missing; used internally to build each ImportedHistorySource adapter.",
+      "tags": [
+        "utility",
+        "lookup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:getImportedHistorySourceBySessionId",
+      "type": "function",
+      "name": "getImportedHistorySourceBySessionId",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        185,
+        192
+      ],
+      "summary": "Resolves the ImportedHistorySource adapter matching a session id's prefix, or undefined if the session isn't from an imported source.",
+      "tags": [
+        "utility",
+        "lookup",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:getImportedHistorySourceByListCategory",
+      "type": "function",
+      "name": "getImportedHistorySourceByListCategory",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        194,
+        200
+      ],
+      "summary": "Resolves the ImportedHistorySource adapter matching a given sidebar list category.",
+      "tags": [
+        "utility",
+        "lookup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistoryListCategory",
+      "type": "function",
+      "name": "isImportedHistoryListCategory",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        202,
+        208
+      ],
+      "summary": "Type guard checking whether a string is a valid ImportedHistoryListCategory recognized by any registered source.",
+      "tags": [
+        "utility",
+        "type-guard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistorySourceSession",
+      "type": "function",
+      "name": "isImportedHistorySourceSession",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        210,
+        215
+      ],
+      "summary": "Checks whether a given session id belongs to a specific imported history source by prefix match.",
+      "tags": [
+        "utility",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistoryReplayableSourceId",
+      "type": "function",
+      "name": "isImportedHistoryReplayableSourceId",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        217,
+        224
+      ],
+      "summary": "Type guard checking whether a source id corresponds to a registered, replayable imported history source.",
+      "tags": [
+        "utility",
+        "type-guard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/index.ts:getDetectedExternalCliSourcesWithoutReplay",
+      "type": "function",
+      "name": "getDetectedExternalCliSourcesWithoutReplay",
+      "filePath": "src/api/tauri/externalHistory/imported/index.ts",
+      "lineRange": [
+        226,
+        232
+      ],
+      "summary": "Filters detected external CLI source probes down to those that lack a registered replay/import adapter, i.e. detected-but-unsupported sources.",
+      "tags": [
+        "utility",
+        "filter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/imported/stat.ts:importedHistoryStat",
+      "type": "function",
+      "name": "importedHistoryStat",
+      "filePath": "src/api/tauri/externalHistory/imported/stat.ts",
+      "lineRange": [
+        12,
+        20
+      ],
+      "summary": "Stats the backing transcript file for a cached imported session (source-agnostic), used by the auto-refresh loop to skip a full reload when the file is unchanged.",
+      "tags": [
+        "api-handler",
+        "freshness-probe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/rescan.ts:externalHistoryRescanSource",
+      "type": "function",
+      "name": "externalHistoryRescanSource",
+      "filePath": "src/api/tauri/externalHistory/rescan.ts",
+      "lineRange": [
+        19,
+        27
+      ],
+      "summary": "Rescans a single external history source, either incrementally updating changed sessions or clearing and fully rebuilding the cache.",
+      "tags": [
+        "api-handler",
+        "cache-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/rescan.ts:externalHistoryRescanSources",
+      "type": "function",
+      "name": "externalHistoryRescanSources",
+      "filePath": "src/api/tauri/externalHistory/rescan.ts",
+      "lineRange": [
+        35,
+        43
+      ],
+      "summary": "Fans out a rescan across multiple external history sources as one user action, delegating to the source-scoped backend command per source.",
+      "tags": [
+        "api-handler",
+        "cache-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sourceStats.ts:statsFromRecentPaths",
+      "type": "function",
+      "name": "statsFromRecentPaths",
+      "filePath": "src/api/tauri/externalHistory/sourceStats.ts",
+      "lineRange": [
+        66,
+        76
+      ],
+      "summary": "Reduces a list of per-path recent-session rows into an aggregate session count and most-recent lastUsedAt timestamp.",
+      "tags": [
+        "utility",
+        "aggregation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sourceStats.ts:cursorStats",
+      "type": "function",
+      "name": "cursorStats",
+      "filePath": "src/api/tauri/externalHistory/sourceStats.ts",
+      "lineRange": [
+        78,
+        91
+      ],
+      "summary": "Computes session count and last-active timestamp for Cursor IDE by querying the orgtrack cursor-sessions pipeline across all time.",
+      "tags": [
+        "utility",
+        "aggregation",
+        "external-integration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sourceStats.ts:fetchExternalSourceStats",
+      "type": "function",
+      "name": "fetchExternalSourceStats",
+      "filePath": "src/api/tauri/externalHistory/sourceStats.ts",
+      "lineRange": [
+        119,
+        127
+      ],
+      "summary": "Aggregates top-level session count and hidden sub-agent count (fetched in parallel) for a given external history source into ExternalSourceStats.",
+      "tags": [
+        "api-handler",
+        "aggregation",
+        "statistics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeRecentPaths",
+      "type": "function",
+      "name": "claudeCodeRecentPaths",
+      "filePath": "src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "lineRange": [
+        12,
+        18
+      ],
+      "summary": "Fetches recently used Claude Code project paths with session counts and last-used timestamps.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeHistoryChunks",
+      "type": "function",
+      "name": "claudeCodeHistoryChunks",
+      "filePath": "src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "lineRange": [
+        20,
+        24
+      ],
+      "summary": "Fetches the full Claude Code transcript for a session as ActivityChunk[].",
+      "tags": [
+        "api-handler",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeHistoryStat",
+      "type": "function",
+      "name": "claudeCodeHistoryStat",
+      "filePath": "src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "lineRange": [
+        36,
+        42
+      ],
+      "summary": "Cheap freshness probe (single backend stat) for a Claude Code session transcript, used to skip the full read/parse pipeline when unchanged.",
+      "tags": [
+        "api-handler",
+        "freshness-probe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/cline/index.ts:clineRecentPaths",
+      "type": "function",
+      "name": "clineRecentPaths",
+      "filePath": "src/api/tauri/externalHistory/sources/cline/index.ts",
+      "lineRange": [
+        12,
+        18
+      ],
+      "summary": "Fetches recently used Cline project paths with session counts and last-used timestamps.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/cline/index.ts:clineHistoryChunks",
+      "type": "function",
+      "name": "clineHistoryChunks",
+      "filePath": "src/api/tauri/externalHistory/sources/cline/index.ts",
+      "lineRange": [
+        20,
+        24
+      ],
+      "summary": "Fetches the full Cline transcript for a session as ActivityChunk[].",
+      "tags": [
+        "api-handler",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/codexApp/index.ts:codexAppRecentPaths",
+      "type": "function",
+      "name": "codexAppRecentPaths",
+      "filePath": "src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "lineRange": [
+        12,
+        18
+      ],
+      "summary": "Fetches recently used Codex App project paths with session counts and last-used timestamps.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/codexApp/index.ts:codexAppChunks",
+      "type": "function",
+      "name": "codexAppChunks",
+      "filePath": "src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "lineRange": [
+        20,
+        24
+      ],
+      "summary": "Fetches the full Codex App transcript for a session as ActivityChunk[].",
+      "tags": [
+        "api-handler",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/cursorCli/index.ts:cursorCliRecentPaths",
+      "type": "function",
+      "name": "cursorCliRecentPaths",
+      "filePath": "src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "lineRange": [
+        12,
+        18
+      ],
+      "summary": "Fetches recently used Cursor CLI project paths with session counts and last-used timestamps.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/cursorCli/index.ts:cursorCliHistoryChunks",
+      "type": "function",
+      "name": "cursorCliHistoryChunks",
+      "filePath": "src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "lineRange": [
+        20,
+        24
+      ],
+      "summary": "Fetches the full Cursor CLI transcript for a session as ActivityChunk[].",
+      "tags": [
+        "api-handler",
+        "session-history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/mimoCode/index.ts:mimoCodeRecentPaths",
+      "type": "function",
+      "name": "mimoCodeRecentPaths",
+      "filePath": "src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "lineRange": [
+        12,
+        18
+      ],
+      "summary": "Fetches recently used Mimo Code project paths with session counts and last-used timestamps.",
+      "tags": [
+        "api-handler",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/tauri/externalHistory/sources/mimoCode/index.ts:mimoCodeHistoryChunks",
+      "type": "function",
+      "name": "mimoCodeHistoryChunks",
+      "filePath": "src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "lineRange": [
+        20,
+        24
+      ],
+      "summary": "Fetches the full Mimo Code transcript for a session as ActivityChunk[].",
+      "tags": [
+        "api-handler",
+        "session-history"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeChunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeChunks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeComposerLastUpdatedAt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeComposerLastUpdatedAt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeInitialWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeInitialWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeFullRefresh",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeFullRefresh",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeTurnWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "target": "function:src/api/tauri/externalHistory/cursorIde/index.ts:cursorIdeTurnWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/detection.ts",
+      "target": "function:src/api/tauri/externalHistory/detection.ts:externalCliSourcesDetect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/detection.ts",
+      "target": "function:src/api/tauri/externalHistory/detection.ts:externalCliSourcesDetect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/detection.ts",
+      "target": "function:src/api/tauri/externalHistory/detection.ts:externalCliSourceProbe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/detection.ts",
+      "target": "function:src/api/tauri/externalHistory/detection.ts:externalCliSourceProbe",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:descriptorFor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:getImportedHistorySourceBySessionId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:getImportedHistorySourceBySessionId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:getImportedHistorySourceByListCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:getImportedHistorySourceByListCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistoryListCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistoryListCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistorySourceSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistorySourceSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistoryReplayableSourceId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:isImportedHistoryReplayableSourceId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:getDetectedExternalCliSourcesWithoutReplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/index.ts:getDetectedExternalCliSourcesWithoutReplay",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/stat.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/stat.ts:importedHistoryStat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/stat.ts",
+      "target": "function:src/api/tauri/externalHistory/imported/stat.ts:importedHistoryStat",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/rescan.ts",
+      "target": "function:src/api/tauri/externalHistory/rescan.ts:externalHistoryRescanSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/rescan.ts",
+      "target": "function:src/api/tauri/externalHistory/rescan.ts:externalHistoryRescanSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/rescan.ts",
+      "target": "function:src/api/tauri/externalHistory/rescan.ts:externalHistoryRescanSources",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/rescan.ts",
+      "target": "function:src/api/tauri/externalHistory/rescan.ts:externalHistoryRescanSources",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "function:src/api/tauri/externalHistory/sourceStats.ts:statsFromRecentPaths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "function:src/api/tauri/externalHistory/sourceStats.ts:cursorStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "function:src/api/tauri/externalHistory/sourceStats.ts:fetchExternalSourceStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "function:src/api/tauri/externalHistory/sourceStats.ts:fetchExternalSourceStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeRecentPaths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeRecentPaths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeHistoryChunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeHistoryChunks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeHistoryStat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/claudeCode/index.ts:claudeCodeHistoryStat",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cline/index.ts:clineRecentPaths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cline/index.ts:clineRecentPaths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cline/index.ts:clineHistoryChunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cline/index.ts:clineHistoryChunks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/codexApp/index.ts:codexAppRecentPaths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/codexApp/index.ts:codexAppRecentPaths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/codexApp/index.ts:codexAppChunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/codexApp/index.ts:codexAppChunks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cursorCli/index.ts:cursorCliRecentPaths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cursorCli/index.ts:cursorCliRecentPaths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cursorCli/index.ts:cursorCliHistoryChunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/cursorCli/index.ts:cursorCliHistoryChunks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/mimoCode/index.ts:mimoCodeRecentPaths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/mimoCode/index.ts:mimoCodeRecentPaths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/mimoCode/index.ts:mimoCodeHistoryChunks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "target": "function:src/api/tauri/externalHistory/sources/mimoCode/index.ts:mimoCodeHistoryChunks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/cursorIde/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/detection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/imported/descriptors.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/imported/stat.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/omp/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/opencode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/qoder/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/qoderCli/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/trae/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/warp/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/windsurf/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/workbuddy/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/zcode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/index.ts",
+      "target": "file:src/api/tauri/session/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/imported/stat.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/rescan.ts",
+      "target": "file:src/api/tauri/externalHistory/imported/descriptors.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/imported/descriptors.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/claudeCode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/cline/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/codexApp/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/cursorCli/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/mimoCode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/omp/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/opencode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/qoder/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/qoderCli/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/trae/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/warp/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/windsurf/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/workbuddy/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/api/tauri/externalHistory/sourceStats.ts",
+      "target": "file:src/api/tauri/externalHistory/sources/zcode/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

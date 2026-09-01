@@ -1,0 +1,323 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/Simulator/hooks/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/engines/Simulator/hooks/types.ts",
+      "summary": "Shared TypeScript type definitions for the ActivitySimulator's event hooks, including the options/return shape for useSimulatorEvents and a default hook-options constant.",
+      "tags": ["type-definition", "simulator", "hooks", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useCellPersistence.ts",
+      "type": "file",
+      "name": "useCellPersistence.ts",
+      "filePath": "src/engines/Simulator/hooks/useCellPersistence.ts",
+      "summary": "Hook that reads and writes a single grid cell's playback state (current index, playing flag, playback speed) into the shared cell-states Jotai atom, keyed by cell id.",
+      "tags": ["hook", "state-management", "jotai", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useCellPersistence.ts:useCellPersistence",
+      "type": "function",
+      "name": "useCellPersistence",
+      "filePath": "src/engines/Simulator/hooks/useCellPersistence.ts",
+      "lineRange": [25, 61],
+      "summary": "Derives a memoized atom scoped to a single cell id and exposes a patch callback for updating that cell's persisted playback state.",
+      "tags": ["hook", "state-persistence", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useCellPlayback.ts",
+      "type": "file",
+      "name": "useCellPlayback.ts",
+      "filePath": "src/engines/Simulator/hooks/useCellPlayback.ts",
+      "summary": "Hook that drives auto-play/manual playback for an individual grid cell, managing an interval timer that advances the cell's event index and exposes play/pause/seek controls.",
+      "tags": ["hook", "playback", "timer", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useCellPlayback.ts:useCellPlayback",
+      "type": "function",
+      "name": "useCellPlayback",
+      "filePath": "src/engines/Simulator/hooks/useCellPlayback.ts",
+      "lineRange": [37, 130],
+      "summary": "Sets up and tears down an auto-play interval for a cell, and exposes memoized callbacks to set the current index and playing state that write through to persisted cell state.",
+      "tags": ["hook", "playback", "interval-timer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useCellReplayState.ts",
+      "type": "file",
+      "name": "useCellReplayState.ts",
+      "filePath": "src/engines/Simulator/hooks/useCellReplayState.ts",
+      "summary": "Central per-cell replay state hook that combines persisted cell state, auto-play, and scrubbing to drive an individual grid cell's independent (or synced) timeline in the Activity Simulator.",
+      "tags": ["hook", "replay", "state-machine", "simulator"],
+      "complexity": "complex",
+      "languageNotes": "Composes useCellPersistence and useCellPlayback, adding scrub/commit semantics and sync-mode index clamping via the local clampIndex helper."
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useCellReplayState.ts:useCellReplayState",
+      "type": "function",
+      "name": "useCellReplayState",
+      "filePath": "src/engines/Simulator/hooks/useCellReplayState.ts",
+      "lineRange": [77, 434],
+      "summary": "Combines persisted cell state, playback, and scrub-index tracking into a full replay controls API (play, pause, seek, scrub, commit) for one grid cell, supporting both independent and sync-mode replay.",
+      "tags": ["hook", "replay-controls", "state-machine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useEventNavigation.ts",
+      "type": "file",
+      "name": "useEventNavigation.ts",
+      "filePath": "src/engines/Simulator/hooks/useEventNavigation.ts",
+      "summary": "Hook providing imperative navigation helpers (jump by replay value, jump by event id, jump by index, next/previous) over a simulator event timeline.",
+      "tags": ["hook", "navigation", "simulator", "event-timeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useEventNavigation.ts:useEventNavigation",
+      "type": "function",
+      "name": "useEventNavigation",
+      "filePath": "src/engines/Simulator/hooks/useEventNavigation.ts",
+      "lineRange": [65, 166],
+      "summary": "Exposes a set of memoized navigation callbacks (setCurrentEventById, setCurrentEventByIndex, goToStart/End/Next/Previous) that update replay bar value and current-event context state.",
+      "tags": ["hook", "navigation", "callbacks"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useGridLayout.ts",
+      "type": "file",
+      "name": "useGridLayout.ts",
+      "filePath": "src/engines/Simulator/hooks/useGridLayout.ts",
+      "summary": "Hook that derives grid cell layout data (titles, colors, per-thread grouping) for the ActivitySimulatorGrid based on layout mode, events, and task threads.",
+      "tags": ["hook", "layout", "grid", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useGridLayout.ts:useGridLayout",
+      "type": "function",
+      "name": "useGridLayout",
+      "filePath": "src/engines/Simulator/hooks/useGridLayout.ts",
+      "lineRange": [45, 119],
+      "summary": "Groups events by thread id and computes a memoized list of grid cell data (index, color, title, event count) used to render the simulator grid in single- or multi-task mode.",
+      "tags": ["hook", "layout", "grouping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts",
+      "type": "file",
+      "name": "useMultiSessionSimulatorEvents.ts",
+      "filePath": "src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts",
+      "summary": "Hook that subscribes to multiple subagent session event stores concurrently, merging and deduplicating streamed/cached snapshots into a per-session event map with sorted, capped event windows.",
+      "tags": ["hook", "multi-session", "event-store", "subscription"],
+      "complexity": "complex",
+      "languageNotes": "Uses several refs (loadedRef, derivedSeenRef, hydrationRequestedRef, mapKeysRef) to avoid redundant snapshot loads and hydration requests across concurrent session subscriptions."
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:mergeEventUpserts",
+      "type": "function",
+      "name": "mergeEventUpserts",
+      "filePath": "src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts",
+      "lineRange": [60, 88],
+      "summary": "Merges an array of event upserts into a previous event list, replacing existing events by id or inserting new ones in timestamp order, then trims the result to the retained window.",
+      "tags": ["utility", "merge", "event-ordering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:extractSimulatorEvents",
+      "type": "function",
+      "name": "extractSimulatorEvents",
+      "filePath": "src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts",
+      "lineRange": [90, 107],
+      "summary": "Extracts and merges an event-store snapshot's streaming or full event payload into the accumulated per-session event list.",
+      "tags": ["utility", "snapshot", "event-store"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:useMultiSessionSimulatorEvents",
+      "type": "function",
+      "name": "useMultiSessionSimulatorEvents",
+      "filePath": "src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts",
+      "lineRange": [109, 258],
+      "summary": "Subscribes to the event store for each subagent session, hydrates initial snapshots (cache then network), and maintains a live-updating map of merged events per session, cleaning up on session-set changes.",
+      "tags": ["hook", "multi-session", "subscription"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useReplayMode.ts",
+      "type": "file",
+      "name": "useReplayMode.ts",
+      "filePath": "src/engines/Simulator/hooks/useReplayMode.ts",
+      "summary": "Hook that tracks whether the user is actively scrubbing the replay timeline versus passively following live/auto playback, debouncing user-interaction detection with a timeout.",
+      "tags": ["hook", "replay-mode", "ui-state", "debounce"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useReplayMode.ts:useReplayMode",
+      "type": "function",
+      "name": "useReplayMode",
+      "filePath": "src/engines/Simulator/hooks/useReplayMode.ts",
+      "lineRange": [36, 108],
+      "summary": "Tracks the previous replay bar value and a debounced isUserReplaying flag, flipping back to non-replaying state after a period of inactivity following a user drag/seek.",
+      "tags": ["hook", "replay-mode", "debounce"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useSimulatorDisplayState.ts",
+      "type": "file",
+      "name": "useSimulatorDisplayState.ts",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorDisplayState.ts",
+      "summary": "Hook that computes display-related derived state for the simulator (auto grid layout, dock app resolution, preview app type) from the current event, selected app, and layout settings.",
+      "tags": ["hook", "display-state", "layout", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useSimulatorDisplayState.ts:useSimulatorDisplayState",
+      "type": "function",
+      "name": "useSimulatorDisplayState",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorDisplayState.ts",
+      "lineRange": [54, 147],
+      "summary": "Derives the effective dock app type, preview app type, and auto-calculated grid layout from the current event, follow-app lock, and manual layout overrides.",
+      "tags": ["hook", "display-state", "layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts",
+      "type": "file",
+      "name": "useSimulatorEvents.ts",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorEvents.ts",
+      "summary": "Core hook that reads simulator session event atoms (event ids, specs, replay time range) and exposes navigation, replay-value, and cache-status state for the active session.",
+      "tags": ["hook", "event-state", "jotai", "replay"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useSimulatorEvents.ts:useSimulatorEvents",
+      "type": "function",
+      "name": "useSimulatorEvents",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorEvents.ts",
+      "lineRange": [35, 219],
+      "summary": "Aggregates simulator event atoms into effective event ids/time range, computes the valid replay time window, wires up event navigation and replay mode, and syncs the replay bar/time-range state on event changes.",
+      "tags": ["hook", "event-state", "replay"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useSimulatorSession.ts",
+      "type": "file",
+      "name": "useSimulatorSession.ts",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorSession.ts",
+      "summary": "Top-level hook that assembles a full simulator session by combining event state, subagent data, and replay navigation, auto-selecting the first non-empty running event and syncing the global data-source atom.",
+      "tags": ["hook", "session", "orchestration", "simulator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useSimulatorSession.ts:useSimulatorSession",
+      "type": "function",
+      "name": "useSimulatorSession",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorSession.ts",
+      "lineRange": [56, 181],
+      "summary": "Wires the active session id into useSimulatorEvents, resolves the currently displayable non-empty event via resolveNonEmptyEventFromIds, and syncs the global data-source atom and selected task id as the session changes.",
+      "tags": ["hook", "session", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts",
+      "type": "file",
+      "name": "useSimulatorSubagents.ts",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorSubagents.ts",
+      "summary": "Hook that resolves the set of active subagent sessions for the current session, combining live subagent-session/event-count hook data with a fallback derived directly from raw session events when hook data is unavailable.",
+      "tags": ["hook", "subagents", "fallback", "simulator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:subagentIdFromEvent",
+      "type": "function",
+      "name": "subagentIdFromEvent",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorSubagents.ts",
+      "lineRange": [46, 57],
+      "summary": "Extracts a subagent session id from a session event's tool-call arguments.",
+      "tags": ["utility", "extraction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:fallbackSubagentSessionsFromEvents",
+      "type": "function",
+      "name": "fallbackSubagentSessionsFromEvents",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorSubagents.ts",
+      "lineRange": [69, 96],
+      "summary": "Derives a fallback list of subagent sessions directly from raw session events when the dedicated subagent-session hook has no data yet.",
+      "tags": ["utility", "fallback", "derivation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:useSimulatorSubagents",
+      "type": "function",
+      "name": "useSimulatorSubagents",
+      "filePath": "src/engines/Simulator/hooks/useSimulatorSubagents.ts",
+      "lineRange": [105, 300],
+      "summary": "Combines useSubagentSessions and useSubagentEventCounts with an event-derived fallback to produce the final list of subagent sessions and their event counts for the current session/cursor.",
+      "tags": ["hook", "subagents", "orchestration"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/engines/Simulator/hooks/useCellReplayState.ts", "target": "file:src/engines/Simulator/hooks/cellReplayTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useCellReplayState.ts", "target": "file:src/engines/Simulator/hooks/useCellPersistence.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useCellReplayState.ts", "target": "file:src/engines/Simulator/hooks/useCellPlayback.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useCellReplayState.ts", "target": "file:src/engines/Simulator/utils/findIndexAtTime.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useEventNavigation.ts", "target": "file:src/engines/Simulator/hooks/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useGridLayout.ts", "target": "file:src/engines/Simulator/config.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useGridLayout.ts", "target": "file:src/engines/Simulator/types/gridTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts", "target": "file:src/engines/Simulator/hooks/useSubagentSessions.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorDisplayState.ts", "target": "file:src/engines/Simulator/config.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorDisplayState.ts", "target": "file:src/engines/Simulator/types/appTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorDisplayState.ts", "target": "file:src/engines/Simulator/utils/eventToDockMapping.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts", "target": "file:src/engines/Simulator/hooks/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts", "target": "file:src/engines/Simulator/hooks/useEventNavigation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts", "target": "file:src/engines/Simulator/hooks/useReplayMode.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSession.ts", "target": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSession.ts", "target": "file:src/engines/Simulator/utils/skipEmptyRunningEvent.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts", "target": "file:src/engines/Simulator/hooks/useSubagentEventCounts.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts", "target": "file:src/engines/Simulator/hooks/useSubagentSessions.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/engines/Simulator/hooks/useCellPersistence.ts", "target": "function:src/engines/Simulator/hooks/useCellPersistence.ts:useCellPersistence", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useCellPersistence.ts", "target": "function:src/engines/Simulator/hooks/useCellPersistence.ts:useCellPersistence", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useCellPlayback.ts", "target": "function:src/engines/Simulator/hooks/useCellPlayback.ts:useCellPlayback", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useCellPlayback.ts", "target": "function:src/engines/Simulator/hooks/useCellPlayback.ts:useCellPlayback", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useCellReplayState.ts", "target": "function:src/engines/Simulator/hooks/useCellReplayState.ts:useCellReplayState", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useCellReplayState.ts", "target": "function:src/engines/Simulator/hooks/useCellReplayState.ts:useCellReplayState", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useEventNavigation.ts", "target": "function:src/engines/Simulator/hooks/useEventNavigation.ts:useEventNavigation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useEventNavigation.ts", "target": "function:src/engines/Simulator/hooks/useEventNavigation.ts:useEventNavigation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useGridLayout.ts", "target": "function:src/engines/Simulator/hooks/useGridLayout.ts:useGridLayout", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useGridLayout.ts", "target": "function:src/engines/Simulator/hooks/useGridLayout.ts:useGridLayout", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts", "target": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:mergeEventUpserts", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts", "target": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:extractSimulatorEvents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts", "target": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:useMultiSessionSimulatorEvents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts", "target": "function:src/engines/Simulator/hooks/useMultiSessionSimulatorEvents.ts:useMultiSessionSimulatorEvents", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useReplayMode.ts", "target": "function:src/engines/Simulator/hooks/useReplayMode.ts:useReplayMode", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useReplayMode.ts", "target": "function:src/engines/Simulator/hooks/useReplayMode.ts:useReplayMode", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorDisplayState.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorDisplayState.ts:useSimulatorDisplayState", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorDisplayState.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorDisplayState.ts:useSimulatorDisplayState", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorEvents.ts:useSimulatorEvents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorEvents.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorEvents.ts:useSimulatorEvents", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSession.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorSession.ts:useSimulatorSession", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSession.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorSession.ts:useSimulatorSession", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:subagentIdFromEvent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:fallbackSubagentSessionsFromEvents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:useSimulatorSubagents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/engines/Simulator/hooks/useSimulatorSubagents.ts", "target": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:useSimulatorSubagents", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "function:src/engines/Simulator/hooks/useCellReplayState.ts:useCellReplayState", "target": "function:src/engines/Simulator/hooks/useCellPersistence.ts:useCellPersistence", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useCellReplayState.ts:useCellReplayState", "target": "function:src/engines/Simulator/hooks/useCellPlayback.ts:useCellPlayback", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useCellReplayState.ts:useCellReplayState", "target": "function:src/engines/Simulator/utils/findIndexAtTime.ts:findIndexAtTime", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorEvents.ts:useSimulatorEvents", "target": "function:src/engines/Simulator/hooks/useReplayMode.ts:useReplayMode", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorEvents.ts:useSimulatorEvents", "target": "function:src/engines/Simulator/hooks/useEventNavigation.ts:useEventNavigation", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorSession.ts:useSimulatorSession", "target": "function:src/engines/Simulator/hooks/useSimulatorEvents.ts:useSimulatorEvents", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorSession.ts:useSimulatorSession", "target": "function:src/engines/Simulator/utils/skipEmptyRunningEvent.ts:resolveNonEmptyEventFromIds", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:useSimulatorSubagents", "target": "function:src/engines/Simulator/hooks/useSubagentSessions.ts:useSubagentSessions", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorSubagents.ts:useSimulatorSubagents", "target": "function:src/engines/Simulator/hooks/useSubagentEventCounts.ts:useSubagentEventCounts", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorDisplayState.ts:useSimulatorDisplayState", "target": "function:src/engines/Simulator/utils/eventToDockMapping.ts:getAppTypeForSessionEvent", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/engines/Simulator/hooks/useSimulatorDisplayState.ts:useSimulatorDisplayState", "target": "function:src/engines/Simulator/config.ts:calculateAutoLayout", "type": "calls", "direction": "forward", "weight": 0.8}
+  ]
+}

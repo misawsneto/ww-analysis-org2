@@ -1,0 +1,350 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/hooks/keyVault/accountQuotaDisplay.ts",
+      "type": "file",
+      "name": "accountQuotaDisplay.ts",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "summary": "Derives and formats key-vault account quota data (usage percentages, plan labels, reset-time hints) into display-ready metrics and cards for the UI.",
+      "tags": ["utility", "formatting", "keyvault", "data-transformation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "type": "file",
+      "name": "sharedLocalKeyStore.ts",
+      "filePath": "src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "summary": "Module-level cache and pub/sub store for local CLI agent keys, shared across all useLocalKeys consumers so concurrent loads reuse a single in-flight request.",
+      "tags": ["singleton", "state-management", "pub-sub", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/keyVault/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/hooks/keyVault/types.ts",
+      "summary": "Defines the unified KeyVaultAccount type and related options/return types used by the local (BYOK) key vault hooks and UI.",
+      "tags": ["type-definition", "keyvault", "data-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/keyVault/useKeyVault.ts",
+      "type": "file",
+      "name": "useKeyVault.ts",
+      "filePath": "src/hooks/keyVault/useKeyVault.ts",
+      "summary": "React hook composing useLocalKeys into a unified, sorted list of KeyVaultAccount entries with status derivation, refresh, and per-account lookup helpers.",
+      "tags": ["hook", "keyvault", "state-management", "aggregator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/keyVault/useLocalKeys.ts",
+      "type": "file",
+      "name": "useLocalKeys.ts",
+      "filePath": "src/hooks/keyVault/useLocalKeys.ts",
+      "summary": "React hook managing the full lifecycle of local CLI agent keys: loading, saving, deleting, validating, and refreshing quota, backed by the shared local key store.",
+      "tags": ["hook", "keyvault", "crud", "state-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:hasUsageItems",
+      "type": "function",
+      "name": "hasUsageItems",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [37, 46],
+      "summary": "Type guard that checks whether an account's quotaInfo carries a non-empty usage_items array.",
+      "tags": ["type-guard", "utility", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getCursorLegacyUsageItems",
+      "type": "function",
+      "name": "getCursorLegacyUsageItems",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [48, 93],
+      "summary": "Builds legacy Cursor usage items (percent-based) from a quota snapshot for accounts predating the unified usage_items format.",
+      "tags": ["quota-display", "cursor", "compatibility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getWindowProviderFallbackUsageItems",
+      "type": "function",
+      "name": "getWindowProviderFallbackUsageItems",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [99, 128],
+      "summary": "Computes fallback session/weekly usage items for window-based providers (Claude Code, Codex) when no usage_items are present.",
+      "tags": ["quota-display", "fallback", "window-provider"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatPlanLabel",
+      "type": "function",
+      "name": "formatPlanLabel",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [135, 147],
+      "summary": "Normalizes a raw plan type string into a human-readable, title-cased label by replacing separators and capitalizing words.",
+      "tags": ["formatting", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:resolveQuotaPlanLabel",
+      "type": "function",
+      "name": "resolveQuotaPlanLabel",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [168, 185],
+      "summary": "Resolves the display label for an account's plan, falling back to a formatted plan type unless it is a generic placeholder value.",
+      "tags": ["formatting", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getQuotaCardLabels",
+      "type": "function",
+      "name": "getQuotaCardLabels",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [191, 204],
+      "summary": "Builds the identity and plan labels for a quota card, omitting the plan label when it duplicates the identity label.",
+      "tags": ["quota-display", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:resolveAccountUsageItems",
+      "type": "function",
+      "name": "resolveAccountUsageItems",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [206, 227],
+      "summary": "Central dispatcher that selects raw, legacy Cursor, or window-provider fallback usage items for an account depending on its quota shape and provider type.",
+      "tags": ["quota-display", "dispatcher", "keyvault"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:toMetric",
+      "type": "function",
+      "name": "toMetric",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [236, 247],
+      "summary": "Converts a raw UsageItem into an AccountQuotaMetric with a percent, label, and optional reset time.",
+      "tags": ["mapping", "quota-display"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetDurationUntil",
+      "type": "function",
+      "name": "formatQuotaResetDurationUntil",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [249, 275],
+      "summary": "Formats the time remaining until a quota reset date as a short relative duration string, or falls back to an absolute time/ISO string.",
+      "tags": ["formatting", "date", "quota-display"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetTime",
+      "type": "function",
+      "name": "formatQuotaResetTime",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [277, 305],
+      "summary": "Formats a quota reset Date into a locale-aware string via Intl.DateTimeFormat, adjusting precision based on same-day/same-year comparisons.",
+      "tags": ["formatting", "date", "keyvault"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetHint",
+      "type": "function",
+      "name": "formatQuotaResetHint",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [307, 330],
+      "summary": "Builds the full i18n-aware quota reset hint text by combining the relative duration and absolute reset time.",
+      "tags": ["formatting", "i18n", "quota-display"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getGenericMetricLabel",
+      "type": "function",
+      "name": "getGenericMetricLabel",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [332, 356],
+      "summary": "Derives an i18n-aware display label for a generic usage metric based on its usage type.",
+      "tags": ["formatting", "i18n", "quota-display"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:buildAccountQuotaMetrics",
+      "type": "function",
+      "name": "buildAccountQuotaMetrics",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [358, 410],
+      "summary": "Assembles the ordered list of AccountQuotaMetric entries (auto/API, session/weekly, or generic) for an account's usage items.",
+      "tags": ["quota-display", "aggregator", "keyvault"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getQuotaUsageLabel",
+      "type": "function",
+      "name": "getQuotaUsageLabel",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [412, 439],
+      "summary": "Produces the i18n-aware label text describing a specific quota usage type for display in the UI.",
+      "tags": ["formatting", "i18n", "quota-display"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:collectAccountQuotaCards",
+      "type": "function",
+      "name": "collectAccountQuotaCards",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [441, 491],
+      "summary": "Iterates a set of key vault accounts and builds the AccountQuotaCard list (labels plus metrics) used to render quota UI.",
+      "tags": ["quota-display", "aggregator", "keyvault"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getGroupedUsageItemsForDisplay",
+      "type": "function",
+      "name": "getGroupedUsageItemsForDisplay",
+      "filePath": "src/hooks/keyVault/accountQuotaDisplay.ts",
+      "lineRange": [493, 520],
+      "summary": "Groups an account's usage items into auto/API or session/weekly pairs for compact display.",
+      "tags": ["quota-display", "grouping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:getSharedLocalKeys",
+      "type": "function",
+      "name": "getSharedLocalKeys",
+      "filePath": "src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "lineRange": [12, 14],
+      "summary": "Returns the current module-level cache of shared local keys.",
+      "tags": ["getter", "state-management", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:subscribeSharedLocalKeys",
+      "type": "function",
+      "name": "subscribeSharedLocalKeys",
+      "filePath": "src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "lineRange": [16, 21],
+      "summary": "Registers a listener for shared local key updates and returns an unsubscribe function.",
+      "tags": ["pub-sub", "state-management", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:publishSharedLocalKeys",
+      "type": "function",
+      "name": "publishSharedLocalKeys",
+      "filePath": "src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "lineRange": [23, 27],
+      "summary": "Updates the shared key cache, syncs the model alias registry, and notifies all subscribed listeners.",
+      "tags": ["pub-sub", "state-management", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:updateSharedLocalKeys",
+      "type": "function",
+      "name": "updateSharedLocalKeys",
+      "filePath": "src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "lineRange": [29, 35],
+      "summary": "Applies an updater function to the shared key cache and republishes the resulting list.",
+      "tags": ["state-management", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:loadSharedLocalKeys",
+      "type": "function",
+      "name": "loadSharedLocalKeys",
+      "filePath": "src/hooks/keyVault/sharedLocalKeyStore.ts",
+      "lineRange": [44, 59],
+      "summary": "Loads the local key list once for all mounted consumers, deduplicating concurrent in-flight requests and reusing the cache unless forced.",
+      "tags": ["data-fetching", "caching", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/useKeyVault.ts:getAccountStatus",
+      "type": "function",
+      "name": "getAccountStatus",
+      "filePath": "src/hooks/keyVault/useKeyVault.ts",
+      "lineRange": [21, 38],
+      "summary": "Determines an account's ready/needs_setup status based on agent type, auth method, and presence of API key or session token.",
+      "tags": ["status-derivation", "keyvault"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/keyVault/useKeyVault.ts:useKeyVault",
+      "type": "function",
+      "name": "useKeyVault",
+      "filePath": "src/hooks/keyVault/useKeyVault.ts",
+      "lineRange": [40, 164],
+      "summary": "Public hook that wraps useLocalKeys, mapping raw KeyInfo entries into sorted KeyVaultAccount objects and exposing refresh/lookup/save/delete operations.",
+      "tags": ["hook", "keyvault", "state-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys",
+      "type": "function",
+      "name": "useLocalKeys",
+      "filePath": "src/hooks/keyVault/useLocalKeys.ts",
+      "lineRange": [79, 405],
+      "summary": "Core hook managing local CLI agent key state: loads from and subscribes to the shared store, and provides save, delete, validate, and quota-refresh operations that all update the shared cache.",
+      "tags": ["hook", "keyvault", "crud", "state-management"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "file:src/hooks/keyVault/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/keyVault/useKeyVault.ts", "target": "file:src/hooks/keyVault/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/keyVault/useKeyVault.ts", "target": "file:src/hooks/keyVault/useLocalKeys.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/keyVault/useLocalKeys.ts", "target": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:src/hooks/keyVault/useKeyVault.ts:useKeyVault", "target": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:getSharedLocalKeys", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:subscribeSharedLocalKeys", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:loadSharedLocalKeys", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:updateSharedLocalKeys", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:publishSharedLocalKeys", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:hasUsageItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getCursorLegacyUsageItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getWindowProviderFallbackUsageItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatPlanLabel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:resolveQuotaPlanLabel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getQuotaCardLabels", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:resolveAccountUsageItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:toMetric", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetDurationUntil", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetTime", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetHint", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getGenericMetricLabel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:buildAccountQuotaMetrics", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getQuotaUsageLabel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:collectAccountQuotaCards", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getGroupedUsageItemsForDisplay", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:getSharedLocalKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:subscribeSharedLocalKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:publishSharedLocalKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:updateSharedLocalKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:loadSharedLocalKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/hooks/keyVault/useKeyVault.ts", "target": "function:src/hooks/keyVault/useKeyVault.ts:getAccountStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/keyVault/useKeyVault.ts", "target": "function:src/hooks/keyVault/useKeyVault.ts:useKeyVault", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/hooks/keyVault/useLocalKeys.ts", "target": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getCursorLegacyUsageItems", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:resolveQuotaPlanLabel", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:resolveAccountUsageItems", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetTime", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:formatQuotaResetHint", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:buildAccountQuotaMetrics", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getQuotaUsageLabel", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:collectAccountQuotaCards", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/accountQuotaDisplay.ts", "target": "function:src/hooks/keyVault/accountQuotaDisplay.ts:getGroupedUsageItemsForDisplay", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:getSharedLocalKeys", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:subscribeSharedLocalKeys", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:publishSharedLocalKeys", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:updateSharedLocalKeys", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/keyVault/sharedLocalKeyStore.ts", "target": "function:src/hooks/keyVault/sharedLocalKeyStore.ts:loadSharedLocalKeys", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/hooks/keyVault/useKeyVault.ts", "target": "function:src/hooks/keyVault/useKeyVault.ts:useKeyVault", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/hooks/keyVault/useLocalKeys.ts", "target": "function:src/hooks/keyVault/useLocalKeys.ts:useLocalKeys", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

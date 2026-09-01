@@ -1,0 +1,1370 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "type": "file",
+      "name": "remote.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "summary": "Manages git remotes (add/update/delete/list) and implements push, pull, and fetch with credential handling: storing/retrieving OS-keychain credentials, parsing git's credential-fill protocol output, and classifying transport errors (auth failure, network, non-fast-forward, etc.) for user-facing messages.",
+      "tags": [
+        "git",
+        "remote",
+        "credentials",
+        "cli-wrapper",
+        "tauri-command"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements git's credential helper protocol (credential fill/approve key=value format) to bridge OS keychain storage with git's CLI credential prompts."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:list_remotes",
+      "type": "function",
+      "name": "list_remotes",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        23,
+        59
+      ],
+      "summary": "Lists all configured remotes with their fetch/push URLs.",
+      "tags": [
+        "git",
+        "remote"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:add_remote",
+      "type": "function",
+      "name": "add_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        62,
+        75
+      ],
+      "summary": "Adds a new named remote with the given URL.",
+      "tags": [
+        "git",
+        "remote"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:update_remote",
+      "type": "function",
+      "name": "update_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        78,
+        91
+      ],
+      "summary": "Updates the URL of an existing remote.",
+      "tags": [
+        "git",
+        "remote"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:delete_remote",
+      "type": "function",
+      "name": "delete_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        94,
+        102
+      ],
+      "summary": "Removes a named remote.",
+      "tags": [
+        "git",
+        "remote"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:credential_target_from_remote",
+      "type": "function",
+      "name": "credential_target_from_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        111,
+        125
+      ],
+      "summary": "Parses a remote URL into a CredentialTarget (protocol, host, path) used for OS-keychain credential lookups.",
+      "tags": [
+        "credentials",
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:parse_credential_output",
+      "type": "function",
+      "name": "parse_credential_output",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        136,
+        154
+      ],
+      "summary": "Parses git's credential-fill key=value stdout into a username/password pair.",
+      "tags": [
+        "credentials",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:fill_git_credentials",
+      "type": "function",
+      "name": "fill_git_credentials",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        156,
+        234
+      ],
+      "summary": "Resolves stored credentials for a remote via git's credential-fill protocol, feeding OS-keychain values through git's credential helper chain.",
+      "tags": [
+        "credentials",
+        "tauri-command",
+        "git"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:approve_git_credentials",
+      "type": "function",
+      "name": "approve_git_credentials",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        236,
+        273
+      ],
+      "summary": "Stores approved credentials via git's credential-approve protocol so they're cached by the configured credential helper.",
+      "tags": [
+        "credentials",
+        "tauri-command",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:run_remote_git",
+      "type": "function",
+      "name": "run_remote_git",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        275,
+        328
+      ],
+      "summary": "Runs a git command against a remote with optional inline auth-username/token, temporarily configuring credential storage behavior.",
+      "tags": [
+        "git",
+        "credentials",
+        "internal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_push_error_type",
+      "type": "function",
+      "name": "detect_push_error_type",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        331,
+        384
+      ],
+      "summary": "Classifies a git push failure's stderr output into a structured GitErrorType (auth, non-fast-forward, network, etc.) for user-facing error messages.",
+      "tags": [
+        "error-handling",
+        "parsing",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:push_to_remote",
+      "type": "function",
+      "name": "push_to_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        387,
+        478
+      ],
+      "summary": "Pushes the current or specified branch to a remote, optionally setting upstream and force-pushing, with credential and error-type handling.",
+      "tags": [
+        "git",
+        "remote",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_pull_error_type",
+      "type": "function",
+      "name": "detect_pull_error_type",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        481,
+        545
+      ],
+      "summary": "Classifies a git pull failure's stderr output into a structured GitErrorType for user-facing error messages.",
+      "tags": [
+        "error-handling",
+        "parsing",
+        "git"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:pull_from_remote",
+      "type": "function",
+      "name": "pull_from_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        548,
+        609
+      ],
+      "summary": "Pulls from a remote using the given merge/rebase strategy, with credential and error-type handling.",
+      "tags": [
+        "git",
+        "remote",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:parse_deleted_branches",
+      "type": "function",
+      "name": "parse_deleted_branches",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        612,
+        634
+      ],
+      "summary": "Parses a fetch's stderr/stdout output to detect remote-tracking branches deleted by the fetch (pruned).",
+      "tags": [
+        "parsing",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_fetch_error_type",
+      "type": "function",
+      "name": "detect_fetch_error_type",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        637,
+        669
+      ],
+      "summary": "Classifies a git fetch failure's stderr output into a structured GitErrorType for user-facing error messages.",
+      "tags": [
+        "error-handling",
+        "parsing",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/remote.rs:fetch_from_remote",
+      "type": "function",
+      "name": "fetch_from_remote",
+      "filePath": "src-tauri/crates/git-api/src/commands/remote.rs",
+      "lineRange": [
+        672,
+        722
+      ],
+      "summary": "Fetches from a remote, optionally pruning deleted remote-tracking branches, with credential and error-type handling.",
+      "tags": [
+        "git",
+        "remote",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "type": "file",
+      "name": "staging.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "summary": "Implements staging-area operations: stage all/one file, unstage files, discard working-tree changes, and resolve merge conflicts by choosing ours/theirs/deleting.",
+      "tags": [
+        "git",
+        "staging",
+        "cli-wrapper",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_all_files",
+      "type": "function",
+      "name": "stage_all_files",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "lineRange": [
+        11,
+        19
+      ],
+      "summary": "Stages all changes in the working tree (git add -A).",
+      "tags": [
+        "git",
+        "staging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_file",
+      "type": "function",
+      "name": "stage_file",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "lineRange": [
+        22,
+        30
+      ],
+      "summary": "Stages a single file by path.",
+      "tags": [
+        "git",
+        "staging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/staging.rs:unstage_files",
+      "type": "function",
+      "name": "unstage_files",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "lineRange": [
+        33,
+        43
+      ],
+      "summary": "Unstages a list of files, restoring their index state to match HEAD.",
+      "tags": [
+        "git",
+        "staging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/staging.rs:discard_changes",
+      "type": "function",
+      "name": "discard_changes",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "lineRange": [
+        53,
+        191
+      ],
+      "summary": "Discards working-tree and/or staged changes for a list of files, handling added/deleted/modified/renamed states and untracked-file removal.",
+      "tags": [
+        "git",
+        "staging",
+        "destructive"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/staging.rs:resolve_conflict",
+      "type": "function",
+      "name": "resolve_conflict",
+      "filePath": "src-tauri/crates/git-api/src/commands/staging.rs",
+      "lineRange": [
+        200,
+        224
+      ],
+      "summary": "Resolves a merge conflict for a file by choosing ours, theirs, or marking it deleted, then re-staging the result.",
+      "tags": [
+        "git",
+        "merge-conflict",
+        "staging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "type": "file",
+      "name": "stash.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "summary": "Implements git stash operations: push (create), list, apply/pop, drop, and clear, for temporarily shelving working-tree changes.",
+      "tags": [
+        "git",
+        "stash",
+        "cli-wrapper",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_push",
+      "type": "function",
+      "name": "stash_push",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "lineRange": [
+        12,
+        50
+      ],
+      "summary": "Creates a new stash from specified files (or all changes), with an optional message and untracked-file inclusion.",
+      "tags": [
+        "git",
+        "stash"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_list",
+      "type": "function",
+      "name": "stash_list",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "lineRange": [
+        53,
+        78
+      ],
+      "summary": "Lists all stashes with their index, message, and branch.",
+      "tags": [
+        "git",
+        "stash"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_apply",
+      "type": "function",
+      "name": "stash_apply",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "lineRange": [
+        81,
+        98
+      ],
+      "summary": "Applies a stash by index, optionally popping (removing) it after applying.",
+      "tags": [
+        "git",
+        "stash"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_drop",
+      "type": "function",
+      "name": "stash_drop",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "lineRange": [
+        101,
+        117
+      ],
+      "summary": "Drops (deletes) a stash by index without applying it.",
+      "tags": [
+        "git",
+        "stash"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_clear",
+      "type": "function",
+      "name": "stash_clear",
+      "filePath": "src-tauri/crates/git-api/src/commands/stash.rs",
+      "lineRange": [
+        120,
+        132
+      ],
+      "summary": "Removes all stashes.",
+      "tags": [
+        "git",
+        "stash"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "type": "file",
+      "name": "streaming.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "summary": "Provides Server-Sent Events (SSE) streaming for long-running git operations (push, pull, fetch, commit, stage) over Axum routes, piping live subprocess stdout/stderr to the frontend and classifying transient vs. fatal errors for retry decisions.",
+      "tags": [
+        "sse",
+        "streaming",
+        "axum",
+        "git",
+        "tauri-command"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses pre_exec on Unix to close inherited file descriptors (3-1024) before spawning git subprocesses, working around 'Bad file descriptor' errors caused by WebView FD inheritance."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:detect_error_type_from_output",
+      "type": "function",
+      "name": "detect_error_type_from_output",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        38,
+        114
+      ],
+      "summary": "Classifies a git subprocess's combined stdout/stderr output into a structured error type per operation (push/pull/fetch/commit/stage), used to decide retry vs. surface-to-user.",
+      "tags": [
+        "error-handling",
+        "parsing",
+        "git"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:is_transient_error",
+      "type": "function",
+      "name": "is_transient_error",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        171,
+        177
+      ],
+      "summary": "Determines whether an error message indicates a transient (retryable) failure such as a lock contention.",
+      "tags": [
+        "error-handling",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:configure_command_for_fd_safety",
+      "type": "function",
+      "name": "configure_command_for_fd_safety",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        182,
+        193
+      ],
+      "summary": "Configures a subprocess Command to close inherited file descriptors on Unix before exec, preventing WebView FD-inheritance issues.",
+      "tags": [
+        "subprocess",
+        "platform-specific",
+        "internal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stream_git_command",
+      "type": "function",
+      "name": "stream_git_command",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        203,
+        324
+      ],
+      "summary": "Spawns a git subprocess and streams its combined stdout/stderr as Server-Sent Events, emitting a final structured result event with the detected error type on failure.",
+      "tags": [
+        "sse",
+        "streaming",
+        "subprocess",
+        "internal"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stream_error_response",
+      "type": "function",
+      "name": "stream_error_response",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        332,
+        342
+      ],
+      "summary": "Builds an SSE error response for a git operation failure that occurs before the subprocess is spawned (e.g., invalid repo path).",
+      "tags": [
+        "sse",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:push_stream",
+      "type": "function",
+      "name": "push_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        353,
+        395
+      ],
+      "summary": "Axum route handler that streams a git push operation's output as SSE.",
+      "tags": [
+        "axum",
+        "api-handler",
+        "sse",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:pull_stream",
+      "type": "function",
+      "name": "pull_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        398,
+        447
+      ],
+      "summary": "Axum route handler that streams a git pull operation's output as SSE.",
+      "tags": [
+        "axum",
+        "api-handler",
+        "sse",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:fetch_stream",
+      "type": "function",
+      "name": "fetch_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        450,
+        508
+      ],
+      "summary": "Axum route handler that streams a git fetch operation's output as SSE.",
+      "tags": [
+        "axum",
+        "api-handler",
+        "sse",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:commit_stream",
+      "type": "function",
+      "name": "commit_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        511,
+        533
+      ],
+      "summary": "Axum route handler that streams a git commit operation's output as SSE, applying the ORGII co-author trailer to the commit message.",
+      "tags": [
+        "axum",
+        "api-handler",
+        "sse",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stage_stream",
+      "type": "function",
+      "name": "stage_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        536,
+        586
+      ],
+      "summary": "Axum route handler that streams a stage-all-files or stage-specific-files operation's output as SSE.",
+      "tags": [
+        "axum",
+        "api-handler",
+        "sse",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/streaming.rs:PushStreamQuery",
+      "type": "class",
+      "name": "PushStreamQuery",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        121,
+        131
+      ],
+      "summary": "Query parameters for the push SSE route (remote, branch, set_upstream, force).",
+      "tags": [
+        "data-model",
+        "axum",
+        "query-params"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/streaming.rs:PullStreamQuery",
+      "type": "class",
+      "name": "PullStreamQuery",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        134,
+        143
+      ],
+      "summary": "Query parameters for the pull SSE route (remote, branch, strategy).",
+      "tags": [
+        "data-model",
+        "axum",
+        "query-params"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/streaming.rs:FetchStreamQuery",
+      "type": "class",
+      "name": "FetchStreamQuery",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        146,
+        154
+      ],
+      "summary": "Query parameters for the fetch SSE route (remote, prune, refspec).",
+      "tags": [
+        "data-model",
+        "axum",
+        "query-params"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/streaming.rs:CommitStreamQuery",
+      "type": "class",
+      "name": "CommitStreamQuery",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        157,
+        162
+      ],
+      "summary": "Query parameters for the commit SSE route (message, coauthor).",
+      "tags": [
+        "data-model",
+        "axum",
+        "query-params"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/streaming.rs:StageStreamQuery",
+      "type": "class",
+      "name": "StageStreamQuery",
+      "filePath": "src-tauri/crates/git-api/src/commands/streaming.rs",
+      "lineRange": [
+        165,
+        168
+      ],
+      "summary": "Query parameters for the stage SSE route (files to stage).",
+      "tags": [
+        "data-model",
+        "axum",
+        "query-params"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/tasks.rs",
+      "type": "file",
+      "name": "tasks.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/tasks.rs",
+      "summary": "Implements a generic task runner that spawns arbitrary shell commands (npm, yarn, pnpm, cargo, etc.) and streams their output as Server-Sent Events, for the app's integrated task-runner panel.",
+      "tags": [
+        "sse",
+        "streaming",
+        "axum",
+        "task-runner",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/tasks.rs:run_task_stream",
+      "type": "function",
+      "name": "run_task_stream",
+      "filePath": "src-tauri/crates/git-api/src/commands/tasks.rs",
+      "lineRange": [
+        40,
+        153
+      ],
+      "summary": "Axum route handler that spawns a shell command with the given cwd, streaming its combined stdout/stderr as SSE and emitting a completion event with the exit code.",
+      "tags": [
+        "axum",
+        "api-handler",
+        "sse",
+        "subprocess"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/tasks.rs:TaskRunQuery",
+      "type": "class",
+      "name": "TaskRunQuery",
+      "filePath": "src-tauri/crates/git-api/src/commands/tasks.rs",
+      "lineRange": [
+        25,
+        33
+      ],
+      "summary": "Query parameters for the task-runner SSE route, specifying the command, working directory, and shell to use.",
+      "tags": [
+        "data-model",
+        "axum",
+        "query-params"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:list_remotes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:list_remotes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:add_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:add_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:update_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:update_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:delete_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:delete_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:credential_target_from_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:parse_credential_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:fill_git_credentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:fill_git_credentials",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:approve_git_credentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:run_remote_git",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_push_error_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_push_error_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:push_to_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:push_to_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_pull_error_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_pull_error_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:pull_from_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:pull_from_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:parse_deleted_branches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_fetch_error_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:detect_fetch_error_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:fetch_from_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/remote.rs:fetch_from_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_all_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_all_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:stage_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:unstage_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:unstage_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:discard_changes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:discard_changes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:resolve_conflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/staging.rs:resolve_conflict",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_push",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_apply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_apply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_drop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/stash.rs:stash_clear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:detect_error_type_from_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:detect_error_type_from_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:is_transient_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:is_transient_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:configure_command_for_fd_safety",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stream_git_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stream_error_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:push_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:push_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:pull_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:pull_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:fetch_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:fetch_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:commit_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:commit_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stage_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/streaming.rs:stage_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:PushStreamQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:PushStreamQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:PullStreamQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:PullStreamQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:FetchStreamQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:FetchStreamQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:CommitStreamQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:CommitStreamQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:StageStreamQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/streaming.rs:StageStreamQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/streaming.rs:commit_stream",
+      "target": "function:src-tauri/crates/git-api/src/commands/commit.rs:append_orgii_coauthor_trailer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/tasks.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/tasks.rs:run_task_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/tasks.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/tasks.rs:TaskRunQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/tasks.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/tasks.rs:run_task_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/tasks.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/tasks.rs:TaskRunQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

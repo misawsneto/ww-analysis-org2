@@ -1,0 +1,381 @@
+/**
+ * CodeMirrorDiff Styles
+ *
+ * Styles for CodeMirror diff views - unified and split
+ * Uses shared public theme CSS variables for consistent colors
+ */
+
+// Import shared diff mixins (CSS variables are loaded globally in src/index.scss)
+@import "../styles/diff-mixins";
+
+@import "../../../components/CustomScrollbar/index.scss";
+
+.codemirror-diff-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.codemirror-diff-wrapper--auto-height {
+  height: auto;
+  overflow: visible;
+  // Constrain to the parent width so a single long code line scrolls
+  // horizontally inside the editor instead of stretching the whole diff
+  // section (the "over-wide line" artifact).
+  max-width: 100%;
+
+  .codemirror-diff {
+    height: auto;
+    overflow: visible;
+    max-width: 100%;
+
+    :global {
+      .cm-mergeView,
+      .cm-editor {
+        height: auto;
+      }
+
+      .cm-editor {
+        overflow: hidden;
+        max-width: 100%;
+      }
+
+      // Keep vertical auto-height (no internal vertical scrollbar) but let
+      // long lines scroll horizontally rather than widen the layout.
+      .cm-scroller {
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+.codemirror-diff {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  // Global override to remove ALL underlines in diff view
+  .cm-content *,
+  .cm-gutters * {
+    text-decoration: none !important;
+    text-decoration-line: none !important;
+    border-bottom: none !important;
+  }
+
+  // Remove wavy/squiggly underlines (SVG background patterns)
+  .cm-content [class*="cm-"],
+  .cm-gutters [class*="cm-"] {
+    background-image: none !important;
+  }
+
+  :global {
+    .cm-panels-top {
+      position: relative;
+      z-index: 5;
+    }
+
+    .cm-search-panel-wrapper {
+      position: relative;
+      z-index: 6;
+      overflow: visible;
+    }
+
+    .cm-mergeView {
+      height: 100%;
+    }
+
+    .cm-editor {
+      height: 100%;
+      overflow: auto;
+
+      &.cm-focused {
+        outline: none;
+      }
+    }
+
+    .cm-scroller {
+      overflow: auto !important;
+      // Scrollbar handled globally in index.scss
+    }
+
+    .cm-selectionBackground,
+    .cm-editor.cm-focused .cm-selectionBackground,
+    .cm-selectionLayer .cm-selectionBackground,
+    .cm-line .cm-selectionBackground,
+    .cm-selectionMatch {
+      background: var(--cm-editor-selection, var(--color-fill-2)) !important;
+      background-color: var(
+        --cm-editor-selection,
+        var(--color-fill-2)
+      ) !important;
+      opacity: 1 !important;
+    }
+
+    .cm-gutters,
+    .cm-gutter,
+    .cm-lineNumbers,
+    .cm-foldGutter,
+    .cm-changeGutter {
+      border-right: none !important;
+      box-shadow: none !important;
+    }
+
+    .cm-lineNumbers::after,
+    .cm-foldGutter::after,
+    .cm-changeGutter::after {
+      border-right: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    .cm-lineNumbers {
+      border-right: none !important;
+      padding-left: var(--cm-line-number-padding-left, 8px);
+    }
+
+    .cm-lineNumbers .cm-gutterElement {
+      border-right: none !important;
+    }
+
+    .cm-editor .cm-gutters .cm-gutterElement,
+    .cm-editor .cm-gutters .cm-gutterElement * {
+      border-right: none !important;
+      box-shadow: none !important;
+    }
+
+    // Merge view change gutter - match Editor's dirty-diff gutter width
+    // Use high specificity selectors to override CodeMirror defaults
+    .cm-editor .cm-gutters .cm-gutter.cm-changeGutter {
+      width: var(--diff-gutter-width, 7px);
+      min-width: var(--diff-gutter-width, 7px);
+      max-width: var(--diff-gutter-width, 7px);
+
+      .cm-gutterElement {
+        position: relative;
+        padding: 0;
+        min-width: var(--diff-gutter-width, 7px);
+
+        // The gutter marker bar (::before pseudo-element)
+        &::before {
+          content: "";
+          @include diff-gutter-marker;
+        }
+
+        // Changed line (added) - green
+        &.cm-changedLineGutter::before {
+          background-color: var(--diff-added-color, #2ea043);
+        }
+
+        // Deleted line - red
+        &.cm-deletedLineGutter::before {
+          background-color: var(--diff-deleted-color, #f85149);
+        }
+      }
+    }
+
+    // Diff change backgrounds - uses shared tokens for consistency
+    .cm-changedLine {
+      background: var(--diff-added-bg) !important;
+    }
+
+    // Remove ALL underlines and decorations from diff view
+    .cm-line,
+    .cm-changedLine,
+    .cm-insertedLine,
+    .cm-deletedLine,
+    .cm-activeLine {
+      text-decoration: none !important;
+      background-image: none !important;
+    }
+
+    .cm-deletedChunk {
+      box-sizing: border-box;
+      padding-left: var(--cm-line-padding-left, 12px) !important;
+      padding-right: var(--cm-line-padding-right, 16px) !important;
+    }
+
+    .cm-deletedChunk .cm-deletedLine {
+      display: block;
+      padding: 0 !important;
+      white-space: pre;
+    }
+
+    .cm-deletedChunk .cm-deletedLine > del {
+      display: inline;
+      margin: 0;
+      padding: 0;
+    }
+
+    .cm-line .cm-deletedLine {
+      display: inline;
+      padding: 0 !important;
+    }
+
+    // Disable lint squiggles in diff view
+    .cm-lintRange-error,
+    .cm-lintRange-warning,
+    .cm-lintRange-info,
+    .cm-lintRange-hint {
+      background-image: none !important;
+      text-decoration: none !important;
+    }
+
+    .cm-deletedLine {
+      background: var(--diff-deleted-bg) !important;
+    }
+
+    .cm-insertedLine {
+      background: var(--diff-added-bg) !important;
+    }
+
+    // Merge controls (accept/reject buttons)
+    .cm-merge-revert,
+    .cm-merge-accept {
+      background: var(--color-fill-2);
+      border: 1px solid var(--color-border-2);
+      color: var(--color-text-2);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 11px;
+      cursor: var(--interactive-cursor, default);
+
+      &:hover {
+        background: var(--color-fill-3);
+        border-color: var(--color-primary-6);
+        color: var(--color-primary-6);
+      }
+    }
+
+    // Note: .cm-collapsedLines styled via EditorView.baseTheme() in index.tsx
+
+    .cm-insertedChunk,
+    .cm-insertedText,
+    .cm-line.cm-changedLine span[class*="Chunk"],
+    .cm-line.cm-insertedLine span[class*="Chunk"],
+    .cm-line.cm-changedLine span[class*="Text"],
+    .cm-line.cm-insertedLine span[class*="Text"] {
+      background: var(--diff-added-bg) !important;
+      background-color: var(--diff-added-bg) !important;
+    }
+
+    .cm-deletedChunk,
+    .cm-deletedText,
+    .cm-line.cm-deletedLine span[class*="Chunk"],
+    .cm-line.cm-deletedLine span[class*="Text"] {
+      background: var(--diff-deleted-bg) !important;
+      background-color: var(--diff-deleted-bg) !important;
+    }
+
+    .cm-activeLine.cm-changedLine,
+    .cm-activeLine.cm-insertedLine,
+    .cm-activeLine.cm-deletedLine {
+      background-image: none !important;
+    }
+
+    // Gutter styling for deleted lines in unified view
+    .cm-deletedGutter {
+      background: var(--diff-deleted-bg);
+    }
+
+    // Merge view gap/spacer
+    .cm-merge-spacer,
+    .cm-merge-gap {
+      background: var(--color-bg-1);
+      border-left: 1px solid var(--color-border-2);
+      border-right: 1px solid var(--color-border-2);
+    }
+  }
+
+  .codemirror-diff-wrapper--full-deletion &--unified {
+    :global {
+      .cm-changedLine,
+      .cm-insertedLine {
+        background: var(--diff-deleted-bg) !important;
+      }
+
+      .cm-insertedChunk {
+        background: var(--diff-deleted-bg) !important;
+      }
+
+      .cm-editor .cm-gutters .cm-gutter.cm-changeGutter {
+        .cm-gutterElement.cm-changedLineGutter::before {
+          background-color: var(--diff-deleted-color, #f85149) !important;
+        }
+      }
+    }
+  }
+
+  // Split view specific styles
+  // The .codemirror-diff--split container (position: absolute, inset: 0) is
+  // the scroll viewport. .cm-mergeView grows to content height so it overflows
+  // and becomes scrollable. Inner .cm-scroller must stay overflow: visible
+  // (MergeView library requirement — it scrolls as a single unit).
+  &--split {
+    overflow: auto;
+    padding-bottom: 80px;
+
+    &.codemirror-diff--no-bottom-padding {
+      padding-bottom: 0;
+    }
+
+    :global {
+      .cm-mergeView {
+        min-height: 100%;
+
+        .cm-mergeViewEditor {
+          min-width: 0;
+
+          &:first-child {
+            border-right: 1px solid var(--color-border-2);
+          }
+        }
+
+        .cm-editor {
+          height: auto !important;
+        }
+
+        .cm-scroller {
+          overflow: visible !important;
+        }
+      }
+    }
+  }
+}
+
+// Unified deleted chunks are CodeMirror block widgets, not .cm-line nodes.
+// Keep these plain global selectors outside :global so they apply in non-module SCSS.
+.codemirror-diff .cm-editor .cm-content > .cm-deletedChunk {
+  box-sizing: border-box;
+  margin-left: 0 !important;
+  padding-left: var(--cm-line-padding-left, 12px) !important;
+  padding-right: var(--cm-line-padding-right, 16px) !important;
+  padding-inline-start: var(--cm-line-padding-left, 12px) !important;
+  padding-inline-end: var(--cm-line-padding-right, 16px) !important;
+  text-indent: 0 !important;
+}
+
+.codemirror-diff .cm-editor .cm-content > .cm-deletedChunk > .cm-deletedLine {
+  display: block;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+  white-space: pre;
+}
+
+.codemirror-diff
+  .cm-editor
+  .cm-content
+  > .cm-deletedChunk
+  > .cm-deletedLine
+  > del {
+  display: inline;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-indent: 0 !important;
+}
+
+// Note: .cm-collapsedLines styles are applied via EditorView.baseTheme()
+// in Diff/index.tsx to properly override CodeMirror's internal styles

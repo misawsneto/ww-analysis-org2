@@ -1,0 +1,1515 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "type": "file",
+      "name": "events.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/events.rs",
+      "summary": "Tauri event bridge that lets the frontend subscribe to live sync outbox-state changes instead of polling, emitting a SYNC_STATUS_EVENT payload to every webview whenever the worker finishes processing a push/merge/pull cycle.",
+      "tags": [
+        "event-handler",
+        "sync",
+        "tauri",
+        "state-broadcast"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a canonical OnceLock<AppHandle> pattern (set once at boot via init_emitter) shared with other native bridges in the codebase."
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "type": "file",
+      "name": "git_credentials.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "summary": "Resolves HTTPS Git credentials for clone/push/API calls by walking ADAPTER_GITHUB connection rows and returning the first usable HTTPS bearer token; SSH connections are intentionally skipped and fall back to system git config.",
+      "tags": [
+        "utility",
+        "authentication",
+        "git",
+        "sync"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "type": "file",
+      "name": "import.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "summary": "Owns the lifecycle of the import_progress table rows that track a per-(project, adapter) paginated historical-import walk, providing state transition helpers (ensure_pending, advance, mark_completed/failed/cancelled, reset_for_retry) and the worker's runnable-row scheduler query.",
+      "tags": [
+        "data-model",
+        "database",
+        "sync",
+        "state-machine"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "summary": "Barrel module for outbox CRUD against projects.db; opens the shared DB connection via conn() and re-exports the full read/write API surface from sibling read.rs and write.rs modules.",
+      "tags": [
+        "barrel",
+        "database",
+        "sync"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "type": "file",
+      "name": "read.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "summary": "Read-only SQL query layer over outbox_entries, sync cursors, adapter bindings, and import-problem rows against projects.db, plus the plain data types (SyncCursor, AdapterBinding, ProjectBinding) that model the read surface.",
+      "tags": [
+        "data-model",
+        "database",
+        "sync",
+        "query"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "type": "file",
+      "name": "write.rs",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "summary": "Mutation layer (INSERT/UPDATE/DELETE) over outbox_entries and project sync columns in projects.db, centered on an atomic claim-next-pending-row UPDATE that avoids a race window between concurrent worker ticks.",
+      "tags": [
+        "database",
+        "sync",
+        "concurrency"
+      ],
+      "complexity": "complex",
+      "languageNotes": "The atomic claim uses a single conditional UPDATE (WHERE id=? AND status='pending') rather than SELECT-then-UPDATE to avoid TOCTOU races across worker ticks."
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/events.rs:SyncEventTrigger",
+      "type": "class",
+      "name": "SyncEventTrigger",
+      "filePath": "src-tauri/crates/project-management/src/sync/events.rs",
+      "lineRange": [
+        51,
+        64
+      ],
+      "summary": "Enum of what triggered a sync-status emission: PushCycle, PullCycle, MergeCycle, or Manual.",
+      "tags": [
+        "type-definition",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/events.rs:SyncStatusEvent",
+      "type": "class",
+      "name": "SyncStatusEvent",
+      "filePath": "src-tauri/crates/project-management/src/sync/events.rs",
+      "lineRange": [
+        76,
+        86
+      ],
+      "summary": "Serializable payload broadcast to the frontend on the SYNC_STATUS_EVENT channel, snapshotting a project's outbox pending/failed/abandoned counts and last error.",
+      "tags": [
+        "type-definition",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/events.rs:init_emitter",
+      "type": "function",
+      "name": "init_emitter",
+      "filePath": "src-tauri/crates/project-management/src/sync/events.rs",
+      "lineRange": [
+        95,
+        97
+      ],
+      "summary": "Stores the Tauri AppHandle once at app boot so later emit_status calls can broadcast to webviews.",
+      "tags": [
+        "event-handler",
+        "tauri"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/events.rs:build_event",
+      "type": "function",
+      "name": "build_event",
+      "filePath": "src-tauri/crates/project-management/src/sync/events.rs",
+      "lineRange": [
+        106,
+        131
+      ],
+      "summary": "Reads the current outbox snapshot for a project from the DB and assembles it into a SyncStatusEvent payload.",
+      "tags": [
+        "event-handler",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/events.rs:emit_status",
+      "type": "function",
+      "name": "emit_status",
+      "filePath": "src-tauri/crates/project-management/src/sync/events.rs",
+      "lineRange": [
+        153,
+        176
+      ],
+      "summary": "Builds a SyncStatusEvent for a project and emits it to every webview; silently no-ops if the AppHandle hasn't been initialized yet.",
+      "tags": [
+        "event-handler",
+        "tauri"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/git_credentials.rs:GitCredential",
+      "type": "class",
+      "name": "GitCredential",
+      "filePath": "src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "lineRange": [
+        20,
+        30
+      ],
+      "summary": "Resolved HTTPS credential bundle (connection id, username, token, source) usable for git clone/push or GitHub API calls.",
+      "tags": [
+        "data-model",
+        "authentication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/git_credentials.rs:find_https_credential",
+      "type": "function",
+      "name": "find_https_credential",
+      "filePath": "src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "lineRange": [
+        38,
+        57
+      ],
+      "summary": "Walks ADAPTER_GITHUB connection rows and returns the first one whose stored token can serve as an HTTPS bearer credential.",
+      "tags": [
+        "authentication",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/git_credentials.rs:git_credential_for_remote",
+      "type": "function",
+      "name": "git_credential_for_remote",
+      "filePath": "src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "lineRange": [
+        64,
+        72
+      ],
+      "summary": "Public entry point that resolves the HTTPS credential to use for a given git remote URL.",
+      "tags": [
+        "authentication",
+        "git"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/import.rs:ImportProgressRow",
+      "type": "class",
+      "name": "ImportProgressRow",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        35,
+        60
+      ],
+      "summary": "One row of the import_progress table: cursor, imported count, total hint, and timestamps for a project's paginated historical import.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:ensure_pending",
+      "type": "function",
+      "name": "ensure_pending",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        72,
+        99
+      ],
+      "summary": "Creates the import_progress row on adapter attach; no-ops if one already exists (including terminal rows) so re-attach doesn't re-trigger a full import.",
+      "tags": [
+        "database",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:read_status",
+      "type": "function",
+      "name": "read_status",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        104,
+        149
+      ],
+      "summary": "Reads the current import_progress row for a project, used by the UI status panel.",
+      "tags": [
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:advance",
+      "type": "function",
+      "name": "advance",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        155,
+        198
+      ],
+      "summary": "Bumps the page cursor and imported-item counter after a page has been applied.",
+      "tags": [
+        "database",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_completed",
+      "type": "function",
+      "name": "mark_completed",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        202,
+        219
+      ],
+      "summary": "Marks an import_progress row terminal-completed.",
+      "tags": [
+        "database",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_failed",
+      "type": "function",
+      "name": "mark_failed",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        223,
+        240
+      ],
+      "summary": "Marks an import_progress row terminal-failed with an error message.",
+      "tags": [
+        "database",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_cancelled",
+      "type": "function",
+      "name": "mark_cancelled",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        244,
+        260
+      ],
+      "summary": "Marks an import_progress row terminal-cancelled.",
+      "tags": [
+        "database",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:reset_for_retry",
+      "type": "function",
+      "name": "reset_for_retry",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        267,
+        286
+      ],
+      "summary": "Resets a failed/cancelled import_progress row back to pending so the worker will pick it up again.",
+      "tags": [
+        "database",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/import.rs:list_runnable",
+      "type": "function",
+      "name": "list_runnable",
+      "filePath": "src-tauri/crates/project-management/src/sync/import.rs",
+      "lineRange": [
+        291,
+        334
+      ],
+      "summary": "Worker scheduler query: returns import_progress rows in pending/running state that are due for another page fetch.",
+      "tags": [
+        "database",
+        "scheduler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "function",
+      "name": "conn",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "lineRange": [
+        28,
+        34
+      ],
+      "summary": "Opens a fresh connection to projects.db, initializing project tables first when compiled for tests.",
+      "tags": [
+        "database",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/io/read.rs:SyncCursor",
+      "type": "class",
+      "name": "SyncCursor",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        21,
+        24
+      ],
+      "summary": "Per-project pull cursor persisted between pull cycles so adapters can request only changes since last_pull_at.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/io/read.rs:AdapterBinding",
+      "type": "class",
+      "name": "AdapterBinding",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        29,
+        33
+      ],
+      "summary": "The adapter_id/config/connection tuple bound to a project for sync.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/project-management/src/sync/io/read.rs:ProjectBinding",
+      "type": "class",
+      "name": "ProjectBinding",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        36,
+        51
+      ],
+      "summary": "A project's full sync binding: slug, adapter, config, connection, and last webhook timestamp.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:row_to_entry",
+      "type": "function",
+      "name": "row_to_entry",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        55,
+        84
+      ],
+      "summary": "Maps a SQL row to an OutboxEntry domain struct.",
+      "tags": [
+        "database",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:row_to_problem",
+      "type": "function",
+      "name": "row_to_problem",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        86,
+        114
+      ],
+      "summary": "Maps a SQL row to an OutboxProblemRow for the sync-problems UI.",
+      "tags": [
+        "database",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:load_by_id",
+      "type": "function",
+      "name": "load_by_id",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        121,
+        132
+      ],
+      "summary": "Loads a single outbox entry by id.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_for_project",
+      "type": "function",
+      "name": "list_for_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        136,
+        152
+      ],
+      "summary": "Lists outbox entries for a given project slug.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_problems",
+      "type": "function",
+      "name": "list_problems",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        167,
+        197
+      ],
+      "summary": "Lists failed/abandoned outbox entries surfaced to the sync-problems UI.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "function",
+      "name": "read_adapter_binding",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        201,
+        236
+      ],
+      "summary": "Reads the adapter binding configuration for a project.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_sync_cursor",
+      "type": "function",
+      "name": "read_sync_cursor",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        241,
+        255
+      ],
+      "summary": "Reads the persisted pull cursor for a project.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_last_webhook_at",
+      "type": "function",
+      "name": "read_last_webhook_at",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        265,
+        274
+      ],
+      "summary": "Reads the timestamp of the last inbound webhook received for a project.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:last_error_for_project",
+      "type": "function",
+      "name": "last_error_for_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        279,
+        296
+      ],
+      "summary": "Reads the most recent sync error recorded for a project.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:count_by_status",
+      "type": "function",
+      "name": "count_by_status",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        300,
+        314
+      ],
+      "summary": "Counts outbox entries for a project filtered by status.",
+      "tags": [
+        "database",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_bound_projects",
+      "type": "function",
+      "name": "list_bound_projects",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/read.rs",
+      "lineRange": [
+        319,
+        345
+      ],
+      "summary": "Lists every project with an attached sync adapter, used by the pull cycle to know what to poll.",
+      "tags": [
+        "database",
+        "query",
+        "scheduler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:append",
+      "type": "function",
+      "name": "append",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        20,
+        43
+      ],
+      "summary": "Inserts a new outbox_entries row and returns it with its assigned id.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:record_local_update",
+      "type": "function",
+      "name": "record_local_update",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        64,
+        107
+      ],
+      "summary": "Records a local field-level change as a pending outbox row so the push cycle will sync it outward.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_pending",
+      "type": "function",
+      "name": "claim_next_pending",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        118,
+        174
+      ],
+      "summary": "Atomically claims the next pending outbox row for push, moving it to in_flight with a single conditional UPDATE to avoid races between worker ticks.",
+      "tags": [
+        "database",
+        "concurrency",
+        "mutation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_merge_external",
+      "type": "function",
+      "name": "claim_next_merge_external",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        181,
+        227
+      ],
+      "summary": "Atomically claims the next merge_external outbox row for the merge cycle.",
+      "tags": [
+        "database",
+        "concurrency",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_succeeded",
+      "type": "function",
+      "name": "mark_succeeded",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        232,
+        241
+      ],
+      "summary": "Marks an outbox row succeeded.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_failed_with_backoff",
+      "type": "function",
+      "name": "mark_failed_with_backoff",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        253,
+        304
+      ],
+      "summary": "Marks an outbox row failed, applying the retry-count backoff schedule or abandoning it once retries are exhausted.",
+      "tags": [
+        "database",
+        "mutation",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:reset_in_flight_to_pending",
+      "type": "function",
+      "name": "reset_in_flight_to_pending",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        312,
+        326
+      ],
+      "summary": "Recovers orphaned in_flight rows back to pending on worker startup after an unclean shutdown.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:gc_succeeded",
+      "type": "function",
+      "name": "gc_succeeded",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        342,
+        363
+      ],
+      "summary": "Deletes succeeded outbox rows older than a retention window, bounded by a row limit per sweep.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:requeue_for_project",
+      "type": "function",
+      "name": "requeue_for_project",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        370,
+        387
+      ],
+      "summary": "Requeues all abandoned/failed rows for a project back to pending.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:requeue_one",
+      "type": "function",
+      "name": "requeue_one",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        400,
+        425
+      ],
+      "summary": "Requeues a single outbox entry back to pending.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:discard_one",
+      "type": "function",
+      "name": "discard_one",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        443,
+        461
+      ],
+      "summary": "Deletes a single outbox entry, used to dismiss a sync problem from the UI.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:attach_adapter",
+      "type": "function",
+      "name": "attach_adapter",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        470,
+        491
+      ],
+      "summary": "Writes the adapter binding for a project, attaching it to a sync connection.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:detach_adapter",
+      "type": "function",
+      "name": "detach_adapter",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        494,
+        509
+      ],
+      "summary": "Clears a project's adapter binding.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/project-management/src/sync/io/write.rs:write_sync_cursor",
+      "type": "function",
+      "name": "write_sync_cursor",
+      "filePath": "src-tauri/crates/project-management/src/sync/io/write.rs",
+      "lineRange": [
+        514,
+        532
+      ],
+      "summary": "Persists the pull cursor for a project after a successful pull.",
+      "tags": [
+        "database",
+        "mutation"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/events.rs:SyncEventTrigger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/events.rs:SyncStatusEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:init_emitter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:build_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:emit_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/git_credentials.rs:GitCredential",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/git_credentials.rs:find_https_credential",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/git_credentials.rs:git_credential_for_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/import.rs:ImportProgressRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:ensure_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:read_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:advance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_completed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_failed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_cancelled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:reset_for_retry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:list_runnable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/io/read.rs:SyncCursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/io/read.rs:AdapterBinding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/io/read.rs:ProjectBinding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:row_to_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:row_to_problem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:load_by_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_for_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_problems",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_sync_cursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_last_webhook_at",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:last_error_for_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:count_by_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_bound_projects",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:append",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:record_local_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_merge_external",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_succeeded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_failed_with_backoff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:reset_in_flight_to_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:gc_succeeded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:requeue_for_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:requeue_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:discard_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:attach_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:detach_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:write_sync_cursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/events.rs:SyncEventTrigger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/events.rs:SyncStatusEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:init_emitter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/events.rs:emit_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/git_credentials.rs:GitCredential",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/git_credentials.rs:find_https_credential",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/git_credentials.rs:git_credential_for_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/import.rs:ImportProgressRow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:ensure_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:read_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:advance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_completed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_failed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:mark_cancelled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:reset_for_retry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/import.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/import.rs:list_runnable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/mod.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/io/read.rs:SyncCursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/io/read.rs:AdapterBinding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "class:src-tauri/crates/project-management/src/sync/io/read.rs:ProjectBinding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:row_to_entry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:row_to_problem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:load_by_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_for_project",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_problems",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_sync_cursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_last_webhook_at",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:last_error_for_project",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:count_by_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/read.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:list_bound_projects",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:append",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:record_local_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:claim_next_merge_external",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_succeeded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:mark_failed_with_backoff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:reset_in_flight_to_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:gc_succeeded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:requeue_for_project",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:requeue_one",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:discard_one",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:attach_adapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:detach_adapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/io/write.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/write.rs:write_sync_cursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/mod.rs:conn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/io/read.rs:read_adapter_binding",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_store.rs:list",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/git_credentials.rs",
+      "target": "function:src-tauri/crates/project-management/src/sync/connection_token_store.rs:get",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/project-management/src/sync/events.rs",
+      "target": "file:src-tauri/crates/project-management/src/sync/worker/tests.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

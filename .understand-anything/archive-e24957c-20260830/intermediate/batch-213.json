@@ -1,0 +1,322 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/orgtrack-graph/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/lib.rs",
+      "summary": "Crate root for orgtrack-graph that declares the project, query, schema, and store submodules and re-exports their key public items (project_record_to_graph, GraphDirection, GraphNeighbor, GraphStore).",
+      "tags": ["entry-point", "barrel", "rust", "crate-root"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-graph/src/project.rs",
+      "type": "file",
+      "name": "project.rs",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "summary": "Projects a SyncRecord's payload (commit notes, pull requests, work items, sessions, AI blame, lessons, etc.) into GraphNodeUpsert/GraphEdgeUpsert records describing the graph representation to persist.",
+      "tags": ["data-model", "transformation", "graph", "serialization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-graph/src/query.rs",
+      "type": "file",
+      "name": "query.rs",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/query.rs",
+      "summary": "Defines the GraphDirection enum and GraphNeighbor result struct used when traversing and querying the graph store's node relationships.",
+      "tags": ["type-definition", "data-model", "graph", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-graph/src/schema.rs",
+      "type": "file",
+      "name": "schema.rs",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/schema.rs",
+      "summary": "Defines initialize_schema, which executes the SQL DDL batch creating the SQLite tables (sync records, graph nodes, graph edges) backing the orgtrack graph store.",
+      "tags": ["database", "schema-definition", "sql", "sqlite"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/orgtrack-graph/src/store.rs",
+      "type": "file",
+      "name": "store.rs",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "summary": "Implements GraphStore, a SQLite-backed store that opens a database, imports sync records by upserting projected graph nodes/edges, and queries node neighbors by direction and edge type.",
+      "tags": ["database", "service", "graph", "sqlite"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/project.rs:project_record_to_graph",
+      "type": "function",
+      "name": "project_record_to_graph",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "lineRange": [34, 361],
+      "summary": "Converts a SyncRecord's payload variant (commit note, pull request, work item, session, AI blame, lesson, etc.) into a ProjectedGraphRecord of graph nodes and edges to upsert.",
+      "tags": ["data-model", "transformation", "graph", "core-logic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/project.rs:edge",
+      "type": "function",
+      "name": "edge",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "lineRange": [371, 388],
+      "summary": "Private helper constructing a GraphEdgeUpsert from a source/target node type and key, an edge type, and a payload, defaulting confidence to 1.0.",
+      "tags": ["utility", "factory", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/project.rs:project_edge_record",
+      "type": "function",
+      "name": "project_edge_record",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "lineRange": [390, 414],
+      "summary": "Converts an AiBlameEdgeRecord into a ProjectedGraphRecord containing its two endpoint nodes and the connecting edge.",
+      "tags": ["transformation", "graph", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/schema.rs:initialize_schema",
+      "type": "function",
+      "name": "initialize_schema",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/schema.rs",
+      "lineRange": [3, 56],
+      "summary": "Executes a batch of SQL statements creating the orgtrack_sync_records, orgtrack_graph_nodes, and orgtrack_graph_edges tables if they do not already exist.",
+      "tags": ["database", "schema-definition", "sql", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open",
+      "type": "function",
+      "name": "open",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [20, 26],
+      "summary": "Opens a GraphStore backed by a SQLite database file at the given path and initializes its schema.",
+      "tags": ["factory", "database", "sqlite"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open_memory",
+      "type": "function",
+      "name": "open_memory",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [28, 34],
+      "summary": "Opens an in-memory GraphStore with its schema initialized, primarily used for testing.",
+      "tags": ["factory", "database", "testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:import_record",
+      "type": "function",
+      "name": "import_record",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [36, 78],
+      "summary": "Upserts a SyncRecord into the sync_records table and projects it into graph nodes/edges, upserting each into the graph store.",
+      "tags": ["database", "graph", "core-logic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:upsert_node",
+      "type": "function",
+      "name": "upsert_node",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [80, 104],
+      "summary": "Inserts or updates a graph node row keyed by node type and stable key, storing its canonicalized JSON payload.",
+      "tags": ["database", "graph", "upsert"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:upsert_edge",
+      "type": "function",
+      "name": "upsert_edge",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [106, 140],
+      "summary": "Inserts or updates a graph edge row between two nodes, storing edge type, confidence, and canonicalized JSON payload.",
+      "tags": ["database", "graph", "upsert"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors",
+      "type": "function",
+      "name": "neighbors",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [142, 159],
+      "summary": "Looks up outgoing, incoming, or both-direction neighbors of a graph node identified by node type and stable key, optionally filtered by edge type.",
+      "tags": ["query", "graph", "database"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:record_count",
+      "type": "function",
+      "name": "record_count",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [161, 168],
+      "summary": "Returns the total count of rows in the orgtrack_sync_records table.",
+      "tags": ["database", "query", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors_outgoing",
+      "type": "function",
+      "name": "neighbors_outgoing",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [170, 182],
+      "summary": "Private helper querying nodes reachable via outgoing edges from the given node id, optionally filtered by edge type.",
+      "tags": ["query", "graph", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors_incoming",
+      "type": "function",
+      "name": "neighbors_incoming",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [184, 196],
+      "summary": "Private helper querying nodes reachable via incoming edges to the given node id, optionally filtered by edge type.",
+      "tags": ["query", "graph", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:query_neighbors",
+      "type": "function",
+      "name": "query_neighbors",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [198, 248],
+      "summary": "Shared SQL query implementation joining graph_edges and graph_nodes to build GraphNeighbor results for either the outgoing or incoming direction.",
+      "tags": ["query", "graph", "database", "sql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:node_exists",
+      "type": "function",
+      "name": "node_exists",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [250, 261],
+      "summary": "Checks whether a graph node with the given node type and stable key already exists in the store.",
+      "tags": ["database", "query", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/orgtrack-graph/src/store.rs:edge_id",
+      "type": "function",
+      "name": "edge_id",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [272, 288],
+      "summary": "Private helper computing a deterministic content-based edge id from the endpoint node ids, edge type, and payload.",
+      "tags": ["utility", "hashing", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-graph/src/project.rs:GraphNodeUpsert",
+      "type": "class",
+      "name": "GraphNodeUpsert",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "lineRange": [9, 13],
+      "summary": "Serializable struct describing a graph node to upsert, carrying its node type, stable key, and JSON payload.",
+      "tags": ["data-model", "type-definition", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-graph/src/project.rs:GraphEdgeUpsert",
+      "type": "class",
+      "name": "GraphEdgeUpsert",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "lineRange": [17, 25],
+      "summary": "Serializable struct describing a graph edge to upsert between two nodes, including edge type, confidence, and JSON payload.",
+      "tags": ["data-model", "type-definition", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-graph/src/project.rs:ProjectedGraphRecord",
+      "type": "class",
+      "name": "ProjectedGraphRecord",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/project.rs",
+      "lineRange": [29, 32],
+      "summary": "Container struct bundling the nodes and edges produced when projecting a sync record into the graph.",
+      "tags": ["data-model", "type-definition", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-graph/src/query.rs:GraphDirection",
+      "type": "class",
+      "name": "GraphDirection",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/query.rs",
+      "lineRange": [6, 10],
+      "summary": "Enum specifying the traversal direction (Outgoing, Incoming, or Both) used when querying graph node neighbors.",
+      "tags": ["type-definition", "enum", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-graph/src/query.rs:GraphNeighbor",
+      "type": "class",
+      "name": "GraphNeighbor",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/query.rs",
+      "lineRange": [14, 23],
+      "summary": "Struct representing a queried neighbor result, including the neighbor node's identity/payload and the connecting edge's identity/payload.",
+      "tags": ["type-definition", "data-model", "graph"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/orgtrack-graph/src/store.rs:GraphStore",
+      "type": "class",
+      "name": "GraphStore",
+      "filePath": "src-tauri/crates/orgtrack-graph/src/store.rs",
+      "lineRange": [15, 17],
+      "summary": "SQLite-backed store providing open, import, upsert, and neighbor-query operations over the orgtrack graph representation.",
+      "tags": ["service", "database", "graph", "sqlite"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/lib.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/lib.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/query.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/lib.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/schema.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/lib.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/query.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "file:src-tauri/crates/orgtrack-graph/src/schema.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/project.rs:project_record_to_graph", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/project.rs:edge", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/project.rs:project_edge_record", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/project.rs:GraphNodeUpsert", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/project.rs:GraphEdgeUpsert", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/project.rs:ProjectedGraphRecord", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/query.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/query.rs:GraphDirection", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/query.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/query.rs:GraphNeighbor", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/schema.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/schema.rs:initialize_schema", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open_memory", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:import_record", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:upsert_node", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:upsert_edge", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:record_count", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors_outgoing", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors_incoming", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:query_neighbors", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:node_exists", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:edge_id", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/store.rs:GraphStore", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/project.rs:GraphNodeUpsert", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/project.rs:GraphEdgeUpsert", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/project.rs:ProjectedGraphRecord", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/project.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/project.rs:project_record_to_graph", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/query.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/query.rs:GraphDirection", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/query.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/query.rs:GraphNeighbor", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/schema.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/schema.rs:initialize_schema", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "class:src-tauri/crates/orgtrack-graph/src/store.rs:GraphStore", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open_memory", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:import_record", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:upsert_node", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:upsert_edge", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:neighbors", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:record_count", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/orgtrack-graph/src/store.rs", "target": "function:src-tauri/crates/orgtrack-graph/src/store.rs:node_exists", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open", "target": "function:src-tauri/crates/orgtrack-graph/src/schema.rs:initialize_schema", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/orgtrack-graph/src/store.rs:open_memory", "target": "function:src-tauri/crates/orgtrack-graph/src/schema.rs:initialize_schema", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/orgtrack-graph/src/store.rs:import_record", "target": "function:src-tauri/crates/orgtrack-graph/src/project.rs:project_record_to_graph", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

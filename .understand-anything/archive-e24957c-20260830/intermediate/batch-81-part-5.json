@@ -1,0 +1,1038 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "type": "file",
+   "name": "history.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "summary": "SQLite-backed history source adapter for the ZCode tool, structurally mirroring the OpenCode adapter: discovers sessions, caches metadata, and converts stored message parts into canonical activity chunks.",
+   "tags": [
+    "history-adapter",
+    "sqlite",
+    "zcode",
+    "source-adapter",
+    "normalization"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/mod.rs",
+   "summary": "Module barrel re-exporting the ZCode history submodule.",
+   "tags": [
+    "barrel",
+    "module",
+    "zcode"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "type": "file",
+   "name": "status_adapter.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "summary": "Normalizes raw live-status/hook event payloads from any source into orgii's canonical AgentStatusEventV1 records, deriving session state (working/waiting/done/failed), interrupt detection, and tool-input previews.",
+   "tags": [
+    "status-normalization",
+    "event-processing",
+    "canonical-model",
+    "hooks"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "summary": "Defines the RecordStore trait -- the canonical persistence API surface used across orgtrack-core -- along with supporting DTOs, re-exporting the SQLite implementation.",
+   "tags": [
+    "persistence",
+    "trait-definition",
+    "data-model",
+    "barrel"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_zcode_history_sessions_paginated",
+   "type": "function",
+   "name": "list_zcode_history_sessions_paginated",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    110,
+    117
+   ],
+   "summary": "Returns a paginated list of ZCode session summaries from the cached history store.",
+   "tags": [
+    "pagination",
+    "history-adapter",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_zcode_recent_paths",
+   "type": "function",
+   "name": "list_zcode_recent_paths",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    119,
+    125
+   ],
+   "summary": "Lists recently active workspace/repo paths derived from cached ZCode sessions.",
+   "tags": [
+    "recent-paths",
+    "history-adapter",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_zcode_history_for_session",
+   "type": "function",
+   "name": "load_zcode_history_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    127,
+    133
+   ],
+   "summary": "Loads and assembles the full canonical activity history for a single ZCode session.",
+   "tags": [
+    "session-loader",
+    "history-adapter",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:sync_zcode_history_cache",
+   "type": "function",
+   "name": "sync_zcode_history_cache",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    135,
+    173
+   ],
+   "summary": "Synchronizes the local ZCode history cache with newly discovered or changed source records on disk.",
+   "tags": [
+    "cache-sync",
+    "history-adapter",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_meta_signature",
+   "type": "function",
+   "name": "zcode_meta_signature",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    175,
+    184
+   ],
+   "summary": "Computes a change-detection signature for a ZCode session's metadata, used to decide whether the cache needs to be refreshed.",
+   "tags": [
+    "change-detection",
+    "caching",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_all_zcode_session_meta_from_conn",
+   "type": "function",
+   "name": "list_all_zcode_session_meta_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    186,
+    259
+   ],
+   "summary": "Reads all ZCode session metadata rows from the local database and augments them with source file fingerprint info.",
+   "tags": [
+    "sqlite",
+    "zcode",
+    "metadata",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_source_fingerprint",
+   "type": "function",
+   "name": "zcode_source_fingerprint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    265,
+    278
+   ],
+   "summary": "Computes a change-detection fingerprint for a ZCode session used to decide whether the cache needs to be refreshed.",
+   "tags": [
+    "change-detection",
+    "caching",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:session_meta_to_cache_input",
+   "type": "function",
+   "name": "session_meta_to_cache_input",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    280,
+    319
+   ],
+   "summary": "Converts parsed ZCode session metadata into the row format used to upsert the imported-history cache.",
+   "tags": [
+    "mapping",
+    "caching",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_zcode_history_from_conn",
+   "type": "function",
+   "name": "load_zcode_history_from_conn",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    321,
+    334
+   ],
+   "summary": "Loads and converts a single ZCode session's raw records into canonical activity chunks.",
+   "tags": [
+    "session-loader",
+    "normalization",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_ordered_parts",
+   "type": "function",
+   "name": "load_ordered_parts",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    336,
+    380
+   ],
+   "summary": "Loads a ZCode session's message parts from the local cache in chronological order.",
+   "tags": [
+    "ordering",
+    "history-adapter",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:part_row_to_chunk",
+   "type": "function",
+   "name": "part_row_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    382,
+    394
+   ],
+   "summary": "Converts a single raw ZCode message-part row into a canonical activity chunk based on its role/type.",
+   "tags": [
+    "normalization",
+    "activity-chunk",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:text_to_user_chunk",
+   "type": "function",
+   "name": "text_to_user_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    396,
+    412
+   ],
+   "summary": "Converts a raw ZCode user-message row into a canonical user-message activity chunk.",
+   "tags": [
+    "normalization",
+    "activity-chunk",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:text_to_assistant_chunk",
+   "type": "function",
+   "name": "text_to_assistant_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    414,
+    430
+   ],
+   "summary": "Converts a raw ZCode assistant-message row into a canonical assistant-message activity chunk.",
+   "tags": [
+    "normalization",
+    "activity-chunk",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:reasoning_to_chunk",
+   "type": "function",
+   "name": "reasoning_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    432,
+    448
+   ],
+   "summary": "Converts a raw ZCode reasoning/thinking row into a canonical thinking activity chunk.",
+   "tags": [
+    "normalization",
+    "activity-chunk",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:tool_to_chunk",
+   "type": "function",
+   "name": "tool_to_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    450,
+    493
+   ],
+   "summary": "Converts a raw ZCode tool-invocation row into a canonical tool-call activity chunk.",
+   "tags": [
+    "normalization",
+    "activity-chunk",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:normalize_zcode_tool_call",
+   "type": "function",
+   "name": "normalize_zcode_tool_call",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    498,
+    510
+   ],
+   "summary": "Normalizes a raw ZCode tool-call name and arguments into orgii's canonical tool-call shape.",
+   "tags": [
+    "normalization",
+    "tool-call",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:normalize_shell_args",
+   "type": "function",
+   "name": "normalize_shell_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    512,
+    523
+   ],
+   "summary": "Normalizes shell-command tool arguments into the canonical shape shared across source adapters.",
+   "tags": [
+    "normalization",
+    "tool-call",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:normalize_edit_args",
+   "type": "function",
+   "name": "normalize_edit_args",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    525,
+    537
+   ],
+   "summary": "Normalizes file-edit tool arguments into the canonical shape shared across source adapters.",
+   "tags": [
+    "normalization",
+    "tool-call",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:tool_output_text",
+   "type": "function",
+   "name": "tool_output_text",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    539,
+    549
+   ],
+   "summary": "Extracts human-readable output text from a raw ZCode tool-result payload.",
+   "tags": [
+    "extraction",
+    "tool-call",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:row_created_at",
+   "type": "function",
+   "name": "row_created_at",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    551,
+    567
+   ],
+   "summary": "Derives a session/part's created-at timestamp from a raw ZCode database row.",
+   "tags": [
+    "timestamp",
+    "parsing",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:open_zcode_db",
+   "type": "function",
+   "name": "open_zcode_db",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    579,
+    591
+   ],
+   "summary": "Opens a read-only SQLite connection to the ZCode local history database, trying candidate paths.",
+   "tags": [
+    "sqlite",
+    "database",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_history_candidate_paths",
+   "type": "function",
+   "name": "zcode_history_candidate_paths",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "lineRange": [
+    595,
+    600
+   ],
+   "summary": "Enumerates candidate filesystem locations for ZCode history/session files.",
+   "tags": [
+    "path-resolution",
+    "filesystem",
+    "zcode",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:canonical_session_id_for",
+   "type": "function",
+   "name": "canonical_session_id_for",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    30,
+    36
+   ],
+   "summary": "Derives orgii's canonical session id for a live-status event, given its source, raw source session id, and payload.",
+   "tags": [
+    "id-mapping",
+    "status-adapter",
+    "canonical-model",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:as_session_status_str",
+   "type": "function",
+   "name": "as_session_status_str",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    52,
+    59
+   ],
+   "summary": "Returns the string representation of an AgentLiveState value used in canonical status events.",
+   "tags": [
+    "serialization",
+    "status-adapter",
+    "canonical-model",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:is_terminal",
+   "type": "function",
+   "name": "is_terminal",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    61,
+    63
+   ],
+   "summary": "Returns whether an AgentLiveState value represents a terminal (done/failed) state.",
+   "tags": [
+    "state-machine",
+    "status-adapter",
+    "canonical-model",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:normalize_status_payload",
+   "type": "function",
+   "name": "normalize_status_payload",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    98,
+    139
+   ],
+   "summary": "Normalizes a raw hook/live-status payload from any source into a canonical AgentStatusEventV1 record.",
+   "tags": [
+    "normalization",
+    "status-adapter",
+    "event-processing",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:state_for_event",
+   "type": "function",
+   "name": "state_for_event",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    155,
+    242
+   ],
+   "summary": "Derives the AgentLiveState (working/waiting/done/failed) implied by a raw status event name and payload.",
+   "tags": [
+    "state-machine",
+    "status-adapter",
+    "event-processing",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:is_interrupt",
+   "type": "function",
+   "name": "is_interrupt",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    244,
+    261
+   ],
+   "summary": "Determines whether a raw status event represents a user interrupt of the agent.",
+   "tags": [
+    "classification",
+    "status-adapter",
+    "event-processing",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:tool_snapshot",
+   "type": "function",
+   "name": "tool_snapshot",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    264,
+    300
+   ],
+   "summary": "Builds a short tool-name/input preview snapshot from a raw status event payload.",
+   "tags": [
+    "extraction",
+    "status-adapter",
+    "event-processing",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/status_adapter.rs:AgentLiveState",
+   "type": "class",
+   "name": "AgentLiveState",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    40,
+    45
+   ],
+   "summary": "Enum of an agent's live session states (working, waiting, done, failed) used throughout canonical status events.",
+   "tags": [
+    "data-model",
+    "status-adapter",
+    "state-machine",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/status_adapter.rs:AgentStatusEventV1",
+   "type": "class",
+   "name": "AgentStatusEventV1",
+   "filePath": "src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "lineRange": [
+    68,
+    94
+   ],
+   "summary": "Canonical, versioned representation of a single live agent-status event surfaced to the UI's activity feed.",
+   "tags": [
+    "data-model",
+    "status-adapter",
+    "canonical-model",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:RecentHookSignal",
+   "type": "class",
+   "name": "RecentHookSignal",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "lineRange": [
+    16,
+    35
+   ],
+   "summary": "Canonical DTO representing a recent hook-derived activity signal surfaced in the UI's live feed.",
+   "tags": [
+    "data-model",
+    "persistence",
+    "dto",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:FileResourceInteractionPage",
+   "type": "class",
+   "name": "FileResourceInteractionPage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "lineRange": [
+    41,
+    46
+   ],
+   "summary": "Paginated result wrapper for file-resource interaction queries.",
+   "tags": [
+    "data-model",
+    "persistence",
+    "pagination",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:RecordStore",
+   "type": "class",
+   "name": "RecordStore",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "lineRange": [
+    48,
+    144
+   ],
+   "summary": "Trait defining the canonical persistence API for sessions, activities, file changes, commit links, edit artifacts, diffs, and checkpoints, implemented by SqliteRecordStore.",
+   "tags": [
+    "trait-definition",
+    "persistence",
+    "core",
+    "rust"
+   ],
+   "complexity": "complex"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_zcode_history_sessions_paginated",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_zcode_history_sessions_paginated",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_zcode_recent_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_zcode_recent_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_zcode_history_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_zcode_history_for_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:sync_zcode_history_cache",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_meta_signature",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:list_all_zcode_session_meta_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_source_fingerprint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:session_meta_to_cache_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_zcode_history_from_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:load_ordered_parts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:part_row_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:text_to_user_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:text_to_assistant_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:reasoning_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:tool_to_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:normalize_zcode_tool_call",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:normalize_shell_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:normalize_edit_args",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:tool_output_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:row_created_at",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:open_zcode_db",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_history_candidate_paths",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs:zcode_history_candidate_paths",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:canonical_session_id_for",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:canonical_session_id_for",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:as_session_status_str",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:as_session_status_str",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:is_terminal",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:is_terminal",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:normalize_status_payload",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:normalize_status_payload",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:state_for_event",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:is_interrupt",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/status_adapter.rs:tool_snapshot",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/status_adapter.rs:AgentLiveState",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/status_adapter.rs:AgentLiveState",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/status_adapter.rs:AgentStatusEventV1",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/status_adapter.rs:AgentStatusEventV1",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:RecentHookSignal",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:RecentHookSignal",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:FileResourceInteractionPage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:FileResourceInteractionPage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:RecordStore",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/mod.rs:RecordStore",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/imported_history/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/sources/zcode/history.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/status_adapter.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/hook_adapter.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/mod.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  }
+ ]
+}

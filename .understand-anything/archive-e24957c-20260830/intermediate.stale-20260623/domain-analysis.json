@@ -1,0 +1,862 @@
+{
+  "domains": [
+    {
+      "id": "domain:agent-session",
+      "name": "Agent Session",
+      "description": "Core agent conversation lifecycle: creating sessions, streaming LLM turns, ingesting events, rendering chat history, and managing session state across native and CLI agent backends.",
+      "flows": [
+        {
+          "id": "flow:session-lifecycle",
+          "name": "Session Lifecycle",
+          "description": "Create, configure, launch, pause, resume, and terminate agent sessions with model/provider selection and workspace binding.",
+          "steps": [
+            {
+              "id": "step:session-lifecycle:create-session",
+              "name": "Create Session",
+              "description": "User configures agent type, model, repo context, and launch parameters via SessionCreator; validates prerequisites and resolves workspace.",
+              "keyFiles": [
+                "src/features/SessionCreator/index.ts",
+                "src/engines/SessionCore/hooks/session/useSessionCreator/useSessionCreator.ts",
+                "src/features/SessionCreator/variants/ChatPanel/deriveLaunchContext.ts"
+              ]
+            },
+            {
+              "id": "step:session-lifecycle:launch-agent",
+              "name": "Launch Agent",
+              "description": "Dispatch session to the Rust backend via Tauri RPC, spawn the agent process (native or CLI sidecar), and establish the sync channel.",
+              "keyFiles": [
+                "src/api/tauri/agent/session.ts",
+                "src/api/tauri/agent/gateway.ts",
+                "src/engines/SessionCore/sync/sessionSyncLifecycle.ts",
+                "src-tauri/crates/agent-core/src/session/mod.rs"
+              ]
+            },
+            {
+              "id": "step:session-lifecycle:manage-session-state",
+              "name": "Manage Session State",
+              "description": "Track active/pinned sessions, switch between sessions, evict idle sessions, and persist session metadata to SQLite.",
+              "keyFiles": [
+                "src-tauri/src/agent_sessions/event_pipeline/commands/session_manager.rs",
+                "src/engines/SessionCore/workspace/hooks/useWorkspaceSession.ts",
+                "src/store/session/index.ts"
+              ]
+            },
+            {
+              "id": "step:session-lifecycle:session-history",
+              "name": "Session History",
+              "description": "Query, group, and display past sessions with statistics, subagent trees, and cross-source import (Claude Code, Cursor, Codex, Windsurf).",
+              "keyFiles": [
+                "src-tauri/src/agent_sessions/event_pipeline/commands/history.rs",
+                "src/api/tauri/importedHistory/index.ts",
+                "src/modules/MainApp/DevRecord/views/SessionsView/index.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:event-pipeline",
+          "name": "Event Pipeline",
+          "description": "Ingest raw LLM activity chunks, normalize into SessionEvents, store in per-session EventStores, and bridge to SQLite cache for persistence.",
+          "steps": [
+            {
+              "id": "step:event-pipeline:ingest-chunks",
+              "name": "Ingest Activity Chunks",
+              "description": "Receive raw streaming chunks from the agent runtime, consolidate partial tokens, normalize tool calls, and merge into the event store.",
+              "keyFiles": [
+                "src-tauri/src/agent_sessions/event_pipeline/commands/ingestion.rs",
+                "src/engines/SessionCore/ingestion/rustBridge.ts",
+                "src/engines/SessionCore/ingestion/agentMessageAdapters.ts"
+              ]
+            },
+            {
+              "id": "step:event-pipeline:sync-channel",
+              "name": "Sync Channel",
+              "description": "Bridge between Rust EventStore and React UI via batched change notifications, adapter-specific streaming parsers, and snapshot materialization.",
+              "keyFiles": [
+                "src/engines/SessionCore/sync/sessionSyncChannel.ts",
+                "src/engines/SessionCore/sync/adapters/createRustAgentAdapter.ts",
+                "src/engines/SessionCore/core/store/EventStoreProxy.ts"
+              ]
+            },
+            {
+              "id": "step:event-pipeline:cache-persistence",
+              "name": "Cache Persistence",
+              "description": "Save and load events to/from SQLite cache with CachedEvent conversion, payload compaction, and turn-based pagination.",
+              "keyFiles": [
+                "src-tauri/src/agent_sessions/event_pipeline/commands/cache_bridge.rs",
+                "src-tauri/crates/session-persistence/src/lib.rs",
+                "src/engines/SessionCore/storage/sqliteCache.ts"
+              ]
+            },
+            {
+              "id": "step:event-pipeline:extract-render-data",
+              "name": "Extract Rendering Data",
+              "description": "Pre-compute rendering props from events: diff parsing, file references, shell output formatting, search results, and tool call cards.",
+              "keyFiles": [
+                "src-tauri/src/agent_sessions/event_pipeline/commands/extractors.rs",
+                "src/engines/SessionCore/rendering/props/propsDataExtractors.ts",
+                "src/engines/SessionCore/rendering/registry/initToolRegistry.ts"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:chat-interaction",
+          "name": "Chat Interaction",
+          "description": "User-facing chat panel: composing messages, rendering conversation history, handling interactive events (approvals, questions), and displaying tool call results.",
+          "steps": [
+            {
+              "id": "step:chat-interaction:compose-message",
+              "name": "Compose Message",
+              "description": "Rich input area with @-mentions, slash commands, file attachments, image paste, code citations, voice input, and context pills.",
+              "keyFiles": [
+                "src/engines/ChatPanel/InputArea/index.tsx",
+                "src/engines/ChatPanel/hooks/useInputArea/useSubmitMessage.ts",
+                "src/components/ComposerInput/index.tsx"
+              ]
+            },
+            {
+              "id": "step:chat-interaction:render-chat-history",
+              "name": "Render Chat History",
+              "description": "Virtualized chat list with turn grouping, pagination, search, pinned headers, and group-chat view for multi-agent sessions.",
+              "keyFiles": [
+                "src/engines/ChatPanel/ChatHistory/index.tsx",
+                "src/engines/ChatPanel/ChatHistory/chatItemPipeline/pipeline.ts",
+                "src/engines/ChatPanel/ChatHistory/GroupChatView/index.tsx"
+              ]
+            },
+            {
+              "id": "step:chat-interaction:display-tool-blocks",
+              "name": "Display Tool Blocks",
+              "description": "Render agent tool calls as structured blocks: code diffs, file reads, shell commands, web searches, canvas previews, and subagent activity.",
+              "keyFiles": [
+                "src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx",
+                "src/engines/ChatPanel/blocks/DiffBlock/index.tsx",
+                "src/engines/ChatPanel/blocks/ShellBlock/index.tsx",
+                "src/engines/ChatPanel/blocks/SubagentBlock/index.tsx"
+              ]
+            },
+            {
+              "id": "step:chat-interaction:handle-interactive-events",
+              "name": "Handle Interactive Events",
+              "description": "Process user-approval requests, ask-question prompts, mode-switch proposals, and plan approval gates during agent execution.",
+              "keyFiles": [
+                "src/engines/ChatPanel/events/interactive_events/approval/index.tsx",
+                "src/engines/ChatPanel/events/interactive_events/ask-question/index.tsx",
+                "src/engines/ChatPanel/InputArea/PermissionCard/index.tsx"
+              ]
+            },
+            {
+              "id": "step:chat-interaction:plan-execution",
+              "name": "Plan Execution",
+              "description": "Create, display, approve, and track agent plans with todo checklists, step-by-step progress, and plan content persistence.",
+              "keyFiles": [
+                "src/engines/SessionCore/services/PlanExecutionService.ts",
+                "src/engines/SessionCore/derived/planContentPersistence.ts",
+                "src/engines/ChatPanel/blocks/CreatePlanCard/index.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:session-replay",
+          "name": "Session Replay",
+          "description": "Replay past sessions as time-sequenced visualizations in the Simulator engine with playback controls, event filtering, and multi-session grid views.",
+          "steps": [
+            {
+              "id": "step:session-replay:simulator-engine",
+              "name": "Simulator Engine",
+              "description": "Core replay runtime: event indexing, time-based navigation, playback speed control, autoplay behavior, and follow-mode across subagents.",
+              "keyFiles": [
+                "src/engines/Simulator/ActivitySimulator.tsx",
+                "src/engines/Simulator/hooks/useGlobalReplay.ts",
+                "src/engines/Simulator/hooks/useCellReplayState.ts"
+              ]
+            },
+            {
+              "id": "step:session-replay:grid-layout",
+              "name": "Grid Layout",
+              "description": "Multi-cell grid displaying parallel subagent activity with dock controls, file tabs, caption bar, and status bar.",
+              "keyFiles": [
+                "src/engines/Simulator/ActivitySimulatorGrid.tsx",
+                "src/engines/Simulator/hooks/useGridLayout.ts",
+                "src/engines/Simulator/components/GridCell/index.ts"
+              ]
+            },
+            {
+              "id": "step:session-replay:event-routing",
+              "name": "Event Routing",
+              "description": "Route events to dock panels (chat, editor, terminal, browser) and filter by type, visibility, and subagent membership.",
+              "keyFiles": [
+                "src/engines/Simulator/utils/simulatorEventRouting.ts",
+                "src/engines/Simulator/utils/eventToDockMapping.ts",
+                "src/engines/SessionCore/derived/simulatorEventFilters.ts"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "domain:agent-organization",
+      "name": "Agent Organization",
+      "description": "Multi-agent orchestration: defining agent teams (orgs), running coordinated org executions with task graphs, inter-agent messaging, member interventions, and automation workflows.",
+      "flows": [
+        {
+          "id": "flow:agent-definition",
+          "name": "Agent Definition",
+          "description": "Define, configure, and manage agent definitions (built-in, CLI, custom) with models, tools, rules, skills, MCP servers, and runtime limits.",
+          "steps": [
+            {
+              "id": "step:agent-definition:manage-agents",
+              "name": "Manage Agent Definitions",
+              "description": "CRUD for agent definitions: built-in SDE/OS agents, CLI agents (Cursor, Claude Code, Codex), and custom agents with personality, sub-agents, and tool configuration.",
+              "keyFiles": [
+                "src/modules/MainApp/AgentOrgs/hooks/useAgentDefinitions.ts",
+                "src/modules/MainApp/AgentOrgs/components/CustomAgentDetailView.tsx",
+                "src/modules/MainApp/AgentOrgs/components/CliAgentDetailView.tsx"
+              ]
+            },
+            {
+              "id": "step:agent-definition:configure-agent-tools",
+              "name": "Configure Agent Tools",
+              "description": "Assign built-in tools, MCP servers, skills, skillsets, and workspace settings to agents; manage tool matrices and safety policies.",
+              "keyFiles": [
+                "src/modules/MainApp/AgentOrgs/config/customAgent/CustomAgentToolsSection.tsx",
+                "src/modules/MainApp/AgentOrgs/config/mcp/AgentMcpSection.tsx",
+                "src/modules/MainApp/AgentOrgs/config/skills/AgentSkillsSection.tsx"
+              ]
+            },
+            {
+              "id": "step:agent-definition:configure-agent-models",
+              "name": "Configure Agent Models",
+              "description": "Select primary/fallback models, set runtime limits (turns, tokens, time), and configure reliability/retry behavior per agent.",
+              "keyFiles": [
+                "src/modules/MainApp/AgentOrgs/config/shared/AgentModelsSection.tsx",
+                "src/modules/MainApp/AgentOrgs/config/shared/AgentRuntimeLimitsSection.tsx",
+                "src-tauri/crates/agent-core/src/core/config/reliability.rs"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:org-execution",
+          "name": "Org Execution",
+          "description": "Run multi-agent organizations: task decomposition, dependency graphs, atomic claim-based task assignment, inter-agent messaging, and coordinated shutdown.",
+          "steps": [
+            {
+              "id": "step:org-execution:create-org-run",
+              "name": "Create Org Run",
+              "description": "Initialize an Agent Org run with entry mode, parent session, and worker session discovery; track lifecycle (Running/Paused/Completed/Failed/Cancelled).",
+              "keyFiles": [
+                "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+                "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+                "src/api/tauri/rpc/procedures/agentOrgs.ts"
+              ]
+            },
+            {
+              "id": "step:org-execution:task-management",
+              "name": "Task Management",
+              "description": "Create tasks with dependency graphs (cycle detection, blocker resolution), atomic try_claim for worker assignment, and status tracking (Pending/InProgress/Completed).",
+              "keyFiles": [
+                "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+                "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/graph.rs",
+                "src/api/tauri/agent/orgTasks.ts"
+              ]
+            },
+            {
+              "id": "step:org-execution:agent-messaging",
+              "name": "Agent Messaging",
+              "description": "Typed inter-agent inbox with message kinds (Plain, ShutdownRequest, PlanApproval, TaskAssigned, MemberTerminated) and SQLite-backed persistence.",
+              "keyFiles": [
+                "src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+                "src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs"
+              ]
+            },
+            {
+              "id": "step:org-execution:user-intervention",
+              "name": "User Intervention",
+              "description": "Pause inbox drain for direct user-agent conversation, TTL-based auto-resume, and group-chat UI for observing multi-agent collaboration.",
+              "keyFiles": [
+                "src/engines/ChatPanel/InputArea/components/AgentOrgInterventionPinBar.tsx",
+                "src/engines/ChatPanel/hooks/useAgentOrgGroupChatController.ts",
+                "src/engines/ChatPanel/ChatHistory/GroupChatView/index.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:automation-workflow",
+          "name": "Automation Workflow",
+          "description": "Visual workflow editor for defining automated agent sequences with branching, actions, and scheduled triggers.",
+          "steps": [
+            {
+              "id": "step:automation-workflow:workflow-editor",
+              "name": "Workflow Editor",
+              "description": "Drag-and-drop visual editor for creating automation workflows with action nodes, branch labels, end blocks, and collapsible sections.",
+              "keyFiles": [
+                "src/modules/MainApp/AgentOrgs/components/WorkflowEditorContent/index.tsx",
+                "src/modules/MainApp/AgentOrgs/components/WorkflowNodeItem/index.tsx",
+                "src/modules/MainApp/AgentOrgs/hooks/useWorkflowActions.ts"
+              ]
+            },
+            {
+              "id": "step:automation-workflow:org-chart",
+              "name": "Org Chart",
+              "description": "Visual org chart showing agent hierarchy, roles, and relationships within an Agent Organization.",
+              "keyFiles": [
+                "src/modules/MainApp/AgentOrgs/components/org/OrgChart.tsx",
+                "src/modules/MainApp/AgentOrgs/components/org/OrgNodeCard.tsx",
+                "src/modules/MainApp/AgentOrgs/hooks/useAgentOrgs.ts"
+              ]
+            },
+            {
+              "id": "step:automation-workflow:routine-scheduling",
+              "name": "Routine Scheduling",
+              "description": "Background scheduler polling cron/one-time triggers with catch-up policy and idempotency keys to prevent double-firing.",
+              "keyFiles": [
+                "src-tauri/crates/agent-core/src/core/coordination/routine_scheduler.rs",
+                "src/modules/MainApp/Integrations/Routines/Table/RoutinesTable.tsx"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "domain:project-management",
+      "name": "Project Management",
+      "description": "Issue tracking and project orchestration: work items with status/priority/assignee, kanban boards, Gantt charts, calendar views, git-synced projects, Linear integration, and agent-driven work item execution.",
+      "flows": [
+        {
+          "id": "flow:work-item-lifecycle",
+          "name": "Work Item Lifecycle",
+          "description": "Create, assign, schedule, execute, and review work items with agent orchestration, automated PR creation, and review workflows.",
+          "steps": [
+            {
+              "id": "step:work-item-lifecycle:create-work-item",
+              "name": "Create Work Item",
+              "description": "Create work items with title, description, status, priority, labels, assignee, due dates, milestones, and delegation configuration.",
+              "keyFiles": [
+                "src/modules/ProjectManager/WorkItems/components/CreateWorkItemView/index.tsx",
+                "src/modules/ProjectManager/WorkItems/components/CreateWorkItemView/createWorkItemFromDraft.ts",
+                "src/api/http/project/types/workItems.ts"
+              ]
+            },
+            {
+              "id": "step:work-item-lifecycle:agent-workflow-execution",
+              "name": "Agent Workflow Execution",
+              "description": "Orchestrate work items through agent phases (coding, SDE, review, follow-up) with linked sessions, file changes, test results, and PR status tracking.",
+              "keyFiles": [
+                "src/modules/ProjectManager/WorkItems/components/AgentWorkflow/index.tsx",
+                "src/api/http/project/types/agentWorkflow.ts",
+                "src/modules/ProjectManager/WorkItems/hooks/useWorkItemOrchestrator/useWorkItemOrchestrator.ts"
+              ]
+            },
+            {
+              "id": "step:work-item-lifecycle:work-item-properties",
+              "name": "Manage Work Item Properties",
+              "description": "Edit status, priority, assignees, reviewers, dates, labels, planning estimates, and delegations via property panels and context menus.",
+              "keyFiles": [
+                "src/modules/ProjectManager/WorkItems/components/WorkItemProperties/index.tsx",
+                "src/modules/ProjectManager/WorkItems/components/WorkItemContextMenu/index.tsx",
+                "src/modules/ProjectManager/WorkItems/hooks/useWorkItemActions.ts"
+              ]
+            },
+            {
+              "id": "step:work-item-lifecycle:auto-review",
+              "name": "Auto Review",
+              "description": "Detect stale sessions, trigger automated code review, and manage reviewer configuration for agent-produced work.",
+              "keyFiles": [
+                "src/modules/ProjectManager/WorkItems/hooks/useWorkItemOrchestrator/useAutoReview.ts",
+                "src/modules/ProjectManager/WorkItems/hooks/useWorkItemOrchestrator/useStaleSessionDetection.ts",
+                "src/modules/ProjectManager/WorkItems/components/ReviewerConfigSection/index.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:project-views",
+          "name": "Project Views",
+          "description": "Multiple visualization modes for project data: kanban boards, list views, Gantt charts, calendar, and task replay timelines.",
+          "steps": [
+            {
+              "id": "step:project-views:kanban-board",
+              "name": "Kanban Board",
+              "description": "Drag-and-drop kanban with columns by status, task cards with priority/impact indicators, and filtering by labels/assignees.",
+              "keyFiles": [
+                "src/features/KanbanBoard/index.tsx",
+                "src/features/TaskKanban/index.tsx",
+                "src/features/TaskKanban/hooks/useKanbanTasks.ts"
+              ]
+            },
+            {
+              "id": "step:project-views:gantt-chart",
+              "name": "Gantt Chart",
+              "description": "Timeline visualization with task bars, dependency lines, milestones, zoom levels, and drag-to-reschedule.",
+              "keyFiles": [
+                "src/features/GanttChart/index.tsx",
+                "src/features/GanttChart/hooks/useGanttDrag.ts",
+                "src/features/GanttChart/components/DependencyLines/index.tsx"
+              ]
+            },
+            {
+              "id": "step:project-views:calendar-view",
+              "name": "Calendar View",
+              "description": "Day/week/month calendar showing work item events with spanning event cards and navigation controls.",
+              "keyFiles": [
+                "src/features/CalendarView/index.tsx",
+                "src/features/CalendarView/hooks/useCalendarEvents.ts",
+                "src/features/CalendarView/components/MonthView/index.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:project-sync",
+          "name": "Project Sync",
+          "description": "Synchronize project data across local storage, git-based project records, hosted API, and external integrations (Linear).",
+          "steps": [
+            {
+              "id": "step:project-sync:git-sync",
+              "name": "Git Sync",
+              "description": "Persist project records as files in the repository, sync changes bidirectionally, and review git-synced modifications.",
+              "keyFiles": [
+                "src/api/http/project/sync.ts",
+                "src/modules/ProjectManager/ProjectManagerLayout/components/ProjectGitSyncReviewContent.tsx",
+                "src-tauri/crates/project-management/src/lib.rs"
+              ]
+            },
+            {
+              "id": "step:project-sync:linear-integration",
+              "name": "Linear Integration",
+              "description": "Import Linear projects and issues, map workflow states, sync bidirectionally, and manage Linear-specific settings.",
+              "keyFiles": [
+                "src/modules/ProjectManager/LinearProjects/index.tsx",
+                "src/modules/ProjectManager/LinearProjects/useLinearProjectsData.ts",
+                "src/api/http/integrations/linearProjects.ts"
+              ]
+            },
+            {
+              "id": "step:project-sync:team-collaboration",
+              "name": "Team Collaboration",
+              "description": "Real-time project collaboration via Supabase sync, team member management, and org-level project settings.",
+              "keyFiles": [
+                "src/features/TeamCollaboration/sync/supabaseSyncClient.ts",
+                "src/features/TeamCollaboration/useCollaborationMetadataSync.ts",
+                "src/modules/ProjectManager/ProjectManagerLayout/components/ProjectOrgSettingsPane.tsx"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "domain:developer-workstation",
+      "name": "Developer Workstation",
+      "description": "IDE-like workspace environment: code editor with syntax highlighting, integrated terminal, embedded browser, file explorer, git source control, search, and diagnostic panels.",
+      "flows": [
+        {
+          "id": "flow:code-editing",
+          "name": "Code Editing",
+          "description": "CodeMirror-based editor with syntax highlighting, git blame, diff viewer, conflict resolution, minimap, and agent-driven file changes.",
+          "steps": [
+            {
+              "id": "step:code-editing:editor-core",
+              "name": "Editor Core",
+              "description": "CodeMirror editor with language extensions, custom linter integration (ESLint, LSP), copy-file-ref extension, and large file handling.",
+              "keyFiles": [
+                "src/features/CodeMirror/Editor/index.tsx",
+                "src/features/CodeMirror/Editor/hooks/useEditorExtensions.ts",
+                "src/features/CodeMirror/Editor/extensions/linter/index.ts"
+              ]
+            },
+            {
+              "id": "step:code-editing:diff-viewer",
+              "name": "Diff Viewer",
+              "description": "Unified and split diff views with syntax highlighting, cherry-pick selection, progressive rendering, and GitHub-style diff display.",
+              "keyFiles": [
+                "src/features/CodeViewer/index.tsx",
+                "src/features/CodeViewer/ModernSplitDiff.tsx",
+                "src/features/CodeMirror/Diff/index.tsx"
+              ]
+            },
+            {
+              "id": "step:code-editing:file-management",
+              "name": "File Management",
+              "description": "File tree explorer with multi-root support, inline rename, context menus, drag-drop, and file content caching with mtime tracking.",
+              "keyFiles": [
+                "src/components/FileTreeContent/index.tsx",
+                "src/hooks/workStation/useCodeEditor/useFileTree.ts",
+                "src/hooks/workStation/fileContent/index.ts"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:terminal-management",
+          "name": "Terminal Management",
+          "description": "Integrated terminal with PTY process management, shell integration, multiple sessions, and agent-driven command execution.",
+          "steps": [
+            {
+              "id": "step:terminal-management:terminal-core",
+              "name": "Terminal Core",
+              "description": "xterm.js-based interactive terminal with PTY lifecycle, resize handlers, theme integration, and shell detection.",
+              "keyFiles": [
+                "src/components/TerminalInteractive/index.tsx",
+                "src/components/TerminalInteractive/terminalPty.ts",
+                "src/components/TerminalInteractive/terminalLifecycle.ts"
+              ]
+            },
+            {
+              "id": "step:terminal-management:shell-integration",
+              "name": "Shell Integration",
+              "description": "Shell integration addon for command detection, process reconciliation, output formatting, and file link resolution.",
+              "keyFiles": [
+                "src/engines/TerminalCore/addons/ShellIntegrationAddon.ts",
+                "src/hooks/terminal/useProcessReconciliation.ts",
+                "src/components/TerminalInteractive/utils/shellOutputFormat.ts"
+              ]
+            },
+            {
+              "id": "step:terminal-management:output-channels",
+              "name": "Output Channels",
+              "description": "Structured output channels for git operations, task runners, and file watcher integrations with formatted display.",
+              "keyFiles": [
+                "src/hooks/workStation/output/useOutputChannels.ts",
+                "src/hooks/workStation/useGitOutputIntegration/useGitOutputIntegration.ts",
+                "src/hooks/workStation/output/useTaskOutputIntegration.ts"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:git-source-control",
+          "name": "Git Source Control",
+          "description": "Full git workflow: staging, committing, branching, merging, rebasing, stashing, push/pull, conflict resolution, and PR management.",
+          "steps": [
+            {
+              "id": "step:git-source-control:staging-and-commit",
+              "name": "Staging and Commit",
+              "description": "Stage files, compose commit messages (with AI generation), commit changes, and manage the commit form state.",
+              "keyFiles": [
+                "src/hooks/git/sourceControl/useCommitForm.ts",
+                "src/hooks/git/sourceControl/commitMessageGeneration.ts",
+                "src/api/http/git/staging.ts"
+              ]
+            },
+            {
+              "id": "step:git-source-control:branch-operations",
+              "name": "Branch Operations",
+              "description": "Create, checkout, delete, and merge branches; handle detached HEAD, protected branch dialogs, and remote branch sync.",
+              "keyFiles": [
+                "src/api/http/git/branches.ts",
+                "src/api/http/git/branchOps.ts",
+                "src/components/GitDialogs/index.ts"
+              ]
+            },
+            {
+              "id": "step:git-source-control:git-status-monitoring",
+              "name": "Git Status Monitoring",
+              "description": "Real-time git status via WebSocket events, file watcher registration, multi-repo status context, and auto-fetch.",
+              "keyFiles": [
+                "src/contexts/git/GitStatusContext/GitStatusProvider.tsx",
+                "src/contexts/git/GitStatusContext/hooks/useGitEventListeners.ts",
+                "src/hooks/git/useGitAutoFetch.ts"
+              ]
+            },
+            {
+              "id": "step:git-source-control:blame-and-history",
+              "name": "Blame and History",
+              "description": "Git blame annotations, file history timeline, commit dot graph, and contributor statistics.",
+              "keyFiles": [
+                "src/api/http/git/blame.ts",
+                "src/hooks/git/useGitBlame.ts",
+                "src/hooks/git/useFileHistory.ts",
+                "src/modules/MainApp/DevRecord/views/GitDashboardView/index.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:search-and-navigation",
+          "name": "Search and Navigation",
+          "description": "Code search (regex, semantic, symbol), code map exploration, spotlight navigation, and file indexing.",
+          "steps": [
+            {
+              "id": "step:search-and-navigation:code-search",
+              "name": "Code Search",
+              "description": "Regex search, semantic search, and symbol search across the workspace with ignore pattern filtering and merkle-based incremental indexing.",
+              "keyFiles": [
+                "src/api/tauri/search/regex.ts",
+                "src/api/tauri/search/semantic.ts",
+                "src/api/tauri/search/symbol.ts",
+                "src/hooks/workStation/search/useCodeSearch.ts"
+              ]
+            },
+            {
+              "id": "step:search-and-navigation:code-map",
+              "name": "Code Map",
+              "description": "Workspace-level code map with node details, relationship exploration, and search panel for navigating codebase structure.",
+              "keyFiles": [
+                "src/api/tauri/codeMap.ts",
+                "src/modules/shared/launchpad/components/CodeMapExplorePanel.tsx",
+                "src/hooks/codeMap/useCodeMapQueries.ts"
+              ]
+            },
+            {
+              "id": "step:search-and-navigation:auto-indexing",
+              "name": "Auto Indexing",
+              "description": "Background file indexing with file watcher integration, incremental updates, and workspace status tracking.",
+              "keyFiles": [
+                "src/hooks/workStation/indexing/useAutoIndexing.ts",
+                "src/hooks/workStation/indexing/useFileWatchIndexing.ts",
+                "src/components/System/AutoIndexingProvider.tsx"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:embedded-browser",
+          "name": "Embedded Browser",
+          "description": "Built-in browser for web previews, OAuth capture, and agent browser automation within the workstation.",
+          "steps": [
+            {
+              "id": "step:embedded-browser:browser-sessions",
+              "name": "Browser Sessions",
+              "description": "Manage browser pane sessions with URL navigation, webview lifecycle, native frame anchoring, and new-window handling.",
+              "keyFiles": [
+                "src/engines/BrowserCore/index.tsx",
+                "src/engines/BrowserCore/hooks/useBrowserState.ts",
+                "src/hooks/workStation/browser/useBrowserSessions.ts"
+              ]
+            },
+            {
+              "id": "step:embedded-browser:oauth-capture",
+              "name": "OAuth Capture",
+              "description": "Capture OAuth tokens from embedded webviews for CLI agent authentication (Claude Code, Codex, Cursor, Gemini, Kiro).",
+              "keyFiles": [
+                "src/hooks/workStation/sessionCapture/useOAuthCapture.ts",
+                "src/hooks/workStation/sessionCapture/useClaudeCodeOAuthCapture.ts",
+                "src/hooks/workStation/sessionCapture/useCursorSessionCapture.ts"
+              ]
+            },
+            {
+              "id": "step:embedded-browser:browser-automation",
+              "name": "Browser Automation",
+              "description": "Agent-driven browser automation with context adaptation, URL input, and session-level webview management.",
+              "keyFiles": [
+                "src/engines/BrowserCore/hooks/useBrowserAutomation.ts",
+                "src/engines/BrowserCore/BrowserSessionWebview.tsx",
+                "src-tauri/crates/browser/src/lib.rs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "domain:platform-infrastructure",
+      "name": "Platform Infrastructure",
+      "description": "Cross-cutting platform services: authentication, API key management, model catalog, MCP server management, skills, settings, integrations, database connections, containers, and application lifecycle.",
+      "flows": [
+        {
+          "id": "flow:auth-and-keys",
+          "name": "Authentication and Key Vault",
+          "description": "User authentication via Supabase, API key storage and validation, model account management, and hosted service key provisioning.",
+          "steps": [
+            {
+              "id": "step:auth-and-keys:user-auth",
+              "name": "User Authentication",
+              "description": "Login/logout via Supabase auth, token refresh, auth guards for routes, and session expiration handling.",
+              "keyFiles": [
+                "src/api/http/auth/login.ts",
+                "src/api/http/auth/supabase.ts",
+                "src/router/guards/AuthGuard.tsx",
+                "src/api/http/client/tokenRefresh.ts"
+              ]
+            },
+            {
+              "id": "step:auth-and-keys:key-vault",
+              "name": "Key Vault Management",
+              "description": "Store and validate API keys for multiple providers, manage accounts with enabled models, and display key status with reference pricing.",
+              "keyFiles": [
+                "src/hooks/keyVault/useKeyVault.ts",
+                "src/hooks/keyVault/useKeyValidation.ts",
+                "src/modules/MainApp/Integrations/KeyVault/AccountCategoryView.tsx",
+                "src-tauri/crates/key-vault/src/lib.rs"
+              ]
+            },
+            {
+              "id": "step:auth-and-keys:model-catalog",
+              "name": "Model Catalog",
+              "description": "Unified model catalog with alias registry, pair compatibility checks, provider-specific capabilities, and model wiki.",
+              "keyFiles": [
+                "src/hooks/models/useModelCatalog.ts",
+                "src/hooks/models/modelAliasRegistry.ts",
+                "src/hooks/models/modelPairCompatibility.ts",
+                "src/modules/MainApp/Integrations/KeyVault/ModelWiki/modelWikiData.ts"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:integrations-hub",
+          "name": "Integrations Hub",
+          "description": "Central management for MCP servers, skills, built-in tools, external connections, databases, language servers, and dev tools.",
+          "steps": [
+            {
+              "id": "step:integrations-hub:mcp-servers",
+              "name": "MCP Servers",
+              "description": "Install, configure, enable/disable MCP servers with inline expanded cards, detail views, and external import from CLI agent configs.",
+              "keyFiles": [
+                "src/modules/MainApp/Integrations/Mcp/McpCategoryView.tsx",
+                "src/modules/MainApp/Integrations/Mcp/Table/McpTable.tsx",
+                "src/modules/MainApp/Integrations/hooks/useMcpHandlers.ts"
+              ]
+            },
+            {
+              "id": "step:integrations-hub:skills-management",
+              "name": "Skills Management",
+              "description": "Browse, install, edit, and manage agent skills with the skills hub, skill editor, and external import from Cursor plugins.",
+              "keyFiles": [
+                "src/modules/MainApp/Integrations/Skills/SkillsCategoryView.tsx",
+                "src/hooks/skills/useSkillsHub.ts",
+                "src/hooks/skills/useSkillEditor.ts"
+              ]
+            },
+            {
+              "id": "step:integrations-hub:rules-memory-evolution",
+              "name": "Rules, Memory, and Evolution",
+              "description": "Agent rules (markdown, automation), workspace memory browser, and agent learning/evolution tracking.",
+              "keyFiles": [
+                "src/modules/MainApp/Integrations/RulesMemoryEvolution/RulesMemoryEvolutionCategoryView.tsx",
+                "src/modules/MainApp/Integrations/RulesMemoryEvolution/Memory/WorkspaceMemoryBrowser.tsx",
+                "src/modules/MainApp/Integrations/RulesMemoryEvolution/Evolution/AgentEvolutionPanel.tsx"
+              ]
+            },
+            {
+              "id": "step:integrations-hub:database-connections",
+              "name": "Database Connections",
+              "description": "Configure and connect to databases (SQLite, Supabase, Turso, Neon, Postgres, MySQL) with SQL editor and query history.",
+              "keyFiles": [
+                "src/modules/MainApp/Integrations/Databases/DatabasesCategoryView.tsx",
+                "src/engines/DatabaseCore/factory.ts",
+                "src/features/CodeMirror/SqlEditor/index.tsx"
+              ]
+            },
+            {
+              "id": "step:integrations-hub:external-connections",
+              "name": "External Connections",
+              "description": "Manage external service connections, channels with gateway agents, and sync connections (GitHub, Linear).",
+              "keyFiles": [
+                "src/modules/MainApp/Integrations/Connections/ConnectionsCategoryView.tsx",
+                "src/modules/MainApp/Integrations/Connections/Channels/index.ts",
+                "src/api/http/integrations/syncConnections.ts"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:settings-and-appearance",
+          "name": "Settings and Appearance",
+          "description": "Application settings with JSON schema-driven UI, theme customization, background images, keyboard shortcuts, and notification preferences.",
+          "steps": [
+            {
+              "id": "step:settings-and-appearance:settings-ui",
+              "name": "Settings UI",
+              "description": "Schema-driven settings renderer with sections, fields, slots, and parity enforcement between schema and UI manifest.",
+              "keyFiles": [
+                "src/modules/MainApp/Settings/renderer/SettingsFieldRenderer.tsx",
+                "src/config/settingsSchema/index.ts",
+                "src/config/settingsUiManifest/index.ts"
+              ]
+            },
+            {
+              "id": "step:settings-and-appearance:theme-and-appearance",
+              "name": "Theme and Appearance",
+              "description": "Global themes, primary colors, background images with luminance sampling, glass material effects, and edge reflection.",
+              "keyFiles": [
+                "src/config/appearance/globalThemes.ts",
+                "src/hooks/theme/useBackgroundImage.ts",
+                "src/hooks/theme/useGlassMaterial.ts"
+              ]
+            },
+            {
+              "id": "step:settings-and-appearance:keyboard-shortcuts",
+              "name": "Keyboard Shortcuts",
+              "description": "Configurable keyboard shortcut registry with category-based organization, display formatting, and global shortcut handlers.",
+              "keyFiles": [
+                "src/config/keyboard/ShortcutRegistry.ts",
+                "src/modules/MainApp/Settings/sections/ShortcutsSection/index.tsx",
+                "src/hooks/navigation/useGlobalShortcuts/useGlobalShortcuts.ts"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "flow:app-lifecycle",
+          "name": "Application Lifecycle",
+          "description": "App bootstrap, repo selection, setup walkthrough, deep links, updates, diagnostics, and cross-window synchronization.",
+          "steps": [
+            {
+              "id": "step:app-lifecycle:bootstrap",
+              "name": "App Bootstrap",
+              "description": "Application initialization: providers setup, deferred services, first paint signal, shell effects, and E2E bootstrap mode.",
+              "keyFiles": [
+                "src/app/root/AppBootstrap.tsx",
+                "src/app/root/AppProviders.tsx",
+                "src/app/root/useAppDeferredInitialization.ts"
+              ]
+            },
+            {
+              "id": "step:app-lifecycle:setup-walkthrough",
+              "name": "Setup Walkthrough",
+              "description": "First-run onboarding wizard with steps for welcome, repo selection, GitHub connection, theme selection, dev passport, and completion.",
+              "keyFiles": [
+                "src/modules/SetupWalkthrough/index.tsx",
+                "src/modules/SetupWalkthrough/config.tsx",
+                "src/modules/SetupWalkthrough/steps/index.ts"
+              ]
+            },
+            {
+              "id": "step:app-lifecycle:repo-workspace",
+              "name": "Repo and Workspace Management",
+              "description": "Repository selection, workspace binding, multi-repo support, container engines, and environment scanning.",
+              "keyFiles": [
+                "src/modules/MainApp/SelectRepo/index.tsx",
+                "src/hooks/git/useRepoSelection/useRepoSelection.ts",
+                "src/modules/shared/launchpad/hooks/useRepoSetup.ts"
+              ]
+            },
+            {
+              "id": "step:app-lifecycle:diagnostics",
+              "name": "Diagnostics and Monitoring",
+              "description": "Runtime diagnostics, RAM history tracking, network monitoring, LSP diagnostics, and system dependency checks.",
+              "keyFiles": [
+                "src/diagnostics/index.ts",
+                "src/hooks/perf/useRamHistory.ts",
+                "src/hooks/workStation/diagnostics/useDiagnostics.ts"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "projectName": "ORG2",
+    "projectType": "Tauri Desktop Application (TypeScript/React + Rust)",
+    "generatedAt": "2026-06-23",
+    "domainCount": 5,
+    "flowCount": 19,
+    "stepCount": 67,
+    "domainNames": [
+      "Agent Session",
+      "Agent Organization",
+      "Project Management",
+      "Developer Workstation",
+      "Platform Infrastructure"
+    ]
+  }
+}

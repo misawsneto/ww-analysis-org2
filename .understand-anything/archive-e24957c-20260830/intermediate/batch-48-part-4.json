@@ -1,0 +1,1454 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "type": "file",
+      "name": "capture.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "summary": "Snapshot-creation and per-file capture logic for the per-session file-history system: reads current file bytes, hashes and backs them up, and records the capture in a session's FileSnapshot manifest.",
+      "tags": [
+        "snapshot",
+        "file-io",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:capture_file",
+      "type": "function",
+      "name": "capture_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "lineRange": [
+        16,
+        58
+      ],
+      "summary": "Captures a single file's current bytes into the content-addressed backup pool, returning a FileBackup record (or an untrackable marker if the file doesn't exist or isn't a regular file).",
+      "tags": [
+        "snapshot",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "type": "function",
+      "name": "make_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "lineRange": [
+        63,
+        72
+      ],
+      "summary": "Creates and persists a new, empty FileSnapshot manifest for a session with a fresh snapshot id and timestamp.",
+      "tags": [
+        "snapshot",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_tool_snapshot",
+      "type": "function",
+      "name": "make_tool_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "lineRange": [
+        80,
+        93
+      ],
+      "summary": "Creates a snapshot and immediately captures a batch of files into it in one call, used by tool-call-scoped edits.",
+      "tags": [
+        "snapshot",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "type": "function",
+      "name": "track_edit_from_bytes",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "lineRange": [
+        101,
+        132
+      ],
+      "summary": "Captures a file's pre-edit backup from an in-memory byte buffer (rather than re-reading disk) and records it in the given snapshot.",
+      "tags": [
+        "snapshot",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_new_file",
+      "type": "function",
+      "name": "track_new_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "lineRange": [
+        140,
+        158
+      ],
+      "summary": "Records that a file is newly created in this snapshot (an 'untrackable' backup marker so rewind knows to delete it on restore).",
+      "tags": [
+        "snapshot",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "type": "function",
+      "name": "track_edit",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "lineRange": [
+        164,
+        175
+      ],
+      "summary": "Captures a file's current on-disk bytes as its pre-edit backup and records it into the given snapshot before an edit tool mutates it.",
+      "tags": [
+        "snapshot",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "type": "file",
+      "name": "cleanup.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "summary": "Eviction, blob garbage-collection, orphan-session pruning, and TTL-based pruning for the file-history storage: keeps per-session manifest/backup counts and disk footprint bounded.",
+      "tags": [
+        "cleanup",
+        "garbage-collection",
+        "persistence"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:remove_session",
+      "type": "function",
+      "name": "remove_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        17,
+        23
+      ],
+      "summary": "Deletes an entire session's file-history directory (backups + snapshots).",
+      "tags": [
+        "cleanup",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_orphan_sessions",
+      "type": "function",
+      "name": "prune_orphan_sessions",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        27,
+        57
+      ],
+      "summary": "Deletes file-history directories for sessions that no longer exist in the live session set.",
+      "tags": [
+        "cleanup",
+        "garbage-collection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:evict_old_manifests_for_session",
+      "type": "function",
+      "name": "evict_old_manifests_for_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        67,
+        116
+      ],
+      "summary": "Evicts the oldest snapshot manifests/DB rows for a session once it exceeds MAX_SNAPSHOTS_PER_SESSION, then runs blob GC.",
+      "tags": [
+        "cleanup",
+        "eviction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:discard_tool_call_snapshots",
+      "type": "function",
+      "name": "discard_tool_call_snapshots",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        121,
+        151
+      ],
+      "summary": "Deletes all snapshots associated with a specific tool_call_id (used to discard a rejected/aborted tool call's captured state) and runs blob GC.",
+      "tags": [
+        "cleanup",
+        "garbage-collection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:gc_unreferenced_blobs",
+      "type": "function",
+      "name": "gc_unreferenced_blobs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        153,
+        204
+      ],
+      "summary": "Scans a session's backup pool and deletes content-addressed blob files no longer referenced by any remaining snapshot manifest.",
+      "tags": [
+        "garbage-collection",
+        "file-io"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:enforce_session_cap_after_save",
+      "type": "function",
+      "name": "enforce_session_cap_after_save",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        210,
+        219
+      ],
+      "summary": "Convenience wrapper that runs evict_old_manifests_for_session after a new snapshot is saved, ignoring eviction errors.",
+      "tags": [
+        "cleanup",
+        "policy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_old_file_history",
+      "type": "function",
+      "name": "prune_old_file_history",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "lineRange": [
+        228,
+        289
+      ],
+      "summary": "Sweeps every session directory and removes sessions whose newest snapshot is older than max_age_days (TTL-based pruning), returning aggregate stats.",
+      "tags": [
+        "cleanup",
+        "ttl",
+        "garbage-collection"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "type": "file",
+      "name": "debug_seed.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "summary": "Debug-only synthetic seed helpers (gated on debug_assertions) exposed via /agent/test/housekeeping/* endpoints, letting housekeeping E2E tests deterministically populate manifests, DB rows, and aged session directories without exercising the real capture path.",
+      "tags": [
+        "test-utility",
+        "debug",
+        "seed-data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs:debug_seed_manifests",
+      "type": "function",
+      "name": "debug_seed_manifests",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "lineRange": [
+        36,
+        94
+      ],
+      "summary": "Synthetically creates a batch of snapshot manifests (and matching DB rows) for a session with configurable creation-time offsets, for deterministic housekeeping tests.",
+      "tags": [
+        "test-utility",
+        "seed-data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs:debug_seed_aged_session",
+      "type": "function",
+      "name": "debug_seed_aged_session",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "lineRange": [
+        104,
+        131
+      ],
+      "summary": "Synthetically creates a session whose newest snapshot is artificially aged by age_days, for TTL-pruning test coverage.",
+      "tags": [
+        "test-utility",
+        "seed-data"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "type": "file",
+      "name": "inspect.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "summary": "Diff and change-detection helpers that compare captured snapshots against current on-disk state (unified diff, numstat, has-changes checks) \u2014 pure read side of the file-history system.",
+      "tags": [
+        "diff",
+        "inspection",
+        "read-only"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:has_any_changes",
+      "type": "function",
+      "name": "has_any_changes",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        21,
+        29
+      ],
+      "summary": "Reports whether a snapshot recorded any file changes at all.",
+      "tags": [
+        "diff",
+        "inspection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:rewind_snapshot_ids",
+      "type": "function",
+      "name": "rewind_snapshot_ids",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        31,
+        91
+      ],
+      "summary": "Computes the ordered set of snapshot ids that would be rewound to reach a target created-at timestamp.",
+      "tags": [
+        "diff",
+        "rewind"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:has_changes_after_message",
+      "type": "function",
+      "name": "has_changes_after_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        97,
+        104
+      ],
+      "summary": "Reports whether any snapshot exists after a given message timestamp for a session.",
+      "tags": [
+        "diff",
+        "inspection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:session_unified_diff",
+      "type": "function",
+      "name": "session_unified_diff",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        114,
+        240
+      ],
+      "summary": "Builds a unified diff string across all tracked file changes in a session, comparing each backup against the current on-disk content.",
+      "tags": [
+        "diff",
+        "formatting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:session_numstat",
+      "type": "function",
+      "name": "session_numstat",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        248,
+        346
+      ],
+      "summary": "Computes per-file added/removed line counts (git numstat style) across all tracked changes in a session.",
+      "tags": [
+        "diff",
+        "statistics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:get_diff_stats",
+      "type": "function",
+      "name": "get_diff_stats",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        349,
+        372
+      ],
+      "summary": "Returns aggregate DiffStats (files changed/added/deleted) for a specific snapshot.",
+      "tags": [
+        "diff",
+        "statistics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:file_differs",
+      "type": "function",
+      "name": "file_differs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "lineRange": [
+        374,
+        391
+      ],
+      "summary": "Compares a FileBackup's recorded hash against the current on-disk file content to determine if it changed.",
+      "tags": [
+        "diff",
+        "comparison"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "summary": "Module root of the per-session file-copy snapshot system that replaced the legacy per-project shadow-git snapshot (which caused multi-session data loss); re-exports the public capture/inspect/rewind/cleanup API from its submodules and hosts the module's integration tests.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "snapshot-system"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "type": "file",
+      "name": "paths.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "summary": "Path helpers and manifest JSON I/O \u2014 the shared kernel that every other file_history submodule goes through to read or write a FileSnapshot manifest and its content-addressed backup blobs under ~/.orgii/file-history/<session_id>/.",
+      "tags": [
+        "utility",
+        "file-io",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:session_root",
+      "type": "function",
+      "name": "session_root",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        14,
+        16
+      ],
+      "summary": "Builds the filesystem root path for a session's file-history directory.",
+      "tags": [
+        "utility",
+        "path-builder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backups_dir",
+      "type": "function",
+      "name": "backups_dir",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        18,
+        20
+      ],
+      "summary": "Builds the path to a session's content-addressed backups directory.",
+      "tags": [
+        "utility",
+        "path-builder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:snapshots_dir",
+      "type": "function",
+      "name": "snapshots_dir",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        22,
+        24
+      ],
+      "summary": "Builds the path to a session's snapshot manifests directory.",
+      "tags": [
+        "utility",
+        "path-builder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:snapshot_file",
+      "type": "function",
+      "name": "snapshot_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        26,
+        28
+      ],
+      "summary": "Builds the path to a specific snapshot manifest JSON file.",
+      "tags": [
+        "utility",
+        "path-builder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backup_file",
+      "type": "function",
+      "name": "backup_file",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        30,
+        32
+      ],
+      "summary": "Builds the path to a specific content-hash-addressed backup blob file.",
+      "tags": [
+        "utility",
+        "path-builder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "function",
+      "name": "ensure_dirs",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        34,
+        38
+      ],
+      "summary": "Creates a session's backups and snapshots directories if they don't already exist.",
+      "tags": [
+        "utility",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:hash_bytes",
+      "type": "function",
+      "name": "hash_bytes",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        40,
+        42
+      ],
+      "summary": "Computes the content hash used to address a backup blob.",
+      "tags": [
+        "utility",
+        "hashing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:new_snapshot_id",
+      "type": "function",
+      "name": "new_snapshot_id",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        44,
+        46
+      ],
+      "summary": "Generates a new unique snapshot id.",
+      "tags": [
+        "utility",
+        "id-generation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:now_iso",
+      "type": "function",
+      "name": "now_iso",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        48,
+        50
+      ],
+      "summary": "Returns the current timestamp in ISO 8601 format.",
+      "tags": [
+        "utility",
+        "time"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "function",
+      "name": "write_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        52,
+        58
+      ],
+      "summary": "Serializes and writes a FileSnapshot manifest to its JSON file, creating parent directories as needed.",
+      "tags": [
+        "persistence",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot",
+      "type": "function",
+      "name": "read_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        60,
+        64
+      ],
+      "summary": "Reads and deserializes a session's snapshot manifest JSON file.",
+      "tags": [
+        "persistence",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:manifest_snapshots",
+      "type": "function",
+      "name": "manifest_snapshots",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        66,
+        117
+      ],
+      "summary": "Iterates a session's snapshots directory, reading and deserializing every manifest into (id, FileSnapshot) pairs sorted appropriately for eviction/pruning.",
+      "tags": [
+        "persistence",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:list_snapshot_ids_at_or_after",
+      "type": "function",
+      "name": "list_snapshot_ids_at_or_after",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        119,
+        129
+      ],
+      "summary": "Returns the ids of all snapshots created at or after a given timestamp.",
+      "tags": [
+        "query",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:latest_snapshot_id_before",
+      "type": "function",
+      "name": "latest_snapshot_id_before",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        131,
+        140
+      ],
+      "summary": "Returns the id of the most recent snapshot created strictly before a given timestamp.",
+      "tags": [
+        "query",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot_created_at",
+      "type": "function",
+      "name": "read_snapshot_created_at",
+      "filePath": "src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "lineRange": [
+        144,
+        147
+      ],
+      "summary": "Reads just the created_at timestamp field of a snapshot manifest without deserializing backups.",
+      "tags": [
+        "query",
+        "persistence"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:capture_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:capture_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_tool_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_tool_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_new_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_new_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_tool_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_tool_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:capture_file",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:capture_file",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:hash_bytes",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:capture_file",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backup_file",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:new_snapshot_id",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:now_iso",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:make_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_new_file",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_new_file",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_new_file",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:hash_bytes",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs:track_edit_from_bytes",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backup_file",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:remove_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:remove_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_orphan_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_orphan_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:evict_old_manifests_for_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:evict_old_manifests_for_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:discard_tool_call_snapshots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:discard_tool_call_snapshots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:gc_unreferenced_blobs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:gc_unreferenced_blobs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:enforce_session_cap_after_save",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:enforce_session_cap_after_save",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_old_file_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_old_file_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:evict_old_manifests_for_session",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:gc_unreferenced_blobs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:discard_tool_call_snapshots",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:gc_unreferenced_blobs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:enforce_session_cap_after_save",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:evict_old_manifests_for_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:remove_session",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:session_root",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_orphan_sessions",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:session_root",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs:prune_old_file_history",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:session_root",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs:debug_seed_manifests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs:debug_seed_manifests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs:debug_seed_aged_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs:debug_seed_aged_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:has_any_changes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:has_any_changes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:rewind_snapshot_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:rewind_snapshot_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:has_changes_after_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:has_changes_after_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:session_unified_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:session_unified_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:session_numstat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:session_numstat",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:get_diff_stats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:get_diff_stats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:file_differs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:file_differs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:get_diff_stats",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:file_differs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:rewind_snapshot_ids",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:latest_snapshot_id_before",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs:rewind_snapshot_ids",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:list_snapshot_ids_at_or_after",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/capture.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/cleanup.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/debug_seed.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/inspect.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/rewind.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/file_history/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:session_root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backups_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:snapshots_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:snapshot_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backup_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:hash_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:new_snapshot_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:now_iso",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:manifest_snapshots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:list_snapshot_ids_at_or_after",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:latest_snapshot_id_before",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot_created_at",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:session_root",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backups_dir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:snapshots_dir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:snapshot_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:backup_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:hash_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:new_snapshot_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:now_iso",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:list_snapshot_ids_at_or_after",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:latest_snapshot_id_before",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:read_snapshot_created_at",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:write_snapshot",
+      "target": "function:src-tauri/crates/agent-core/src/core/tools/file_history/paths.rs:ensure_dirs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

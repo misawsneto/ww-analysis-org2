@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.bash",
+      "type": "file",
+      "name": "shellIntegration.bash",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.bash",
+      "summary": "Bash shell integration script loaded via --init-file that sources the user's login/rc files then installs PROMPT_COMMAND and DEBUG trap hooks to emit OSC 633 escape sequences reporting prompt starts, executed commands, exit codes, and the current working directory.",
+      "tags": ["shell-integration", "terminal", "bash", "escape-sequences", "hooks"],
+      "complexity": "moderate",
+      "languageNotes": "Uses OSC 633 (VS Code-style) escape codes and a DEBUG trap plus PROMPT_COMMAND chaining to detect command start/end boundaries without a native shell hook API."
+    },
+    {
+      "id": "file:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.ps1",
+      "type": "file",
+      "name": "shellIntegration.ps1",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.ps1",
+      "summary": "PowerShell shell integration script that wraps the existing prompt function and hooks the PSReadLine Enter key to emit OSC 633 escape sequences reporting command execution, exit codes, and working directory to the Orgii terminal.",
+      "tags": ["shell-integration", "terminal", "powershell", "escape-sequences", "hooks"],
+      "complexity": "moderate",
+      "languageNotes": "Wraps the original prompt function via $function:prompt and overrides the Enter key binding through Set-PSReadLineKeyHandler to capture the command line text before execution."
+    },
+    {
+      "id": "file:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.zsh",
+      "type": "file",
+      "name": "shellIntegration.zsh",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.zsh",
+      "summary": "Zsh shell integration script that registers precmd and preexec hooks via add-zsh-hook to emit OSC 633 escape sequences reporting command execution, exit codes, and working directory for structured terminal command detection.",
+      "tags": ["shell-integration", "terminal", "zsh", "escape-sequences", "hooks"],
+      "complexity": "moderate",
+      "languageNotes": "Uses zsh's native add-zsh-hook facility for precmd/preexec, which is more direct than the PROMPT_COMMAND/DEBUG-trap approach needed in bash."
+    },
+    {
+      "id": "function:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.ps1:prompt",
+      "type": "function",
+      "name": "prompt",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.ps1",
+      "lineRange": [21, 36],
+      "summary": "Overrides the global PowerShell prompt function to emit an OSC 633 command-finished sequence (with exit code), report the current working directory, signal prompt start, then delegate to the previously installed prompt function.",
+      "tags": ["hook", "prompt-override", "escape-sequences"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.ps1",
+      "target": "function:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.ps1:prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

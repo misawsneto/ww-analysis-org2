@@ -1,0 +1,1685 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "type": "file",
+      "name": "scanner.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "summary": "Core SkillsLoader implementation: a builder-configured, cache-backed scanner that discovers SKILL.md files across builtin/workspace/global/extra source directories, parses YAML frontmatter, applies disabled-skill and agent-scoping filters, and renders a token-budgeted skill listing for the system prompt.",
+      "tags": [
+        "skills",
+        "scanner",
+        "caching",
+        "yaml-parsing"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses a 2-second SWR (stale-while-revalidate) cache keyed on a hashable SkillScanKey struct so repeated turns in the same workspace avoid re-walking the filesystem."
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "type": "file",
+      "name": "skill_env_storage.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "summary": "Persists and loads user-supplied environment variables required by skills (e.g. API keys) to a JSON file, and applies them to the process environment on load.",
+      "tags": [
+        "skills",
+        "persistence",
+        "environment-config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "type": "file",
+      "name": "source_dirs.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "summary": "Resolves extra skill source directories and lazily unpacks the bundled ai-research-skills archive into a well-known directory on first use.",
+      "tags": [
+        "skills",
+        "filesystem",
+        "bootstrap"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "summary": "Shared data types for the skills system: SkillInfo (the full per-skill descriptor surfaced to the frontend), SkillListingEntry, SkillMetadata (parsed frontmatter), and the DescriptionQuality classification enum.",
+      "tags": [
+        "skills",
+        "type-definition",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/market/browse.rs",
+      "type": "file",
+      "name": "browse.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/browse.rs",
+      "summary": "Tauri command that lists the Skills Hub marketplace with no search query, delegating to the same search endpoint used by skills_hub_search.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "type": "file",
+      "name": "cache.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "summary": "Reads and writes a per-skill on-disk JSON cache of Skills Hub detail responses so repeated detail lookups avoid a network round trip.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs",
+      "type": "file",
+      "name": "detail.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs",
+      "summary": "Tauri command that fetches full detail (stats, owner, changelog, SKILL.md content) for a single Skills Hub listing by slug.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/market/http.rs",
+      "type": "file",
+      "name": "http.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/http.rs",
+      "summary": "Builds the shared reqwest HTTP client and holds the skills.sh base URL constants used by every Skills Hub endpoint.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "http-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "type": "file",
+      "name": "install.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "summary": "Fetches a skill snapshot from Skills Hub, safely extracts its files under the target skill directory (guarding against path traversal), and exposes the install/uninstall Tauri commands plus frontmatter-scalar extraction helpers used to build the post-install detail response.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "installation",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        72,
+        82
+      ],
+      "summary": "Creates a SkillsLoader for a given workspace path with default (empty) source configuration.",
+      "tags": [
+        "skills",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:with_extra_source_dirs",
+      "type": "function",
+      "name": "with_extra_source_dirs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        91,
+        96
+      ],
+      "summary": "Builder method adding extra skill source directories to scan.",
+      "tags": [
+        "skills",
+        "builder-pattern"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:list_skills",
+      "type": "function",
+      "name": "list_skills",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        123,
+        152
+      ],
+      "summary": "Returns the current skill listing, transparently using the SWR cache when the entry is still fresh and triggering a background revalidation otherwise.",
+      "tags": [
+        "skills",
+        "caching",
+        "scanner"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:invalidate_cache",
+      "type": "function",
+      "name": "invalidate_cache",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        174,
+        183
+      ],
+      "summary": "Drops the cached scan result for this loader's cache key so the next list_skills call re-scans the filesystem.",
+      "tags": [
+        "skills",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skills_uncached",
+      "type": "function",
+      "name": "scan_skills_uncached",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        191,
+        224
+      ],
+      "summary": "Performs a full filesystem scan across all configured source directories and returns the resulting skill set, bypassing the cache.",
+      "tags": [
+        "skills",
+        "scanner",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:default_workspace_skill_source_dirs",
+      "type": "function",
+      "name": "default_workspace_skill_source_dirs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        226,
+        262
+      ],
+      "summary": "Computes the default set of skill source directories to scan for a workspace (project-local, global, and optional home-root skill directories).",
+      "tags": [
+        "skills",
+        "path-resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:discover_skill_source_dirs",
+      "type": "function",
+      "name": "discover_skill_source_dirs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        264,
+        298
+      ],
+      "summary": "Walks a root directory looking for nested directories that themselves qualify as skill source roots (contain a SKILL.md within the scan depth).",
+      "tags": [
+        "skills",
+        "discovery",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:skill_root_has_skill_md",
+      "type": "function",
+      "name": "skill_root_has_skill_md",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        300,
+        306
+      ],
+      "summary": "Checks whether a candidate root directory contains a SKILL.md file within the allowed recursion depth.",
+      "tags": [
+        "skills",
+        "discovery"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:skill_root_has_skill_md_inner",
+      "type": "function",
+      "name": "skill_root_has_skill_md_inner",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        308,
+        337
+      ],
+      "summary": "Recursive depth- and cycle-guarded helper for skill_root_has_skill_md, tracking visited directory entries to avoid infinite loops on symlinks.",
+      "tags": [
+        "skills",
+        "discovery",
+        "recursion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:apply_disabled_skills",
+      "type": "function",
+      "name": "apply_disabled_skills",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        339,
+        345
+      ],
+      "summary": "Marks scanned skills as disabled based on the loader's disabled-skills set.",
+      "tags": [
+        "skills",
+        "filtering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:load_skill_with_path",
+      "type": "function",
+      "name": "load_skill_with_path",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        357,
+        427
+      ],
+      "summary": "Loads a single skill's full content and path by name, searching source directories in priority order and falling back to built-in skills.",
+      "tags": [
+        "skills",
+        "file-io"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:get_always_skills",
+      "type": "function",
+      "name": "get_always_skills",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        430,
+        435
+      ],
+      "summary": "Returns the subset of skills flagged `always: true` in frontmatter, which are unconditionally included in the prompt.",
+      "tags": [
+        "skills",
+        "filtering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_always_skills_manifest_section",
+      "type": "function",
+      "name": "build_always_skills_manifest_section",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        448,
+        495
+      ],
+      "summary": "Renders the always-included skills into a system-prompt manifest section.",
+      "tags": [
+        "skills",
+        "prompt-engineering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_skill_listing_entries",
+      "type": "function",
+      "name": "build_skill_listing_entries",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        498,
+        528
+      ],
+      "summary": "Builds the lightweight SkillListingEntry list (name/source/description/availability) used for the discovery listing, applying disabled-skill and agent-scope filters.",
+      "tags": [
+        "skills",
+        "listing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:format_skill_listing_entries",
+      "type": "function",
+      "name": "format_skill_listing_entries",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        530,
+        549
+      ],
+      "summary": "Formats listing entries into rendered text lines grouped for the system prompt.",
+      "tags": [
+        "skills",
+        "prompt-engineering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:listing_entry_description",
+      "type": "function",
+      "name": "listing_entry_description",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        551,
+        558
+      ],
+      "summary": "Selects the description text to display for a listing entry, substituting a placeholder when the description quality is poor.",
+      "tags": [
+        "skills",
+        "text-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:render_listing_line",
+      "type": "function",
+      "name": "render_listing_line",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        560,
+        570
+      ],
+      "summary": "Formats a single skill listing entry as one prompt line (name, source, description).",
+      "tags": [
+        "skills",
+        "text-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:render_listing_lines_within_budget",
+      "type": "function",
+      "name": "render_listing_lines_within_budget",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        576,
+        609
+      ],
+      "summary": "Renders listing lines up to the char budget, truncating or dropping trailing entries once the budget is exhausted.",
+      "tags": [
+        "skills",
+        "prompt-engineering",
+        "budgeting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_skill_listing_attachment",
+      "type": "function",
+      "name": "build_skill_listing_attachment",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        612,
+        619
+      ],
+      "summary": "Builds the full skill-listing prompt attachment (manifest header plus budgeted entry lines) injected into the system prompt.",
+      "tags": [
+        "skills",
+        "prompt-engineering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_supplemental_dir",
+      "type": "function",
+      "name": "scan_supplemental_dir",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        623,
+        632
+      ],
+      "summary": "Scans a single supplemental (extra) source directory for skills and merges results into the accumulator, skipping names already claimed by a higher-priority source.",
+      "tags": [
+        "skills",
+        "scanner",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_supplemental_dir_recursive",
+      "type": "function",
+      "name": "scan_supplemental_dir_recursive",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        634,
+        648
+      ],
+      "summary": "Recursive worker for scan_supplemental_dir that walks nested directories looking for SKILL.md files.",
+      "tags": [
+        "skills",
+        "scanner",
+        "recursion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skills_dir",
+      "type": "function",
+      "name": "scan_skills_dir",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        650,
+        663
+      ],
+      "summary": "Scans a top-level skills directory (workspace or global) for immediate skill subdirectories.",
+      "tags": [
+        "skills",
+        "scanner",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skills_dir_recursive",
+      "type": "function",
+      "name": "scan_skills_dir_recursive",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        665,
+        681
+      ],
+      "summary": "Recursive worker for scan_skills_dir supporting nested skill directory layouts.",
+      "tags": [
+        "skills",
+        "scanner",
+        "recursion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skill_dir",
+      "type": "function",
+      "name": "scan_skill_dir",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        683,
+        751
+      ],
+      "summary": "Loads and parses a single skill directory's SKILL.md, populating a SkillInfo entry with metadata, bundled files, and requirement-check results.",
+      "tags": [
+        "skills",
+        "scanner",
+        "yaml-parsing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:load_skill_from_source_dir",
+      "type": "function",
+      "name": "load_skill_from_source_dir",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        753,
+        780
+      ],
+      "summary": "Locates and loads a named skill's SKILL.md from a specific source directory, searching nested paths.",
+      "tags": [
+        "skills",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:find_skill_file_recursive",
+      "type": "function",
+      "name": "find_skill_file_recursive",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        782,
+        800
+      ],
+      "summary": "Recursively searches a directory tree for a skill's SKILL.md by matching directory name.",
+      "tags": [
+        "skills",
+        "file-io",
+        "recursion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:skill_metadata_applies_to_agent",
+      "type": "function",
+      "name": "skill_metadata_applies_to_agent",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        802,
+        818
+      ],
+      "summary": "Checks whether a skill's frontmatter include/exclude agent lists permit it to be surfaced to the current agent.",
+      "tags": [
+        "skills",
+        "filtering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:parse_inline_list",
+      "type": "function",
+      "name": "parse_inline_list",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        820,
+        827
+      ],
+      "summary": "Parses a YAML-ish inline list value (e.g. `[a, b, c]`) from a single frontmatter line.",
+      "tags": [
+        "skills",
+        "yaml-parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:parse_skill_metadata",
+      "type": "function",
+      "name": "parse_skill_metadata",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        832,
+        971
+      ],
+      "summary": "Parses a SKILL.md's YAML frontmatter block into a SkillMetadata struct, handling scalar fields, inline lists, and required-bins/env-vars declarations.",
+      "tags": [
+        "skills",
+        "yaml-parsing",
+        "complex"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:check_requirements",
+      "type": "function",
+      "name": "check_requirements",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        974,
+        993
+      ],
+      "summary": "Checks whether the binaries and environment variables a skill declares as required are actually present, returning the missing subsets.",
+      "tags": [
+        "skills",
+        "validation",
+        "environment-config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:truncate_listing_text",
+      "type": "function",
+      "name": "truncate_listing_text",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        998,
+        1004
+      ],
+      "summary": "Truncates listing text to a maximum character count, appending an ellipsis marker when truncated.",
+      "tags": [
+        "skills",
+        "text-processing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:SkillScanKey",
+      "type": "class",
+      "name": "SkillScanKey",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        45,
+        51
+      ],
+      "summary": "Hashable cache key capturing the workspace, builtin dir, extra source dirs, agent id, and workspace-resource flag that together determine a skill scan's result set.",
+      "tags": [
+        "skills",
+        "caching",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:SkillsLoader",
+      "type": "class",
+      "name": "SkillsLoader",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "lineRange": [
+        57,
+        65
+      ],
+      "summary": "Builder-configured scanner that discovers, caches, parses, and filters SKILL.md files across builtin/workspace/global/extra source directories and renders the token-budgeted skill listing injected into the system prompt.",
+      "tags": [
+        "skills",
+        "scanner",
+        "caching"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:load_skill_env",
+      "type": "function",
+      "name": "load_skill_env",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "lineRange": [
+        19,
+        46
+      ],
+      "summary": "Reads the persisted skill-environment JSON file from disk, returning an empty map if it doesn't exist yet.",
+      "tags": [
+        "skills",
+        "persistence",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:load_and_apply_skill_env",
+      "type": "function",
+      "name": "load_and_apply_skill_env",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "lineRange": [
+        53,
+        66
+      ],
+      "summary": "Loads the persisted skill environment variables and applies each one to the current process environment.",
+      "tags": [
+        "skills",
+        "environment-config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:skill_env_save",
+      "type": "function",
+      "name": "skill_env_save",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "lineRange": [
+        76,
+        96
+      ],
+      "summary": "Tauri command that persists a full replacement set of skill environment variables to disk and re-applies them to the process.",
+      "tags": [
+        "skills",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:source_dir_path",
+      "type": "function",
+      "name": "source_dir_path",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "lineRange": [
+        20,
+        25
+      ],
+      "summary": "Resolves an ExtraSourceDir enum value to its concrete on-disk path.",
+      "tags": [
+        "skills",
+        "path-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:ensure_source_dirs",
+      "type": "function",
+      "name": "ensure_source_dirs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "lineRange": [
+        27,
+        35
+      ],
+      "summary": "Ensures each requested extra source directory exists on disk, unpacking bundled archives as needed.",
+      "tags": [
+        "skills",
+        "bootstrap",
+        "file-io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:ensure_ai_research_skills",
+      "type": "function",
+      "name": "ensure_ai_research_skills",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "lineRange": [
+        37,
+        92
+      ],
+      "summary": "Lazily unpacks the bundled ai-research-skills archive into its target directory the first time it's requested, skipping if already present.",
+      "tags": [
+        "skills",
+        "bootstrap",
+        "file-io"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:unpack_ai_research_archive",
+      "type": "function",
+      "name": "unpack_ai_research_archive",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "lineRange": [
+        94,
+        134
+      ],
+      "summary": "Extracts the embedded ai-research-skills archive bytes into a destination directory.",
+      "tags": [
+        "skills",
+        "file-io",
+        "archive-extraction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:DescriptionQuality",
+      "type": "class",
+      "name": "DescriptionQuality",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "lineRange": [
+        10,
+        14
+      ],
+      "summary": "Classification of a skill's frontmatter description quality (Good/Short/Missing), used to decide whether to substitute a placeholder in listings.",
+      "tags": [
+        "skills",
+        "type-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillInfo",
+      "type": "class",
+      "name": "SkillInfo",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "lineRange": [
+        19,
+        64
+      ],
+      "summary": "Full per-skill descriptor surfaced to the frontend: identity, source, availability/enabled flags, requirement checks, description quality, version/license/compatibility metadata, token estimates, and bundled file list.",
+      "tags": [
+        "skills",
+        "data-model",
+        "type-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillListingEntry",
+      "type": "class",
+      "name": "SkillListingEntry",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "lineRange": [
+        70,
+        77
+      ],
+      "summary": "Lightweight entry (name, source, description, availability) used to render the discovery-time skill listing without loading full content.",
+      "tags": [
+        "skills",
+        "data-model",
+        "type-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillMetadata",
+      "type": "class",
+      "name": "SkillMetadata",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "lineRange": [
+        81,
+        92
+      ],
+      "summary": "Parsed SKILL.md frontmatter: name, description, always flag, version/license/compatibility, required bins/env vars, and agent include/exclude lists.",
+      "tags": [
+        "skills",
+        "data-model",
+        "type-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs:skills_hub_detail_cache_read",
+      "type": "function",
+      "name": "skills_hub_detail_cache_read",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "lineRange": [
+        18,
+        33
+      ],
+      "summary": "Reads a cached Skills Hub detail response for a skill name from disk, returning None on missing/corrupt cache.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs:skills_hub_detail_cache_write",
+      "type": "function",
+      "name": "skills_hub_detail_cache_write",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "lineRange": [
+        39,
+        57
+      ],
+      "summary": "Writes a Skills Hub detail response to the on-disk per-skill cache file.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs:skills_hub_detail",
+      "type": "function",
+      "name": "skills_hub_detail",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs",
+      "lineRange": [
+        9,
+        17
+      ],
+      "summary": "Tauri command that fetches full detail for a Skills Hub listing by slug via HTTP.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/http.rs:build_http_client",
+      "type": "function",
+      "name": "build_http_client",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/http.rs",
+      "lineRange": [
+        12,
+        17
+      ],
+      "summary": "Constructs the shared reqwest client used for all Skills Hub HTTP requests, with timeout configuration.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "http-client"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:split_skills_sh_slug",
+      "type": "function",
+      "name": "split_skills_sh_slug",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        20,
+        33
+      ],
+      "summary": "Splits a skills.sh slug into its owner and skill-name components.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:snapshot_skill_md",
+      "type": "function",
+      "name": "snapshot_skill_md",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        35,
+        41
+      ],
+      "summary": "Extracts the SKILL.md file content from a downloaded skill snapshot's file list.",
+      "tags": [
+        "skills",
+        "marketplace"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:fetch_skill_snapshot",
+      "type": "function",
+      "name": "fetch_skill_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        44,
+        86
+      ],
+      "summary": "Downloads a skill's file snapshot (all bundled files + hash) from Skills Hub over HTTP.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "http-client"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:safe_join_skill_file",
+      "type": "function",
+      "name": "safe_join_skill_file",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        87,
+        102
+      ],
+      "summary": "Joins a snapshot file's relative path onto the target skill directory, rejecting paths that would escape it.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:install_skill_snapshot",
+      "type": "function",
+      "name": "install_skill_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        104,
+        139
+      ],
+      "summary": "Writes every file in a downloaded skill snapshot to disk under the skill directory, creating parent directories as needed.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:skills_hub_install",
+      "type": "function",
+      "name": "skills_hub_install",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        143,
+        175
+      ],
+      "summary": "Tauri command that downloads and installs a skill from Skills Hub by slug into the appropriate local skill directory.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:build_detail_from_snapshot",
+      "type": "function",
+      "name": "build_detail_from_snapshot",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        177,
+        216
+      ],
+      "summary": "Builds a HubSkillDetail response object from a slug and its downloaded snapshot when the full detail endpoint isn't available.",
+      "tags": [
+        "skills",
+        "marketplace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:skills_hub_uninstall",
+      "type": "function",
+      "name": "skills_hub_uninstall",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        220,
+        241
+      ],
+      "summary": "Tauri command that removes an installed skill's directory from disk.",
+      "tags": [
+        "skills",
+        "marketplace",
+        "api-handler",
+        "tauri-command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:extract_frontmatter_scalar",
+      "type": "function",
+      "name": "extract_frontmatter_scalar",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "lineRange": [
+        243,
+        260
+      ],
+      "summary": "Extracts a single scalar YAML frontmatter field's value from raw SKILL.md content by key.",
+      "tags": [
+        "skills",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:with_extra_source_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:with_extra_source_dirs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:list_skills",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:list_skills",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:invalidate_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:invalidate_cache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skills_uncached",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:default_workspace_skill_source_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:discover_skill_source_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:skill_root_has_skill_md",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:skill_root_has_skill_md_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:apply_disabled_skills",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:load_skill_with_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:load_skill_with_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:get_always_skills",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:get_always_skills",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_always_skills_manifest_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_always_skills_manifest_section",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_skill_listing_entries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_skill_listing_entries",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:format_skill_listing_entries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:format_skill_listing_entries",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:listing_entry_description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:render_listing_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:render_listing_lines_within_budget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_skill_listing_attachment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:build_skill_listing_attachment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_supplemental_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_supplemental_dir_recursive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skills_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skills_dir_recursive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:scan_skill_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:load_skill_from_source_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:find_skill_file_recursive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:skill_metadata_applies_to_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:parse_inline_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:parse_skill_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:check_requirements",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:truncate_listing_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:SkillScanKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:SkillsLoader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/scanner.rs:SkillsLoader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:load_skill_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:load_and_apply_skill_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:load_and_apply_skill_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:skill_env_save",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/skill_env_storage.rs:skill_env_save",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:source_dir_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:source_dir_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:ensure_source_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:ensure_source_dirs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:ensure_ai_research_skills",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/loader/source_dirs.rs:unpack_ai_research_archive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:DescriptionQuality",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:DescriptionQuality",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillListingEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillListingEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/skills/loader/types.rs:SkillMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs:skills_hub_detail_cache_read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs:skills_hub_detail_cache_read",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs:skills_hub_detail_cache_write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/cache.rs:skills_hub_detail_cache_write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs:skills_hub_detail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/detail.rs:skills_hub_detail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/http.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/http.rs:build_http_client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/http.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/http.rs:build_http_client",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:split_skills_sh_slug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:snapshot_skill_md",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:snapshot_skill_md",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:fetch_skill_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:fetch_skill_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:safe_join_skill_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:install_skill_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:install_skill_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:skills_hub_install",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:skills_hub_install",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:build_detail_from_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:build_detail_from_snapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:skills_hub_uninstall",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:skills_hub_uninstall",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs:extract_frontmatter_scalar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/skills/market/install.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

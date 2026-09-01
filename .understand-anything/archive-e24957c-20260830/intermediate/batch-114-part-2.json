@@ -1,0 +1,1010 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "type": "file",
+      "name": "file_content.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "summary": "Reads a file's content at a specific git ref using libgit2, resolving the ref to a commit and looking up the blob by path.",
+      "tags": [
+        "git",
+        "git2",
+        "file-content",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/file_content.rs:get_file_content",
+      "type": "function",
+      "name": "get_file_content",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "lineRange": [
+        6,
+        69
+      ],
+      "summary": "Retrieves a file's content as of a given git ref by resolving the ref to a tree and reading the blob at the file's path.",
+      "tags": [
+        "git",
+        "git2",
+        "file-content"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "summary": "Module barrel for git2-based diff and file-content operations, wiring together the blame, commit-diff, diff_ops, file_content, numstat, ref_utils, and summary submodules and re-exporting their public functions.",
+      "tags": [
+        "barrel",
+        "module-organization",
+        "git",
+        "diff"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "type": "file",
+      "name": "numstat.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "summary": "Computes per-file insertion/deletion statistics (numstat) between refs without loading full diff content, with a short-lived in-memory cache to avoid redundant libgit2 diff walks on rapid UI re-renders.",
+      "tags": [
+        "git",
+        "git2",
+        "diff",
+        "caching",
+        "performance"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a 500ms in-process cache keyed by repo state to avoid redundant libgit2 diff walks when the sidebar re-renders rapidly."
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:read_head_sha_for_numstat",
+      "type": "function",
+      "name": "read_head_sha_for_numstat",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "lineRange": [
+        30,
+        59
+      ],
+      "summary": "Reads the current HEAD commit SHA (or a sentinel for unborn branches), used as part of the numstat cache key.",
+      "tags": [
+        "git",
+        "git2",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat",
+      "type": "function",
+      "name": "get_diff_numstat",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "lineRange": [
+        63,
+        180
+      ],
+      "summary": "Computes per-file added/deleted line counts between two refs (or against the working tree/index), optionally including untracked files.",
+      "tags": [
+        "git",
+        "git2",
+        "diff",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat_combined",
+      "type": "function",
+      "name": "get_diff_numstat_combined",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "lineRange": [
+        202,
+        285
+      ],
+      "summary": "Computes combined numstat totals (aggregating staged and unstaged changes) against a base ref, using a short-lived cache to avoid redundant diff walks.",
+      "tags": [
+        "git",
+        "git2",
+        "diff",
+        "caching"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/git-api/src/commands/diff/numstat.rs:CombinedDiffNumstatResult",
+      "type": "class",
+      "name": "CombinedDiffNumstatResult",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "lineRange": [
+        186,
+        195
+      ],
+      "summary": "Aggregated numstat result combining staged and unstaged changes into total insertion/deletion counts and per-file entries.",
+      "tags": [
+        "data-model",
+        "diff",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "type": "file",
+      "name": "ref_utils.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "summary": "Shared ref-resolution utilities for diff operations, translating sentinel ref strings (STAGED, INDEX, EMPTY, HEAD-on-unborn-branch) into git2 tree lookups so every diff/numstat caller can treat 'HEAD' uniformly even on brand-new repositories.",
+      "tags": [
+        "git",
+        "git2",
+        "utility",
+        "ref-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "function",
+      "name": "resolve_from_ref",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "lineRange": [
+        16,
+        50
+      ],
+      "summary": "Resolves a from_ref string to an optional git2 Tree, treating STAGED/INDEX as the index, EMPTY as no base, and gracefully falling back to no base when HEAD has no commits yet.",
+      "tags": [
+        "git",
+        "git2",
+        "ref-resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "function",
+      "name": "is_empty_base",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "lineRange": [
+        54,
+        56
+      ],
+      "summary": "Returns true when a from_ref string is the EMPTY sentinel, indicating the diff should show everything as newly added.",
+      "tags": [
+        "git",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "type": "file",
+      "name": "summary.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "summary": "Computes diff statistics (insertions/deletions/files-changed counts only, no content) between two refs using libgit2.",
+      "tags": [
+        "git",
+        "git2",
+        "diff",
+        "stats"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/diff/summary.rs:get_diff_summary",
+      "type": "function",
+      "name": "get_diff_summary",
+      "filePath": "src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "lineRange": [
+        8,
+        64
+      ],
+      "summary": "Computes aggregate diff stats (files changed, insertions, deletions) between two refs without collecting line content.",
+      "tags": [
+        "git",
+        "git2",
+        "diff",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "type": "file",
+      "name": "merge.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "summary": "Implements advanced git history operations: merge, rebase, cherry-pick, revert, and reset, each with retry logic for transient errors and conflicted-file reporting when an operation halts on conflicts.",
+      "tags": [
+        "git",
+        "merge",
+        "rebase",
+        "cli-wrapper",
+        "tauri-command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_branch",
+      "type": "function",
+      "name": "merge_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        16,
+        52
+      ],
+      "summary": "Merges a branch into the current branch, optionally forcing a merge commit (no-fast-forward) and reporting conflicted files on failure.",
+      "tags": [
+        "git",
+        "merge"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_abort",
+      "type": "function",
+      "name": "merge_abort",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        55,
+        63
+      ],
+      "summary": "Aborts an in-progress merge.",
+      "tags": [
+        "git",
+        "merge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_continue",
+      "type": "function",
+      "name": "merge_continue",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        66,
+        81
+      ],
+      "summary": "Continues an in-progress merge after conflicts have been resolved.",
+      "tags": [
+        "git",
+        "merge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_branch",
+      "type": "function",
+      "name": "rebase_branch",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        88,
+        116
+      ],
+      "summary": "Rebases the current branch onto an upstream branch, reporting conflicted files on failure.",
+      "tags": [
+        "git",
+        "rebase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_continue",
+      "type": "function",
+      "name": "rebase_continue",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        119,
+        134
+      ],
+      "summary": "Continues an in-progress rebase after conflicts have been resolved.",
+      "tags": [
+        "git",
+        "rebase"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_abort",
+      "type": "function",
+      "name": "rebase_abort",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        137,
+        145
+      ],
+      "summary": "Aborts an in-progress rebase.",
+      "tags": [
+        "git",
+        "rebase"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_skip",
+      "type": "function",
+      "name": "rebase_skip",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        148,
+        166
+      ],
+      "summary": "Skips the current commit during an in-progress rebase, reporting conflicted files if skipping itself produces new conflicts.",
+      "tags": [
+        "git",
+        "rebase"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_commit",
+      "type": "function",
+      "name": "cherry_pick_commit",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        173,
+        203
+      ],
+      "summary": "Cherry-picks a commit onto the current branch, optionally staging without committing.",
+      "tags": [
+        "git",
+        "cherry-pick"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_continue",
+      "type": "function",
+      "name": "cherry_pick_continue",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        206,
+        221
+      ],
+      "summary": "Continues an in-progress cherry-pick after conflicts have been resolved.",
+      "tags": [
+        "git",
+        "cherry-pick"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_abort",
+      "type": "function",
+      "name": "cherry_pick_abort",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        224,
+        232
+      ],
+      "summary": "Aborts an in-progress cherry-pick.",
+      "tags": [
+        "git",
+        "cherry-pick"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_commit",
+      "type": "function",
+      "name": "revert_commit",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        239,
+        269
+      ],
+      "summary": "Reverts a commit on the current branch, optionally staging without committing.",
+      "tags": [
+        "git",
+        "revert"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_abort",
+      "type": "function",
+      "name": "revert_abort",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        272,
+        280
+      ],
+      "summary": "Aborts an in-progress revert.",
+      "tags": [
+        "git",
+        "revert"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_continue",
+      "type": "function",
+      "name": "revert_continue",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        283,
+        298
+      ],
+      "summary": "Continues an in-progress revert after conflicts have been resolved.",
+      "tags": [
+        "git",
+        "revert"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:reset_head",
+      "type": "function",
+      "name": "reset_head",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        305,
+        324
+      ],
+      "summary": "Resets HEAD to a target ref using the given mode (soft/mixed/hard).",
+      "tags": [
+        "git",
+        "reset"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/git-api/src/commands/merge.rs:reset_file",
+      "type": "function",
+      "name": "reset_file",
+      "filePath": "src-tauri/crates/git-api/src/commands/merge.rs",
+      "lineRange": [
+        327,
+        342
+      ],
+      "summary": "Resets a single file's staged/working content to its state at a target ref.",
+      "tags": [
+        "git",
+        "reset"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/git-api/src/commands/mod.rs",
+      "summary": "Top-level barrel for the git-api commands module, declaring all command submodules (ai, branch, commit, cursor_chat, diff, merge, remote, staging, stash, streaming, tasks, utils) and re-exporting their public functions for convenient crate-wide access.",
+      "tags": [
+        "barrel",
+        "module-organization",
+        "git",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/file_content.rs:get_file_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/file_content.rs:get_file_content",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/blame.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/commit.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/diff_ops.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/file_content.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:read_head_sha_for_numstat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat_combined",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/diff/numstat.rs:CombinedDiffNumstatResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat_combined",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "class:src-tauri/crates/git-api/src/commands/diff/numstat.rs:CombinedDiffNumstatResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/numstat.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/diff/numstat.rs:get_diff_numstat",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:resolve_from_ref",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/ref_utils.rs:is_empty_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/summary.rs:get_diff_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/diff/summary.rs:get_diff_summary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/diff/summary.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_continue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_continue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_continue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_continue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_skip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_skip",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_commit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_commit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_continue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_continue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_commit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_commit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_continue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_continue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:reset_head",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:reset_head",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:reset_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "function:src-tauri/crates/git-api/src/commands/merge.rs:reset_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "target": "file:src-tauri/crates/git-api/src/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/merge.rs:merge_branch",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_branch",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/merge.rs:rebase_skip",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/merge.rs:cherry_pick_commit",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/git-api/src/commands/merge.rs:revert_commit",
+      "target": "function:src-tauri/crates/git-api/src/commands/utils.rs:get_conflicted_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/ai.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/branch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/commit.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/cursor_chat.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/merge.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/remote.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/staging.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/stash.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/streaming.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/tasks.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/utils.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/git-api/src/commands/mod.rs",
+      "target": "file:src-tauri/crates/git-api/src/commands/diff/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

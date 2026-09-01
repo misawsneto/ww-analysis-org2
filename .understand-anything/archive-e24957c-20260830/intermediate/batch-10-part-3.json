@@ -1,0 +1,1369 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "type": "file",
+      "name": "ranking.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "summary": "Ranks and retrieves active learnings by salience: an AgeBucket freshness classifier, a composite salience_score algorithm, ranked listing, and cosine-similarity vector search over stored embeddings.",
+      "tags": [
+        "memory",
+        "ranking-algorithm",
+        "search",
+        "embeddings"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "type": "file",
+      "name": "schema.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "summary": "Owns the learnings table DDL (init_learnings_table) and the content-hash function used for reinforcement dedup.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "type": "file",
+      "name": "stats.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "summary": "Read-side reporting queries for the UI/CLI: filtered listing of learnings, per-scope status counts, and the most recent consolidation run summary.",
+      "tags": [
+        "database",
+        "reporting",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "summary": "Core domain model for the learnings store: the Learning struct plus LearningCategory, EvolutionType, LearningStatus, and LearningSource enums, each with as_str/parse string round-trips for SQLite storage.",
+      "tags": [
+        "type-definition",
+        "memory",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "summary": "Root of the agent memory subsystem; documents the three-tier architecture (embeddings, learnings/consolidation as L3, workspace_memory as L2, reflection write paths) and re-exports commands, consolidation, embeddings, learnings, reflection, and workspace_memory as public submodules, plus the shared MemoryAgentParams struct for forked memory agents.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "memory",
+        "module-root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "type": "file",
+      "name": "auto_dream.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "summary": "Offline \"auto-dream\" background agent that periodically consolidates redundant or stale workspace-memory markdown files: gates on elapsed time/session count (should_attempt), then runs an LLM-driven consolidation pass (run_consolidation) building its own prompt from recent session activity.",
+      "tags": [
+        "background-job",
+        "llm-orchestration",
+        "memory",
+        "consolidation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "type": "file",
+      "name": "gating.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "summary": "Decides per-turn whether the forked memory-extraction agent should run: message-count thresholds, skipping when the main agent already wrote a memory file this turn, and pending-message stashing between checks.",
+      "tags": [
+        "policy",
+        "memory",
+        "gating"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "summary": "Barrel for the per-turn memory-extraction subsystem; defines NoopEventHandler (a do-nothing EventHandler implementation used by the forked extraction agent) and re-exports the gating/runner/state submodules.",
+      "tags": [
+        "barrel",
+        "memory",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "type": "file",
+      "name": "runner.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "summary": "Drives the forked LLM memory-extraction agent that reads recent conversation turns and existing workspace memory to decide whether to write or update a workspace-memory markdown file.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:age_days_since_last_touch",
+      "type": "function",
+      "name": "age_days_since_last_touch",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "lineRange": [
+        49,
+        64
+      ],
+      "summary": "Computes days elapsed since a learning was last recalled, used as the recency component of salience scoring.",
+      "tags": [
+        "ranking-algorithm",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:age_days_f64",
+      "type": "function",
+      "name": "age_days_f64",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "lineRange": [
+        68,
+        83
+      ],
+      "summary": "Computes a fractional-day age value for a learning, used for finer-grained freshness weighting.",
+      "tags": [
+        "ranking-algorithm",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:salience_score",
+      "type": "function",
+      "name": "salience_score",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "lineRange": [
+        96,
+        101
+      ],
+      "summary": "Combines recency, reinforcement count, and importance into a single composite score used to rank active learnings.",
+      "tags": [
+        "ranking-algorithm",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:load_active_learnings_ranked",
+      "type": "function",
+      "name": "load_active_learnings_ranked",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "lineRange": [
+        111,
+        134
+      ],
+      "summary": "Loads active learnings for a scope and sorts them by salience score, highest first.",
+      "tags": [
+        "database",
+        "ranking-algorithm",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "type": "function",
+      "name": "search_similar",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "lineRange": [
+        151,
+        195
+      ],
+      "summary": "Runs a cosine-similarity vector search over active learnings' embeddings, returning the top-k matches above a minimum similarity threshold.",
+      "tags": [
+        "embeddings",
+        "search",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:AgeBucket",
+      "type": "class",
+      "name": "AgeBucket",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "lineRange": [
+        25,
+        33
+      ],
+      "summary": "Freshness classification (Recent/Medium/Old) derived from a learning's age in days, used as an input to salience scoring.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:compute_content_hash",
+      "type": "function",
+      "name": "compute_content_hash",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "lineRange": [
+        19,
+        31
+      ],
+      "summary": "Normalizes and hashes a learning's content+category with SHA-256 to produce the dedup key used by content_hash_dedup.",
+      "tags": [
+        "algorithm",
+        "deduplication",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:init_learnings_table",
+      "type": "function",
+      "name": "init_learnings_table",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "lineRange": [
+        42,
+        181
+      ],
+      "summary": "Creates the learnings table and its indexes/columns if they do not already exist.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:list_learnings",
+      "type": "function",
+      "name": "list_learnings",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "lineRange": [
+        29,
+        73
+      ],
+      "summary": "Runs a filtered, paginated query over learnings for a scope, used by the UI/CLI browser.",
+      "tags": [
+        "database",
+        "reporting",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:count_status_per_scope",
+      "type": "function",
+      "name": "count_status_per_scope",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "lineRange": [
+        87,
+        124
+      ],
+      "summary": "Aggregates learning counts per lifecycle status (pending/active/merged/deprecated/abandoned) for a scope.",
+      "tags": [
+        "database",
+        "reporting",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:latest_consolidation_run",
+      "type": "function",
+      "name": "latest_consolidation_run",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "lineRange": [
+        128,
+        165
+      ],
+      "summary": "Fetches the most recent consolidation_runs row for a scope for status display.",
+      "tags": [
+        "database",
+        "reporting",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:LearningListFilter",
+      "type": "class",
+      "name": "LearningListFilter",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "lineRange": [
+        17,
+        23
+      ],
+      "summary": "Filter criteria (status, source, category, search text, limit) accepted by the list_learnings query.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:LearningsStatusCounts",
+      "type": "class",
+      "name": "LearningsStatusCounts",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "lineRange": [
+        77,
+        83
+      ],
+      "summary": "Aggregate counts of learnings per lifecycle status for a scope, returned by count_status_per_scope.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:Learning",
+      "type": "class",
+      "name": "Learning",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "lineRange": [
+        10,
+        55
+      ],
+      "summary": "Core domain struct for a stored learning: content, takeaway, category, importance/confidence, embedding, lifecycle status, evolution lineage, and timestamps.",
+      "tags": [
+        "type-definition",
+        "data-model",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningCategory",
+      "type": "class",
+      "name": "LearningCategory",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "lineRange": [
+        59,
+        68
+      ],
+      "summary": "Enum of learning categories: Pattern, Correction, Preference, or Strategy, with as_str/parse round-trips.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:EvolutionType",
+      "type": "class",
+      "name": "EvolutionType",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "lineRange": [
+        106,
+        113
+      ],
+      "summary": "Enum tracking how a learning relates to its parent in the evolution DAG: Original, Refined, or Deprecated.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningStatus",
+      "type": "class",
+      "name": "LearningStatus",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "lineRange": [
+        150,
+        156
+      ],
+      "summary": "Lifecycle status enum for a learning: Pending, Active, Merged, Deprecated, or Abandoned.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningSource",
+      "type": "class",
+      "name": "LearningSource",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "lineRange": [
+        193,
+        200
+      ],
+      "summary": "Enum identifying how a learning was produced: Reflection, PatternExtraction, or ActiveObservation.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/mod.rs:MemoryAgentParams",
+      "type": "class",
+      "name": "MemoryAgentParams",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "lineRange": [
+        47,
+        55
+      ],
+      "summary": "Shared parameter bundle (messages, provider, model, workspace, parent tools, session ID, definitions store) passed to forked memory agents like extract_memories and auto_dream, kept together to stay within clippy's argument-count limit.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:should_attempt",
+      "type": "function",
+      "name": "should_attempt",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "lineRange": [
+        72,
+        87
+      ],
+      "summary": "Decides whether the auto-dream consolidation pass should run now based on elapsed time since the last scan and hours since last file-lock-recorded consolidation.",
+      "tags": [
+        "policy",
+        "memory",
+        "gating"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "type": "function",
+      "name": "run_consolidation",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "lineRange": [
+        97,
+        235
+      ],
+      "summary": "Acquires the file lock, builds an LLM prompt from recent session activity, runs the forked consolidation agent over workspace memory files, and rolls back the lock on failure.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "background-job"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:count_sessions_since",
+      "type": "function",
+      "name": "count_sessions_since",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "lineRange": [
+        246,
+        282
+      ],
+      "summary": "Counts workspace sessions started after a given timestamp, used to gate auto-dream on session activity volume.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:build_consolidation_prompt",
+      "type": "function",
+      "name": "build_consolidation_prompt",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "lineRange": [
+        289,
+        349
+      ],
+      "summary": "Builds the prompt given to the auto-dream forked agent, summarizing recent session count and the current memory directory state.",
+      "tags": [
+        "prompt-engineering",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:AutoDreamState",
+      "type": "class",
+      "name": "AutoDreamState",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "lineRange": [
+        48,
+        51
+      ],
+      "summary": "Tracks the last time auto-dream scanned for consolidation opportunities, used to throttle background scans.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:should_extract",
+      "type": "function",
+      "name": "should_extract",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        37,
+        60
+      ],
+      "summary": "Top-level gate deciding whether the per-turn memory-extraction agent should run for the latest exchange, combining new-message count and prior-write checks.",
+      "tags": [
+        "policy",
+        "memory",
+        "gating"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:skip_if_main_agent_wrote_memory",
+      "type": "function",
+      "name": "skip_if_main_agent_wrote_memory",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        71,
+        83
+      ],
+      "summary": "Skips triggering the forked extraction agent when the main agent already wrote a workspace-memory file itself during this turn.",
+      "tags": [
+        "policy",
+        "memory",
+        "gating"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:stash_pending",
+      "type": "function",
+      "name": "stash_pending",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        93,
+        97
+      ],
+      "summary": "Stashes messages that arrived while extraction was gated off, so they are considered on the next eligible turn.",
+      "tags": [
+        "state-machine",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:take_pending",
+      "type": "function",
+      "name": "take_pending",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        106,
+        108
+      ],
+      "summary": "Drains and returns any previously stashed pending messages for the extraction agent to process.",
+      "tags": [
+        "state-machine",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:record_turn",
+      "type": "function",
+      "name": "record_turn",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        112,
+        114
+      ],
+      "summary": "Increments the turns-since-last-extraction counter in the extraction state.",
+      "tags": [
+        "state-machine",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:count_new_messages",
+      "type": "function",
+      "name": "count_new_messages",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        120,
+        126
+      ],
+      "summary": "Counts messages added to the conversation since a given index, used for extraction-trigger thresholds.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:has_memory_writes_since",
+      "type": "function",
+      "name": "has_memory_writes_since",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        145,
+        175
+      ],
+      "summary": "Scans tool calls since a given message index for writes into the workspace-memory path, used to detect the main agent already saved a memory.",
+      "tags": [
+        "memory",
+        "policy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:extract_written_path",
+      "type": "function",
+      "name": "extract_written_path",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "lineRange": [
+        182,
+        214
+      ],
+      "summary": "Extracts the file path argument from a tool call, used to check whether it targeted the workspace-memory directory.",
+      "tags": [
+        "parsing",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs:NoopEventHandler",
+      "type": "class",
+      "name": "NoopEventHandler",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "lineRange": [
+        33,
+        33
+      ],
+      "summary": "No-op implementation of the EventHandler trait (on_message_delta/on_tool_call/on_tool_result) used to run the forked extraction agent without streaming events to the UI.",
+      "tags": [
+        "event-handler",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "type": "function",
+      "name": "run_extraction",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "lineRange": [
+        32,
+        162
+      ],
+      "summary": "Drives the forked memory-extraction agent end to end: builds the prompt from recent messages and the current memory manifest, runs the agent, and persists any resulting memory writes.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:build_extraction_prompt",
+      "type": "function",
+      "name": "build_extraction_prompt",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "lineRange": [
+        165,
+        209
+      ],
+      "summary": "Builds the prompt for the extraction agent, embedding the count of new messages and the current memory-file manifest.",
+      "tags": [
+        "prompt-engineering",
+        "memory"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:age_days_since_last_touch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:age_days_since_last_touch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:age_days_f64",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:salience_score",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:salience_score",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:load_active_learnings_ranked",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:load_active_learnings_ranked",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:AgeBucket",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:AgeBucket",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:compute_content_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:compute_content_hash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:init_learnings_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/schema.rs:init_learnings_table",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:list_learnings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:list_learnings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:count_status_per_scope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:count_status_per_scope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:latest_consolidation_run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:latest_consolidation_run",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:LearningListFilter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:LearningListFilter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:LearningsStatusCounts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:LearningsStatusCounts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:Learning",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:Learning",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:EvolutionType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:EvolutionType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/learnings/types.rs:LearningSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/mod.rs:MemoryAgentParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/mod.rs:MemoryAgentParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:should_attempt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:should_attempt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:count_sessions_since",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:build_consolidation_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:AutoDreamState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:AutoDreamState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:should_extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:should_extract",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:skip_if_main_agent_wrote_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:skip_if_main_agent_wrote_memory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:stash_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:stash_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:take_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:take_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:record_turn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:record_turn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:count_new_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:count_new_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:has_memory_writes_since",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:extract_written_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs:NoopEventHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs:NoopEventHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:build_extraction_prompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/consolidation/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/embeddings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/learnings/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/reflection/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:load_active_learnings_ranked",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/crud.rs:load_active_learnings",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/lifecycle.rs:load_active_candidates",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/ranking.rs:search_similar",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/embeddings/mod.rs:cosine_similarity",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/learnings/stats.rs:list_learnings",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:should_attempt",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:hours_since_last_consolidation",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:read_last_consolidated_at",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:try_acquire",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:rollback",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:build_memory_policy",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:run_consolidation",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs:build_consolidation_prompt",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:skip_if_main_agent_wrote_memory",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:count_new_messages",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:has_memory_writes_since",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:is_memory_path",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/gating.rs:count_new_messages",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_memory_manifest",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_memory_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:build_memory_policy",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/runner.rs:run_extraction",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

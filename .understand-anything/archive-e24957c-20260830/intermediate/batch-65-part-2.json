@@ -1,0 +1,1325 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "summary": "Composes the full task detail panel: routes to a session-backed panel (with replay/merge/discard actions and merge-strategy dropdown) or a metadata-only panel depending on whether the task has a live session.",
+      "tags": [
+        "component",
+        "kanban",
+        "task-detail",
+        "merge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/TaskKanban/components/TaskKanbanContent/index.tsx",
+      "type": "file",
+      "name": "index.tsx",
+      "filePath": "src/features/TaskKanban/components/TaskKanbanContent/index.tsx",
+      "summary": "Renders the appropriate Kanban body view (columns/list/diary/datasource) based on the current view mode, wrapped in an error-boundary fallback.",
+      "tags": [
+        "component",
+        "kanban",
+        "view-router"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/TaskKanban/config.ts",
+      "type": "file",
+      "name": "config.ts",
+      "filePath": "src/features/TaskKanban/config.ts",
+      "summary": "Central configuration for the Task Kanban feature: column definitions, sidebar/agent-type filter option lists, time-filter and auto-archive TTL options, and the logic mapping a session to its Kanban column.",
+      "tags": [
+        "config",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "type": "file",
+      "name": "useKanbanTasks.ts",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "summary": "Core data hook that assembles the Kanban task list from raw sessions: dedupes/filters sessions, enriches them with session-impact data, derives replay events/cursor state, and groups tasks by column.",
+      "tags": [
+        "hook",
+        "kanban",
+        "data-model",
+        "replay"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "type": "file",
+      "name": "replayEvents.ts",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "summary": "Builds a chronologically sorted list of replay events (task start plus terminal event) from session/task pairs, used to drive the Kanban replay timeline.",
+      "tags": [
+        "utility",
+        "kanban",
+        "replay"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "type": "file",
+      "name": "replayProjection.ts",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "summary": "Helpers determining whether a session status is terminal, computing its terminal timestamp, and projecting a task's displayed status/timestamp at a given replay cursor time.",
+      "tags": [
+        "utility",
+        "kanban",
+        "replay"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "type": "file",
+      "name": "sessionToKanbanTask.ts",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "summary": "Maps a raw session record into a KanbanTask view model, deriving result status, category tag, agent label and workspace name.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "type": "file",
+      "name": "taskTimestamps.ts",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "summary": "Tiny helper returning the numeric epoch timestamp for a Kanban task, used for sorting.",
+      "tags": [
+        "utility",
+        "kanban",
+        "date"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "type": "file",
+      "name": "useSessionImpact.ts",
+      "filePath": "src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "summary": "Hook computing per-session code-impact metrics (touched files/lines), using a fast path from session data where possible or fetching aggregated orgtrack session summaries otherwise.",
+      "tags": [
+        "hook",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "type": "file",
+      "name": "useTaskKanbanFilters.ts",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "summary": "Hook applying sidebar/agent-type/file-search filters to the Kanban task list, computing visible columns and providing task navigation (find selected/prev/next).",
+      "tags": [
+        "hook",
+        "kanban",
+        "filter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "type": "file",
+      "name": "useTaskKanbanHeader.tsx",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "summary": "Hook that assembles the Kanban workstation tab header (leading/trailing controls built from the header sub-components) and publishes it via usePublishWorkstationTabHeader.",
+      "tags": [
+        "hook",
+        "kanban",
+        "header"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:TaskDetailPanel",
+      "type": "function",
+      "name": "TaskDetailPanel",
+      "filePath": "src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "lineRange": [
+        64,
+        96
+      ],
+      "summary": "Default-exported top-level task detail panel component that picks between SessionTaskPanel and MetadataTaskPanel based on whether the task has a live sessionId.",
+      "tags": [
+        "component",
+        "kanban",
+        "task-detail",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "type": "function",
+      "name": "SessionTaskPanel",
+      "filePath": "src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "lineRange": [
+        106,
+        265
+      ],
+      "summary": "Renders the full detail panel for a session-backed task: subscribes to the session/replay atoms and implements merge (with strategy dropdown), discard and replay-jump handlers.",
+      "tags": [
+        "component",
+        "kanban",
+        "task-detail",
+        "merge",
+        "replay"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:MetadataTaskPanel",
+      "type": "function",
+      "name": "MetadataTaskPanel",
+      "filePath": "src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "lineRange": [
+        271,
+        289
+      ],
+      "summary": "Renders a minimal detail panel for tasks that have no live session, showing only header and info sections.",
+      "tags": [
+        "component",
+        "kanban",
+        "task-detail"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/components/TaskKanbanContent/index.tsx:TaskKanbanContent",
+      "type": "function",
+      "name": "TaskKanbanContent",
+      "filePath": "src/features/TaskKanban/components/TaskKanbanContent/index.tsx",
+      "lineRange": [
+        36,
+        113
+      ],
+      "summary": "Default-exported component that switches between the Kanban columns, list and diary views based on viewMode, rendering a ViewFallback while the view module loads.",
+      "tags": [
+        "component",
+        "kanban",
+        "view-router",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/TaskKanban/config.ts:getColumnTitleKey",
+      "type": "function",
+      "name": "getColumnTitleKey",
+      "filePath": "src/features/TaskKanban/config.ts",
+      "lineRange": [
+        144,
+        146
+      ],
+      "summary": "Returns the i18n title key for a given Kanban column id.",
+      "tags": [
+        "utility",
+        "kanban",
+        "i18n"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/config.ts:mapSessionToKanbanColumn",
+      "type": "function",
+      "name": "mapSessionToKanbanColumn",
+      "filePath": "src/features/TaskKanban/config.ts",
+      "lineRange": [
+        247,
+        277
+      ],
+      "summary": "Determines which Kanban column a session belongs to (todo/running/archived/etc.) based on its status and the manual/auto-archive options.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/config.ts:getTimeFilterCutoff",
+      "type": "function",
+      "name": "getTimeFilterCutoff",
+      "filePath": "src/features/TaskKanban/config.ts",
+      "lineRange": [
+        328,
+        330
+      ],
+      "summary": "Computes the epoch-ms cutoff timestamp for a given Kanban time filter relative to now.",
+      "tags": [
+        "utility",
+        "kanban",
+        "date"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/config.ts:isSessionAutoArchived",
+      "type": "function",
+      "name": "isSessionAutoArchived",
+      "filePath": "src/features/TaskKanban/config.ts",
+      "lineRange": [
+        340,
+        350
+      ],
+      "summary": "Determines whether a session should be treated as auto-archived given the configured TTL and current time, skipping active-status sessions.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/config.ts:getColumnConfig",
+      "type": "function",
+      "name": "getColumnConfig",
+      "filePath": "src/features/TaskKanban/config.ts",
+      "lineRange": [
+        356,
+        360
+      ],
+      "summary": "Looks up the KanbanColumnConfig entry for a given task status from KANBAN_COLUMNS.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "type": "function",
+      "name": "useKanbanTasks",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "lineRange": [
+        74,
+        247
+      ],
+      "summary": "Main Kanban data hook: dedupes and filters visible sessions, computes session impact, maps sessions to tasks, derives replay events/cursor bounds and groups tasks into columns.",
+      "tags": [
+        "hook",
+        "kanban",
+        "data-model",
+        "replay",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts:createReplayEvents",
+      "type": "function",
+      "name": "createReplayEvents",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "lineRange": [
+        12,
+        40
+      ],
+      "summary": "Builds and sorts the list of start/terminal replay events across all task/session pairs for the Kanban replay timeline.",
+      "tags": [
+        "utility",
+        "kanban",
+        "replay"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:isTerminalStatus",
+      "type": "function",
+      "name": "isTerminalStatus",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "lineRange": [
+        5,
+        18
+      ],
+      "summary": "Predicate returning true when a session status is a terminal (non-running) status.",
+      "tags": [
+        "utility",
+        "kanban",
+        "predicate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:getTerminalTimestampMs",
+      "type": "function",
+      "name": "getTerminalTimestampMs",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "lineRange": [
+        20,
+        30
+      ],
+      "summary": "Resolves the terminal timestamp (completed_at or fallback updated_at) for a session in epoch milliseconds.",
+      "tags": [
+        "utility",
+        "kanban",
+        "date"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:applyReplayCursor",
+      "type": "function",
+      "name": "applyReplayCursor",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "lineRange": [
+        32,
+        52
+      ],
+      "summary": "Projects a task's displayed state (status/timestamp) as of a given replay cursor time, comparing it against the session's start and terminal timestamps.",
+      "tags": [
+        "utility",
+        "kanban",
+        "replay"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:getResultStatus",
+      "type": "function",
+      "name": "getResultStatus",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "lineRange": [
+        19,
+        34
+      ],
+      "summary": "Derives the KanbanResultStatus (success/failure/etc.) for a session given its target column.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:getWorkspaceName",
+      "type": "function",
+      "name": "getWorkspaceName",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "lineRange": [
+        53,
+        64
+      ],
+      "summary": "Derives a display-friendly workspace name for a session, preferring repo_name and falling back to the last path segment of the workspace path.",
+      "tags": [
+        "utility",
+        "kanban",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "type": "function",
+      "name": "sessionToKanbanTask",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "lineRange": [
+        66,
+        117
+      ],
+      "summary": "Maps a raw session plus visited/archived state into a full KanbanTask object: column, status, tags, agent label, workspace name and truncated summary text.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts:getTaskTimestamp",
+      "type": "function",
+      "name": "getTaskTimestamp",
+      "filePath": "src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "lineRange": [
+        3,
+        7
+      ],
+      "summary": "Returns the numeric epoch-ms timestamp for a Kanban task, used to sort tasks chronologically.",
+      "tags": [
+        "utility",
+        "kanban",
+        "date"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:impactFromSession",
+      "type": "function",
+      "name": "impactFromSession",
+      "filePath": "src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "lineRange": [
+        26,
+        49
+      ],
+      "summary": "Computes session impact directly from session fields for source types that have a reliable fast path (Cursor IDE, Codex App, Claude Code history).",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:impactFromSummaries",
+      "type": "function",
+      "name": "impactFromSummaries",
+      "filePath": "src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "lineRange": [
+        51,
+        68
+      ],
+      "summary": "Builds a sessionId-to-impact map from fetched orgtrack session summaries.",
+      "tags": [
+        "utility",
+        "kanban",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:useSessionImpact",
+      "type": "function",
+      "name": "useSessionImpact",
+      "filePath": "src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "lineRange": [
+        81,
+        124
+      ],
+      "summary": "Hook returning a sessionId-to-impact map, using the fast path where available and otherwise fetching orgtrack session summaries asynchronously.",
+      "tags": [
+        "hook",
+        "kanban",
+        "data-model",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:matchesAgentTypeFilter",
+      "type": "function",
+      "name": "matchesAgentTypeFilter",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "lineRange": [
+        20,
+        45
+      ],
+      "summary": "Checks whether a session matches the selected agent-type filter bucket, considering dispatch category and external history source.",
+      "tags": [
+        "utility",
+        "kanban",
+        "filter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:normalizeFileSearchQuery",
+      "type": "function",
+      "name": "normalizeFileSearchQuery",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "lineRange": [
+        56,
+        58
+      ],
+      "summary": "Normalizes a file-search query string (trims, lowercases, converts backslashes to forward slashes) for path matching.",
+      "tags": [
+        "utility",
+        "kanban",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:buildTaskFileSearchText",
+      "type": "function",
+      "name": "buildTaskFileSearchText",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "lineRange": [
+        60,
+        64
+      ],
+      "summary": "Builds a normalized, searchable text blob of a task's touched file paths for file-search filtering.",
+      "tags": [
+        "utility",
+        "kanban",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:useTaskKanbanFilters",
+      "type": "function",
+      "name": "useTaskKanbanFilters",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "lineRange": [
+        66,
+        157
+      ],
+      "summary": "Hook applying sidebar/agent-type/file-search filters to tasks, computing the visible column set and exposing find-by-id and prev/next task navigation.",
+      "tags": [
+        "hook",
+        "kanban",
+        "filter",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "type": "function",
+      "name": "useTaskKanbanHeader",
+      "filePath": "src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "lineRange": [
+        23,
+        88
+      ],
+      "summary": "Hook that builds the Kanban tab header (title plus leading/trailing control elements assembled from the header sub-components) and publishes it via usePublishWorkstationTabHeader.",
+      "tags": [
+        "hook",
+        "kanban",
+        "header",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:TaskDetailPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:MetadataTaskPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:TaskDetailPanel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/components/TaskDetailPanel/helpers.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailHeader.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailHeaderActions.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailInfoSection.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailViewPill.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/components/TaskDetailPanel/TouchedFilesList.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskDetailPanel/index.tsx",
+      "target": "file:src/features/TaskKanban/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/helpers.ts:isMergeSettledStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/helpers.ts:isMergeRetryStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/helpers.ts:getMergeFailureMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/helpers.ts:isDirtyRepoMergeError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/helpers.ts:buildDiscardConfirmationMessage",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailHeader.tsx:TaskDetailHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailHeaderActions.tsx:TaskDetailHeaderActions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailInfoSection.tsx:TaskDetailInfoSection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/TaskDetailViewPill.tsx:TaskDetailViewPill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskDetailPanel/index.tsx:SessionTaskPanel",
+      "target": "function:src/features/TaskKanban/components/TaskDetailPanel/TouchedFilesList.tsx:TouchedFilesList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskKanbanContent/index.tsx",
+      "target": "function:src/features/TaskKanban/components/TaskKanbanContent/index.tsx:TaskKanbanContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskKanbanContent/index.tsx",
+      "target": "function:src/features/TaskKanban/components/TaskKanbanContent/index.tsx:TaskKanbanContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/components/TaskKanbanContent/index.tsx",
+      "target": "file:src/features/TaskKanban/components/FactoryViewPill/index.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/components/TaskKanbanContent/index.tsx:TaskKanbanContent",
+      "target": "function:src/features/TaskKanban/components/FactoryViewPill/index.tsx:FactoryViewPill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:getColumnTitleKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:mapSessionToKanbanColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:getTimeFilterCutoff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:isSessionAutoArchived",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:getColumnConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:getColumnTitleKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:mapSessionToKanbanColumn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:getTimeFilterCutoff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/config.ts",
+      "target": "function:src/features/TaskKanban/config.ts:getColumnConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks.ts",
+      "target": "file:src/features/TaskKanban/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:useSessionImpact",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts:createReplayEvents",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:applyReplayCursor",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks.ts:useKanbanTasks",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts:getTaskTimestamp",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts:createReplayEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts:createReplayEvents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "target": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts",
+      "target": "file:src/features/TaskKanban/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayEvents.ts:createReplayEvents",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:getTerminalTimestampMs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:isTerminalStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:getTerminalTimestampMs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:applyReplayCursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:isTerminalStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:getTerminalTimestampMs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:applyReplayCursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts",
+      "target": "file:src/features/TaskKanban/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:getTerminalTimestampMs",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:isTerminalStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:applyReplayCursor",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/replayProjection.ts:getTerminalTimestampMs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:getResultStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:getWorkspaceName",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "target": "file:src/features/TaskKanban/config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts",
+      "target": "file:src/features/TaskKanban/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:getResultStatus",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:getWorkspaceName",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useKanbanTasks/sessionToKanbanTask.ts:sessionToKanbanTask",
+      "target": "function:src/features/TaskKanban/config.ts:mapSessionToKanbanColumn",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts:getTaskTimestamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "target": "function:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts:getTaskTimestamp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useKanbanTasks/taskTimestamps.ts",
+      "target": "file:src/features/TaskKanban/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:impactFromSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:impactFromSummaries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:useSessionImpact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useSessionImpact.ts",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:useSessionImpact",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:useSessionImpact",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:impactFromSummaries",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:useSessionImpact",
+      "target": "function:src/features/TaskKanban/hooks/useSessionImpact.ts:impactFromSession",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:matchesAgentTypeFilter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:normalizeFileSearchQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:buildTaskFileSearchText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:useTaskKanbanFilters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:normalizeFileSearchQuery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:buildTaskFileSearchText",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:useTaskKanbanFilters",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts",
+      "target": "file:src/features/TaskKanban/config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:useTaskKanbanFilters",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:buildTaskFileSearchText",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:useTaskKanbanFilters",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanFilters.ts:matchesAgentTypeFilter",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "file:src/features/TaskKanban/components/DiaryDateControls/index.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "file:src/features/TaskKanban/components/FactoryViewPill/index.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "file:src/features/TaskKanban/components/KanbanFileSearchInput.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "file:src/features/TaskKanban/components/KanbanHeaderFilters/index.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "file:src/features/TaskKanban/components/KanbanHeaderTrailingControls/index.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx",
+      "target": "file:src/features/TaskKanban/config.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "target": "function:src/features/TaskKanban/components/DiaryDateControls/index.tsx:DiaryDateControls",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "target": "function:src/features/TaskKanban/components/FactoryViewPill/index.tsx:FactoryViewPill",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "target": "function:src/features/TaskKanban/components/KanbanFileSearchInput.tsx:KanbanFileSearchInput",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "target": "function:src/features/TaskKanban/components/KanbanHeaderFilters/index.tsx:KanbanHeaderFilters",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src/features/TaskKanban/hooks/useTaskKanbanHeader.tsx:useTaskKanbanHeader",
+      "target": "function:src/features/TaskKanban/components/KanbanHeaderTrailingControls/index.tsx:KanbanHeaderTrailingControls",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

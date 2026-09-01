@@ -1,0 +1,174 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import {
+  type OrchestratorPhase,
+  type WorkItemRun,
+  projectApi,
+} from "@src/api/http/project";
+import { useProjectDataChanged } from "@src/hooks/project";
+import ChangedFilesList from "@src/modules/ProjectManager/WorkItems/components/AgentWorkflow/ChangedFilesList";
+import { CollapsibleSection } from "@src/modules/shared/layouts/blocks";
+
+import PrSection from "./PrSection";
+import { useLiveDiffStats } from "./hooks/useLiveDiffStats";
+import type { OutputTabContentProps } from "./types";
+
+const OutputTab: React.FC<OutputTabContentProps> = ({
+  workItem,
+  repoPath,
+  projectSlug,
+  shortId,
+  orgId,
+  onOpenFileDiff,
+  onReviewAllFiles,
+  onCreatePr,
+}) => {
+  const { t } = useTranslation("projects");
+  const phase: OrchestratorPhase =
+    workItem.orchestratorState?.current_phase ?? "idle";
+  const proofOfWork = workItem.proofOfWork;
+  const isLiveSde = phase === "sde";
+  const runQueryKey = `${orgId ?? "personal-org"}:${projectSlug ?? "-"}:${shortId ?? "-"}`;
+  const [runState, setRunState] = useState<{
+    key: string;
+    runs: WorkItemRun[];
+  }>({ key: "", runs: [] });
+  const runs = useMemo(
+    () => (shortId && runState.key === runQueryKey ? runState.runs : []),
+    [runQueryKey, runState, shortId]
+  );
+  const [runRefreshKey, setRunRefreshKey] = useState(0);
+  useProjectDataChanged(() => setRunRefreshKey((value) => value + 1));
+
+  useEffect(() => {
+    if (!shortId) return;
+    let cancelled = false;
+    projectApi
+      .listWorkItemRuns({ projectSlug, orgId, shortId })
+      .then((nextRuns) => {
+        if (!cancelled) setRunState({ key: runQueryKey, runs: nextRuns });
+      })
+      .catch(() => {
+        if (!cancelled) setRunState({ key: runQueryKey, runs: [] });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    orgId,
+    projectSlug,
+    runQueryKey,
+    runRefreshKey,
+    shortId,
+    workItem.updated_time,
+  ]);
+
+  const runUsage = useMemo(
+    () =>
+      runs.reduce(
+        (total, run) => ({
+          inputTokens: total.inputTokens + run.usage.inputTokens,
+          outputTokens: total.outputTokens + run.usage.outputTokens,
+          totalTokens: total.totalTokens + run.usage.totalTokens,
+          costUsd: total.costUsd + run.usage.costUsd,
+        }),
+        { inputTokens: 0, outputTokens: 0, totalTokens: 0, costUsd: 0 }
+      ),
+    [runs]
+  );
+  const displayedUsage =
+    runs.length > 0
+      ? runUsage
+      : {
+          inputTokens: 0,
+          outputTokens: 0,
+          totalTokens: proofOfWork?.total_tokens ?? 0,
+          costUsd: proofOfWork?.total_cost_usd ?? 0,
+        };
+
+  const liveDiffStats = useLiveDiffStats({
+    sessionId: workItem.session_id,
+    repoPath,
+    branch: proofOfWork?.branch,
+    isLive: isLiveSde,
+  });
+
+  const effectiveDiffStats =
+    isLiveSde && liveDiffStats ? liveDiffStats : proofOfWork?.diff_stats;
+
+  const hasChangedFiles =
+    (effectiveDiffStats?.files_changed ?? 0) > 0 ||
+    (effectiveDiffStats?.files?.length ?? 0) > 0;
+
+  return (
+    <>
+      <CollapsibleSection
+        title={t("workItems.outputTab.prSection")}
+        defaultOpen={true}
+      >
+        <PrSection
+          key={workItem.session_id}
+          prUrl={proofOfWork?.pr_url}
+          prStatus={proofOfWork?.pr_status}
+          branch={proofOfWork?.branch}
+          phase={phase}
+          autoCreatePr={workItem.orchestratorConfig?.auto_create_pr ?? true}
+          onCreatePr={onCreatePr}
+          projectSlug={projectSlug}
+          orgId={orgId}
+          shortId={shortId}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection
+        title={t("workItems.outputTab.changedFilesSection")}
+        defaultOpen={true}
+      >
+        {hasChangedFiles ? (
+          <ChangedFilesList
+            diffStats={effectiveDiffStats}
+            isLive={isLiveSde}
+            onOpenFileDiff={onOpenFileDiff}
+            onReviewAllFiles={onReviewAllFiles}
+          />
+        ) : (
+          <div className="rounded-md bg-fill-2 px-4 py-3">
+            <p className="text-sm text-text-2">
+              {t("workItems.outputTab.fileDiffClean")}
+            </p>
+            <p className="mt-0.5 text-xs text-text-4">
+              {t("workItems.outputTab.fileDiffCleanHint")}
+            </p>
+          </div>
+        )}
+      </CollapsibleSection>
+
+      {(displayedUsage.costUsd > 0 || displayedUsage.totalTokens > 0) && (
+        <CollapsibleSection
+          title={t("workItems.outputTab.costSummary")}
+          defaultOpen={true}
+        >
+          <div
+            className="rounded-md bg-fill-1 px-4 py-2.5 text-xs text-text-3"
+            data-testid="work-item-run-usage-summary"
+          >
+            {t("workItems.outputTab.totalCost")}: $
+            {displayedUsage.costUsd.toFixed(4)} &middot;{" "}
+            {displayedUsage.totalTokens.toLocaleString()}{" "}
+            {t("workItems.outputTab.tokens")}
+            {runs.length > 0 && (
+              <span className="ml-2 text-text-4">
+                · {runs.length} runs ·{" "}
+                {displayedUsage.inputTokens.toLocaleString()} in ·{" "}
+                {displayedUsage.outputTokens.toLocaleString()} out
+              </span>
+            )}
+          </div>
+        </CollapsibleSection>
+      )}
+    </>
+  );
+};
+
+export default OutputTab;

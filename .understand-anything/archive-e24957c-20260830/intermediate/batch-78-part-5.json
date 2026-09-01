@@ -1,0 +1,1581 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "summary": "KiroValidator validates and refreshes Kiro OAuth tokens, and provides platform-specific helpers to auto-detect a locally cached Kiro token/device registration from the macOS Keychain or Kiro's local SQLite database.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "oauth",
+    "cross-platform"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/mod.rs",
+   "summary": "Module barrel declaring and re-exporting every provider validator submodule (anthropic, azure_openai, claude_code, codex, copilot, cursor, google, kiro, openai, opencode_go, quota_windows, zhipu).",
+   "tags": [
+    "barrel",
+    "module-root",
+    "key-vault"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "summary": "OpenAIValidator validates API keys for OpenAI and OpenAI-compatible providers (DeepSeek, Groq, xAI, etc.), listing models and sending a minimal test chat completion, with model-prefix filtering per provider.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client",
+    "openai"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "type": "file",
+   "name": "opencode_go.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "summary": "OpenCodeGoQuotaFetcher scrapes usage/subscription data for opencode.ai workspaces by calling its internal server endpoints with a session cookie, parsing rolling/weekly/monthly usage percentages out of embedded page text.",
+   "tags": [
+    "api-handler",
+    "quota",
+    "http-client",
+    "web-scraping"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "type": "file",
+   "name": "quota_windows.rs",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "summary": "Shared helper for building a normalized QuotaInfo from session/weekly usage windows, used by several OAuth-based providers (Claude Code, Codex, Zhipu) to avoid duplicating quota-aggregation logic.",
+   "tags": [
+    "utility",
+    "quota",
+    "shared"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:KiroToken",
+   "type": "class",
+   "name": "KiroToken",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    32,
+    43
+   ],
+   "summary": "A cached Kiro OAuth token (access/refresh tokens, expiry, region, OAuth flow, scopes, client credentials) with an is_expired helper.",
+   "tags": [
+    "data-model",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:KiroValidator",
+   "type": "class",
+   "name": "KiroValidator",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    65,
+    68
+   ],
+   "summary": "Validates and locally format-checks Kiro OAuth tokens.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "oauth"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:DeviceRegistration",
+   "type": "class",
+   "name": "DeviceRegistration",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    333,
+    336
+   ],
+   "summary": "OAuth device-flow client registration (client id/secret) read from Kiro's local storage.",
+   "tags": [
+    "data-model",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ModelsResponse",
+   "type": "class",
+   "name": "ModelsResponse",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    37,
+    39
+   ],
+   "summary": "Deserialization target for an OpenAI-compatible provider's list-models API response.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ModelInfo",
+   "type": "class",
+   "name": "ModelInfo",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    42,
+    49
+   ],
+   "summary": "A single model entry (id, context length) from an OpenAI-compatible models list.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ChatCompletionRequest",
+   "type": "class",
+   "name": "ChatCompletionRequest",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    53,
+    57
+   ],
+   "summary": "Request body for a minimal OpenAI-compatible chat completion test call.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ChatMessage",
+   "type": "class",
+   "name": "ChatMessage",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    60,
+    63
+   ],
+   "summary": "A single chat message (role + content) in an OpenAI-compatible completion request.",
+   "tags": [
+    "data-model",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:OpenAIValidator",
+   "type": "class",
+   "name": "OpenAIValidator",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    66,
+    69
+   ],
+   "summary": "HTTP-client-backed validator shared by OpenAI and OpenAI-compatible providers (DeepSeek, Groq, xAI, etc.): lists models, applies per-provider model-prefix filtering, and sends a minimal test completion.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/opencode_go.rs:OpenCodeGoQuotaFetcher",
+   "type": "class",
+   "name": "OpenCodeGoQuotaFetcher",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    22,
+    24
+   ],
+   "summary": "HTTP-client-backed fetcher that resolves an opencode.ai workspace id and scrapes rolling/weekly/monthly subscription usage from the workspace page's embedded page text using a session cookie.",
+   "tags": [
+    "api-handler",
+    "quota",
+    "web-scraping"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/opencode_go.rs:ParsedSubscription",
+   "type": "class",
+   "name": "ParsedSubscription",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    27,
+    34
+   ],
+   "summary": "Parsed usage percentages and reset countdowns (rolling, weekly, monthly) extracted from an opencode.ai workspace page.",
+   "tags": [
+    "data-model",
+    "quota"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/key-vault/src/providers/quota_windows.rs:QuotaWindow",
+   "type": "class",
+   "name": "QuotaWindow",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "lineRange": [
+    9,
+    13
+   ],
+   "summary": "A single named usage window (session or weekly) with a used-percent figure and reset time, with constructors for the two common window types.",
+   "tags": [
+    "data-model",
+    "quota"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:is_expired",
+   "type": "function",
+   "name": "is_expired",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    47,
+    61
+   ],
+   "summary": "Checks whether a KiroToken's access token has passed its expiry timestamp.",
+   "tags": [
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    80,
+    82
+   ],
+   "summary": "Constructs a KiroValidator with the default timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:with_timeout",
+   "type": "function",
+   "name": "with_timeout",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    85,
+    89
+   ],
+   "summary": "Constructs a KiroValidator with a custom timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:validate",
+   "type": "function",
+   "name": "validate",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    98,
+    185
+   ],
+   "summary": "Validates a Kiro OAuth token JSON payload, checking expiry and required fields.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "oauth"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:validate_format",
+   "type": "function",
+   "name": "validate_format",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    188,
+    225
+   ],
+   "summary": "Checks that a Kiro token JSON payload is well-formed and parseable, without checking expiry.",
+   "tags": [
+    "validation",
+    "oauth"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_models",
+   "type": "function",
+   "name": "get_kiro_models",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    230,
+    232
+   ],
+   "summary": "Returns the static list of models available under a Kiro subscription.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_sqlite_path",
+   "type": "function",
+   "name": "get_kiro_sqlite_path",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    235,
+    274
+   ],
+   "summary": "Resolves the platform-specific path to Kiro's local SQLite database where cached tokens/device registration are stored.",
+   "tags": [
+    "filesystem",
+    "cross-platform"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_token_from_macos_keychain",
+   "type": "function",
+   "name": "read_token_from_macos_keychain",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    278,
+    304
+   ],
+   "summary": "Reads a cached Kiro OAuth token from the macOS Keychain via the `security` CLI (macOS only; a no-op stub is compiled in on other platforms).",
+   "tags": [
+    "cross-platform",
+    "oauth",
+    "cli-integration"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_token_from_sqlite",
+   "type": "function",
+   "name": "read_token_from_sqlite",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    312,
+    329
+   ],
+   "summary": "Reads a cached Kiro OAuth token from Kiro's local SQLite database.",
+   "tags": [
+    "oauth",
+    "filesystem"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_device_reg_from_sqlite",
+   "type": "function",
+   "name": "read_device_reg_from_sqlite",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    339,
+    358
+   ],
+   "summary": "Reads the OAuth device-flow client registration from Kiro's local SQLite database.",
+   "tags": [
+    "oauth",
+    "filesystem"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_device_reg_from_macos_keychain",
+   "type": "function",
+   "name": "read_device_reg_from_macos_keychain",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    362,
+    388
+   ],
+   "summary": "Reads the OAuth device-flow client registration from the macOS Keychain.",
+   "tags": [
+    "cross-platform",
+    "oauth"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_device_registration",
+   "type": "function",
+   "name": "get_device_registration",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    391,
+    408
+   ],
+   "summary": "Resolves Kiro's device registration by trying the Keychain (on macOS) and falling back to SQLite.",
+   "tags": [
+    "oauth",
+    "cross-platform"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_local_kiro_token",
+   "type": "function",
+   "name": "get_local_kiro_token",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    412,
+    436
+   ],
+   "summary": "Resolves a locally cached Kiro token by trying the Keychain (on macOS) and falling back to SQLite.",
+   "tags": [
+    "oauth",
+    "cross-platform"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:detect_kiro_tokens",
+   "type": "function",
+   "name": "detect_kiro_tokens",
+   "filePath": "src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "lineRange": [
+    439,
+    447
+   ],
+   "summary": "Auto-detects a Kiro token and its associated device registration from local machine state, for the auto-detect key flow.",
+   "tags": [
+    "oauth",
+    "cross-platform"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    72,
+    77
+   ],
+   "summary": "Constructs an OpenAIValidator with the default timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:with_timeout",
+   "type": "function",
+   "name": "with_timeout",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    79,
+    84
+   ],
+   "summary": "Constructs an OpenAIValidator with a custom timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:validate",
+   "type": "function",
+   "name": "validate",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    97,
+    231
+   ],
+   "summary": "Validates an OpenAI-compatible API key by listing models (filtered by provider) and sending a minimal test completion.",
+   "tags": [
+    "api-handler",
+    "validation",
+    "http-client"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:get_models",
+   "type": "function",
+   "name": "get_models",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    240,
+    316
+   ],
+   "summary": "Fetches the list of available models from an OpenAI-compatible provider's models API, filtering by the provider's model prefixes.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:test_completion",
+   "type": "function",
+   "name": "test_completion",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    322,
+    371
+   ],
+   "summary": "Sends a minimal chat completion request to confirm the API key can perform inference.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:validate_format",
+   "type": "function",
+   "name": "validate_format",
+   "filePath": "src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "lineRange": [
+    374,
+    388
+   ],
+   "summary": "Checks that an OpenAI-compatible API key string is well-formed, without a network call.",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    43,
+    47
+   ],
+   "summary": "Constructs an OpenCodeGoQuotaFetcher with the default timeout.",
+   "tags": [
+    "api-handler"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:fetch_quota",
+   "type": "function",
+   "name": "fetch_quota",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    49,
+    90
+   ],
+   "summary": "Resolves the workspace id for a session cookie (or uses an override) and fetches that workspace's usage quota from opencode.ai.",
+   "tags": [
+    "api-handler",
+    "quota",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:resolve_workspace_ids",
+   "type": "function",
+   "name": "resolve_workspace_ids",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    92,
+    136
+   ],
+   "summary": "Determines the candidate opencode.ai workspace ids to query for a given session cookie, using an override if provided or discovering them from the server.",
+   "tags": [
+    "api-handler",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:fetch_workspace_quota",
+   "type": "function",
+   "name": "fetch_workspace_quota",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    138,
+    174
+   ],
+   "summary": "Fetches and parses the subscription usage page for a specific opencode.ai workspace id.",
+   "tags": [
+    "api-handler",
+    "http-client",
+    "web-scraping"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:workspace_id_override_from_key",
+   "type": "function",
+   "name": "workspace_id_override_from_key",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    177,
+    186
+   ],
+   "summary": "Extracts a workspace id override embedded in a stored key's metadata, if present.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:normalize_cookie_input",
+   "type": "function",
+   "name": "normalize_cookie_input",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    188,
+    200
+   ],
+   "summary": "Normalizes a raw cookie string into the form expected by the opencode.ai session cookie header.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:filter_auth_cookie",
+   "type": "function",
+   "name": "filter_auth_cookie",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    213,
+    227
+   ],
+   "summary": "Strips a raw cookie header down to just the auth cookie needed for the request.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:valid_workspace_id",
+   "type": "function",
+   "name": "valid_workspace_id",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    229,
+    239
+   ],
+   "summary": "Validates that a string looks like a well-formed opencode.ai workspace id.",
+   "tags": [
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:parse_workspace_ids",
+   "type": "function",
+   "name": "parse_workspace_ids",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    241,
+    265
+   ],
+   "summary": "Extracts candidate workspace ids embedded in the opencode.ai server response text.",
+   "tags": [
+    "web-scraping",
+    "serialization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:parse_subscription_from_page_text",
+   "type": "function",
+   "name": "parse_subscription_from_page_text",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    267,
+    297
+   ],
+   "summary": "Extracts and parses the embedded subscription/usage JSON block from an opencode.ai workspace page's HTML/JS text.",
+   "tags": [
+    "web-scraping",
+    "serialization"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:extract_usage_block",
+   "type": "function",
+   "name": "extract_usage_block",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    299,
+    322
+   ],
+   "summary": "Locates the raw text span of the usage data object embedded in a workspace page for a given key.",
+   "tags": [
+    "web-scraping"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:balanced_object_block",
+   "type": "function",
+   "name": "balanced_object_block",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    324,
+    337
+   ],
+   "summary": "Extracts a balanced brace-delimited JSON object substring starting at a given opening brace, tolerating nested braces.",
+   "tags": [
+    "utility",
+    "web-scraping"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:extract_top_level_number",
+   "type": "function",
+   "name": "extract_top_level_number",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    339,
+    368
+   ],
+   "summary": "Extracts a top-level numeric field's value from a raw (not fully parsed) JSON object text block.",
+   "tags": [
+    "web-scraping",
+    "utility"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:parse_number_prefix",
+   "type": "function",
+   "name": "parse_number_prefix",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    370,
+    387
+   ],
+   "summary": "Parses the leading numeric prefix of a text fragment into a float.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:subscription_to_quota",
+   "type": "function",
+   "name": "subscription_to_quota",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    393,
+    430
+   ],
+   "summary": "Converts a ParsedSubscription's rolling/weekly/monthly usage figures into a normalized QuotaInfo.",
+   "tags": [
+    "quota"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:usage_item",
+   "type": "function",
+   "name": "usage_item",
+   "filePath": "src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "lineRange": [
+    432,
+    442
+   ],
+   "summary": "Builds a single UsageItem from a usage type and used-percent figure.",
+   "tags": [
+    "quota",
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:session",
+   "type": "function",
+   "name": "session",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "lineRange": [
+    16,
+    22
+   ],
+   "summary": "Constructs a QuotaWindow tagged as the session (short) usage window.",
+   "tags": [
+    "quota"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:weekly",
+   "type": "function",
+   "name": "weekly",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "lineRange": [
+    24,
+    30
+   ],
+   "summary": "Constructs a QuotaWindow tagged as the weekly usage window.",
+   "tags": [
+    "quota"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:unix_seconds_to_rfc3339",
+   "type": "function",
+   "name": "unix_seconds_to_rfc3339",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "lineRange": [
+    33,
+    36
+   ],
+   "summary": "Converts a Unix timestamp in seconds to an RFC3339 datetime string.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:normalize_reset_time",
+   "type": "function",
+   "name": "normalize_reset_time",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "lineRange": [
+    38,
+    45
+   ],
+   "summary": "Normalizes a provider-supplied reset-time value (Unix seconds or ISO string) into a consistent RFC3339 string.",
+   "tags": [
+    "utility"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:quota_from_windows",
+   "type": "function",
+   "name": "quota_from_windows",
+   "filePath": "src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "lineRange": [
+    47,
+    89
+   ],
+   "summary": "Shared helper that builds a normalized QuotaInfo (remaining percentage, usage items, reset windows) from a plan type, quota source, and a list of QuotaWindows.",
+   "tags": [
+    "quota",
+    "shared"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:KiroToken",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:KiroValidator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:DeviceRegistration",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ModelsResponse",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ModelInfo",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ChatCompletionRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:ChatMessage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:OpenAIValidator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/opencode_go.rs:OpenCodeGoQuotaFetcher",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/opencode_go.rs:ParsedSubscription",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/quota_windows.rs:QuotaWindow",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:is_expired",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:is_expired",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:with_timeout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:with_timeout",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:validate",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:validate",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:validate_format",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:validate_format",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_models",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_models",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_sqlite_path",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_kiro_sqlite_path",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_token_from_macos_keychain",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_token_from_macos_keychain",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_token_from_sqlite",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_token_from_sqlite",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_device_reg_from_sqlite",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:read_device_reg_from_macos_keychain",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_device_registration",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_local_kiro_token",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:get_local_kiro_token",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:detect_kiro_tokens",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:detect_kiro_tokens",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:with_timeout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:with_timeout",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:validate",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:validate",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:get_models",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:test_completion",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:test_completion",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:validate_format",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/openai/mod.rs:validate_format",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:fetch_quota",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:fetch_quota",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:resolve_workspace_ids",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:fetch_workspace_quota",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:workspace_id_override_from_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:workspace_id_override_from_key",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:normalize_cookie_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:filter_auth_cookie",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:valid_workspace_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:parse_workspace_ids",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:parse_subscription_from_page_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:extract_usage_block",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:balanced_object_block",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:extract_top_level_number",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:parse_number_prefix",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:subscription_to_quota",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/opencode_go.rs:usage_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:weekly",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:weekly",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:unix_seconds_to_rfc3339",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:unix_seconds_to_rfc3339",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:normalize_reset_time",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:normalize_reset_time",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:quota_from_windows",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "function:src-tauri/crates/key-vault/src/providers/quota_windows.rs:quota_from_windows",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:KiroToken",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:KiroValidator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/kiro/mod.rs:DeviceRegistration",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/openai/mod.rs:OpenAIValidator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/opencode_go.rs:OpenCodeGoQuotaFetcher",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "class:src-tauri/crates/key-vault/src/providers/quota_windows.rs:QuotaWindow",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/anthropic/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/azure_openai/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/claude_code.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/codex/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/copilot/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/cursor/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/google/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/kiro/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/providers/zhipu.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/openai/mod.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/opencode_go.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/key-vault/src/providers/quota_windows.rs",
+   "target": "file:src-tauri/crates/key-vault/src/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  }
+ ]
+}

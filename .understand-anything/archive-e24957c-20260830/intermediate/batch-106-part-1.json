@@ -1,0 +1,1651 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "type": "file",
+      "name": "cli_binary_resolver.rs",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "summary": "Resolves and probes installed coding-agent CLI binaries (Claude Code, Cursor, Aider, Codex, Copilot, and 20+ others) by searching the process PATH, login shell, and known install locations, returning structured metadata used to launch and version-detect external CLI tools.",
+      "tags": [
+        "utility",
+        "cli-resolution",
+        "external-process",
+        "detection"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses per-platform login-shell probing (with a Windows stub variant of resolve_via_login_shell) and a timeout-guarded subprocess call to safely probe CLI versions without hanging the UI thread."
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/integrations/src/commands.rs",
+      "summary": "Centralized registry that re-exports the integration crate's Tauri commands (currently the external-IDE open/show-in-folder commands) so the app crate has a single import path.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "tauri-command",
+        "re-export"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "type": "file",
+      "name": "computer_use_lock.rs",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "summary": "File-based, PID-checked exclusive lock ensuring only one session runs desktop Computer Use automation at a time, with reentrant same-session semantics and process-exit-safe release via a Drop guard.",
+      "tags": [
+        "concurrency",
+        "file-lock",
+        "singleton",
+        "utility"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses O_EXCL atomic file creation for the mutual-exclusion primitive and a liveness probe on the stored PID to recover from stale locks left by crashed sessions."
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "type": "file",
+      "name": "external_ide.rs",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "summary": "Detects installed external IDEs/editors (with version and last-used timestamps) across platform-specific install locations and exposes Tauri commands to open project folders in them or reveal them in the OS file manager.",
+      "tags": [
+        "detection",
+        "tauri-command",
+        "cross-platform",
+        "integration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "type": "file",
+      "name": "github/client.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "summary": "Thin reqwest-based HTTP client wrapper for the GitHub REST and GraphQL APIs, handling bearer-token auth, ETag-based conditional GETs, and surfacing 401s as a canonical re-auth error.",
+      "tags": [
+        "api-client",
+        "http",
+        "github",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "type": "file",
+      "name": "github/commands/credentials.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "summary": "Tauri commands for resolving Git credentials for a remote, building safe `git clone` argv, cloning repositories, and validating the stored GitHub token.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "github",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "type": "file",
+      "name": "github/commands/issues.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "summary": "Tauri commands and response models for listing, creating, and updating GitHub issues, plus issue comments, repo labels, and collaborators.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "github",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:id_for_registry_name",
+      "type": "function",
+      "name": "id_for_registry_name",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        328,
+        362
+      ],
+      "summary": "Maps a free-text registry/display name (e.g. from IDE metadata) to a known CliBinaryId enum variant via case-insensitive matching.",
+      "tags": [
+        "utility",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:probe_cli_binary_version",
+      "type": "function",
+      "name": "probe_cli_binary_version",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        380,
+        444
+      ],
+      "summary": "Spawns the resolved CLI binary with a version flag under a timeout and parses stdout/stderr into a CliVersionProbe result.",
+      "tags": [
+        "subprocess",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:parse_version_string",
+      "type": "function",
+      "name": "parse_version_string",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        446,
+        461
+      ],
+      "summary": "Extracts a semantic version substring from raw CLI --version output using pattern heuristics.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:resolve_cli_binary_with_options",
+      "type": "function",
+      "name": "resolve_cli_binary_with_options",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        482,
+        534
+      ],
+      "summary": "Core resolution routine that tries process PATH, known install locations, and login-shell lookup in order to locate a CLI binary and records which source found it.",
+      "tags": [
+        "cli-resolution",
+        "core-logic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:find_on_process_path",
+      "type": "function",
+      "name": "find_on_process_path",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        536,
+        546
+      ],
+      "summary": "Searches the current process's PATH environment variable for a matching executable.",
+      "tags": [
+        "filesystem",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:known_locations_for",
+      "type": "function",
+      "name": "known_locations_for",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        548,
+        572
+      ],
+      "summary": "Returns a platform-specific list of well-known install directories to check for a given CLI binary id.",
+      "tags": [
+        "filesystem",
+        "platform-specific"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:resolve_via_login_shell",
+      "type": "function",
+      "name": "resolve_via_login_shell",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        575,
+        584
+      ],
+      "summary": "Unix implementation that spawns the user's login shell to resolve a command via its interactive PATH, capturing platform shell quirks not visible to the app's own PATH.",
+      "tags": [
+        "subprocess",
+        "platform-specific"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:run_shell_command_with_timeout",
+      "type": "function",
+      "name": "run_shell_command_with_timeout",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        587,
+        619
+      ],
+      "summary": "Runs a shell command with a bounded timeout, killing the child process if it exceeds the deadline to avoid hanging CLI detection.",
+      "tags": [
+        "subprocess",
+        "timeout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:parse_command_v_path",
+      "type": "function",
+      "name": "parse_command_v_path",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        626,
+        638
+      ],
+      "summary": "Parses the output of `command -v` / `which`-style shell probes into a resolved path.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:command_path_candidates",
+      "type": "function",
+      "name": "command_path_candidates",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        644,
+        674
+      ],
+      "summary": "Generates candidate executable paths for a command name within a directory, accounting for platform executable extensions.",
+      "tags": [
+        "filesystem",
+        "platform-specific"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:is_executable_file",
+      "type": "function",
+      "name": "is_executable_file",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        676,
+        693
+      ],
+      "summary": "Checks whether a filesystem path points to a file with executable permissions.",
+      "tags": [
+        "filesystem",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/integrations/src/cli_binary_resolver.rs:CliBinaryId",
+      "type": "class",
+      "name": "CliBinaryId",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        11,
+        44
+      ],
+      "summary": "Enum of every supported coding-agent CLI binary (Claude Code, Cursor, Aider, Codex, Copilot, and 25+ others) that the app can detect and launch.",
+      "tags": [
+        "data-model",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/integrations/src/cli_binary_resolver.rs:CliBinaryResolution",
+      "type": "class",
+      "name": "CliBinaryResolution",
+      "filePath": "src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "lineRange": [
+        64,
+        69
+      ],
+      "summary": "Result of resolving a CLI binary, bundling the metadata, resolved command, and the resolution source (process PATH, login shell, known location, or fallback).",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:read_lock",
+      "type": "function",
+      "name": "read_lock",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        73,
+        106
+      ],
+      "summary": "Reads and deserializes the on-disk lock file, if present, into a LockPayload.",
+      "tags": [
+        "filesystem",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:is_process_running",
+      "type": "function",
+      "name": "is_process_running",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        108,
+        118
+      ],
+      "summary": "Checks whether a given PID still corresponds to a live process, used to detect and recover stale locks.",
+      "tags": [
+        "process",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:try_create_exclusive",
+      "type": "function",
+      "name": "try_create_exclusive",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        120,
+        161
+      ],
+      "summary": "Attempts to atomically create the lock file with O_EXCL, falling back to stale-lock recovery if creation fails because a dead process's lock remains.",
+      "tags": [
+        "file-lock",
+        "atomicity"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:try_acquire",
+      "type": "function",
+      "name": "try_acquire",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        173,
+        253
+      ],
+      "summary": "Attempts to acquire the Computer Use lock for a session, returning Acquired, Reentrant (same session already holds it), or Blocked (another live session holds it).",
+      "tags": [
+        "file-lock",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:release",
+      "type": "function",
+      "name": "release",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        258,
+        290
+      ],
+      "summary": "Releases the lock file if held by the given session, verifying session ownership before deleting it.",
+      "tags": [
+        "file-lock",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:request_abort",
+      "type": "function",
+      "name": "request_abort",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        295,
+        307
+      ],
+      "summary": "Signals an in-progress Computer Use automation to abort and notifies the registered abort broadcaster.",
+      "tags": [
+        "signaling",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:force_release_on_exit",
+      "type": "function",
+      "name": "force_release_on_exit",
+      "filePath": "src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "lineRange": [
+        321,
+        336
+      ],
+      "summary": "Best-effort lock release invoked on process exit or panic to avoid leaving a stale lock behind.",
+      "tags": [
+        "cleanup",
+        "file-lock"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:server_detect_ides",
+      "type": "function",
+      "name": "server_detect_ides",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        24,
+        182
+      ],
+      "summary": "Tauri command that enumerates every supported IDE, resolves its CLI binary metadata, checks install status, and returns combined detection results to the frontend.",
+      "tags": [
+        "tauri-command",
+        "detection"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:detect_ide_version",
+      "type": "function",
+      "name": "detect_ide_version",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        189,
+        254
+      ],
+      "summary": "Determines an installed IDE's version by reading app bundle metadata or invoking the IDE's CLI with a version flag.",
+      "tags": [
+        "detection",
+        "subprocess"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:parse_version_string",
+      "type": "function",
+      "name": "parse_version_string",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        257,
+        274
+      ],
+      "summary": "Extracts a semantic version substring from raw IDE version output.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:detect_last_used",
+      "type": "function",
+      "name": "detect_last_used",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        282,
+        334
+      ],
+      "summary": "Determines when an IDE was last used by inspecting recent-files/workspace metadata on disk.",
+      "tags": [
+        "filesystem",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:get_user_data_dir",
+      "type": "function",
+      "name": "get_user_data_dir",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        337,
+        419
+      ],
+      "summary": "Returns the platform-specific user data directory for a given IDE, used to locate its config and recent-workspace files.",
+      "tags": [
+        "filesystem",
+        "platform-specific"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:newest_mtime_in_dir",
+      "type": "function",
+      "name": "newest_mtime_in_dir",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        422,
+        440
+      ],
+      "summary": "Finds the most recently modified file's mtime within a directory tree.",
+      "tags": [
+        "filesystem",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:build_app_path_map",
+      "type": "function",
+      "name": "build_app_path_map",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        443,
+        480
+      ],
+      "summary": "Builds a lookup map from IDE identifiers to their installed application bundle paths.",
+      "tags": [
+        "filesystem",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:spotlight_date_to_iso",
+      "type": "function",
+      "name": "spotlight_date_to_iso",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        484,
+        496
+      ],
+      "summary": "Converts a macOS Spotlight metadata date string into an ISO-8601 timestamp.",
+      "tags": [
+        "parsing",
+        "macos"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:collect_app_ide_paths",
+      "type": "function",
+      "name": "collect_app_ide_paths",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        499,
+        762
+      ],
+      "summary": "Scans platform-specific application directories to discover installed IDE app bundles/executables for every supported CLI binary id.",
+      "tags": [
+        "filesystem",
+        "detection",
+        "platform-specific"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:try_open_app",
+      "type": "function",
+      "name": "try_open_app",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        769,
+        787
+      ],
+      "summary": "Attempts to launch an installed application, optionally passing a folder path argument.",
+      "tags": [
+        "subprocess",
+        "process"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:generate_app_name_variants",
+      "type": "function",
+      "name": "generate_app_name_variants",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        791,
+        829
+      ],
+      "summary": "Generates alternate spellings/casings of an application name to improve app-launch matching heuristics.",
+      "tags": [
+        "utility",
+        "string-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:open_in_external_ide",
+      "type": "function",
+      "name": "open_in_external_ide",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        835,
+        891
+      ],
+      "summary": "Tauri command that opens a project folder in the specified external IDE application.",
+      "tags": [
+        "tauri-command",
+        "process"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:show_in_folder",
+      "type": "function",
+      "name": "show_in_folder",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        899,
+        947
+      ],
+      "summary": "Tauri command that reveals a file or folder in the OS's native file manager.",
+      "tags": [
+        "tauri-command",
+        "filesystem"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/external_ide.rs:open_folder",
+      "type": "function",
+      "name": "open_folder",
+      "filePath": "src-tauri/crates/integrations/src/external_ide.rs",
+      "lineRange": [
+        951,
+        986
+      ],
+      "summary": "Tauri command that opens a folder using the OS's default file manager/handler.",
+      "tags": [
+        "tauri-command",
+        "filesystem"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "function",
+      "name": "get_conditional",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        65,
+        132
+      ],
+      "summary": "Performs a GET request with ETag-based conditional caching, returning cached data on 304 and updating the ETag cache on 200, plus 401 re-auth error handling.",
+      "tags": [
+        "http",
+        "caching",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/client.rs:get_raw",
+      "type": "function",
+      "name": "get_raw",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        138,
+        167
+      ],
+      "summary": "Performs a GET request and returns the raw response body honoring a custom Accept header, used for fetching file content.",
+      "tags": [
+        "http"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/client.rs:graphql",
+      "type": "function",
+      "name": "graphql",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        178,
+        194
+      ],
+      "summary": "Sends a GraphQL query with variables to the GitHub GraphQL endpoint and returns the parsed JSON response.",
+      "tags": [
+        "http",
+        "graphql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/client.rs:request",
+      "type": "function",
+      "name": "request",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        196,
+        212
+      ],
+      "summary": "Low-level HTTP request dispatcher shared by the REST helper methods, attaching auth headers and handling errors.",
+      "tags": [
+        "http",
+        "core-logic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/client.rs:do_rest_request",
+      "type": "function",
+      "name": "do_rest_request",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        214,
+        233
+      ],
+      "summary": "Builds and sends a REST API request for a given HTTP method, path, and optional body.",
+      "tags": [
+        "http"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/client.rs:parse_response",
+      "type": "function",
+      "name": "parse_response",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        235,
+        249
+      ],
+      "summary": "Parses an HTTP response into JSON, surfacing GitHub API error bodies and 401s as structured errors.",
+      "tags": [
+        "parsing",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/integrations/src/github/client.rs:GitHubClient",
+      "type": "class",
+      "name": "GitHubClient",
+      "filePath": "src-tauri/crates/integrations/src/github/client.rs",
+      "lineRange": [
+        41,
+        44
+      ],
+      "summary": "Authenticated GitHub API client bundling a reqwest HTTP client and bearer token, exposing REST and GraphQL helper methods used by every GitHub command handler.",
+      "tags": [
+        "api-client",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:build_clone_argv",
+      "type": "function",
+      "name": "build_clone_argv",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "lineRange": [
+        31,
+        52
+      ],
+      "summary": "Builds the argument vector for a `git clone` invocation using an embedded token credential and optional branch.",
+      "tags": [
+        "git",
+        "argument-building"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_git_credential_for_remote",
+      "type": "function",
+      "name": "github_git_credential_for_remote",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "lineRange": [
+        66,
+        80
+      ],
+      "summary": "Resolves the Git credential (username/token) to use for a given remote URL.",
+      "tags": [
+        "tauri-command",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_clone_repo",
+      "type": "function",
+      "name": "github_clone_repo",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "lineRange": [
+        100,
+        130
+      ],
+      "summary": "Tauri command that clones a GitHub repository into a target directory using the resolved credential token.",
+      "tags": [
+        "tauri-command",
+        "git",
+        "subprocess"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_check_token",
+      "type": "function",
+      "name": "github_check_token",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "lineRange": [
+        134,
+        146
+      ],
+      "summary": "Tauri command that validates the stored GitHub token by making an authenticated API call.",
+      "tags": [
+        "tauri-command",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:parse_issue",
+      "type": "function",
+      "name": "parse_issue",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        75,
+        98
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a GitHubIssue struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:parse_issue_comment",
+      "type": "function",
+      "name": "parse_issue_comment",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        100,
+        109
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a GitHubIssueComment struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issues",
+      "type": "function",
+      "name": "github_list_issues",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        120,
+        185
+      ],
+      "summary": "Tauri command that lists a repository's issues with optional state/label/assignee filters and pagination.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_get_issue",
+      "type": "function",
+      "name": "github_get_issue",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        188,
+        199
+      ],
+      "summary": "Tauri command that fetches a single issue by number.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue",
+      "type": "function",
+      "name": "github_create_issue",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        203,
+        227
+      ],
+      "summary": "Tauri command that creates a new issue with title, body, labels, and assignees.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_update_issue",
+      "type": "function",
+      "name": "github_update_issue",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        231,
+        270
+      ],
+      "summary": "Tauri command that updates an existing issue's title, body, state, labels, or assignees.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issue_comments",
+      "type": "function",
+      "name": "github_list_issue_comments",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        273,
+        293
+      ],
+      "summary": "Tauri command that lists comments on an issue with pagination.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue_comment",
+      "type": "function",
+      "name": "github_create_issue_comment",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        296,
+        312
+      ],
+      "summary": "Tauri command that posts a new comment on an issue.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_labels",
+      "type": "function",
+      "name": "github_list_repo_labels",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        315,
+        326
+      ],
+      "summary": "Tauri command that lists the labels defined on a repository.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_collaborators",
+      "type": "function",
+      "name": "github_list_repo_collaborators",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "lineRange": [
+        329,
+        344
+      ],
+      "summary": "Tauri command that lists a repository's collaborators.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:id_for_registry_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:id_for_registry_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:probe_cli_binary_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:probe_cli_binary_version",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:parse_version_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:resolve_cli_binary_with_options",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:find_on_process_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:known_locations_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:resolve_via_login_shell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:run_shell_command_with_timeout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:parse_command_v_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:command_path_candidates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "function:src-tauri/crates/integrations/src/cli_binary_resolver.rs:is_executable_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "class:src-tauri/crates/integrations/src/cli_binary_resolver.rs:CliBinaryId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "class:src-tauri/crates/integrations/src/cli_binary_resolver.rs:CliBinaryId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "class:src-tauri/crates/integrations/src/cli_binary_resolver.rs:CliBinaryResolution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "target": "class:src-tauri/crates/integrations/src/cli_binary_resolver.rs:CliBinaryResolution",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:read_lock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:is_process_running",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:try_create_exclusive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:try_acquire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:try_acquire",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:release",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:release",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:request_abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:request_abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:force_release_on_exit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "target": "function:src-tauri/crates/integrations/src/computer_use_lock.rs:force_release_on_exit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:server_detect_ides",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:server_detect_ides",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:detect_ide_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:parse_version_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:detect_last_used",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:get_user_data_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:newest_mtime_in_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:build_app_path_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:spotlight_date_to_iso",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:collect_app_ide_paths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:try_open_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:generate_app_name_variants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:open_in_external_ide",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:open_in_external_ide",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:show_in_folder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:show_in_folder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:open_folder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "function:src-tauri/crates/integrations/src/external_ide.rs:open_folder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_raw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_raw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:graphql",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:graphql",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:do_rest_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:parse_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "class:src-tauri/crates/integrations/src/github/client.rs:GitHubClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "target": "class:src-tauri/crates/integrations/src/github/client.rs:GitHubClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:build_clone_argv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:build_clone_argv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_git_credential_for_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_git_credential_for_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_clone_repo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_clone_repo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_check_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_check_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:parse_issue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:parse_issue_comment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issues",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issues",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_get_issue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_get_issue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_update_issue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_update_issue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issue_comments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issue_comments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue_comment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue_comment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_labels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_labels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_collaborators",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_collaborators",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "target": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/commands.rs",
+      "target": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_clone_repo",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:resolve_token",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/credentials.rs:github_check_token",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issues",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_get_issue",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_update_issue",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_issue_comments",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_create_issue_comment",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_labels",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/issues.rs:github_list_repo_collaborators",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

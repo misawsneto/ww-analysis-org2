@@ -1,0 +1,1574 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "type": "file",
+      "name": "github/commands/mod.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "summary": "Barrel module that wires together and re-exports the GitHub command submodules (shared, repos, pulls, issues, credentials) so their `#[tauri::command]` functions register under a single `github::commands::*` path.",
+      "tags": [
+        "barrel",
+        "module-registry",
+        "github",
+        "tauri-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "type": "file",
+      "name": "github/commands/pulls.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "summary": "Tauri commands and response models covering the full GitHub pull-request lifecycle: create/find/list PRs, commits and files, reviews and inline review comments, and rolled-up CI check status.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "github",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "type": "file",
+      "name": "github/commands/repos.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "summary": "Tauri commands and response models for listing, searching, and creating GitHub repositories and branches, plus fetching raw file content from a repo.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "github",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "type": "file",
+      "name": "github/commands/shared.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "summary": "Shared helpers used by every GitHub command module: resolves the active HTTPS credential token from the centralized connection-token store and constructs an authenticated GitHubClient.",
+      "tags": [
+        "utility",
+        "authentication",
+        "github",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "type": "file",
+      "name": "github/detect.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "summary": "Scans the local system for existing GitHub credentials -- gh CLI config, SSH public keys, and git credential-helper output -- to pre-populate the Connections setup wizard.",
+      "tags": [
+        "detection",
+        "credentials",
+        "github",
+        "filesystem"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/mod.rs",
+      "type": "file",
+      "name": "github/mod.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/mod.rs",
+      "summary": "Module root that declares and re-exports the GitHub integration's client, commands, detect, and profile submodules.",
+      "tags": [
+        "barrel",
+        "module-registry",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "type": "file",
+      "name": "github/profile.rs",
+      "filePath": "src-tauri/crates/integrations/src/github/profile.rs",
+      "summary": "Fetches a GitHub user's full profile (repos, language stats, commit history, top repos) concurrently on the client, replacing a slow server-side Python implementation that generated hundreds of serial API requests.",
+      "tags": [
+        "service",
+        "github",
+        "aggregation",
+        "concurrency"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses buffer_unordered(10) to fan out repo/commit-history requests concurrently instead of serially, and runs parallel per-year GraphQL queries for commit history."
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:get_paginated_array",
+      "type": "function",
+      "name": "get_paginated_array",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        19,
+        35
+      ],
+      "summary": "Fetches and concatenates every page of a top-level-array GitHub API endpoint via conditional GETs.",
+      "tags": [
+        "http",
+        "pagination",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:get_paginated_field_array",
+      "type": "function",
+      "name": "get_paginated_field_array",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        37,
+        57
+      ],
+      "summary": "Fetches and concatenates every page of a named-field array from a paginated GitHub API endpoint.",
+      "tags": [
+        "http",
+        "pagination",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr",
+      "type": "function",
+      "name": "github_create_pr",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        83,
+        111
+      ],
+      "summary": "Tauri command that creates a new pull request from a head/base branch pair, title, body, and draft flag.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_find_pull_request",
+      "type": "function",
+      "name": "github_find_pull_request",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        114,
+        162
+      ],
+      "summary": "Tauri command that looks up an existing open pull request for a given head branch.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_prs",
+      "type": "function",
+      "name": "github_list_prs",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        179,
+        223
+      ],
+      "summary": "Tauri command that lists a repository's pull requests filtered by state.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_pr",
+      "type": "function",
+      "name": "github_get_pr",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        226,
+        255
+      ],
+      "summary": "Tauri command that fetches a single pull request's details.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_commits",
+      "type": "function",
+      "name": "github_list_pr_commits",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        258,
+        271
+      ],
+      "summary": "Tauri command that lists the commits belonging to a pull request.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_files",
+      "type": "function",
+      "name": "github_list_pr_files",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        274,
+        284
+      ],
+      "summary": "Tauri command that lists the files changed by a pull request.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_pr_review",
+      "type": "function",
+      "name": "parse_pr_review",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        304,
+        314
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a GitHubPrReview struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_review_comment",
+      "type": "function",
+      "name": "parse_review_comment",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        340,
+        359
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a GitHubReviewComment struct, including inline diff position fields.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_check_run",
+      "type": "function",
+      "name": "parse_check_run",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        377,
+        389
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a GitHubCheckRun struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_status_context",
+      "type": "function",
+      "name": "parse_status_context",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        403,
+        411
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a GitHubStatusContext struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:roll_up_checks_state",
+      "type": "function",
+      "name": "roll_up_checks_state",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        427,
+        459
+      ],
+      "summary": "Aggregates individual CI check-run and commit-status results into a single overall pass/fail/pending state.",
+      "tags": [
+        "core-logic",
+        "aggregation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_reviews",
+      "type": "function",
+      "name": "github_list_pr_reviews",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        462,
+        474
+      ],
+      "summary": "Tauri command that lists the reviews submitted on a pull request.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_review_comments",
+      "type": "function",
+      "name": "github_list_pr_review_comments",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        477,
+        489
+      ],
+      "summary": "Tauri command that lists inline review comments on a pull request.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review",
+      "type": "function",
+      "name": "github_create_pr_review",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        494,
+        517
+      ],
+      "summary": "Tauri command that submits a top-level review (approve/request-changes/comment) on a pull request.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review_comment",
+      "type": "function",
+      "name": "github_create_pr_review_comment",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        524,
+        557
+      ],
+      "summary": "Tauri command that posts an inline review comment on a specific line of a pull request diff.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_reply_pr_review_comment",
+      "type": "function",
+      "name": "github_reply_pr_review_comment",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        561,
+        579
+      ],
+      "summary": "Tauri command that replies to an existing inline review comment thread.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_checks",
+      "type": "function",
+      "name": "github_get_checks",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "lineRange": [
+        584,
+        631
+      ],
+      "summary": "Tauri command that fetches and rolls up CI check-run and status results for a git ref.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:parse_repo",
+      "type": "function",
+      "name": "parse_repo",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        32,
+        45
+      ],
+      "summary": "Parses a raw GitHub API JSON value into a Repo struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:clean_repo_path",
+      "type": "function",
+      "name": "clean_repo_path",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        55,
+        64
+      ],
+      "summary": "Normalizes a repository-relative file path extracted from a remote URL.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_repo_full_name_from_remote",
+      "type": "function",
+      "name": "github_repo_full_name_from_remote",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        66,
+        81
+      ],
+      "summary": "Tauri command that extracts an `owner/repo` full name from a git remote URL.",
+      "tags": [
+        "tauri-command",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:parse_search_repo",
+      "type": "function",
+      "name": "parse_search_repo",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        121,
+        150
+      ],
+      "summary": "Parses a raw GitHub search-API JSON value into a SearchRepo struct.",
+      "tags": [
+        "parsing",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_search_repos",
+      "type": "function",
+      "name": "github_search_repos",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        164,
+        230
+      ],
+      "summary": "Tauri command that searches GitHub repositories by query with sort and pagination options.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_repos",
+      "type": "function",
+      "name": "github_list_repos",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        233,
+        252
+      ],
+      "summary": "Tauri command that lists the authenticated user's repositories with pagination.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_branches",
+      "type": "function",
+      "name": "github_list_branches",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        255,
+        270
+      ],
+      "summary": "Tauri command that lists a repository's branches.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_create_branch",
+      "type": "function",
+      "name": "github_create_branch",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        273,
+        292
+      ],
+      "summary": "Tauri command that creates a new branch from a given base SHA.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_get_content",
+      "type": "function",
+      "name": "github_get_content",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        312,
+        352
+      ],
+      "summary": "Tauri command that fetches a repository file's raw content (with binary/truncation detection) at a given ref.",
+      "tags": [
+        "tauri-command",
+        "github"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/integrations/src/github/commands/repos.rs:SearchRepo",
+      "type": "class",
+      "name": "SearchRepo",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "lineRange": [
+        99,
+        119
+      ],
+      "summary": "Repository search-result data model returned by GitHub's repo search API, including owner, fork/archive flags, and topics.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:resolve_token",
+      "type": "function",
+      "name": "resolve_token",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "lineRange": [
+        11,
+        16
+      ],
+      "summary": "Resolves the active HTTPS credential token from the centralized connection-token store, or returns the canonical GitHubReAuthRequired error.",
+      "tags": [
+        "authentication",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "function",
+      "name": "make_client",
+      "filePath": "src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "lineRange": [
+        18,
+        20
+      ],
+      "summary": "Constructs an authenticated GitHubClient using the resolved HTTPS token; called by nearly every GitHub command handler.",
+      "tags": [
+        "factory",
+        "authentication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_github_credentials",
+      "type": "function",
+      "name": "detect_github_credentials",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        52,
+        90
+      ],
+      "summary": "Tauri command that aggregates gh CLI, SSH key, and git credential-helper detection results into a single DetectedGitHubCredentials response.",
+      "tags": [
+        "tauri-command",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_gh_cli",
+      "type": "function",
+      "name": "detect_gh_cli",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        100,
+        110
+      ],
+      "summary": "Reads the gh CLI's hosts.yml config file to detect an existing gh CLI login.",
+      "tags": [
+        "filesystem",
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:extract_gh_cli_token",
+      "type": "function",
+      "name": "extract_gh_cli_token",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        112,
+        123
+      ],
+      "summary": "Extracts the OAuth token from gh CLI's hosts.yml content.",
+      "tags": [
+        "parsing",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:extract_gh_cli_username",
+      "type": "function",
+      "name": "extract_gh_cli_username",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        125,
+        136
+      ],
+      "summary": "Extracts the logged-in username from gh CLI's hosts.yml content.",
+      "tags": [
+        "parsing",
+        "credentials"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_ssh_keys",
+      "type": "function",
+      "name": "detect_ssh_keys",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        138,
+        181
+      ],
+      "summary": "Scans ~/.ssh/ for public key files and extracts their type and comment.",
+      "tags": [
+        "filesystem",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:probe_credential_helper",
+      "type": "function",
+      "name": "probe_credential_helper",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        184,
+        227
+      ],
+      "summary": "Invokes the configured git credential helper to probe for stored GitHub credentials.",
+      "tags": [
+        "subprocess",
+        "detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_credential_helper",
+      "type": "function",
+      "name": "detect_credential_helper",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        229,
+        247
+      ],
+      "summary": "Determines which git credential helper is configured and probes it for GitHub credentials.",
+      "tags": [
+        "detection",
+        "git"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_git_credentials_file",
+      "type": "function",
+      "name": "detect_git_credentials_file",
+      "filePath": "src-tauri/crates/integrations/src/github/detect.rs",
+      "lineRange": [
+        249,
+        262
+      ],
+      "summary": "Checks whether the global git-credentials file contains a github.com entry.",
+      "tags": [
+        "filesystem",
+        "detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_profile_internal",
+      "type": "function",
+      "name": "fetch_profile_internal",
+      "filePath": "src-tauri/crates/integrations/src/github/profile.rs",
+      "lineRange": [
+        76,
+        120
+      ],
+      "summary": "Fetches the authenticated user's profile, repos, language stats, commit history, and top repos concurrently and assembles the combined ProfileData response.",
+      "tags": [
+        "core-logic",
+        "aggregation",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_all_repos",
+      "type": "function",
+      "name": "fetch_all_repos",
+      "filePath": "src-tauri/crates/integrations/src/github/profile.rs",
+      "lineRange": [
+        127,
+        151
+      ],
+      "summary": "Fetches every page of the user's repositories via conditional GETs.",
+      "tags": [
+        "http",
+        "pagination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/profile.rs:aggregate_language_stats",
+      "type": "function",
+      "name": "aggregate_language_stats",
+      "filePath": "src-tauri/crates/integrations/src/github/profile.rs",
+      "lineRange": [
+        155,
+        202
+      ],
+      "summary": "Fans out per-repo language-byte-count requests concurrently and aggregates them into overall language percentages.",
+      "tags": [
+        "aggregation",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_commit_history",
+      "type": "function",
+      "name": "fetch_commit_history",
+      "filePath": "src-tauri/crates/integrations/src/github/profile.rs",
+      "lineRange": [
+        205,
+        245
+      ],
+      "summary": "Runs parallel per-year GraphQL contribution queries to build a multi-year commit-count history for a user.",
+      "tags": [
+        "graphql",
+        "concurrency",
+        "aggregation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_top_repos",
+      "type": "function",
+      "name": "fetch_top_repos",
+      "filePath": "src-tauri/crates/integrations/src/github/profile.rs",
+      "lineRange": [
+        248,
+        286
+      ],
+      "summary": "Fetches the user's top repositories ranked by stargazer count via a GraphQL query.",
+      "tags": [
+        "graphql",
+        "aggregation"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:get_paginated_array",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:get_paginated_field_array",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_find_pull_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_find_pull_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_prs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_prs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_pr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_pr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_commits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_commits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_pr_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_review_comment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_review_comment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_check_run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_check_run",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_status_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:parse_status_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:roll_up_checks_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:roll_up_checks_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_reviews",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_reviews",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_review_comments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_review_comments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review_comment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review_comment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_reply_pr_review_comment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_reply_pr_review_comment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_checks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_checks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:parse_repo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:parse_repo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:clean_repo_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_repo_full_name_from_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_repo_full_name_from_remote",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:parse_search_repo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_search_repos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_search_repos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_repos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_repos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_branches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_branches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_create_branch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_create_branch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_get_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_get_content",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "class:src-tauri/crates/integrations/src/github/commands/repos.rs:SearchRepo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "target": "class:src-tauri/crates/integrations/src/github/commands/repos.rs:SearchRepo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:resolve_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:resolve_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_github_credentials",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_github_credentials",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_gh_cli",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:extract_gh_cli_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:extract_gh_cli_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:extract_gh_cli_username",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:extract_gh_cli_username",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_ssh_keys",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:probe_credential_helper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_credential_helper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/detect.rs:detect_git_credentials_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_profile_internal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_all_repos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/profile.rs:aggregate_language_stats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_commit_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "target": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_top_repos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/commands/credentials.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/commands/issues.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/commands/pulls.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/commands/repos.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/commands/shared.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/client.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/commands/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/detect.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/github/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/profile.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_find_pull_request",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_prs",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_pr",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_commits",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_files",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_reviews",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_pr_review_comments",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_create_pr_review_comment",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_reply_pr_review_comment",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_checks",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:get_paginated_array",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:get_paginated_field_array",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_list_prs",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_pr",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/pulls.rs:github_get_checks",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_conditional",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_repos",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_list_branches",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_create_branch",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_get_content",
+      "target": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/repos.rs:github_get_content",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:get_raw",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/commands/shared.rs:make_client",
+      "target": "class:src-tauri/crates/integrations/src/github/client.rs:GitHubClient",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_profile_internal",
+      "target": "class:src-tauri/crates/integrations/src/github/client.rs:GitHubClient",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_commit_history",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:graphql",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/github/profile.rs:fetch_top_repos",
+      "target": "function:src-tauri/crates/integrations/src/github/client.rs:graphql",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

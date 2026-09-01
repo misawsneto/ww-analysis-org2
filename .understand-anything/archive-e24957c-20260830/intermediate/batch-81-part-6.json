@@ -1,0 +1,1461 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "type": "file",
+   "name": "sqlite.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "summary": "SQLite implementation of RecordStore: owns schema creation/migration and provides CRUD operations for sessions, activities, file changes, commit links, edit artifacts, diffs, and checkpoints -- the core persistence layer of orgtrack-core.",
+   "tags": [
+    "persistence",
+    "sqlite",
+    "crud",
+    "database",
+    "core"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "type": "file",
+   "name": "sync_export.rs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "summary": "Builds outbound sync-record payloads (session evidence, commit notes, file notes, AI-blame) from canonical session/diff/commit data for export to an external sync target.",
+   "tags": [
+    "sync",
+    "export",
+    "serialization",
+    "evidence"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:with_file_resource_savepoint",
+   "type": "function",
+   "name": "with_file_resource_savepoint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    20,
+    45
+   ],
+   "summary": "Runs a closure inside a SQLite savepoint scoped to file-resource mutations, rolling back automatically on error.",
+   "tags": [
+    "sqlite",
+    "transactions",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:ensure_column",
+   "type": "function",
+   "name": "ensure_column",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    47,
+    65
+   ],
+   "summary": "Adds a column to a table if it does not already exist, used for lightweight in-place schema migrations.",
+   "tags": [
+    "sqlite",
+    "migration",
+    "schema",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:new",
+   "type": "function",
+   "name": "new",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    68,
+    70
+   ],
+   "summary": "Constructs a SqliteRecordStore wrapping the given database connection.",
+   "tags": [
+    "constructor",
+    "sqlite",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_collaboration_session_provenance",
+   "type": "function",
+   "name": "delete_collaboration_session_provenance",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    78,
+    127
+   ],
+   "summary": "Deletes all derived/provenance rows tied to a collaboration session, used before a session is re-imported.",
+   "tags": [
+    "sqlite",
+    "deletion",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:init_tables",
+   "type": "function",
+   "name": "init_tables",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    129,
+    497
+   ],
+   "summary": "Creates (or migrates) all core orgtrack-core database tables: sessions, activities, file changes, commit links, edit artifacts, diffs, and checkpoints.",
+   "tags": [
+    "sqlite",
+    "schema",
+    "migration",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:init_source_cache_tables",
+   "type": "function",
+   "name": "init_source_cache_tables",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    499,
+    620
+   ],
+   "summary": "Creates the per-source cache tables used to track discovered raw history records and speed up incremental sync.",
+   "tags": [
+    "sqlite",
+    "schema",
+    "caching",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:interaction_import_is_current",
+   "type": "function",
+   "name": "interaction_import_is_current",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    632,
+    650
+   ],
+   "summary": "Checks whether a session's resource-interaction import is already up to date for a given fingerprint and parser version.",
+   "tags": [
+    "sqlite",
+    "caching",
+    "change-detection",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:mark_interaction_imported",
+   "type": "function",
+   "name": "mark_interaction_imported",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    654,
+    681
+   ],
+   "summary": "Records that a session's resource interactions have been imported for a given fingerprint and parser version.",
+   "tags": [
+    "sqlite",
+    "caching",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_reconciled_resource_interactions",
+   "type": "function",
+   "name": "delete_reconciled_resource_interactions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    685,
+    697
+   ],
+   "summary": "Deletes previously imported resource-interaction rows for a session so they can be safely re-imported.",
+   "tags": [
+    "sqlite",
+    "deletion",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_recent_hook_signals",
+   "type": "function",
+   "name": "list_recent_hook_signals",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    703,
+    752
+   ],
+   "summary": "Returns the most recent hook-derived activity signals across all sessions, most recent first.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_usage",
+   "type": "function",
+   "name": "upsert_session_usage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    757,
+    803
+   ],
+   "summary": "Inserts or updates a session's token-usage record.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_usage",
+   "type": "function",
+   "name": "get_session_usage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    805,
+    841
+   ],
+   "summary": "Reads a session's token-usage record.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_usage",
+   "type": "function",
+   "name": "delete_session_usage",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    843,
+    851
+   ],
+   "summary": "Deletes a session's token-usage record.",
+   "tags": [
+    "sqlite",
+    "deletion",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_by_scope",
+   "type": "function",
+   "name": "list_by_scope",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    853,
+    909
+   ],
+   "summary": "Generic helper that lists rows from a given table filtered by source/session scope and ordered by a caller-provided column.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session",
+   "type": "function",
+   "name": "upsert_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    913,
+    951
+   ],
+   "summary": "Inserts or updates a canonical SessionRecord row.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:append_activity",
+   "type": "function",
+   "name": "append_activity",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    953,
+    973
+   ],
+   "summary": "Appends a canonical ActivityRecord row for a session.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_file_change",
+   "type": "function",
+   "name": "upsert_file_change",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    975,
+    1001
+   ],
+   "summary": "Inserts or updates a FileChangeRecord row.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_file_resource",
+   "type": "function",
+   "name": "upsert_file_resource",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1003,
+    1051
+   ],
+   "summary": "Inserts or updates a tracked file-resource row within a savepoint.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:append_resource_interaction",
+   "type": "function",
+   "name": "append_resource_interaction",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1053,
+    1084
+   ],
+   "summary": "Appends a resource-interaction row linking a session to a tracked file resource.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_actor",
+   "type": "function",
+   "name": "upsert_session_actor",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1086,
+    1122
+   ],
+   "summary": "Inserts or updates the actor/author metadata associated with a session.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_commit_link",
+   "type": "function",
+   "name": "upsert_commit_link",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1124,
+    1138
+   ],
+   "summary": "Inserts or updates a link between a session and a git commit.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_edit_artifact",
+   "type": "function",
+   "name": "upsert_edit_artifact",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1140,
+    1173
+   ],
+   "summary": "Inserts or updates a session edit-artifact row.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_diff_chunk",
+   "type": "function",
+   "name": "upsert_diff_chunk",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1175,
+    1208
+   ],
+   "summary": "Inserts or updates a diff-chunk row for a session edit.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_final_diff",
+   "type": "function",
+   "name": "upsert_final_diff",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1210,
+    1236
+   ],
+   "summary": "Inserts or updates the final consolidated diff row for a session.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_checkpoint",
+   "type": "function",
+   "name": "upsert_session_checkpoint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1238,
+    1269
+   ],
+   "summary": "Inserts or updates a session checkpoint row.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_checkpoint_file_state",
+   "type": "function",
+   "name": "upsert_checkpoint_file_state",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1271,
+    1298
+   ],
+   "summary": "Inserts or updates a per-file state row for a session checkpoint.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_artifacts",
+   "type": "function",
+   "name": "delete_session_artifacts",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1300,
+    1343
+   ],
+   "summary": "Deletes all derived artifacts (diffs, checkpoints, commit links) for a session.",
+   "tags": [
+    "sqlite",
+    "deletion",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_derived_artifacts",
+   "type": "function",
+   "name": "delete_session_derived_artifacts",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1345,
+    1390
+   ],
+   "summary": "Deletes a narrower set of derived artifacts for a session, without touching commit links.",
+   "tags": [
+    "sqlite",
+    "deletion",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_edit_artifacts",
+   "type": "function",
+   "name": "list_edit_artifacts",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1392,
+    1403
+   ],
+   "summary": "Lists edit-artifact rows for a session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_diff_chunks",
+   "type": "function",
+   "name": "list_diff_chunks",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1405,
+    1416
+   ],
+   "summary": "Lists diff-chunk rows for a session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_final_diffs",
+   "type": "function",
+   "name": "list_final_diffs",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1418,
+    1429
+   ],
+   "summary": "Lists final-diff rows for a session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_session_checkpoints",
+   "type": "function",
+   "name": "list_session_checkpoints",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1431,
+    1442
+   ],
+   "summary": "Lists checkpoint rows for a session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_checkpoint_file_states",
+   "type": "function",
+   "name": "list_checkpoint_file_states",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1444,
+    1462
+   ],
+   "summary": "Lists per-file state rows for a given checkpoint.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_commit_links",
+   "type": "function",
+   "name": "list_commit_links",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1464,
+    1477
+   ],
+   "summary": "Lists all commit-link rows across every session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_commit_links_for_session",
+   "type": "function",
+   "name": "list_commit_links_for_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1479,
+    1500
+   ],
+   "summary": "Lists commit-link rows for a single session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_checkpoint",
+   "type": "function",
+   "name": "get_checkpoint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1502,
+    1513
+   ],
+   "summary": "Reads the latest scan checkpoint for a given source.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:put_checkpoint",
+   "type": "function",
+   "name": "put_checkpoint",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1515,
+    1529
+   ],
+   "summary": "Persists a scan checkpoint for a given source, used to resume incremental imports.",
+   "tags": [
+    "sqlite",
+    "crud",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_sessions",
+   "type": "function",
+   "name": "list_sessions",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1531,
+    1557
+   ],
+   "summary": "Lists sessions scoped to a workspace path.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_file_changes",
+   "type": "function",
+   "name": "list_file_changes",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1559,
+    1588
+   ],
+   "summary": "Lists file-change rows scoped to a workspace path.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_file_resource_interactions_page",
+   "type": "function",
+   "name": "list_file_resource_interactions_page",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1590,
+    1669
+   ],
+   "summary": "Returns a paginated page of resource-interaction rows for a given file within a repository.",
+   "tags": [
+    "sqlite",
+    "pagination",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_file_resource_revision",
+   "type": "function",
+   "name": "get_file_resource_revision",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1671,
+    1692
+   ],
+   "summary": "Reads the latest tracked revision of a file resource.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session",
+   "type": "function",
+   "name": "get_session",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1694,
+    1705
+   ],
+   "summary": "Reads a single canonical SessionRecord by id.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_actor",
+   "type": "function",
+   "name": "get_session_actor",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1707,
+    1724
+   ],
+   "summary": "Reads a session's actor metadata by source, session id, and actor id.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_actor_by_source_identity",
+   "type": "function",
+   "name": "get_session_actor_by_source_identity",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1726,
+    1743
+   ],
+   "summary": "Reads a session actor's metadata looked up by the source's own session id rather than orgii's canonical id.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_session_actors",
+   "type": "function",
+   "name": "list_session_actors",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1745,
+    1766
+   ],
+   "summary": "Lists all actors associated with a session.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_actor_by_transcript_session_id",
+   "type": "function",
+   "name": "get_session_actor_by_transcript_session_id",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    1768,
+    1785
+   ],
+   "summary": "Reads a session actor's metadata looked up by its raw transcript session id.",
+   "tags": [
+    "sqlite",
+    "query",
+    "persistence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:SqliteRecordStore",
+   "type": "class",
+   "name": "SqliteRecordStore",
+   "filePath": "src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "lineRange": [
+    12,
+    14
+   ],
+   "summary": "SQLite-backed implementation of the RecordStore trait, wrapping a database connection and providing schema init plus all persistence operations.",
+   "tags": [
+    "sqlite",
+    "persistence",
+    "core",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:session_evidence_sync_record",
+   "type": "function",
+   "name": "session_evidence_sync_record",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "lineRange": [
+    15,
+    73
+   ],
+   "summary": "Builds a sync-export record capturing the evidence (diffs and commit links) supporting a session's contribution.",
+   "tags": [
+    "sync",
+    "export",
+    "evidence",
+    "rust"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:commit_note_sync_records",
+   "type": "function",
+   "name": "commit_note_sync_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "lineRange": [
+    75,
+    112
+   ],
+   "summary": "Builds sync-export 'commit note' records summarizing which sessions and files are linked to each commit.",
+   "tags": [
+    "sync",
+    "export",
+    "evidence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:file_note_sync_records",
+   "type": "function",
+   "name": "file_note_sync_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "lineRange": [
+    114,
+    147
+   ],
+   "summary": "Builds sync-export 'file note' records summarizing the final diffs applied to each file.",
+   "tags": [
+    "sync",
+    "export",
+    "evidence",
+    "rust"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:session_ai_blame_sync_records",
+   "type": "function",
+   "name": "session_ai_blame_sync_records",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "lineRange": [
+    149,
+    162
+   ],
+   "summary": "Builds sync-export 'AI blame' records attributing file changes to the AI session and agent that produced them.",
+   "tags": [
+    "sync",
+    "export",
+    "evidence",
+    "rust"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:sync_record",
+   "type": "function",
+   "name": "sync_record",
+   "filePath": "src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "lineRange": [
+    172,
+    191
+   ],
+   "summary": "Constructs a generic sync-export record envelope with the given schema, entity id, timestamp, and payload.",
+   "tags": [
+    "sync",
+    "export",
+    "serialization",
+    "rust"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:with_file_resource_savepoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:ensure_column",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:new",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:new",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_collaboration_session_provenance",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_collaboration_session_provenance",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:init_tables",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:init_tables",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:init_source_cache_tables",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:init_source_cache_tables",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:interaction_import_is_current",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:interaction_import_is_current",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:mark_interaction_imported",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:mark_interaction_imported",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_reconciled_resource_interactions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_reconciled_resource_interactions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_recent_hook_signals",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_recent_hook_signals",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_usage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_usage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_usage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_usage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_usage",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_usage",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_by_scope",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:append_activity",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_file_change",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_file_resource",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:append_resource_interaction",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_actor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_commit_link",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_edit_artifact",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_diff_chunk",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_final_diff",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_session_checkpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:upsert_checkpoint_file_state",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_artifacts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:delete_session_derived_artifacts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_edit_artifacts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_diff_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_final_diffs",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_session_checkpoints",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_checkpoint_file_states",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_commit_links",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_commit_links_for_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_checkpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:put_checkpoint",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_file_changes",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_file_resource_interactions_page",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_file_resource_revision",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_actor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_actor_by_source_identity",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:list_session_actors",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:get_session_actor_by_transcript_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:SqliteRecordStore",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "class:src-tauri/crates/orgtrack-core/src/store/sqlite.rs:SqliteRecordStore",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:session_evidence_sync_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:session_evidence_sync_record",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:commit_note_sync_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:commit_note_sync_records",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:file_note_sync_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:file_note_sync_records",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:session_ai_blame_sync_records",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:session_ai_blame_sync_records",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/sync_export.rs",
+   "target": "function:src-tauri/crates/orgtrack-core/src/sync_export.rs:sync_record",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/canonical.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/orgtrack-core/src/store/sqlite.rs",
+   "target": "file:src-tauri/crates/orgtrack-core/src/session_usage.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  }
+ ]
+}

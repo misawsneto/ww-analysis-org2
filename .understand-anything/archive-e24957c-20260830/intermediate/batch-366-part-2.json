@@ -1,0 +1,981 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "type": "file",
+      "name": "useAgentADEActions.ts",
+      "filePath": "src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "summary": "Hook bridging the agent's ADE (Agentic Development Environment) 'ade' tool action requests to the frontend ActionSystem, dispatching zod-registered actions and reporting results back to the Rust backend via Tauri.",
+      "tags": [
+        "hook",
+        "action-system",
+        "tauri-bridge",
+        "agent-actions"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses Tauri Channel + window CustomEvent listeners to bridge Rust-originated agent actions into the frontend action registry."
+    },
+    {
+      "id": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:parseAdeActionEnvelope",
+      "type": "function",
+      "name": "parseAdeActionEnvelope",
+      "filePath": "src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "lineRange": [
+        97,
+        126
+      ],
+      "summary": "Parses and validates a raw agent-ade-action message payload into a structured action envelope, extracting the invoking session ID.",
+      "tags": [
+        "utility",
+        "parsing",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:matchesGuiManifestQuery",
+      "type": "function",
+      "name": "matchesGuiManifestQuery",
+      "filePath": "src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "lineRange": [
+        146,
+        165
+      ],
+      "summary": "Checks whether a requested GUI action matches a manifest query used to filter available ADE actions.",
+      "tags": [
+        "utility",
+        "matching",
+        "ade"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:useAgentADEActions",
+      "type": "function",
+      "name": "useAgentADEActions",
+      "filePath": "src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "lineRange": [
+        177,
+        491
+      ],
+      "summary": "Hook that listens for agent-ade-action CustomEvents, dispatches the requested action via zodActionRegistry, and reports results back to the Rust backend via Tauri invoke.",
+      "tags": [
+        "hook",
+        "tauri-bridge",
+        "action-system",
+        "agent-actions"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/index.ts",
+      "summary": "Main public entry point (barrel) for the SessionCore module, aggregating state atoms, event store, ingestion, hooks, rendering, and storage APIs, plus the initSessionCore() startup initializer.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "session",
+        "module-root"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/index.ts:initSessionCore",
+      "type": "function",
+      "name": "initSessionCore",
+      "filePath": "src/engines/SessionCore/index.ts",
+      "lineRange": [
+        48,
+        50
+      ],
+      "summary": "Idempotent startup initializer that awaits registration of the Rust-backed EventStore's Tauri 'es:changed' listener before session-dependent components mount.",
+      "tags": [
+        "entry-point",
+        "initialization",
+        "tauri-bridge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/ingestion/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/ingestion/index.ts",
+      "summary": "Barrel file re-exporting the Rust ingestion bridge, agent message adapters, and chat visibility filters used to normalize raw backend chunks into SessionEvents.",
+      "tags": [
+        "barrel",
+        "ingestion",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "type": "file",
+      "name": "rustBridge.ts",
+      "filePath": "src/engines/SessionCore/ingestion/rustBridge.ts",
+      "summary": "TypeScript wrappers around the Rust-side Tauri event-ingestion pipeline, converting ActivityChunks to the Rust-expected shape and exposing chunk processing/normalization and repo-context setup.",
+      "tags": [
+        "tauri-bridge",
+        "ingestion",
+        "rpc",
+        "rust-interop"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/ingestion/rustBridge.ts:toRawChunk",
+      "type": "function",
+      "name": "toRawChunk",
+      "filePath": "src/engines/SessionCore/ingestion/rustBridge.ts",
+      "lineRange": [
+        37,
+        50
+      ],
+      "summary": "Converts a TypeScript ActivityChunk into the raw snake_case shape expected by the Rust ingestion Tauri commands.",
+      "tags": [
+        "utility",
+        "conversion",
+        "rust-interop"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/ingestion/rustBridge.ts:processChunksRust",
+      "type": "function",
+      "name": "processChunksRust",
+      "filePath": "src/engines/SessionCore/ingestion/rustBridge.ts",
+      "lineRange": [
+        63,
+        73
+      ],
+      "summary": "Invokes the Rust-side full ingestion pipeline (consolidate to normalize to merge) for a batch of activity chunks via Tauri RPC.",
+      "tags": [
+        "tauri-bridge",
+        "ingestion",
+        "rpc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/ingestion/rustBridge.ts:normalizeChunkRust",
+      "type": "function",
+      "name": "normalizeChunkRust",
+      "filePath": "src/engines/SessionCore/ingestion/rustBridge.ts",
+      "lineRange": [
+        79,
+        88
+      ],
+      "summary": "Invokes the Rust-side single-chunk normalization command, used for streaming completions.",
+      "tags": [
+        "tauri-bridge",
+        "ingestion",
+        "rpc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/ingestion/rustBridge.ts:setEventStoreRepoContext",
+      "type": "function",
+      "name": "setEventStoreRepoContext",
+      "filePath": "src/engines/SessionCore/ingestion/rustBridge.ts",
+      "lineRange": [
+        95,
+        103
+      ],
+      "summary": "Sets the active repo ID/path context on the Rust-backed EventStore via Tauri RPC.",
+      "tags": [
+        "tauri-bridge",
+        "rust-interop"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/payloads/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/payloads/index.ts",
+      "summary": "Barrel file re-exporting the loaded-payload registry API for lazy-loaded event payload bodies.",
+      "tags": [
+        "barrel",
+        "payloads",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "type": "file",
+      "name": "loadedPayloadRegistry.ts",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "summary": "In-memory registry tracking lazily-loaded event payload bodies, pending loads, and byte-size accounting, with pruning to bound memory usage.",
+      "tags": [
+        "registry",
+        "caching",
+        "memory-management",
+        "payloads"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getPayloadRegistryKey",
+      "type": "function",
+      "name": "getPayloadRegistryKey",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        18,
+        24
+      ],
+      "summary": "Builds the composite registry key for a payload from session ID, event ID, and field path.",
+      "tags": [
+        "utility",
+        "registry",
+        "payloads"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getLoadedPayload",
+      "type": "function",
+      "name": "getLoadedPayload",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        26,
+        31
+      ],
+      "summary": "Looks up a currently loaded payload body by registry key.",
+      "tags": [
+        "registry",
+        "payloads",
+        "lookup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getPendingPayloadLoad",
+      "type": "function",
+      "name": "getPendingPayloadLoad",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        33,
+        37
+      ],
+      "summary": "Looks up an in-flight pending payload load promise by registry key.",
+      "tags": [
+        "registry",
+        "payloads",
+        "concurrency"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:trackPendingPayloadLoad",
+      "type": "function",
+      "name": "trackPendingPayloadLoad",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        39,
+        53
+      ],
+      "summary": "Registers an in-flight payload load promise under a registry key, deduplicating concurrent loads.",
+      "tags": [
+        "registry",
+        "payloads",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:markPayloadLoaded",
+      "type": "function",
+      "name": "markPayloadLoaded",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        55,
+        63
+      ],
+      "summary": "Marks a payload as loaded, storing its body and updating byte-size accounting.",
+      "tags": [
+        "registry",
+        "payloads",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:unloadPayload",
+      "type": "function",
+      "name": "unloadPayload",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        65,
+        67
+      ],
+      "summary": "Removes a payload body from the loaded-payload registry.",
+      "tags": [
+        "registry",
+        "payloads",
+        "memory-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:clearLoadedPayloads",
+      "type": "function",
+      "name": "clearLoadedPayloads",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        69,
+        72
+      ],
+      "summary": "Clears all entries from the loaded-payload registry.",
+      "tags": [
+        "registry",
+        "payloads",
+        "memory-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getLoadedPayloadStats",
+      "type": "function",
+      "name": "getLoadedPayloadStats",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        74,
+        79
+      ],
+      "summary": "Returns aggregate statistics (count, bytes) about currently loaded payloads.",
+      "tags": [
+        "registry",
+        "payloads",
+        "metrics"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:pruneLoadedPayloads",
+      "type": "function",
+      "name": "pruneLoadedPayloads",
+      "filePath": "src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "lineRange": [
+        99,
+        110
+      ],
+      "summary": "Evicts the oldest loaded payloads until total tracked bytes fall under a size budget.",
+      "tags": [
+        "registry",
+        "payloads",
+        "memory-management",
+        "eviction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/rendering/index.ts",
+      "summary": "Barrel file re-exporting the event rendering registry, unified rendering hooks, and props normalizer for displaying SessionEvents across chat and simulator contexts.",
+      "tags": [
+        "barrel",
+        "rendering",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "type": "file",
+      "name": "orgTaskOutcome.ts",
+      "filePath": "src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "summary": "Utility functions that interpret raw tool-call results for org-task operations, resolving success/failure/recoverable-validation-error outcomes and whether an event should be persisted.",
+      "tags": [
+        "utility",
+        "task-outcome",
+        "validation",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isRejectedResult",
+      "type": "function",
+      "name": "isRejectedResult",
+      "filePath": "src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "lineRange": [
+        32,
+        42
+      ],
+      "summary": "Predicate checking whether a raw tool-call result represents a rejected/failed operation.",
+      "tags": [
+        "predicate",
+        "validation",
+        "task-outcome"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isRecoverableTaskValidationError",
+      "type": "function",
+      "name": "isRecoverableTaskValidationError",
+      "filePath": "src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "lineRange": [
+        44,
+        54
+      ],
+      "summary": "Predicate identifying whether a failed task result is a recoverable validation error rather than a hard failure.",
+      "tags": [
+        "predicate",
+        "validation",
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:normalizedResult",
+      "type": "function",
+      "name": "normalizedResult",
+      "filePath": "src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "lineRange": [
+        56,
+        74
+      ],
+      "summary": "Normalizes a raw org-task tool result into a consistent shape for downstream outcome resolution.",
+      "tags": [
+        "utility",
+        "normalization",
+        "task-outcome"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:resolveOrgTaskOperationOutcome",
+      "type": "function",
+      "name": "resolveOrgTaskOperationOutcome",
+      "filePath": "src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "lineRange": [
+        81,
+        134
+      ],
+      "summary": "Resolves the final display outcome (success/failure/recoverable) for an org-task operation from its extracted data, raw result, and current display status.",
+      "tags": [
+        "utility",
+        "task-outcome",
+        "rendering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isPersistedOrgTaskEvent",
+      "type": "function",
+      "name": "isPersistedOrgTaskEvent",
+      "filePath": "src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "lineRange": [
+        136,
+        145
+      ],
+      "summary": "Determines whether an org-task event with the given extracted data/result/status should be persisted.",
+      "tags": [
+        "predicate",
+        "persistence",
+        "task-outcome"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/index.ts",
+      "summary": "Barrel file re-exporting event data extractors (thinking, file, edit, shell, search, todo) and the props normalizer hook.",
+      "tags": [
+        "barrel",
+        "rendering",
+        "props",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/propsDataExtractors.ts",
+      "type": "file",
+      "name": "propsDataExtractors.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/propsDataExtractors.ts",
+      "summary": "Re-export barrel consolidating domain-specific event data extractors (thinking, file, edit, shell, search, todo) that were split into separate modules for maintainability.",
+      "tags": [
+        "barrel",
+        "extractors",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "type": "file",
+      "name": "propsNormalizer.ts",
+      "filePath": "src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "summary": "Normalizes raw SessionEvent data into unified UI props, mapping tool status/context/variant and exposing both a pure function and a memoized React hook.",
+      "tags": [
+        "normalization",
+        "rendering",
+        "hook",
+        "props"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:shouldShowActiveEventPainting",
+      "type": "function",
+      "name": "shouldShowActiveEventPainting",
+      "filePath": "src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "lineRange": [
+        58,
+        67
+      ],
+      "summary": "Determines whether an event should render with 'active/in-progress' painting based on its status and creation time.",
+      "tags": [
+        "predicate",
+        "ui-state",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:mapStatus",
+      "type": "function",
+      "name": "mapStatus",
+      "filePath": "src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "lineRange": [
+        123,
+        152
+      ],
+      "summary": "Maps a raw event status string to the normalized EventStatus used by rendering components.",
+      "tags": [
+        "utility",
+        "mapping",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:inferStatusFromResult",
+      "type": "function",
+      "name": "inferStatusFromResult",
+      "filePath": "src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "lineRange": [
+        162,
+        171
+      ],
+      "summary": "Infers an event's status by inspecting its raw tool-call result when no explicit status is present.",
+      "tags": [
+        "utility",
+        "inference",
+        "rendering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:normalizeEventProps",
+      "type": "function",
+      "name": "normalizeEventProps",
+      "filePath": "src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "lineRange": [
+        201,
+        329
+      ],
+      "summary": "Core pure function that normalizes a raw SessionEvent into unified UniversalEventProps for chat/simulator rendering, resolving status/context/variant and delegating to type-specific data extractors.",
+      "tags": [
+        "normalization",
+        "rendering",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:useNormalizedEventProps",
+      "type": "function",
+      "name": "useNormalizedEventProps",
+      "filePath": "src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "lineRange": [
+        339,
+        347
+      ],
+      "summary": "Memoized React hook wrapper around normalizeEventProps for use in rendering components.",
+      "tags": [
+        "hook",
+        "rendering",
+        "memoization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/rendering/registry/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/engines/SessionCore/rendering/registry/index.ts",
+      "summary": "Barrel file re-exporting the unified event/tool registry system: tool metadata lookups, CLI alias resolution, lifecycle labels, tool-type detection, and React-coupled component loaders.",
+      "tags": [
+        "barrel",
+        "registry",
+        "rendering",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "target": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:parseAdeActionEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "target": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:matchesGuiManifestQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "target": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:useAgentADEActions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "target": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:useAgentADEActions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/hooks/useAgentADEActions.ts",
+      "target": "file:src/engines/SessionCore/hooks/adeReplyBinding.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:parseAdeActionEnvelope",
+      "target": "function:src/engines/SessionCore/hooks/adeReplyBinding.ts:extractInvokingSessionId",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/hooks/useAgentADEActions.ts:useAgentADEActions",
+      "target": "function:src/engines/SessionCore/hooks/adeReplyBinding.ts:resolveTrustedDispatchParams",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/index.ts",
+      "target": "function:src/engines/SessionCore/index.ts:initSessionCore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/index.ts",
+      "target": "function:src/engines/SessionCore/index.ts:initSessionCore",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/index.ts",
+      "target": "file:src/engines/SessionCore/core/store/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:toRawChunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:processChunksRust",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:processChunksRust",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:normalizeChunkRust",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:normalizeChunkRust",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:setEventStoreRepoContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/ingestion/rustBridge.ts",
+      "target": "function:src/engines/SessionCore/ingestion/rustBridge.ts:setEventStoreRepoContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getPayloadRegistryKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getPayloadRegistryKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getLoadedPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getLoadedPayload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getPendingPayloadLoad",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getPendingPayloadLoad",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:trackPendingPayloadLoad",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:trackPendingPayloadLoad",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:markPayloadLoaded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:markPayloadLoaded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:unloadPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:unloadPayload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:clearLoadedPayloads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:clearLoadedPayloads",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getLoadedPayloadStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:getLoadedPayloadStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts",
+      "target": "function:src/engines/SessionCore/payloads/loadedPayloadRegistry.ts:pruneLoadedPayloads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isRejectedResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isRecoverableTaskValidationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:normalizedResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:resolveOrgTaskOperationOutcome",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:resolveOrgTaskOperationOutcome",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isPersistedOrgTaskEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/orgTaskOutcome.ts",
+      "target": "function:src/engines/SessionCore/rendering/orgTaskOutcome.ts:isPersistedOrgTaskEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:shouldShowActiveEventPainting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:mapStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:mapStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:inferStatusFromResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:inferStatusFromResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:normalizeEventProps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:normalizeEventProps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:useNormalizedEventProps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/rendering/props/propsNormalizer.ts",
+      "target": "function:src/engines/SessionCore/rendering/props/propsNormalizer.ts:useNormalizedEventProps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    {
+      "id": "pipeline:.github/workflows/ci.yml",
+      "type": "pipeline",
+      "name": "ci.yml",
+      "filePath": ".github/workflows/ci.yml",
+      "summary": "GitHub Actions CI workflow that runs on every pull request to develop/release/master, executing parallel frontend (TypeScript typecheck, ESLint, Vitest) and Rust (cargo check, clippy, test) jobs on macOS runners.",
+      "tags": ["ci-cd", "testing", "typescript", "rust", "pull-request"],
+      "complexity": "moderate",
+      "languageNotes": "Toolchain versions (Node 20, pnpm 9, Rust stable, swatinem/rust-cache) are deliberately mirrored from release.yaml so CI validates the same environment used for production builds. Clippy is currently advisory-only (no -D warnings) pending a baseline cleanup, and cargo test is forced single-threaded to avoid races in tests exercising process-global SQLite state."
+    },
+    {
+      "id": "pipeline:.github/workflows/release.yaml",
+      "type": "pipeline",
+      "name": "release.yaml",
+      "filePath": ".github/workflows/release.yaml",
+      "summary": "GitHub Actions release workflow triggered by version tags (v*) that builds, code-signs, notarizes, and publishes ORGII desktop app installers sequentially for macOS (Apple Silicon), Windows x64 (Azure Trusted Signing via OIDC), and Linux x64, generating the Tauri updater manifest (latest.json) and a rolling SemVer-guarded beta channel.",
+      "tags": ["ci-cd", "deployment", "release", "code-signing", "cross-platform"],
+      "complexity": "complex",
+      "languageNotes": "The three platform jobs are chained with `needs:` into a strict macOS -> Windows -> Linux sequence rather than running in parallel, so each subsequent job can download and extend the same GitHub Release's latest.json updater manifest without a race. Windows beta builds intentionally ship NSIS only (WiX/MSI rejects SemVer prerelease versions)."
+    }
+  ],
+  "edges": []
+}

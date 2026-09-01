@@ -1,0 +1,1160 @@
+{
+  "nodes": [
+    {
+      "id": "config:src-tauri/crates/terminal/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/terminal/Cargo.toml",
+      "summary": "Crate manifest for the `terminal` crate, combining front-side PTY session Tauri commands with back-side agent-core LLM terminal tool plumbing, hoisted to collapse a circular dependency between the two.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "cargo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.fish",
+      "type": "file",
+      "name": "shellIntegration.fish",
+      "filePath": "src-tauri/crates/terminal/src/pty_commands/integration_scripts/shellIntegration.fish",
+      "summary": "Fish shell integration script injected into PTY sessions that emits OSC 633 escape sequences so Orgii's terminal UI can detect command boundaries, exit codes, and working-directory changes.",
+      "tags": [
+        "shell-integration",
+        "terminal",
+        "pty",
+        "osc-sequences"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Uses OSC 633 (VS Code-style shell integration protocol) to report cwd, prompt start/end, and command exit status back to the host application."
+    },
+    {
+      "id": "config:src-tauri/crates/test-helpers/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/test-helpers/Cargo.toml",
+      "summary": "Crate manifest for the workspace-wide `test-helpers` crate exposing the sandbox environment guard used by tests that mutate ORGII_HOME/HOME.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "testing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/test-helpers/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/test-helpers/src/lib.rs",
+      "summary": "Crate root for `test-helpers` that re-exports the `test_env` module, the canonical sandbox guard for tests mutating ORGII_HOME/HOME, hoisted out of the monolithic `app` crate.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "testing",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "type": "file",
+      "name": "test_env.rs",
+      "filePath": "src-tauri/crates/test-helpers/src/test_env.rs",
+      "summary": "Provides a process-wide mutex-guarded sandbox for tests that need to safely mutate the ORGII_HOME/HOME environment variables and restore them on drop, preventing cross-test interference.",
+      "tags": [
+        "testing",
+        "utility",
+        "sandbox",
+        "environment"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a global OnceLock<Mutex<()>> to serialize env-var mutation across parallel test threads, and an RAII guard (SandboxGuard) whose Drop impl restores prior HOME/ORGII_HOME values."
+    },
+    {
+      "id": "function:src-tauri/crates/test-helpers/src/test_env.rs:lock_home",
+      "type": "function",
+      "name": "lock_home",
+      "filePath": "src-tauri/crates/test-helpers/src/test_env.rs",
+      "lineRange": [
+        76,
+        81
+      ],
+      "summary": "Acquires the process-wide home-directory mutex, recovering from lock poisoning so a single panicking test does not permanently break the sandbox for subsequent tests.",
+      "tags": [
+        "testing",
+        "concurrency",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/test-helpers/src/test_env.rs:register_after_env_hook",
+      "type": "function",
+      "name": "register_after_env_hook",
+      "filePath": "src-tauri/crates/test-helpers/src/test_env.rs",
+      "lineRange": [
+        98,
+        100
+      ],
+      "summary": "Registers a one-time hook function invoked after the sandbox environment is set up, used by callers that need extra setup once HOME/ORGII_HOME are redirected.",
+      "tags": [
+        "testing",
+        "hook",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/test-helpers/src/test_env.rs:sandbox",
+      "type": "function",
+      "name": "sandbox",
+      "filePath": "src-tauri/crates/test-helpers/src/test_env.rs",
+      "lineRange": [
+        144,
+        166
+      ],
+      "summary": "Creates a temporary directory, redirects HOME and ORGII_HOME into it while holding the global lock, runs the registered after-env hook, and returns a SandboxGuard that restores the original environment on drop.",
+      "tags": [
+        "testing",
+        "sandbox",
+        "environment",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/test-helpers/src/test_env.rs:SandboxGuard",
+      "type": "class",
+      "name": "SandboxGuard",
+      "filePath": "src-tauri/crates/test-helpers/src/test_env.rs",
+      "lineRange": [
+        112,
+        118
+      ],
+      "summary": "RAII guard returned by sandbox() that holds the sandbox temp directory and mutex lock, restoring the previous ORGII_HOME/HOME values when dropped.",
+      "tags": [
+        "testing",
+        "raii-guard",
+        "sandbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/test-runner/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/test-runner/Cargo.toml",
+      "summary": "Crate manifest for the `test-runner` crate, a workspace utility crate for orchestrating or executing test suites.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "testing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/transport/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/transport/Cargo.toml",
+      "summary": "Crate manifest for the `transport` crate, providing shared network/IPC transport primitives used elsewhere in the Rust backend workspace.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "networking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/types/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/types/Cargo.toml",
+      "summary": "Crate manifest for the `types` crate, which defines shared wire-format type constants (such as tool names) consumed across multiple backend crates.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system",
+        "type-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/types/src/tool_names_tests.rs",
+      "type": "file",
+      "name": "tool_names_tests.rs",
+      "filePath": "src-tauri/crates/types/src/tool_names_tests.rs",
+      "summary": "Wire-string stability tests pinning every tool-name constant's exact string value, guarding against silent breakage of raw-string matches performed by other crates such as project_management's event hook.",
+      "tags": [
+        "test",
+        "type-definition",
+        "regression-test",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/types/src/tool_names_tests.rs:tool_name_constants_are_stable_wire_strings",
+      "type": "function",
+      "name": "tool_name_constants_are_stable_wire_strings",
+      "filePath": "src-tauri/crates/types/src/tool_names_tests.rs",
+      "lineRange": [
+        12,
+        93
+      ],
+      "summary": "Asserts that every tool-name constant (READ_FILE, LIST_DIR, RUN_SHELL, etc.) equals its expected raw wire string, catching accidental renames before they silently break external string matches.",
+      "tags": [
+        "test",
+        "regression-test",
+        "wire-format"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/types/src/tool_names_tests.rs:tool_names_referenced_by_event_hook_are_present",
+      "type": "function",
+      "name": "tool_names_referenced_by_event_hook_are_present",
+      "filePath": "src-tauri/crates/types/src/tool_names_tests.rs",
+      "lineRange": [
+        96,
+        105
+      ],
+      "summary": "Verifies that the tool names referenced by project_management's lineage event hook are actually present among the defined tool-name constants.",
+      "tags": [
+        "test",
+        "regression-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/crates/ui-indexer/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/ui-indexer/Cargo.toml",
+      "summary": "Crate manifest for the `ui-indexer` crate, a workspace utility crate for indexing UI-related assets or metadata.",
+      "tags": [
+        "configuration",
+        "rust",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml",
+      "type": "config",
+      "name": "ic_launcher.xml",
+      "filePath": "src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml",
+      "summary": "Android adaptive-icon descriptor pointing to the foreground drawable and background color used to render Orgii's Android app icon.",
+      "tags": [
+        "configuration",
+        "android",
+        "icon",
+        "asset"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src-tauri/icons/android/values/ic_launcher_background.xml",
+      "type": "config",
+      "name": "ic_launcher_background.xml",
+      "filePath": "src-tauri/icons/android/values/ic_launcher_background.xml",
+      "summary": "Android resource file defining the solid background color (#fff) referenced by the adaptive launcher icon.",
+      "tags": [
+        "configuration",
+        "android",
+        "icon",
+        "asset"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/icons/icon.icns",
+      "type": "file",
+      "name": "icon.icns",
+      "filePath": "src-tauri/icons/icon.icns",
+      "summary": "Compiled macOS multi-resolution application icon bundle (.icns) used by the Tauri build to brand the desktop app on macOS.",
+      "tags": [
+        "asset",
+        "icon",
+        "macos",
+        "binary"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src-tauri/model/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src-tauri/model/README.md",
+      "summary": "Explains that the `model/` directory holds embedding models for semantic code search and directs developers to run the download script since model files are excluded from git due to size.",
+      "tags": [
+        "documentation",
+        "setup-guide",
+        "embeddings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/proto/cursor_agent_v1.descriptor.pb",
+      "type": "file",
+      "name": "cursor_agent_v1.descriptor.pb",
+      "filePath": "src-tauri/proto/cursor_agent_v1.descriptor.pb",
+      "summary": "Checked-in binary protobuf FileDescriptorSet for Cursor's internal `agent.v1` gRPC/Connect API schema (~300 messages), consumed by agent-core's build.rs via prost-build so protoc is not required at build time.",
+      "tags": [
+        "schema-definition",
+        "protobuf",
+        "binary",
+        "build-artifact"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extracted and decoded from a third-party TypeScript client's embedded base64 FileDescriptorProto, then wrapped into a single-file FileDescriptorSet for prost-build consumption."
+    },
+    {
+      "id": "document:src-tauri/proto/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src-tauri/proto/README.md",
+      "summary": "Documents the provenance, rationale, and build-time usage of the two checked-in binary protobuf descriptor sets (Cursor agent.v1 and Warp multi_agent.v1) that let ORGII generate Rust protobuf bindings without requiring protoc during normal builds.",
+      "tags": [
+        "documentation",
+        "protobuf",
+        "schema-definition",
+        "build-system"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/proto/warp_multi_agent_v1.descriptor.pb",
+      "type": "file",
+      "name": "warp_multi_agent_v1.descriptor.pb",
+      "filePath": "src-tauri/proto/warp_multi_agent_v1.descriptor.pb",
+      "summary": "Checked-in binary protobuf FileDescriptorSet for Warp's published `warp.multi_agent.v1` schema, used via prost-reflect to decode task transcript blobs stored in Warp's local warp.sqlite database.",
+      "tags": [
+        "schema-definition",
+        "protobuf",
+        "binary",
+        "build-artifact"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Sourced from warpdotdev/warp-proto-apis at a pinned commit/SHA-256, normalized for Edition 2023 prost compatibility, and updated by re-running the upstream build.rs."
+    },
+    {
+      "id": "file:src-tauri/resources/download_models.py",
+      "type": "file",
+      "name": "download_models.py",
+      "filePath": "src-tauri/resources/download_models.py",
+      "summary": "Interactive CLI script that downloads and verifies the CodeRankEmbed GGUF embedding model and tokenizer used for semantic code search, with progress reporting and re-download prompts.",
+      "tags": [
+        "script",
+        "utility",
+        "embeddings",
+        "cli"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/resources/download_models.py:download_file",
+      "type": "function",
+      "name": "download_file",
+      "filePath": "src-tauri/resources/download_models.py",
+      "lineRange": [
+        14,
+        34
+      ],
+      "summary": "Downloads a single file from a URL to a destination path via urllib, printing a live progress percentage as blocks arrive.",
+      "tags": [
+        "utility",
+        "download",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/resources/download_models.py:download_coderank_gguf",
+      "type": "function",
+      "name": "download_coderank_gguf",
+      "filePath": "src-tauri/resources/download_models.py",
+      "lineRange": [
+        37,
+        69
+      ],
+      "summary": "Ensures the ggml model directory exists and downloads the CodeRankEmbed GGUF model file and its tokenizer if they are not already present.",
+      "tags": [
+        "utility",
+        "download",
+        "embeddings"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/resources/download_models.py:verify_models",
+      "type": "function",
+      "name": "verify_models",
+      "filePath": "src-tauri/resources/download_models.py",
+      "lineRange": [
+        72,
+        94
+      ],
+      "summary": "Checks that the required model files exist on disk and reports their file sizes, returning whether verification succeeded.",
+      "tags": [
+        "utility",
+        "validation",
+        "embeddings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/resources/download_models.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "src-tauri/resources/download_models.py",
+      "lineRange": [
+        97,
+        161
+      ],
+      "summary": "CLI entry point that verifies existing models, prompts the user before re-downloading or downloading for the first time, and reports the final verification outcome.",
+      "tags": [
+        "entry-point",
+        "cli",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src-tauri/src/agent_sessions/event_pipeline/fixtures/visibility_parity.json",
+      "type": "config",
+      "name": "visibility_parity.json",
+      "filePath": "src-tauri/src/agent_sessions/event_pipeline/fixtures/visibility_parity.json",
+      "summary": "Test fixture enumerating named event-visibility scenarios (e.g. streaming thinking deltas) with expected chat-canonical event shapes, used to assert visibility parity in the agent session event pipeline.",
+      "tags": [
+        "test-fixture",
+        "data",
+        "event-pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/api/agent/dto_extended_tests.rs",
+      "type": "file",
+      "name": "dto_extended_tests.rs",
+      "filePath": "src-tauri/src/api/agent/dto_extended_tests.rs",
+      "summary": "Extended test suite (included directly into dto.rs via #[path]) covering AgentRuntimeView construction from both ResolvedAgent and AgentDefinition, asserting field mapping correctness and camelCase JSON serialization for the agent DTO layer.",
+      "tags": [
+        "test",
+        "dto",
+        "serialization",
+        "rust"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Included into dto.rs at compile time via #[cfg(test)] #[path = \"dto_extended_tests.rs\"] rather than a normal `mod` file import, so it shares dto.rs's module scope; contains roughly 200 #[test] functions covering every AgentRuntimeView field."
+    },
+    {
+      "id": "file:src-tauri/src/commands/handler_list.inc",
+      "type": "file",
+      "name": "handler_list.inc",
+      "filePath": "src-tauri/src/commands/handler_list.inc",
+      "summary": "Master flat list of every Tauri command handler path exposed to the frontend, included into main.rs via `tauri::generate_handler![...]`; any command omitted here is silently unreachable from the UI.",
+      "tags": [
+        "command-registry",
+        "tauri",
+        "generated",
+        "rustfmt-skip"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Not a compilable Rust module on its own \u2014 it is textually spliced into a `generate_handler!` macro invocation, so tree-sitter finds no functions/classes despite the file being over a thousand lines of command paths."
+    },
+    {
+      "id": "document:src-tauri/src/CONVENTIONS.md",
+      "type": "document",
+      "name": "CONVENTIONS.md",
+      "filePath": "src-tauri/src/CONVENTIONS.md",
+      "summary": "Documents naming conventions for the Rust backend, covering constant naming patterns for limits/thresholds, timeouts/intervals, and size/count constants (e.g. MAX_*, *_TIMEOUT_SECS, *_SIZE_BYTES).",
+      "tags": [
+        "documentation",
+        "conventions",
+        "rust",
+        "development"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "type": "file",
+      "name": "housekeeping_orphans.rs",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "summary": "Orphan-eviction helpers for the housekeeping orchestrator that identify and remove session-scoped artifacts (directories, CLI profiles, kiro proxy homes, scratchpads, agent worktrees, session images, gateway bindings) whose owning session no longer exists in the database.",
+      "tags": [
+        "infrastructure",
+        "cleanup",
+        "housekeeping",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:list_known_session_ids",
+      "type": "function",
+      "name": "list_known_session_ids",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        22,
+        71
+      ],
+      "summary": "Collects every session_id currently present in both the agent_sessions and code_sessions tables, used by the orphan sweep to decide whether a per-session directory still has a live owner.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_session_dirs",
+      "type": "function",
+      "name": "evict_orphan_session_dirs",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        76,
+        117
+      ],
+      "summary": "Deletes per-session directories under the sessions root whose session_id is not present in the known-session-ids set.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_cli_session_profiles",
+      "type": "function",
+      "name": "evict_orphan_cli_session_profiles",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        122,
+        163
+      ],
+      "summary": "Removes CLI session profile directories that no longer correspond to a known session_id.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_kiro_proxy_homes",
+      "type": "function",
+      "name": "evict_orphan_kiro_proxy_homes",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        166,
+        170
+      ],
+      "summary": "Evicts orphaned Kiro proxy home directories that are not backed by a known session.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_scratchpads",
+      "type": "function",
+      "name": "evict_orphan_scratchpads",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        174,
+        225
+      ],
+      "summary": "Removes scratchpad files/directories left behind by sessions that no longer exist.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_agent_worktrees",
+      "type": "function",
+      "name": "evict_orphan_agent_worktrees",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        236,
+        284
+      ],
+      "summary": "Deletes agent git worktrees created exclusively for CLI agent sessions whose session_id is no longer known.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_session_images",
+      "type": "function",
+      "name": "evict_orphan_session_images",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        292,
+        343
+      ],
+      "summary": "Removes cached session preview images that are not among the currently live session image filenames.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:live_session_image_filenames",
+      "type": "function",
+      "name": "live_session_image_filenames",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        350,
+        378
+      ],
+      "summary": "Computes the set of session image filenames that are still considered live, used to filter which cached images to evict.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_gateway_bindings",
+      "type": "function",
+      "name": "evict_orphan_gateway_bindings",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "lineRange": [
+        403,
+        461
+      ],
+      "summary": "Removes gateway network bindings associated with sessions that no longer exist in the session tables.",
+      "tags": [
+        "housekeeping",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "type": "file",
+      "name": "housekeeping_ttl.rs",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "summary": "TTL-based file pruning helpers for the housekeeping orchestrator that cap per-session snapshot storage and remove log files and other artifacts older than a configured maximum age.",
+      "tags": [
+        "infrastructure",
+        "cleanup",
+        "housekeeping",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:cap_all_surviving_sessions",
+      "type": "function",
+      "name": "cap_all_surviving_sessions",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "lineRange": [
+        15,
+        35
+      ],
+      "summary": "Visits every session with at least one agent_snapshots row and runs the per-session snapshot cap helper on it, returning counts of sessions touched, manifests removed, and blobs removed.",
+      "tags": [
+        "housekeeping",
+        "ttl",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_log_files",
+      "type": "function",
+      "name": "prune_old_log_files",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "lineRange": [
+        43,
+        45
+      ],
+      "summary": "Removes log files older than the given maximum age in days.",
+      "tags": [
+        "housekeeping",
+        "ttl",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_files_in_dir",
+      "type": "function",
+      "name": "prune_old_files_in_dir",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "lineRange": [
+        50,
+        98
+      ],
+      "summary": "Prunes files older than max_age_days from a single directory (non-recursive), removing files exceeding the TTL cutoff.",
+      "tags": [
+        "housekeeping",
+        "ttl",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_files_recursive",
+      "type": "function",
+      "name": "prune_old_files_recursive",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "lineRange": [
+        106,
+        130
+      ],
+      "summary": "Recursively walks a directory tree and prunes files older than max_age_days, delegating to the recursive inner helper.",
+      "tags": [
+        "housekeeping",
+        "ttl",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:remove_old_files_recursive_inner",
+      "type": "function",
+      "name": "remove_old_files_recursive_inner",
+      "filePath": "src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "lineRange": [
+        132,
+        172
+      ],
+      "summary": "Recursive worker that walks directory entries, computing a cutoff time and removing files/subdirectory contents older than that cutoff.",
+      "tags": [
+        "housekeeping",
+        "ttl",
+        "cleanup",
+        "infrastructure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/src/infrastructure/spreadsheet_csv_tests.rs",
+      "type": "file",
+      "name": "spreadsheet_csv_tests.rs",
+      "filePath": "src-tauri/src/infrastructure/spreadsheet_csv_tests.rs",
+      "summary": "Unit tests for the spreadsheet CSV/TSV module, covering delimiter selection by file extension and cell-patch grouping/application logic used to apply sparse edits to tabular data.",
+      "tags": [
+        "test",
+        "csv",
+        "spreadsheet",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/src/infrastructure/spreadsheet_csv_tests.rs:group_patches_overwrites_duplicate_cell_with_last_value",
+      "type": "function",
+      "name": "group_patches_overwrites_duplicate_cell_with_last_value",
+      "filePath": "src-tauri/src/infrastructure/spreadsheet_csv_tests.rs",
+      "lineRange": [
+        16,
+        36
+      ],
+      "summary": "Asserts that when multiple patches target the same cell, grouping the patches keeps only the last value written to that cell.",
+      "tags": [
+        "test",
+        "csv",
+        "data-patching"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "function:src-tauri/crates/test-helpers/src/test_env.rs:lock_home",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "function:src-tauri/crates/test-helpers/src/test_env.rs:register_after_env_hook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "function:src-tauri/crates/test-helpers/src/test_env.rs:sandbox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "class:src-tauri/crates/test-helpers/src/test_env.rs:SandboxGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/types/src/tool_names_tests.rs",
+      "target": "function:src-tauri/crates/types/src/tool_names_tests.rs:tool_name_constants_are_stable_wire_strings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/types/src/tool_names_tests.rs",
+      "target": "function:src-tauri/crates/types/src/tool_names_tests.rs:tool_names_referenced_by_event_hook_are_present",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:download_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:download_coderank_gguf",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:verify_models",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:cap_all_surviving_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_log_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_files_in_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_files_recursive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:remove_old_files_recursive_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/spreadsheet_csv_tests.rs",
+      "target": "function:src-tauri/src/infrastructure/spreadsheet_csv_tests.rs:group_patches_overwrites_duplicate_cell_with_last_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:list_known_session_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_session_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_cli_session_profiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_kiro_proxy_homes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_scratchpads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_agent_worktrees",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_session_images",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:live_session_image_filenames",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_gateway_bindings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "function:src-tauri/crates/test-helpers/src/test_env.rs:lock_home",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "function:src-tauri/crates/test-helpers/src/test_env.rs:register_after_env_hook",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "function:src-tauri/crates/test-helpers/src/test_env.rs:sandbox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "target": "class:src-tauri/crates/test-helpers/src/test_env.rs:SandboxGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:download_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:download_coderank_gguf",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:verify_models",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/resources/download_models.py",
+      "target": "function:src-tauri/resources/download_models.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:cap_all_surviving_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_log_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_files_in_dir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:prune_old_files_recursive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_ttl.rs:remove_old_files_recursive_inner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:list_known_session_ids",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_session_dirs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_cli_session_profiles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_kiro_proxy_homes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_scratchpads",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_agent_worktrees",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_session_images",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:live_session_image_filenames",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs",
+      "target": "function:src-tauri/src/infrastructure/housekeeping/housekeeping_orphans.rs:evict_orphan_gateway_bindings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/test-helpers/src/lib.rs",
+      "target": "file:src-tauri/crates/test-helpers/src/test_env.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "config:src-tauri/crates/test-helpers/Cargo.toml",
+      "target": "file:src-tauri/crates/test-helpers/src/lib.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:src-tauri/crates/types/Cargo.toml",
+      "target": "file:src-tauri/crates/types/src/tool_names_tests.rs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:src-tauri/model/README.md",
+      "target": "file:src-tauri/resources/download_models.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src-tauri/proto/README.md",
+      "target": "file:src-tauri/proto/cursor_agent_v1.descriptor.pb",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src-tauri/proto/README.md",
+      "target": "file:src-tauri/proto/warp_multi_agent_v1.descriptor.pb",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

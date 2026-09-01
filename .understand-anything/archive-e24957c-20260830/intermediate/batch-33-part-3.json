@@ -1,0 +1,2114 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "type": "file",
+   "name": "executor.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "summary": "Executes matched hooks for a lifecycle event \u2014 running command, prompt, and http hook entries concurrently with per-hook timeouts \u2014 and implements the exit-code-2 blocking-feedback contract for command hooks.",
+   "tags": [
+    "hooks",
+    "executor",
+    "concurrency"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:HookResult",
+   "type": "class",
+   "name": "HookResult",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "lineRange": [
+    13,
+    23
+   ],
+   "summary": "Result of executing a single hook: success flag, captured stdout/stderr, duration, and exit code (for the exit-code-2 blocking contract).",
+   "tags": [
+    "data-model",
+    "hooks"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:HookExecutor",
+   "type": "class",
+   "name": "HookExecutor",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "lineRange": [
+    38,
+    41
+   ],
+   "summary": "Loads `.orgii/hooks.json` for a workspace and runs matched hooks concurrently for a given event, supporting command (shell), prompt (text injection), and http (webhook) hook types with regex tool-name matching.",
+   "tags": [
+    "hooks",
+    "executor",
+    "concurrency"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:matcher_applies",
+   "type": "function",
+   "name": "matcher_applies",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "lineRange": [
+    405,
+    416
+   ],
+   "summary": "Checks whether a command hook's tool-name matcher (an anchored regex, or `*`/empty for all) matches the current tool name, falling back to exact string comparison on invalid regex.",
+   "tags": [
+    "validation",
+    "regex"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "summary": "Module root for the lifecycle hook system; declares the config/dispatch/events/executor submodules and re-exports `HookEvent` and `HookExecutor` as the public API surface.",
+   "tags": [
+    "entry-point",
+    "barrel",
+    "hooks"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "type": "file",
+   "name": "tests.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "summary": "Integration test suite for the hooks system covering config parsing/merging, concurrent hook execution, matcher filtering, timeout handling, compaction dispatch, and hook-decision parsing.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_valid_json",
+   "type": "function",
+   "name": "config_parse_valid_json",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    82,
+    98
+   ],
+   "summary": "Verifies a well-formed hooks.json parses into the expected `HooksConfig` structure.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_concatenates_same_event",
+   "type": "function",
+   "name": "config_merge_concatenates_same_event",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    120,
+    154
+   ],
+   "summary": "Verifies global and workspace hook entries for the same event are concatenated rather than one overriding the other.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_combines_different_events",
+   "type": "function",
+   "name": "config_merge_combines_different_events",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    157,
+    184
+   ],
+   "summary": "Verifies global and workspace configs covering different events are both retained after merge.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_empty_global_returns_project",
+   "type": "function",
+   "name": "config_merge_empty_global_returns_project",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    187,
+    202
+   ],
+   "summary": "Verifies merging an empty global config with a populated workspace config yields just the workspace entries.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_empty_project_returns_global",
+   "type": "function",
+   "name": "config_merge_empty_project_returns_global",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    205,
+    221
+   ],
+   "summary": "Verifies merging a populated global config with an empty workspace config yields just the global entries.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_detects_registered_hooks",
+   "type": "function",
+   "name": "executor_detects_registered_hooks",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    261,
+    275
+   ],
+   "summary": "Verifies `HookExecutor::has_hooks_for` correctly reports whether an event has registered hooks.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_run_echo_command",
+   "type": "function",
+   "name": "executor_run_echo_command",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    288,
+    306
+   ],
+   "summary": "Verifies a simple echo command hook runs successfully and captures its stdout.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_passes_env_vars_to_command",
+   "type": "function",
+   "name": "executor_passes_env_vars_to_command",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    309,
+    327
+   ],
+   "summary": "Verifies `HookContext` env vars are passed through to the spawned command hook process.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_injects_hook_event_env",
+   "type": "function",
+   "name": "executor_injects_hook_event_env",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    330,
+    346
+   ],
+   "summary": "Verifies the executor injects an ORGII_HOOK_EVENT env var identifying the firing event into command hooks.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_handles_failing_command",
+   "type": "function",
+   "name": "executor_handles_failing_command",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    349,
+    367
+   ],
+   "summary": "Verifies a non-zero-exit command hook is reported as failed with captured stderr.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_timeout_reports_failure",
+   "type": "function",
+   "name": "executor_timeout_reports_failure",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    370,
+    389
+   ],
+   "summary": "Verifies a hook exceeding its timeout is reported as a failed result rather than hanging.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_preserves_config_order_in_results",
+   "type": "function",
+   "name": "executor_preserves_config_order_in_results",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    392,
+    425
+   ],
+   "summary": "Verifies concurrently-run hook results are returned in config order regardless of completion order.",
+   "tags": [
+    "test",
+    "executor",
+    "concurrency"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_runs_hooks_concurrently",
+   "type": "function",
+   "name": "executor_runs_hooks_concurrently",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    428,
+    468
+   ],
+   "summary": "Verifies multiple hooks for one event run concurrently rather than sequentially, bounding total time by the slowest hook.",
+   "tags": [
+    "test",
+    "executor",
+    "concurrency"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_matcher_skips_non_matching_tool_in_concurrent_run",
+   "type": "function",
+   "name": "executor_matcher_skips_non_matching_tool_in_concurrent_run",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    471,
+    495
+   ],
+   "summary": "Verifies a matcher-gated hook is skipped when the firing tool name doesn't match, even during concurrent execution.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_failing_hook_does_not_block_subsequent",
+   "type": "function",
+   "name": "executor_failing_hook_does_not_block_subsequent",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    498,
+    525
+   ],
+   "summary": "Verifies a failing hook does not prevent other hooks for the same event from running and reporting results.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:stop_hook_receives_turn_metadata_env_vars",
+   "type": "function",
+   "name": "stop_hook_receives_turn_metadata_env_vars",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    532,
+    557
+   ],
+   "summary": "Verifies Stop-event hooks receive turn-related metadata (turn id, tool call count) as env vars.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:session_stop_hook_receives_status_env_var",
+   "type": "function",
+   "name": "session_stop_hook_receives_status_env_var",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    560,
+    581
+   ],
+   "summary": "Verifies SessionStop hooks receive a session status env var.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_prompt_hook",
+   "type": "function",
+   "name": "config_parse_prompt_hook",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    608,
+    619
+   ],
+   "summary": "Verifies a prompt-type hook entry parses correctly from JSON.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:collect_prompt_hooks_concatenates_content",
+   "type": "function",
+   "name": "collect_prompt_hooks_concatenates_content",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    639,
+    666
+   ],
+   "summary": "Verifies multiple prompt hooks for one event have their content concatenated by `collect_prompt_hooks`.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:prompt_hook_run_returns_success_noop",
+   "type": "function",
+   "name": "prompt_hook_run_returns_success_noop",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    669,
+    686
+   ],
+   "summary": "Verifies running a prompt-type hook via `HookExecutor::run` is a no-op that reports success.",
+   "tags": [
+    "test",
+    "executor"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_http_hook",
+   "type": "function",
+   "name": "config_parse_http_hook",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    693,
+    712
+   ],
+   "summary": "Verifies an http-type hook entry (url, method, headers) parses correctly from JSON.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:http_method_default_is_post",
+   "type": "function",
+   "name": "http_method_default_is_post",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    715,
+    724
+   ],
+   "summary": "Verifies the default HTTP method for an http hook entry is POST when unspecified.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_mixed_hook_types",
+   "type": "function",
+   "name": "config_parse_mixed_hook_types",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    727,
+    739
+   ],
+   "summary": "Verifies a hooks.json mixing command, prompt, and http entries for the same event parses correctly.",
+   "tags": [
+    "test",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:new_events_serialize_correctly",
+   "type": "function",
+   "name": "new_events_serialize_correctly",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    746,
+    756
+   ],
+   "summary": "Verifies the newer lifecycle events (PrePromptBuild, PreCompaction, PostCompaction) serialize to the expected string form.",
+   "tags": [
+    "test",
+    "events"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:new_events_round_trip",
+   "type": "function",
+   "name": "new_events_round_trip",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    759,
+    770
+   ],
+   "summary": "Verifies the newer lifecycle events round-trip through serialize/deserialize without loss.",
+   "tags": [
+    "test",
+    "events"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:parse_hook_decision_deny_blocks_tool",
+   "type": "function",
+   "name": "parse_hook_decision_deny_blocks_tool",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    777,
+    789
+   ],
+   "summary": "Verifies a hook stdout of `{\"decision\": \"deny\"}` is parsed as a blocking intervention.",
+   "tags": [
+    "test",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:parse_hook_decision_deny_default_message",
+   "type": "function",
+   "name": "parse_hook_decision_deny_default_message",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    792,
+    803
+   ],
+   "summary": "Verifies a deny decision without an explicit reason falls back to a default block message.",
+   "tags": [
+    "test",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:parse_hook_decision_allow_with_updated_input",
+   "type": "function",
+   "name": "parse_hook_decision_allow_with_updated_input",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    814,
+    826
+   ],
+   "summary": "Verifies an allow decision carrying updated tool input is parsed and surfaced correctly.",
+   "tags": [
+    "test",
+    "parsing"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:single_command_executor",
+   "type": "function",
+   "name": "single_command_executor",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    851,
+    865
+   ],
+   "summary": "Test helper that builds a `HookExecutor` configured with a single command hook for a given event.",
+   "tags": [
+    "test",
+    "helper"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:fire_pre_compaction_passes_trigger_and_count_and_waits",
+   "type": "function",
+   "name": "fire_pre_compaction_passes_trigger_and_count_and_waits",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    868,
+    887
+   ],
+   "summary": "Verifies `fire_pre_compaction` passes the compaction trigger and message count as env vars and awaits hook completion.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:fire_post_compaction_passes_before_and_after_counts",
+   "type": "function",
+   "name": "fire_post_compaction_passes_before_and_after_counts",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    890,
+    919
+   ],
+   "summary": "Verifies `fire_post_compaction` passes both before- and after-compaction message counts as env vars.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:fire_notification_received_passes_message_excerpt",
+   "type": "function",
+   "name": "fire_notification_received_passes_message_excerpt",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    922,
+    945
+   ],
+   "summary": "Verifies `fire_notification_received` passes a truncated user-message excerpt as hook context.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:compaction_dispatch_is_noop_without_matching_hooks",
+   "type": "function",
+   "name": "compaction_dispatch_is_noop_without_matching_hooks",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "lineRange": [
+    948,
+    957
+   ],
+   "summary": "Verifies compaction dispatch functions are no-ops when no hooks are registered for the compaction events.",
+   "tags": [
+    "test",
+    "hooks"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "type": "file",
+   "name": "bridge.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "summary": "Bridges connected MCP servers' tools into ORGII's internal `ToolRegistry` as `McpBridgeTool` instances, handling name normalization/collision avoidance, description truncation, disabled-tool filtering, and result conversion.",
+   "tags": [
+    "mcp",
+    "tool-registry",
+    "integration"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:call_result_to_execute_result",
+   "type": "function",
+   "name": "call_result_to_execute_result",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    32,
+    46
+   ],
+   "summary": "Converts an MCP tool call result into ORGII's internal `ToolExecuteResult`, preserving content blocks and `_meta` for the success path.",
+   "tags": [
+    "mcp",
+    "conversion"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:McpBridgeTool",
+   "type": "class",
+   "name": "McpBridgeTool",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    49,
+    62
+   ],
+   "summary": "Adapter implementing ORGII's `Tool` trait over a single MCP server tool, forwarding `execute` calls to the underlying `McpClient::call_tool_typed`.",
+   "tags": [
+    "mcp",
+    "tool-registry",
+    "adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:truncate_description",
+   "type": "function",
+   "name": "truncate_description",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    81,
+    90
+   ],
+   "summary": "Truncates an MCP tool's description to a maximum character count so oversized descriptions don't bloat the model's tool list.",
+   "tags": [
+    "utility",
+    "mcp"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:normalize_name_for_mcp",
+   "type": "function",
+   "name": "normalize_name_for_mcp",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    97,
+    107
+   ],
+   "summary": "Normalizes a server or tool name into a safe identifier segment for building composite MCP tool names.",
+   "tags": [
+    "utility",
+    "mcp"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:build_mcp_tool_name",
+   "type": "function",
+   "name": "build_mcp_tool_name",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    120,
+    126
+   ],
+   "summary": "Builds the composite tool name (`mcp__server__tool`-style) used to expose an MCP tool in ORGII's tool registry, normalizing both segments.",
+   "tags": [
+    "mcp",
+    "naming"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:should_skip_mcp_tool",
+   "type": "function",
+   "name": "should_skip_mcp_tool",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    137,
+    154
+   ],
+   "summary": "Determines whether an MCP tool should be excluded from registration because it or its server is disabled.",
+   "tags": [
+    "mcp",
+    "validation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:register_mcp_tools",
+   "type": "function",
+   "name": "register_mcp_tools",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "lineRange": [
+    297,
+    431
+   ],
+   "summary": "Registers every enabled tool from every connected MCP server into the `ToolRegistry`, building composite names and skipping disabled tools/servers.",
+   "tags": [
+    "mcp",
+    "tool-registry",
+    "orchestration"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "type": "file",
+   "name": "call.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "summary": "Implements `McpClient::call_tool_typed` and its progress-aware variant \u2014 invoking an MCP tool with a timeout, classifying errors via `McpCallError`, and rendering the raw rmcp result into ORGII's content/text representation.",
+   "tags": [
+    "mcp",
+    "tool-call",
+    "error-handling"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "type": "function",
+   "name": "call_tool_typed",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "lineRange": [
+    41,
+    114
+   ],
+   "summary": "Calls an MCP tool by name with typed arguments, applying the configured timeout, classifying any error, and rendering the result content/text.",
+   "tags": [
+    "mcp",
+    "tool-call"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "type": "function",
+   "name": "call_tool_typed_with_progress",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "lineRange": [
+    137,
+    251
+   ],
+   "summary": "Progress-aware variant of `call_tool_typed` that subscribes to a progress token before issuing the request so server-pushed progress notifications reach the caller.",
+   "tags": [
+    "mcp",
+    "tool-call",
+    "progress"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:record_error",
+   "type": "function",
+   "name": "record_error",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "lineRange": [
+    257,
+    272
+   ],
+   "summary": "Records the most recent classified `McpCallError` on the client for status reporting and reconnect-counter bookkeeping.",
+   "tags": [
+    "error-handling",
+    "mcp"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "type": "file",
+   "name": "connect.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "summary": "Implements `McpClient::connect` \u2014 spawning/dialing the configured transport (stdio, SSE, StreamableHttp), wiring OAuth credentials, stderr draining, and custom headers \u2014 plus `refresh_tools` for re-fetching the server's tool list.",
+   "tags": [
+    "mcp",
+    "connection",
+    "transport"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:spawn_stderr_drain",
+   "type": "function",
+   "name": "spawn_stderr_drain",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "lineRange": [
+    26,
+    42
+   ],
+   "summary": "Spawns a background task that drains a stdio MCP server child process's stderr into a bounded ring buffer for diagnostics.",
+   "tags": [
+    "mcp",
+    "stdio",
+    "diagnostics"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:build_custom_headers",
+   "type": "function",
+   "name": "build_custom_headers",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "lineRange": [
+    72,
+    84
+   ],
+   "summary": "Converts a map of user-configured HTTP header strings into validated `HeaderMap` entries for SSE/StreamableHttp transports, without echoing header values in error messages.",
+   "tags": [
+    "mcp",
+    "http",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:load_stored_auth_client",
+   "type": "function",
+   "name": "load_stored_auth_client",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "lineRange": [
+    104,
+    140
+   ],
+   "summary": "Loads a previously-stored OAuth `AuthClient` for a server/URL pair from the auth cache, if one exists.",
+   "tags": [
+    "mcp",
+    "oauth"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:serialize_tool_input_schema",
+   "type": "function",
+   "name": "serialize_tool_input_schema",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "lineRange": [
+    142,
+    153
+   ],
+   "summary": "Serializes an MCP tool's typed input schema to a `serde_json::Value`, surfacing serialization failures as connection errors.",
+   "tags": [
+    "mcp",
+    "serialization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "type": "function",
+   "name": "connect",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "lineRange": [
+    156,
+    377
+   ],
+   "summary": "Establishes a connection to the MCP server over its configured transport (stdio spawn, SSE, or StreamableHttp with OAuth), completes the rmcp handshake, and populates the client's tool list.",
+   "tags": [
+    "mcp",
+    "connection",
+    "transport"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:refresh_tools",
+   "type": "function",
+   "name": "refresh_tools",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "lineRange": [
+    379,
+    409
+   ],
+   "summary": "Re-fetches the tool list from an already-connected MCP server and updates the client's cached tool definitions.",
+   "tags": [
+    "mcp",
+    "tool-registry"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "summary": "Defines the `McpClient` struct and its shared state/status/content-rendering types; the struct's behavior (connect, call tools, list resources/prompts, lifecycle) is implemented across sibling files in this directory.",
+   "tags": [
+    "mcp",
+    "data-model",
+    "entry-point"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Rust impl-block-per-file pattern: `McpClient`'s methods are split across connect.rs, call.rs, state.rs, resources.rs, and prompts.rs rather than defined in one file."
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpToolDef",
+   "type": "class",
+   "name": "McpToolDef",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    57,
+    63
+   ],
+   "summary": "Cached definition of a single tool exposed by an MCP server (name, description, input schema).",
+   "tags": [
+    "mcp",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpConnectionStatus",
+   "type": "class",
+   "name": "McpConnectionStatus",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    67,
+    83
+   ],
+   "summary": "Enum of an MCP server connection's lifecycle state (Connected, Disconnected, Error).",
+   "tags": [
+    "mcp",
+    "data-model",
+    "enum"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpServerStatus",
+   "type": "class",
+   "name": "McpServerStatus",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    87,
+    110
+   ],
+   "summary": "Snapshot of an MCP server's current status for UI display: connection state, tool count, last error, transport type, and connected-at timestamp.",
+   "tags": [
+    "mcp",
+    "data-model"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:ServerCapabilities",
+   "type": "class",
+   "name": "ServerCapabilities",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    113,
+    121
+   ],
+   "summary": "Subset of the MCP server's advertised capabilities (tools, resources, prompts) recorded after the initialize handshake.",
+   "tags": [
+    "mcp",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpClient",
+   "type": "class",
+   "name": "McpClient",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    128,
+    163
+   ],
+   "summary": "Core client struct for one configured MCP server, holding its connection handle, cached tools, notification channel, and reconnect/error state; behavior is implemented in sibling files.",
+   "tags": [
+    "mcp",
+    "data-model",
+    "client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:default_client_info",
+   "type": "function",
+   "name": "default_client_info",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    169,
+    174
+   ],
+   "summary": "Builds the `ClientInfo` advertised during the rmcp initialize handshake, deliberately leaving sampling and elicitation capabilities unset.",
+   "tags": [
+    "mcp",
+    "handshake"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_connect_timeout",
+   "type": "function",
+   "name": "resolve_connect_timeout",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    182,
+    194
+   ],
+   "summary": "Resolves the effective connection timeout for a server, falling back to a default when not configured.",
+   "tags": [
+    "mcp",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_tool_timeout",
+   "type": "function",
+   "name": "resolve_tool_timeout",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    203,
+    212
+   ],
+   "summary": "Resolves the effective per-tool-call timeout, honoring the `MCP_TOOL_TIMEOUT` environment override.",
+   "tags": [
+    "mcp",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_prompt_content",
+   "type": "function",
+   "name": "render_prompt_content",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    217,
+    239
+   ],
+   "summary": "Flattens an MCP prompt message's content blocks into a plain string for prompt rendering.",
+   "tags": [
+    "mcp",
+    "rendering"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_content",
+   "type": "function",
+   "name": "render_content",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    250,
+    301
+   ],
+   "summary": "Flattens an rmcp `Content` block list (text, image, audio, resource, resource_link) into a single display string, falling back to pretty-printed structured content when no blocks render.",
+   "tags": [
+    "mcp",
+    "rendering"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:extract_content_blocks",
+   "type": "function",
+   "name": "extract_content_blocks",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "lineRange": [
+    315,
+    362
+   ],
+   "summary": "Losslessly projects rmcp `Content` blocks into ORGII's provider-agnostic `ToolContentBlock` enum, preserving raw bytes/URIs for downstream consumers.",
+   "tags": [
+    "mcp",
+    "conversion"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "type": "file",
+   "name": "prompts.rs",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "summary": "Implements `McpClient` prompt operations \u2014 listing available prompts and rendering a named prompt's messages into ORGII's prompt format.",
+   "tags": [
+    "mcp",
+    "prompts"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:has_prompts",
+   "type": "function",
+   "name": "has_prompts",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "lineRange": [
+    13,
+    15
+   ],
+   "summary": "Reports whether the connected server advertised the prompts capability.",
+   "tags": [
+    "mcp",
+    "capability"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:list_prompts",
+   "type": "function",
+   "name": "list_prompts",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "lineRange": [
+    28,
+    64
+   ],
+   "summary": "Fetches and caches the list of prompts advertised by the MCP server.",
+   "tags": [
+    "mcp",
+    "prompts"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:get_prompt",
+   "type": "function",
+   "name": "get_prompt",
+   "filePath": "src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "lineRange": [
+    74,
+    112
+   ],
+   "summary": "Fetches a named prompt's rendered messages from the MCP server with the given arguments, flattening each message's content via `render_prompt_content`.",
+   "tags": [
+    "mcp",
+    "prompts"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:HookResult",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:HookResult",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:HookExecutor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:HookExecutor",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs:matcher_applies",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_valid_json",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_concatenates_same_event",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_combines_different_events",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_empty_global_returns_project",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_merge_empty_project_returns_global",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_detects_registered_hooks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_run_echo_command",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_passes_env_vars_to_command",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_injects_hook_event_env",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_handles_failing_command",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_timeout_reports_failure",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_preserves_config_order_in_results",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_runs_hooks_concurrently",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_matcher_skips_non_matching_tool_in_concurrent_run",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:executor_failing_hook_does_not_block_subsequent",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:stop_hook_receives_turn_metadata_env_vars",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:session_stop_hook_receives_status_env_var",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_prompt_hook",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:collect_prompt_hooks_concatenates_content",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:prompt_hook_run_returns_success_noop",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_http_hook",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:http_method_default_is_post",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:config_parse_mixed_hook_types",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:new_events_serialize_correctly",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:new_events_round_trip",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:parse_hook_decision_deny_blocks_tool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:parse_hook_decision_deny_default_message",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:parse_hook_decision_allow_with_updated_input",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:single_command_executor",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:fire_pre_compaction_passes_trigger_and_count_and_waits",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:fire_post_compaction_passes_before_and_after_counts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:fire_notification_received_passes_message_excerpt",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs:compaction_dispatch_is_noop_without_matching_hooks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:call_result_to_execute_result",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:call_result_to_execute_result",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:McpBridgeTool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:McpBridgeTool",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:truncate_description",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:truncate_description",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:normalize_name_for_mcp",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:normalize_name_for_mcp",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:build_mcp_tool_name",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:build_mcp_tool_name",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:should_skip_mcp_tool",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:should_skip_mcp_tool",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:register_mcp_tools",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:register_mcp_tools",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:record_error",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:record_error",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:spawn_stderr_drain",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:build_custom_headers",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:load_stored_auth_client",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:serialize_tool_input_schema",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:refresh_tools",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:refresh_tools",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpToolDef",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpToolDef",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpConnectionStatus",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpConnectionStatus",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpServerStatus",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpServerStatus",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:ServerCapabilities",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:ServerCapabilities",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpClient",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "class:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:McpClient",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:default_client_info",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:default_client_info",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_connect_timeout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_connect_timeout",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_tool_timeout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_tool_timeout",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_prompt_content",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_prompt_content",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_content",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_content",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:extract_content_blocks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:extract_content_blocks",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:has_prompts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:has_prompts",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:list_prompts",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:list_prompts",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:get_prompt",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:get_prompt",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/dispatch.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/events.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/errors.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/result.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/handler.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/notification.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/oauth_store.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/resources.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/state.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/config.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/handler.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/notification.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/mcp/prompts.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:register_mcp_tools",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:build_mcp_tool_name",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:register_mcp_tools",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:should_skip_mcp_tool",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:build_mcp_tool_name",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/bridge.rs:normalize_name_for_mcp",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_connect_timeout",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:spawn_stderr_drain",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:build_custom_headers",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:connect",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:load_stored_auth_client",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:refresh_tools",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/connect.rs:serialize_tool_input_schema",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_tool_timeout",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:extract_content_blocks",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_content",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:record_error",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:resolve_tool_timeout",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:extract_content_blocks",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_content",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:call_tool_typed_with_progress",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/call.rs:record_error",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/prompts.rs:get_prompt",
+   "target": "function:src-tauri/crates/agent-core/src/specialization/mcp/client/mod.rs:render_prompt_content",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/config.rs",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/events.rs",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "file:src-tauri/crates/agent-core/src/specialization/hooks/executor.rs",
+   "target": "file:src-tauri/crates/agent-core/src/specialization/hooks/tests.rs",
+   "type": "tested_by",
+   "direction": "forward",
+   "weight": 0.5
+  }
+ ]
+}

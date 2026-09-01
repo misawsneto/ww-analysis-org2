@@ -1,0 +1,258 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "type": "file",
+      "name": "brickHistoryClient.ts",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "summary": "Typed Stage-1 shadow-read adapter over the `brick history` CLI surface from the ORGII Adapter Contract; runs the brick binary via an injected command runner, validates JSON responses into versioned DTOs, and gates on the binary's reported contract version.",
+      "tags": ["adapter", "cli-client", "validation", "service"],
+      "complexity": "complex",
+      "languageNotes": "Uses an injected BrickCommandRunner function type so production can wire the Tauri shell plugin while tests supply a stub, keeping the adapter free of direct process-spawning concerns."
+    },
+    {
+      "id": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickUnavailableError",
+      "type": "class",
+      "name": "BrickUnavailableError",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "lineRange": [70, 78],
+      "summary": "Error thrown when the brick binary cannot be run, times out, exits non-zero, or returns non-JSON stdout; carries the raw command result for diagnostics.",
+      "tags": ["error-type", "cli-client", "adapter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickContractError",
+      "type": "class",
+      "name": "BrickContractError",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "lineRange": [80, 85],
+      "summary": "Error thrown when the brick binary's JSON response violates the expected adapter contract shape (missing fields, wrong types).",
+      "tags": ["error-type", "validation", "adapter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickHistoryClient",
+      "type": "class",
+      "name": "BrickHistoryClient",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "lineRange": [118, 185],
+      "summary": "Client that wraps an injected command runner to query the brick binary's version/compatibility and to fetch paginated session history for a source.",
+      "tags": ["adapter", "cli-client", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseJsonStdout",
+      "type": "function",
+      "name": "parseJsonStdout",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "lineRange": [101, 116],
+      "summary": "Validates a brick command result (timeout, exit code, JSON parseability) and returns the parsed stdout, throwing BrickUnavailableError otherwise.",
+      "tags": ["validation", "parsing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseSessionsPage",
+      "type": "function",
+      "name": "parseSessionsPage",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "lineRange": [187, 204],
+      "summary": "Parses and validates a raw JSON sessions-page response into a typed BrickHistorySessionsPage, throwing BrickContractError on malformed shape.",
+      "tags": ["validation", "parsing", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseSession",
+      "type": "function",
+      "name": "parseSession",
+      "filePath": "src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "lineRange": [206, 235],
+      "summary": "Maps a raw JSON session row (snake_case fields) into a typed BrickHistorySession, requiring external_session_id and defaulting/nullifying other fields.",
+      "tags": ["parsing", "data-model", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "type": "file",
+      "name": "brickShadowRead.ts",
+      "filePath": "src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "summary": "Stage-1 shadow-read parity capture that compares a Brick history sessions page against ORGII's existing reader rows without serving Brick to the UI, producing a mismatch report for background recording.",
+      "tags": ["parity-check", "shadow-read", "sync", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:compareSessionParity",
+      "type": "function",
+      "name": "compareSessionParity",
+      "filePath": "src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "lineRange": [53, 126],
+      "summary": "Compares Brick and ORGII session rows keyed by externalSessionId, tolerating normalized title differences and only comparing tokens when both sides expose them, and returns a ShadowReadParityReport.",
+      "tags": ["parity-check", "validation", "comparison"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:runShadowReadParity",
+      "type": "function",
+      "name": "runShadowReadParity",
+      "filePath": "src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "lineRange": [132, 147],
+      "summary": "Runs a single shadow-read parity pass for one source via the BrickHistoryClient, returning null when Brick is unavailable/incompatible or the fetch fails so the caller keeps serving the old reader.",
+      "tags": ["shadow-read", "sync", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts",
+      "type": "file",
+      "name": "tauriBrickRunner.ts",
+      "filePath": "src/engines/SessionCore/sync/brick/tauriBrickRunner.ts",
+      "summary": "Production BrickCommandRunner implementation backed by the Tauri shell plugin, executing the brick binary via `sh -c 'exec \"$0\" \"$@\"'` with array arguments to avoid shell injection.",
+      "tags": ["tauri", "shell-integration", "adapter", "process-execution"],
+      "complexity": "moderate",
+      "languageNotes": "Uses `exec` inside an `sh -c` wrapper so positional args are never shell-interpolated and the child process exit code propagates directly, satisfying the adapter contract's injection-safety requirement."
+    },
+    {
+      "id": "function:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts:createTauriBrickRunner",
+      "type": "function",
+      "name": "createTauriBrickRunner",
+      "filePath": "src/engines/SessionCore/sync/brick/tauriBrickRunner.ts",
+      "lineRange": [30, 87],
+      "summary": "Factory that builds a BrickCommandRunner executing `brick <args...>` through the Tauri shell plugin with a timeout race and structured result/error mapping.",
+      "tags": ["factory", "tauri", "process-execution", "adapter"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickUnavailableError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickContractError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickHistoryClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseJsonStdout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseSessionsPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickUnavailableError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickContractError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickHistoryClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:parseSessionsPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:compareSessionParity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:runShadowReadParity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:compareSessionParity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:runShadowReadParity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts:createTauriBrickRunner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts",
+      "target": "function:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts:createTauriBrickRunner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/brickShadowRead.ts",
+      "target": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/sync/brick/tauriBrickRunner.ts",
+      "target": "file:src/engines/SessionCore/sync/brick/brickHistoryClient.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/engines/SessionCore/sync/brick/brickShadowRead.ts:runShadowReadParity",
+      "target": "class:src/engines/SessionCore/sync/brick/brickHistoryClient.ts:BrickHistoryClient",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

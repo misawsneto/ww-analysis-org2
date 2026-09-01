@@ -1,0 +1,1391 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "type": "file",
+      "name": "state.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "summary": "ExtractMemoriesState tracks per-session extraction progress (last processed message index, in-progress flag, turns since last extraction, and stashed pending messages) with a serializable snapshot for status reporting.",
+      "tags": [
+        "state-machine",
+        "memory",
+        "type-definition"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs",
+      "type": "file",
+      "name": "frontmatter.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs",
+      "summary": "Parses the YAML-style frontmatter header (key: value lines between --- delimiters) at the top of a workspace-memory markdown file.",
+      "tags": [
+        "parsing",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "type": "file",
+      "name": "lock.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "summary": "File-based mutex (a .consolidate-lock file plus mtime bookkeeping) that prevents the auto-dream consolidation job from running concurrently across processes, including stale-PID detection and rollback on failure.",
+      "tags": [
+        "concurrency",
+        "file-system",
+        "memory",
+        "locking"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "type": "file",
+      "name": "manifest.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "summary": "Scans the workspace-memory directory recursively into a list of MemoryHeader entries, formats them into the MEMORY.md manifest with freshness annotations, and loads/truncates the index file itself.",
+      "tags": [
+        "file-system",
+        "memory",
+        "formatting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "summary": "Root of the L2 workspace-scoped memory system (markdown files with YAML frontmatter under .orgii/workspace-memory/): defines MemoryType and MemoryHeader, workspace path helpers, a personal-workspace migration routine, and re-exports auto_dream/extract/lock/prefetch/surface_state plus flattened frontmatter/manifest helpers.",
+      "tags": [
+        "entry-point",
+        "barrel",
+        "memory",
+        "module-root"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "type": "file",
+      "name": "prefetch.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "summary": "Session-start memory prefetch: an LLM side-query (select_relevant_headers) picks the most relevant workspace-memory files for the user's first message, with an offline fallback, then assembles the memory protocol/prompt sections injected into the agent system prompt.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "prompt-engineering",
+        "search"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs",
+      "type": "file",
+      "name": "prompt_sections.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs",
+      "summary": "Static, eval-validated prompt-text constants describing memory types, save/skip guidance, and access rules, exposed via how_to_save_section for injection into the agent system prompt.",
+      "tags": [
+        "prompt-engineering",
+        "memory",
+        "static-content"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs",
+      "type": "file",
+      "name": "surface_state.rs",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs",
+      "summary": "WorkspaceMemorySurfaceState tracks which memory file paths have already been surfaced to the agent within a session (bounded insertion-ordered dedup set) plus a running injected-byte budget.",
+      "tags": [
+        "state-machine",
+        "memory",
+        "type-definition"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs:ExtractMemoriesState",
+      "type": "class",
+      "name": "ExtractMemoriesState",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "lineRange": [
+        13,
+        30
+      ],
+      "summary": "Per-session state for the memory-extraction gate: last processed message index, in-progress flag, turns since extraction, and stashed pending messages.",
+      "tags": [
+        "type-definition",
+        "state-machine",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs:ExtractMemoriesStateSnapshot",
+      "type": "class",
+      "name": "ExtractMemoriesStateSnapshot",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "lineRange": [
+        39,
+        44
+      ],
+      "summary": "Serializable snapshot of ExtractMemoriesState for status reporting to the frontend.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs:parse_frontmatter",
+      "type": "function",
+      "name": "parse_frontmatter",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs",
+      "lineRange": [
+        15,
+        59
+      ],
+      "summary": "Parses the leading --- delimited YAML-style frontmatter block of a workspace-memory markdown file into a key/value map.",
+      "tags": [
+        "parsing",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:read_last_consolidated_at",
+      "type": "function",
+      "name": "read_last_consolidated_at",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        30,
+        41
+      ],
+      "summary": "Reads the lock file's modification time as the last-consolidated-at timestamp for a workspace.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:hours_since_last_consolidation",
+      "type": "function",
+      "name": "hours_since_last_consolidation",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        44,
+        54
+      ],
+      "summary": "Computes elapsed hours since the last recorded consolidation for a workspace, used by auto-dream gating.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:try_acquire",
+      "type": "function",
+      "name": "try_acquire",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        62,
+        105
+      ],
+      "summary": "Attempts to atomically acquire the consolidation lock, checking for and clearing stale locks held by dead processes.",
+      "tags": [
+        "concurrency",
+        "locking",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:rollback",
+      "type": "function",
+      "name": "rollback",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        111,
+        141
+      ],
+      "summary": "Restores the lock file's prior modification time if a consolidation attempt fails after acquiring the lock.",
+      "tags": [
+        "concurrency",
+        "locking",
+        "memory",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:record_consolidation",
+      "type": "function",
+      "name": "record_consolidation",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        144,
+        152
+      ],
+      "summary": "Updates the lock file's mtime to mark a successful consolidation completion.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:read_lock_state",
+      "type": "function",
+      "name": "read_lock_state",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        158,
+        213
+      ],
+      "summary": "Reads and parses the lock file contents to determine the holder PID and acquisition time.",
+      "tags": [
+        "file-system",
+        "parsing",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:is_process_running",
+      "type": "function",
+      "name": "is_process_running",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        216,
+        227
+      ],
+      "summary": "Checks whether a given PID currently corresponds to a live process, used to detect stale locks.",
+      "tags": [
+        "concurrency",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:set_file_mtime",
+      "type": "function",
+      "name": "set_file_mtime",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "lineRange": [
+        230,
+        262
+      ],
+      "summary": "Sets a file's modification time to a specific millisecond timestamp, used for lock rollback and recording.",
+      "tags": [
+        "file-system",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_memory_files",
+      "type": "function",
+      "name": "scan_memory_files",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        21,
+        33
+      ],
+      "summary": "Recursively scans a workspace-memory directory and returns MemoryHeader entries sorted by most-recently-modified.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_recursive",
+      "type": "function",
+      "name": "scan_recursive",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        35,
+        116
+      ],
+      "summary": "Recursive directory walker collecting markdown files and parsing their frontmatter into headers.",
+      "tags": [
+        "file-system",
+        "parsing",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_memory_manifest",
+      "type": "function",
+      "name": "format_memory_manifest",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        121,
+        137
+      ],
+      "summary": "Formats a list of memory headers into the markdown manifest block used in prompts and the MEMORY.md index.",
+      "tags": [
+        "formatting",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_timestamp_iso",
+      "type": "function",
+      "name": "format_timestamp_iso",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        139,
+        187
+      ],
+      "summary": "Converts a millisecond epoch timestamp into an ISO-8601 formatted date/time string without relying on chrono for this hot path.",
+      "tags": [
+        "formatting",
+        "utility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:load_memory_index",
+      "type": "function",
+      "name": "load_memory_index",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        196,
+        219
+      ],
+      "summary": "Loads and parses the MEMORY.md index file for a workspace, falling back gracefully when absent.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:truncate_entrypoint",
+      "type": "function",
+      "name": "truncate_entrypoint",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        222,
+        267
+      ],
+      "summary": "Truncates the MEMORY.md index content to the configured maximum line count before prompt injection.",
+      "tags": [
+        "formatting",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_age_days",
+      "type": "function",
+      "name": "memory_age_days",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        272,
+        283
+      ],
+      "summary": "Computes a memory file's age in whole days from its mtime.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_age",
+      "type": "function",
+      "name": "memory_age",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        286,
+        293
+      ],
+      "summary": "Computes a memory file's age as a duration from its mtime.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_freshness_text",
+      "type": "function",
+      "name": "memory_freshness_text",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "lineRange": [
+        300,
+        319
+      ],
+      "summary": "Formats a memory file's mtime into a human-readable freshness label for prompt display.",
+      "tags": [
+        "formatting",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "function",
+      "name": "memory_dir",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "lineRange": [
+        167,
+        172
+      ],
+      "summary": "Computes the .orgii/workspace-memory/ directory path for a given workspace root.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:is_memory_path",
+      "type": "function",
+      "name": "is_memory_path",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "lineRange": [
+        175,
+        178
+      ],
+      "summary": "Checks whether a given file path lies inside a workspace's memory directory.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:migrate_personal_workspace_memory",
+      "type": "function",
+      "name": "migrate_personal_workspace_memory",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "lineRange": [
+        189,
+        230
+      ],
+      "summary": "One-time migration routine that moves legacy personal-workspace memory files into the current memory directory layout.",
+      "tags": [
+        "migration",
+        "file-system",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:build_memory_policy",
+      "type": "function",
+      "name": "build_memory_policy",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "lineRange": [
+        242,
+        255
+      ],
+      "summary": "Builds the effective memory policy (limits/toggles) used to gate prefetch, extraction, and auto-dream for the current session.",
+      "tags": [
+        "configuration",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:MemoryType",
+      "type": "class",
+      "name": "MemoryType",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "lineRange": [
+        97,
+        106
+      ],
+      "summary": "Enum classifying a workspace-memory file: User, Feedback, Workspace, or Reference.",
+      "tags": [
+        "type-definition",
+        "enum",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:MemoryHeader",
+      "type": "class",
+      "name": "MemoryHeader",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "lineRange": [
+        137,
+        148
+      ],
+      "summary": "Scanned metadata for one workspace-memory file: filename, path, mtime, description, and memory type.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories",
+      "type": "function",
+      "name": "select_memories",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        108,
+        145
+      ],
+      "summary": "Main prefetch entry point: scans available memory headers and uses an LLM side-query to select the subset most relevant to the user's first message, respecting a byte budget.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "search"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories_offline",
+      "type": "function",
+      "name": "select_memories_offline",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        148,
+        160
+      ],
+      "summary": "Offline fallback for memory prefetch that selects recent memory headers without an LLM call when no provider is available.",
+      "tags": [
+        "memory",
+        "fallback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_relevant_headers",
+      "type": "function",
+      "name": "select_relevant_headers",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        162,
+        220
+      ],
+      "summary": "Issues the LLM side-query asking it to pick the most relevant memory filenames from the manifest given the user query and recent tool activity.",
+      "tags": [
+        "llm-orchestration",
+        "memory",
+        "search"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:extract_recent_tools_from_history",
+      "type": "function",
+      "name": "extract_recent_tools_from_history",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        222,
+        260
+      ],
+      "summary": "Extracts a de-duplicated list of recently used tool names from the conversation history to give the selection LLM extra context.",
+      "tags": [
+        "parsing",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:parse_selected_filenames",
+      "type": "function",
+      "name": "parse_selected_filenames",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        270,
+        301
+      ],
+      "summary": "Parses the LLM's selection response text into a list of chosen memory filenames.",
+      "tags": [
+        "parsing",
+        "llm-orchestration",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:load_selected_memories",
+      "type": "function",
+      "name": "load_selected_memories",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        307,
+        349
+      ],
+      "summary": "Loads the file contents for the selected memory headers, up to a maximum count and byte budget.",
+      "tags": [
+        "file-system",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:truncate_memory_to_file_budget",
+      "type": "function",
+      "name": "truncate_memory_to_file_budget",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        356,
+        374
+      ],
+      "summary": "Truncates a single memory file's content to stay within its allotted portion of the prompt byte budget.",
+      "tags": [
+        "formatting",
+        "memory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_protocol_section",
+      "type": "function",
+      "name": "build_memory_protocol_section",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        402,
+        428
+      ],
+      "summary": "Assembles the \"how memory works\" protocol section of the system prompt, describing save/access rules.",
+      "tags": [
+        "prompt-engineering",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_prompt_section",
+      "type": "function",
+      "name": "build_memory_prompt_section",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        434,
+        483
+      ],
+      "summary": "Assembles the final memory prompt section injected into the agent system prompt, combining the manifest and selected memory contents.",
+      "tags": [
+        "prompt-engineering",
+        "memory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:RelevantMemory",
+      "type": "class",
+      "name": "RelevantMemory",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "lineRange": [
+        81,
+        90
+      ],
+      "summary": "A memory file selected during prefetch, paired with its path, mtime, content, and freshness label.",
+      "tags": [
+        "type-definition",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs:how_to_save_section",
+      "type": "function",
+      "name": "how_to_save_section",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs",
+      "lineRange": [
+        174,
+        194
+      ],
+      "summary": "Returns the static, eval-validated prompt text instructing the agent how and when to save workspace-memory files.",
+      "tags": [
+        "prompt-engineering",
+        "memory",
+        "static-content"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "class",
+      "name": "WorkspaceMemorySurfaceState",
+      "filePath": "src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs",
+      "lineRange": [
+        15,
+        21
+      ],
+      "summary": "Bounded, insertion-ordered set of memory paths already surfaced to the agent this session, plus a running injected-byte counter, used to avoid re-injecting the same memory twice.",
+      "tags": [
+        "type-definition",
+        "state-machine",
+        "memory"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs:ExtractMemoriesState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs:ExtractMemoriesState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs:ExtractMemoriesStateSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/state.rs:ExtractMemoriesStateSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs:parse_frontmatter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs:parse_frontmatter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:read_last_consolidated_at",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:read_last_consolidated_at",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:hours_since_last_consolidation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:hours_since_last_consolidation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:try_acquire",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:try_acquire",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:rollback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:rollback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:record_consolidation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:record_consolidation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:read_lock_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:is_process_running",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:set_file_mtime",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_memory_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_memory_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_recursive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_memory_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_memory_manifest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_timestamp_iso",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:load_memory_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:load_memory_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:truncate_entrypoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_age_days",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_age",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_freshness_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_freshness_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:is_memory_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:is_memory_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:migrate_personal_workspace_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:migrate_personal_workspace_memory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:build_memory_policy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:build_memory_policy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:MemoryType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:MemoryType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:MemoryHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:MemoryHeader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories_offline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories_offline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_relevant_headers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:extract_recent_tools_from_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:extract_recent_tools_from_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:parse_selected_filenames",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:load_selected_memories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:truncate_memory_to_file_budget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_protocol_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_protocol_section",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_prompt_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_prompt_section",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:RelevantMemory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:RelevantMemory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs:how_to_save_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs:how_to_save_section",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/auto_dream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/extract/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs:parse_frontmatter",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:try_acquire",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/lock.rs:record_consolidation",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_recursive",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/frontmatter.rs:parse_frontmatter",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:truncate_entrypoint",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_memory_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories_offline",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_memories_offline",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:scan_memory_files",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_relevant_headers",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:format_memory_manifest",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:extract_recent_tools_from_history",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:load_selected_memories",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:load_selected_memories",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:memory_freshness_text",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:truncate_memory_to_file_budget",
+      "target": "class:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/surface_state.rs:WorkspaceMemorySurfaceState",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_protocol_section",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_protocol_section",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prompt_sections.rs:how_to_save_section",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_prompt_section",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/mod.rs:memory_dir",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:build_memory_prompt_section",
+      "target": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/manifest.rs:load_memory_index",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/specialization/memory/workspace_memory/prefetch.rs:select_relevant_headers",
+      "target": "function:src-tauri/crates/agent-core/src/core/side_query.rs:side_query",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

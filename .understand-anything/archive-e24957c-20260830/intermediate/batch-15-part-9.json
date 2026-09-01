@@ -1,0 +1,1349 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/api/agent/test/sync.rs",
+   "type": "file",
+   "name": "sync.rs",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "summary": "Debug-only `/agent/test/sync/*` endpoints driving the pluggable sync framework end-to-end (seed project, enqueue, pump, echo-adapter flags, status, problems, requeue/discard/force-push, webhook and conflict-resolution probes) without a real adapter network.",
+   "tags": [
+    "debug-only",
+    "api-handler",
+    "e2e-testing",
+    "sync"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_seed_project",
+   "type": "function",
+   "name": "test_sync_seed_project",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    211,
+    257
+   ],
+   "summary": "Insert (or upsert) a projects row for slug and attach the requested adapter (defaults to echo).  The row carries the minimum fields the projects schema requires (id, name, slug, short_id_prefix, created_at, updated_at). We use a deterministic synthetic id so a re-seed of the...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_enqueue",
+   "type": "function",
+   "name": "test_sync_enqueue",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    260,
+    307
+   ],
+   "summary": "Append one outbox row for slug. Returns the new row's id.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_pump",
+   "type": "function",
+   "name": "test_sync_pump",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    313,
+    318
+   ],
+   "summary": "Pump the worker once for slug. See project_management::sync::worker::pump_once_for_project for the exact semantics \u2014 backoff timers are reset for the slug's pending rows so the cycle drains them immediately.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_echo_flag",
+   "type": "function",
+   "name": "test_sync_echo_flag",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    323,
+    336
+   ],
+   "summary": "Toggle the Echo adapter's per-slug debug flags. Either field may be omitted to leave that flag untouched. Returns the request as echo so the e2e harness can sanity-check it landed.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_status",
+   "type": "function",
+   "name": "test_sync_status",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    340,
+    390
+   ],
+   "summary": "Snapshot of slug's sync state \u2014 mirrors what the project_sync_status Tauri command returns.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_problems",
+   "type": "function",
+   "name": "test_sync_problems",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    395,
+    413
+   ],
+   "summary": "Vec<OutboxProblemRow> \u2014 same wire shape as the project_sync_list_problems Tauri command, returned untouched so the e2e harness can grep field names directly.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_inspect_entry",
+   "type": "function",
+   "name": "test_sync_inspect_entry",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    424,
+    440
+   ],
+   "summary": "Single-row OutboxEntry lookup by entry_id. Used by scenarios that need to observe a row in any state \u2014 including Pending and Succeeded \u2014 which the problems-list endpoint deliberately hides (it scopes to Failed | Abandoned).  Wire shape: { ok: true, entry: <OutboxEntry serde...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_requeue",
+   "type": "function",
+   "name": "test_sync_requeue",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    446,
+    467
+   ],
+   "summary": "Requeue exactly one row by id. slug is required so the caller can keep its scenario assertions colocated with the rest of the test even though the underlying requeue_one call doesn't strictly need it.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_discard",
+   "type": "function",
+   "name": "test_sync_discard",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    473,
+    494
+   ],
+   "summary": "Hard-delete one outbox row by id. See the docstring on sync::io::discard_one for the design rationale (DELETE rather than status='abandoned'); scenario sync-discard-blocks-force-push-resurrection is the regression pin for that decision.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_force_push",
+   "type": "function",
+   "name": "test_sync_force_push",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    499,
+    512
+   ],
+   "summary": "Same code path as project_sync_force_push \u2014 re-queues every Failed and Abandoned row for slug back to Pending. Returns the count of touched rows.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_install",
+   "type": "function",
+   "name": "test_sync_webhook_install",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    521,
+    544
+   ],
+   "summary": "Mint a webhook secret for (slug, adapter_id) and return the plaintext value so the e2e harness can compute valid HMAC-SHA256 signatures. Mirrors webhook_secrets::rotate_secret. Used by the Sync: Webhook * scenarios in crates/e2e-test/src/sync_webhook.rs.  The plaintext secret...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_status",
+   "type": "function",
+   "name": "test_sync_webhook_status",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    550,
+    569
+   ],
+   "summary": "Read projects.sync_last_webhook_at for slug so the e2e harness can assert whether a delivery landed and when. Returns {\"last_webhook_at\": null} when no delivery has been recorded (or the project doesn't exist yet \u2014 caller seeds first).",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_clear_stamp",
+   "type": "function",
+   "name": "test_sync_webhook_clear_stamp",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    577,
+    599
+   ],
+   "summary": "Reset projects.sync_last_webhook_at to NULL so the webhook_fall_back_to_poll_when_stale scenario can simulate \"no delivery in WEBHOOK_FRESHNESS_WINDOW_MS\" without waiting on Instant-driven worker timers. Idempotent: a missing project row is treated as success because the...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_cleanup",
+   "type": "function",
+   "name": "test_sync_cleanup",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    604,
+    658
+   ],
+   "summary": "Idempotently delete the project + every outbox row owned by it. Also clears the Echo adapter's debug flags for the slug so a re-run starts from a clean state.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_ensure_pending",
+   "type": "function",
+   "name": "test_sync_import_ensure_pending",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    668,
+    688
+   ],
+   "summary": "Idempotently insert a pending import_progress row for (slug, adapter_id). Mirrors the path the production project_sync_attach_adapter Tauri command takes after a successful attach.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_status",
+   "type": "function",
+   "name": "test_sync_import_status",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    692,
+    709
+   ],
+   "summary": "Read the current ImportProgressRow for (slug, adapter_id). Mirrors project_sync_import_status. null when no row exists.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_pump",
+   "type": "function",
+   "name": "test_sync_import_pump",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    715,
+    730
+   ],
+   "summary": "Drive one (or max_pages) iterations of the worker import cycle. Lets scenarios pump the import pipeline synchronously without waiting for the worker's 60s tick. Returns the number of pages the cycle drained \u2014 useful as an assertion target.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_cancel",
+   "type": "function",
+   "name": "test_sync_import_cancel",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    735,
+    750
+   ],
+   "summary": "Mark the import for (slug, adapter_id) as cancelled. Mirrors project_sync_import_cancel. Idempotent against rows already in terminal state.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_retry",
+   "type": "function",
+   "name": "test_sync_import_retry",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    755,
+    770
+   ],
+   "summary": "Reset a failed row back to pending so the next import_pump picks it up. Mirrors project_sync_import_retry. Returns transitioned: false when the row wasn't Failed.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_force_fail",
+   "type": "function",
+   "name": "test_sync_import_force_fail",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    777,
+    792
+   ],
+   "summary": "Force a failed state on the import row by injecting an error. Used by retry-after-failure scenarios \u2014 the echo adapter's pull_all is deterministically successful, so we synthesize the failure via this debug endpoint rather than introducing an Echo flag that would never have a...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_seed_work_item",
+   "type": "function",
+   "name": "test_sync_conflict_seed_work_item",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    808,
+    898
+   ],
+   "summary": "Insert (or upsert) a synthetic work item plus per-field local-source FieldRevisions and an external_refsadapter_id = external_id binding.  The seeded watermark is (mtime = local_mtime_ms, source = \"local\") for both title and status. A subsequent inject-merge-external call whose...",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_inject_merge_external",
+   "type": "function",
+   "name": "test_sync_conflict_inject_merge_external",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    904,
+    953
+   ],
+   "summary": "Append one merge_external outbox row carrying an ExternalChange payload. The merge cycle (drained via /test/sync/conflict/pump-merge) will run the resolver against the seeded local watermark and record an outbox_conflicts row when the resolver's verdict is \"keep local\".",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_pump_merge",
+   "type": "function",
+   "name": "test_sync_conflict_pump_merge",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    959,
+    966
+   ],
+   "summary": "Drive merge_cycle(N) so the worker drains pending merge_external rows synchronously without waiting for the background tick. Default cap of 8 mirrors process_merge_entry-friendly batch sizes elsewhere in the codebase.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_list",
+   "type": "function",
+   "name": "test_sync_conflict_list",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    971,
+    988
+   ],
+   "summary": "Vec<ConflictRow> for slug \u2014 open rows first (newest first) then up to 25 recently-resolved. Wraps the same code path the project_sync_conflicts_list Tauri command uses.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_use_local",
+   "type": "function",
+   "name": "test_sync_conflict_use_local",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    993,
+    1000
+   ],
+   "summary": "Resolve a conflict by re-pushing local values. Wraps project_sync_conflict_use_local so the e2e harness exercises the exact code path the Conflicts panel does.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_use_remote",
+   "type": "function",
+   "name": "test_sync_conflict_use_remote",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    1004,
+    1011
+   ],
+   "summary": "Resolve a conflict by overwriting local with the captured remote values. Wraps project_sync_conflict_use_remote.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_dismiss",
+   "type": "function",
+   "name": "test_sync_conflict_dismiss",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    1015,
+    1022
+   ],
+   "summary": "Dismiss a conflict (close the audit row, no field changes). Wraps project_sync_conflict_dismiss.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_read_work_item",
+   "type": "function",
+   "name": "test_sync_conflict_read_work_item",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    1034,
+    1052
+   ],
+   "summary": "Implements `test_sync_conflict_read_work_item(axum::extract::Query(query))` in sync.rs.",
+   "tags": [
+    "debug-only",
+    "e2e-testing",
+    "test-endpoint"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:SeedProjectRequest",
+   "type": "class",
+   "name": "SeedProjectRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    56,
+    60
+   ],
+   "summary": "Data structure `SeedProjectRequest` with fields slug, adapter_id in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:EnqueueRequest",
+   "type": "class",
+   "name": "EnqueueRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    63,
+    70
+   ],
+   "summary": "Data structure `EnqueueRequest` with fields slug, entity_type, op, entity_id, payload in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:PumpRequest",
+   "type": "class",
+   "name": "PumpRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    73,
+    75
+   ],
+   "summary": "Data structure `PumpRequest` with fields slug in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:EchoFlagRequest",
+   "type": "class",
+   "name": "EchoFlagRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    78,
+    84
+   ],
+   "summary": "Data structure `EchoFlagRequest` with fields slug, force_next_failure, force_persistent_failure in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:EntryIdRequest",
+   "type": "class",
+   "name": "EntryIdRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    87,
+    90
+   ],
+   "summary": "Data structure `EntryIdRequest` with fields slug, entry_id in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:SlugOnlyRequest",
+   "type": "class",
+   "name": "SlugOnlyRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    93,
+    95
+   ],
+   "summary": "Data structure `SlugOnlyRequest` with fields slug in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:SlugQuery",
+   "type": "class",
+   "name": "SlugQuery",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    98,
+    100
+   ],
+   "summary": "Data structure `SlugQuery` with fields slug in sync.rs.",
+   "tags": [
+    "data-model",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:InspectEntryQuery",
+   "type": "class",
+   "name": "InspectEntryQuery",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    103,
+    105
+   ],
+   "summary": "Data structure `InspectEntryQuery` with fields entry_id in sync.rs.",
+   "tags": [
+    "data-model",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:SlugAdapterRequest",
+   "type": "class",
+   "name": "SlugAdapterRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    108,
+    111
+   ],
+   "summary": "Data structure `SlugAdapterRequest` with fields slug, adapter_id in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:SlugAdapterQuery",
+   "type": "class",
+   "name": "SlugAdapterQuery",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    114,
+    117
+   ],
+   "summary": "Data structure `SlugAdapterQuery` with fields slug, adapter_id in sync.rs.",
+   "tags": [
+    "data-model",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:ImportPumpRequest",
+   "type": "class",
+   "name": "ImportPumpRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    120,
+    128
+   ],
+   "summary": "Data structure `ImportPumpRequest` with fields slug, adapter_id, max_pages in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:ConflictSeedWorkItemRequest",
+   "type": "class",
+   "name": "ConflictSeedWorkItemRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    138,
+    154
+   ],
+   "summary": "Request body for /test/sync/conflict/seed-work-item.  Stamps a synthetic work item plus per-field revisions and an external_ref so the merge resolver can identity-match a follow-up inject-merge-external call. Title/status are the only fields the Echo adapter mirrors...",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:ConflictInjectMergeRequest",
+   "type": "class",
+   "name": "ConflictInjectMergeRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    164,
+    176
+   ],
+   "summary": "Request body for /test/sync/conflict/inject-merge-external.  Appends one merge_external outbox row carrying an ExternalChange payload that targets the work item seeded by the previous endpoint. remote_updated_at_ms < local_mtime_ms from the seed step is what trips the...",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:ConflictIdRequest",
+   "type": "class",
+   "name": "ConflictIdRequest",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    179,
+    181
+   ],
+   "summary": "Data structure `ConflictIdRequest` with fields conflict_id in sync.rs.",
+   "tags": [
+    "data-model",
+    "dto",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/api/agent/test/sync.rs:ConflictReadWorkItemQuery",
+   "type": "class",
+   "name": "ConflictReadWorkItemQuery",
+   "filePath": "src-tauri/src/api/agent/test/sync.rs",
+   "lineRange": [
+    1029,
+    1032
+   ],
+   "summary": "Read back a work item's hot fields so scenarios can assert that use_remote actually rewrote the local state. Returns the title + status in a stable wire shape; field labels match the WorkItemData accessor names.",
+   "tags": [
+    "data-model",
+    "debug-only"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_seed_project",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_seed_project",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_enqueue",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_enqueue",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_pump",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_pump",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_echo_flag",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_echo_flag",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_problems",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_problems",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_inspect_entry",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_inspect_entry",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_requeue",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_requeue",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_discard",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_discard",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_force_push",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_force_push",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_install",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_install",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_clear_stamp",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_webhook_clear_stamp",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_cleanup",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_cleanup",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_ensure_pending",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_ensure_pending",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_pump",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_pump",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_cancel",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_cancel",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_retry",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_retry",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_force_fail",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_import_force_fail",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_seed_work_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_seed_work_item",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_inject_merge_external",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_inject_merge_external",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_pump_merge",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_pump_merge",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_list",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_list",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_use_local",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_use_local",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_use_remote",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_use_remote",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_dismiss",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_dismiss",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_read_work_item",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "function:src-tauri/src/api/agent/test/sync.rs:test_sync_conflict_read_work_item",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SeedProjectRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SeedProjectRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:EnqueueRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:EnqueueRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:PumpRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:PumpRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:EchoFlagRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:EchoFlagRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:EntryIdRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:EntryIdRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugOnlyRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugOnlyRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugQuery",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugQuery",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:InspectEntryQuery",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:InspectEntryQuery",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugAdapterRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugAdapterRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugAdapterQuery",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:SlugAdapterQuery",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ImportPumpRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ImportPumpRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictSeedWorkItemRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictSeedWorkItemRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictInjectMergeRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictInjectMergeRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictIdRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictIdRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictReadWorkItemQuery",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/api/agent/test/sync.rs",
+   "target": "class:src-tauri/src/api/agent/test/sync.rs:ConflictReadWorkItemQuery",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

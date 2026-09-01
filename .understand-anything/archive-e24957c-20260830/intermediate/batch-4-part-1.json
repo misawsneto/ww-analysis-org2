@@ -1,0 +1,1478 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "type": "file",
+      "name": "recovery.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "summary": "Detects and repairs a turn's message history when execution was interrupted mid-tool-call or mid-assistant-response, ensuring the LLM provider never sees a malformed history after a crash or forced stop.",
+      "tags": [
+        "session-recovery",
+        "crash-resilience",
+        "message-history",
+        "tool-use",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:detect_turn_interruption",
+      "type": "function",
+      "name": "detect_turn_interruption",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "lineRange": [
+        104,
+        169
+      ],
+      "summary": "Scans the tail of a turn's message history to determine whether execution was interrupted mid-tool-call or mid-assistant-response, returning the classified InterruptionType.",
+      "tags": [
+        "predicate",
+        "session-recovery",
+        "crash-resilience",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:repair_interrupted_history",
+      "type": "function",
+      "name": "repair_interrupted_history",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "lineRange": [
+        174,
+        218
+      ],
+      "summary": "Rewrites an interrupted message history into a valid state the model can resume from, closing out dangling tool calls or truncating an unterminated assistant turn.",
+      "tags": [
+        "repair",
+        "session-recovery",
+        "crash-resilience",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:filter_unresolved_tool_uses",
+      "type": "function",
+      "name": "filter_unresolved_tool_uses",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "lineRange": [
+        243,
+        305
+      ],
+      "summary": "Strips tool-call entries that never received a matching tool-result from the history, preventing malformed provider requests after a crash.",
+      "tags": [
+        "filtering",
+        "session-recovery",
+        "crash-resilience",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:ensure_tool_result_pairing",
+      "type": "function",
+      "name": "ensure_tool_result_pairing",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "lineRange": [
+        315,
+        420
+      ],
+      "summary": "Validates and repairs tool_use/tool_result pairing across the message history, inserting synthetic results for any tool call left unanswered.",
+      "tags": [
+        "validation",
+        "session-recovery",
+        "crash-resilience",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/recovery.rs:InterruptionType",
+      "type": "class",
+      "name": "InterruptionType",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "lineRange": [
+        63,
+        69
+      ],
+      "summary": "Enumerates the ways a turn can be left interrupted (a tool call awaiting its result, or an assistant message cut off mid-stream), driving the recovery repair logic.",
+      "tags": [
+        "enum-type",
+        "session-recovery",
+        "crash-resilience",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "type": "file",
+      "name": "scheduler.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "summary": "Implements DialogScheduler, a per-session async message queue that serializes turn and maintenance work through a single background worker task, tracking generation numbers and deduplicating by client message id.",
+      "tags": [
+        "scheduler",
+        "async-task",
+        "queue",
+        "session-management",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:panic_payload_to_string",
+      "type": "function",
+      "name": "panic_payload_to_string",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        109,
+        117
+      ],
+      "summary": "Converts a caught panic payload into a human-readable string for logging when the scheduler's worker task unwinds unexpectedly.",
+      "tags": [
+        "helper",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        207,
+        218
+      ],
+      "summary": "Constructs a DialogScheduler for a session with a bounded message channel of the given capacity.",
+      "tags": [
+        "constructor",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ensure_initialized",
+      "type": "function",
+      "name": "ensure_initialized",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        220,
+        247
+      ],
+      "summary": "Lazily spawns the background WorkerTask loop the first time the scheduler is used for a session.",
+      "tags": [
+        "lifecycle",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:enqueue",
+      "type": "function",
+      "name": "enqueue",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        256,
+        327
+      ],
+      "summary": "Pushes a scheduled turn/maintenance message onto the session's queue, deduplicating by client_message_id and returning the resulting queue position.",
+      "tags": [
+        "queue",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:pending_count",
+      "type": "function",
+      "name": "pending_count",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        330,
+        332
+      ],
+      "summary": "Returns the number of messages currently queued and not yet processed.",
+      "tags": [
+        "query",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:invalidate_pending",
+      "type": "function",
+      "name": "invalidate_pending",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        335,
+        348
+      ],
+      "summary": "Bumps the scheduler generation to invalidate all currently queued messages, used when a session is reset mid-flight.",
+      "tags": [
+        "state-management",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:is_processing",
+      "type": "function",
+      "name": "is_processing",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        355,
+        357
+      ],
+      "summary": "Reports whether the worker task is actively processing any queued message.",
+      "tags": [
+        "predicate",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:is_turn_processing",
+      "type": "function",
+      "name": "is_turn_processing",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        360,
+        362
+      ],
+      "summary": "Reports whether the worker task is specifically mid-turn, as opposed to a maintenance message.",
+      "tags": [
+        "predicate",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:status",
+      "type": "function",
+      "name": "status",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        365,
+        371
+      ],
+      "summary": "Snapshots the scheduler's current QueueStatus (pending count and processing state) for UI polling.",
+      "tags": [
+        "query",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        396,
+        539
+      ],
+      "summary": "The WorkerTask's main loop that pulls scheduled messages off the channel one at a time and drives their execution, broadcasting queue/idle status as it goes.",
+      "tags": [
+        "orchestration",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:broadcast_idle_status",
+      "type": "function",
+      "name": "broadcast_idle_status",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        541,
+        550
+      ],
+      "summary": "Emits a UI event announcing the worker has drained its queue and gone idle.",
+      "tags": [
+        "broadcast",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ScheduledKind",
+      "type": "class",
+      "name": "ScheduledKind",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        76,
+        82
+      ],
+      "summary": "Distinguishes a queued message as a normal conversational turn versus a background maintenance task.",
+      "tags": [
+        "enum-type",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ScheduledMessage",
+      "type": "class",
+      "name": "ScheduledMessage",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        85,
+        107
+      ],
+      "summary": "Represents one item queued for processing, carrying its kind, ids, generation stamp and executable payload closure.",
+      "tags": [
+        "data-model",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:QueueStatus",
+      "type": "class",
+      "name": "QueueStatus",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        136,
+        145
+      ],
+      "summary": "Snapshot DTO reporting a session's pending message count and processing flag to the UI layer.",
+      "tags": [
+        "config-object",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:EnqueueResult",
+      "type": "class",
+      "name": "EnqueueResult",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        154,
+        160
+      ],
+      "summary": "Return value of enqueue() reporting the assigned message id, queue position, and whether it was a duplicate.",
+      "tags": [
+        "data-model",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:DialogScheduler",
+      "type": "class",
+      "name": "DialogScheduler",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        181,
+        198
+      ],
+      "summary": "Per-session async message queue that serializes turn and maintenance work through a single worker task, tracking generation and duplicate client message ids.",
+      "tags": [
+        "state-management",
+        "scheduler",
+        "async-task",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:WorkerTask",
+      "type": "class",
+      "name": "WorkerTask",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "lineRange": [
+        385,
+        393
+      ],
+      "summary": "The background task backing a DialogScheduler, owning the receiver end of the channel and running the processing loop.",
+      "tags": [
+        "async-task",
+        "scheduler",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "type": "file",
+      "name": "session_id.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "summary": "Utility functions for slugifying, deriving, versioning and de-duplicating stable session id strings from channel/chat identifiers.",
+      "tags": [
+        "session-id",
+        "utility",
+        "slug",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:slugify_segment",
+      "type": "function",
+      "name": "slugify_segment",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "lineRange": [
+        30,
+        47
+      ],
+      "summary": "Normalizes an arbitrary string into a filesystem/id-safe slug, falling back to a default when the input yields nothing usable.",
+      "tags": [
+        "helper",
+        "session-id",
+        "utility",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:os_session_id_base",
+      "type": "function",
+      "name": "os_session_id_base",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "lineRange": [
+        50,
+        54
+      ],
+      "summary": "Derives the base, unversioned session id from a channel/chat identifier pair.",
+      "tags": [
+        "helper",
+        "session-id",
+        "utility",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:with_version",
+      "type": "function",
+      "name": "with_version",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "lineRange": [
+        58,
+        64
+      ],
+      "summary": "Appends a version suffix to a base session id string.",
+      "tags": [
+        "helper",
+        "session-id",
+        "utility",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:next_version_for",
+      "type": "function",
+      "name": "next_version_for",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "lineRange": [
+        78,
+        119
+      ],
+      "summary": "Scans existing session ids sharing a base to compute the next available version suffix, avoiding collisions.",
+      "tags": [
+        "resolver",
+        "session-id",
+        "utility",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "type": "file",
+      "name": "title.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/title.rs",
+      "summary": "Generates a short descriptive session title via a side-query LLM call, with a heuristic fallback and persistence onto the session record.",
+      "tags": [
+        "session-title",
+        "llm",
+        "side-query",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/title.rs:normalize_title",
+      "type": "function",
+      "name": "normalize_title",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/title.rs",
+      "lineRange": [
+        19,
+        46
+      ],
+      "summary": "Cleans up a raw LLM-generated title candidate, trimming quotes/whitespace and stray formatting into a display-ready string.",
+      "tags": [
+        "helper",
+        "session-title",
+        "llm",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/title.rs:derive_title_fallback",
+      "type": "function",
+      "name": "derive_title_fallback",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/title.rs",
+      "lineRange": [
+        48,
+        55
+      ],
+      "summary": "Produces a best-effort session title from the first user message when LLM title generation is unavailable or fails.",
+      "tags": [
+        "helper",
+        "session-title",
+        "llm",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/title.rs:truncate_title",
+      "type": "function",
+      "name": "truncate_title",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/title.rs",
+      "lineRange": [
+        57,
+        67
+      ],
+      "summary": "Clips an overly long title to a display-safe character limit, adding an ellipsis when truncated.",
+      "tags": [
+        "helper",
+        "session-title",
+        "llm",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/title.rs:generate_session_title",
+      "type": "function",
+      "name": "generate_session_title",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/title.rs",
+      "lineRange": [
+        69,
+        120
+      ],
+      "summary": "Issues a side-query LLM call asking for a short descriptive title for the given conversation content.",
+      "tags": [
+        "async-task",
+        "session-title",
+        "llm",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/title.rs:generate_and_persist_session_title",
+      "type": "function",
+      "name": "generate_and_persist_session_title",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/title.rs",
+      "lineRange": [
+        122,
+        174
+      ],
+      "summary": "Generates a session title via LLM, falling back to a heuristic title, and persists it onto the session record.",
+      "tags": [
+        "orchestration",
+        "session-title",
+        "llm",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "type": "file",
+      "name": "background_reminder.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "summary": "Builds a system reminder message that summarizes still-running or newly-completed background jobs for injection into the next turn's prompt.",
+      "tags": [
+        "background-jobs",
+        "prompt-injection",
+        "reminder",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:inlined_result_handles",
+      "type": "function",
+      "name": "inlined_result_handles",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "lineRange": [
+        29,
+        34
+      ],
+      "summary": "Extracts the set of background job handles whose results have already been inlined into the conversation, to avoid re-surfacing them.",
+      "tags": [
+        "filtering",
+        "background-jobs",
+        "prompt-injection",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:build_background_jobs_reminder",
+      "type": "function",
+      "name": "build_background_jobs_reminder",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "lineRange": [
+        36,
+        133
+      ],
+      "summary": "Builds a system reminder message summarizing still-running or newly-completed background jobs to inject into the next turn's prompt.",
+      "tags": [
+        "builder",
+        "background-jobs",
+        "prompt-injection",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:format_age",
+      "type": "function",
+      "name": "format_age",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "lineRange": [
+        135,
+        144
+      ],
+      "summary": "Formats an elapsed-time-in-milliseconds value into a short human-readable age string for the reminder text.",
+      "tags": [
+        "helper",
+        "background-jobs",
+        "prompt-injection",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "type": "file",
+      "name": "entry.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "summary": "Entry point that turns a raw user TurnInput into a normalized, context-enriched message \u2014 extracting LSP/screenshot context and expanding skill slash commands \u2014 ready for the turn processor.",
+      "tags": [
+        "entry-point",
+        "turn-processing",
+        "message-normalization",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:extract_screenshot_store",
+      "type": "function",
+      "name": "extract_screenshot_store",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "lineRange": [
+        28,
+        37
+      ],
+      "summary": "Pulls the shared screenshot store handle out of the Tauri app state so it can be attached to a turn's context.",
+      "tags": [
+        "helper",
+        "entry-point",
+        "turn-processing",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:expand_skill_slash_command",
+      "type": "function",
+      "name": "expand_skill_slash_command",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "lineRange": [
+        64,
+        100
+      ],
+      "summary": "Detects a leading slash-command in the user's message and expands it into the referenced skill's full instructions before the turn is processed.",
+      "tags": [
+        "expansion",
+        "entry-point",
+        "turn-processing",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:process_message",
+      "type": "function",
+      "name": "process_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "lineRange": [
+        147,
+        248
+      ],
+      "summary": "Top-level entry point that turns a raw user TurnInput into a normalized, context-enriched message ready to be handed to the turn processor.",
+      "tags": [
+        "orchestration",
+        "entry-point",
+        "turn-processing",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "type": "file",
+      "name": "event_factory.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "summary": "Builds structured UI event payloads \u2014 assistant message, tool call and tool result events \u2014 consumed by the frontend event store.",
+      "tags": [
+        "event-factory",
+        "ui-events",
+        "tool-call",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_assistant_message_event",
+      "type": "function",
+      "name": "build_assistant_message_event",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "lineRange": [
+        13,
+        49
+      ],
+      "summary": "Constructs the UI event payload announcing a new assistant message chunk for a session.",
+      "tags": [
+        "builder",
+        "event-factory",
+        "ui-events",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_tool_call_event",
+      "type": "function",
+      "name": "build_tool_call_event",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "lineRange": [
+        57,
+        101
+      ],
+      "summary": "Builds the structured event describing a tool invocation (id, name, display label, arguments, repo context) for the frontend.",
+      "tags": [
+        "builder",
+        "event-factory",
+        "ui-events",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_tool_result_event",
+      "type": "function",
+      "name": "build_tool_result_event",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "lineRange": [
+        133,
+        193
+      ],
+      "summary": "Builds the structured event carrying a tool's completed result and any UI metadata for rendering.",
+      "tags": [
+        "builder",
+        "event-factory",
+        "ui-events",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "type": "file",
+      "name": "helpers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "summary": "Small parsing helpers used by the event handler to preview partial streamed tool arguments and to parse hook script decisions.",
+      "tags": [
+        "streaming-parse",
+        "hooks",
+        "json",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:tool_status_preview_from_args",
+      "type": "function",
+      "name": "tool_status_preview_from_args",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "lineRange": [
+        21,
+        42
+      ],
+      "summary": "Produces a short human-readable preview string of a tool's arguments, such as a truncated file path or command, for live status display while the call streams in.",
+      "tags": [
+        "parsing",
+        "streaming-parse",
+        "hooks",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:parse_partial_plan_args",
+      "type": "function",
+      "name": "parse_partial_plan_args",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "lineRange": [
+        61,
+        65
+      ],
+      "summary": "Attempts to parse a partially-streamed JSON buffer of a write-plan tool call into whatever plan fields are available so far.",
+      "tags": [
+        "parsing",
+        "streaming-parse",
+        "hooks",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:decode_json_string_prefix",
+      "type": "function",
+      "name": "decode_json_string_prefix",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "lineRange": [
+        79,
+        109
+      ],
+      "summary": "Decodes a possibly-incomplete JSON string literal prefix, handling escapes, so partial streamed tool arguments can be previewed before the closing quote arrives.",
+      "tags": [
+        "parsing",
+        "streaming-parse",
+        "hooks",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:parse_hook_decision",
+      "type": "function",
+      "name": "parse_hook_decision",
+      "filePath": "src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "lineRange": [
+        125,
+        182
+      ],
+      "summary": "Parses a hook script's stdout into a structured HookDecision (allow/deny/modify) governing whether a tool call proceeds.",
+      "tags": [
+        "parsing",
+        "streaming-parse",
+        "hooks",
+        "rust"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:detect_turn_interruption",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:detect_turn_interruption",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:repair_interrupted_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:repair_interrupted_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:filter_unresolved_tool_uses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:filter_unresolved_tool_uses",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:ensure_tool_result_pairing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/recovery.rs:ensure_tool_result_pairing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/recovery.rs:InterruptionType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/recovery.rs:InterruptionType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/recovery.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:panic_payload_to_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:panic_payload_to_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ensure_initialized",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:enqueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:enqueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:pending_count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:pending_count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:invalidate_pending",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:invalidate_pending",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:is_processing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:is_processing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:is_turn_processing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:is_turn_processing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/scheduler.rs:broadcast_idle_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ScheduledKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ScheduledKind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ScheduledMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:ScheduledMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:QueueStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:QueueStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:EnqueueResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:EnqueueResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:DialogScheduler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:DialogScheduler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/scheduler.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/session/scheduler.rs:WorkerTask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:slugify_segment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:slugify_segment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:os_session_id_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:os_session_id_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:with_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:with_version",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:next_version_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/session_id.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/session_id.rs:next_version_for",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:normalize_title",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:derive_title_fallback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:derive_title_fallback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:truncate_title",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:generate_session_title",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:generate_session_title",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:generate_and_persist_session_title",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/title.rs:generate_and_persist_session_title",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/title.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/side_query.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:inlined_result_handles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:inlined_result_handles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:build_background_jobs_reminder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:build_background_jobs_reminder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/background_reminder.rs:format_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:extract_screenshot_store",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:expand_skill_slash_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:process_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/entry.rs:process_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/entry.rs",
+      "target": "file:src-tauri/crates/agent-core/src/state/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_assistant_message_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_assistant_message_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_tool_call_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_tool_call_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_tool_result_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/event_factory.rs:build_tool_result_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:tool_status_preview_from_args",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:tool_status_preview_from_args",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:parse_partial_plan_args",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:parse_partial_plan_args",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:decode_json_string_prefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:parse_hook_decision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/session/turn/event_handler/helpers.rs:parse_hook_decision",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,354 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs",
+      "type": "file",
+      "name": "file_watch.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs",
+      "summary": "Trigger listener that watches a set of filesystem paths with the notify crate and fires a debounced TriggerEvent when changes are detected.",
+      "tags": ["trigger", "file-watcher", "event-listener", "automation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs:spawn_file_watch",
+      "type": "function",
+      "name": "spawn_file_watch",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs",
+      "lineRange": [11, 129],
+      "summary": "Spawns a background task that sets up a filesystem watcher on the given paths and emits a debounced TriggerEvent whenever a change notification arrives.",
+      "tags": ["trigger", "async", "file-watcher"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs",
+      "type": "file",
+      "name": "git_activity.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs",
+      "summary": "Trigger listener that subscribes to git broadcast events and fires a TriggerEvent when a commit/push/pull/branch/file-change event matches the configured event and repo filters.",
+      "tags": ["trigger", "event-listener", "git", "automation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs:spawn_git_activity",
+      "type": "function",
+      "name": "spawn_git_activity",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs",
+      "lineRange": [11, 97],
+      "summary": "Spawns a background task subscribing to git broadcast events, filtering by event type and optional repo id substring, and emitting a matching TriggerEvent.",
+      "tags": ["trigger", "async", "git", "event-listener"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs",
+      "summary": "Barrel and dispatcher that maps an AutomationTrigger variant to the corresponding spawn_* function (timer, scheduled time, cron, git activity, channel message, file watch, webhook).",
+      "tags": ["automation", "trigger", "dispatcher", "barrel"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger",
+      "type": "function",
+      "name": "spawn_trigger",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs",
+      "lineRange": [26, 88],
+      "summary": "Dispatches on an AutomationTrigger variant, spawning the matching trigger listener (timer, scheduled time, cron, git activity, channel message, file watch, or webhook) and returning its TriggerHandle.",
+      "tags": ["dispatcher", "trigger", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "type": "file",
+      "name": "timer.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "summary": "Trigger listeners for time-based automations: fixed-interval timers, scheduled recurring times (daily/weekly/monthly with timezone handling), and cron expressions, each firing TriggerEvents on schedule.",
+      "tags": ["trigger", "scheduling", "cron", "timezone", "automation"],
+      "complexity": "complex",
+      "languageNotes": "Combines chrono-tz timezone-aware scheduling with DST-safe local-to-UTC conversion (picks the earlier offset on ambiguous local times) and the croner crate for cron expression evaluation."
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:ScheduledTimeSpec",
+      "type": "class",
+      "name": "ScheduledTimeSpec",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [20, 29],
+      "summary": "Configuration for a scheduled recurring trigger: frequency, time of day, timezone, and monthly/weekly recurrence rules.",
+      "tags": ["type-definition", "scheduling", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_timer",
+      "type": "function",
+      "name": "spawn_timer",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [44, 90],
+      "summary": "Spawns a background task that fires a TriggerEvent every fixed interval in seconds.",
+      "tags": ["trigger", "async", "interval"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_scheduled_time",
+      "type": "function",
+      "name": "spawn_scheduled_time",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [92, 193],
+      "summary": "Spawns a background task that computes the next scheduled occurrence for a daily/weekly/monthly time spec and sleeps until it fires a TriggerEvent.",
+      "tags": ["trigger", "async", "scheduling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:next_scheduled_occurrence",
+      "type": "function",
+      "name": "next_scheduled_occurrence",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [195, 240],
+      "summary": "Computes the next UTC datetime matching a resolved schedule (day-of-week, day-of-month, or weekday-of-month rules) relative to now.",
+      "tags": ["scheduling", "date-calculation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:next_matching_day",
+      "type": "function",
+      "name": "next_matching_day",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [242, 262],
+      "summary": "Scans forward day by day from a start date until it finds one satisfying a matcher predicate, then converts it into a local-time occurrence.",
+      "tags": ["scheduling", "date-calculation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:local_naive_to_utc",
+      "type": "function",
+      "name": "local_naive_to_utc",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [264, 282],
+      "summary": "Converts a naive local date/time in a given timezone to UTC, resolving DST ambiguity by picking the earlier offset.",
+      "tags": ["timezone", "date-calculation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:matches",
+      "type": "function",
+      "name": "matches",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [285, 296],
+      "summary": "Predicate helper methods (on date and on weekday) determining whether a given date/weekday satisfies a week-of-month or weekday matching rule.",
+      "tags": ["scheduling", "predicate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:from_chrono",
+      "type": "function",
+      "name": "from_chrono",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [300, 310],
+      "summary": "Converts a chrono::Weekday into the crate's own ScheduleWeekday enum.",
+      "tags": ["conversion", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_cron",
+      "type": "function",
+      "name": "spawn_cron",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs",
+      "lineRange": [325, 401],
+      "summary": "Spawns a background task that parses a cron expression and fires a TriggerEvent at each computed occurrence.",
+      "tags": ["trigger", "async", "cron"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs",
+      "type": "file",
+      "name": "webhook.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs",
+      "summary": "Trigger listener plus a global webhook route registry: spawns a listener that waits for a registered route to be fired externally, and exposes register/unregister/fire/list_routes for the webhook dispatch mechanism.",
+      "tags": ["trigger", "webhook", "registry", "automation"],
+      "complexity": "moderate",
+      "languageNotes": "Contains a private webhook_registry sub-module (register/unregister/fire/list_routes) backed by a global map, which is how externally-triggered webhook routes reach the waiting trigger task via an mpsc channel."
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs:spawn_webhook",
+      "type": "function",
+      "name": "spawn_webhook",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs",
+      "lineRange": [10, 66],
+      "summary": "Spawns a background task that registers a webhook route and waits on a channel for external fire() calls, emitting a TriggerEvent on each.",
+      "tags": ["trigger", "async", "webhook"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "summary": "Core automation domain types: AutomationRule (with cooldown/fire-count logic), the AutomationTrigger and AutomationAction enums, schedule configuration enums, git event kinds, and the AutomationStatus summary DTO.",
+      "tags": ["type-definition", "automation", "data-model", "domain-model"],
+      "complexity": "complex",
+      "languageNotes": "Rule fire-control (cooldown_secs/max_fires) lives directly on AutomationRule via can_fire/record_fire, making the rule itself responsible for rate-limiting rather than the engine."
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationRule",
+      "type": "class",
+      "name": "AutomationRule",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [19, 46],
+      "summary": "A user-defined automation rule combining a trigger, an action, enable state, and cooldown/max-fire limits, with logic to decide whether it can currently fire.",
+      "tags": ["data-model", "rule-engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationTrigger",
+      "type": "class",
+      "name": "AutomationTrigger",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [80, 126],
+      "summary": "Enum of supported trigger kinds: Timer, ScheduledTime, Cron, GitActivity, ChannelMessage, FileWatch, and Webhook, each carrying its own configuration.",
+      "tags": ["type-definition", "enum", "trigger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleFrequency",
+      "type": "class",
+      "name": "ScheduleFrequency",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [131, 135],
+      "summary": "Enum of recurrence frequencies for scheduled-time triggers: Daily, Weekly, Monthly.",
+      "tags": ["type-definition", "enum", "scheduling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleMonthlyMode",
+      "type": "class",
+      "name": "ScheduleMonthlyMode",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [140, 144],
+      "summary": "Enum selecting how a monthly schedule resolves a day: fixed day-of-month, weekday-of-month, or last day.",
+      "tags": ["type-definition", "enum", "scheduling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:WeekOfMonth",
+      "type": "class",
+      "name": "WeekOfMonth",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [149, 155],
+      "summary": "Enum enumerating which week of the month (First..Last) a weekday-of-month schedule refers to.",
+      "tags": ["type-definition", "enum", "scheduling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleWeekday",
+      "type": "class",
+      "name": "ScheduleWeekday",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [160, 168],
+      "summary": "Enum of weekdays used by scheduled-time and weekday-of-month rules.",
+      "tags": ["type-definition", "enum", "scheduling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:GitEvent",
+      "type": "class",
+      "name": "GitEvent",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [173, 179],
+      "summary": "Enum of git activity kinds that can trigger an automation: Commit, Push, Pull, BranchChange, FileChange.",
+      "tags": ["type-definition", "enum", "git"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationAction",
+      "type": "class",
+      "name": "AutomationAction",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [184, 213],
+      "summary": "Enum of actions an automation rule can execute: InjectPrompt, StartSession, KillSession, SendMessage, InjectToSession, or a Workflow action instance.",
+      "tags": ["type-definition", "enum", "action"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:WorkflowActionInstance",
+      "type": "class",
+      "name": "WorkflowActionInstance",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [227, 237],
+      "summary": "Reference to a workflow action definition plus its instance id and JSON data payload, used by the Workflow variant of AutomationAction.",
+      "tags": ["type-definition", "workflow"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationStatus",
+      "type": "class",
+      "name": "AutomationStatus",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/automation/types.rs",
+      "lineRange": [246, 263],
+      "summary": "DTO summarizing engine runtime status: running state, active/total rule counts, total fires, uptime, and agent health metrics.",
+      "tags": ["type-definition", "dto", "status"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs:spawn_file_watch", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs:spawn_file_watch", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs:spawn_git_activity", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs:spawn_git_activity", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/channel_message.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/common.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs", "target": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_timer", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_scheduled_time", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_cron", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/git_activity.rs:spawn_git_activity", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/channel_message.rs:spawn_channel_message", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/file_watch.rs:spawn_file_watch", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/mod.rs:spawn_trigger", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs:spawn_webhook", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:ScheduledTimeSpec", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_timer", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_scheduled_time", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:next_scheduled_occurrence", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:next_matching_day", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:local_naive_to_utc", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:matches", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:from_chrono", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_cron", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:ScheduledTimeSpec", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_timer", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_scheduled_time", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/timer.rs:spawn_cron", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs:spawn_webhook", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs", "target": "function:src-tauri/crates/agent-core/src/integrations/automation/triggers/webhook.rs:spawn_webhook", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationRule", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationTrigger", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleFrequency", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleMonthlyMode", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:WeekOfMonth", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleWeekday", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:GitEvent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationAction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:WorkflowActionInstance", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationRule", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationTrigger", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleFrequency", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleMonthlyMode", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:WeekOfMonth", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:ScheduleWeekday", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:GitEvent", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationAction", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:WorkflowActionInstance", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src-tauri/crates/agent-core/src/integrations/automation/types.rs", "target": "class:src-tauri/crates/agent-core/src/integrations/automation/types.rs:AutomationStatus", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

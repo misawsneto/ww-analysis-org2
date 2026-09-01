@@ -1,0 +1,1910 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "type": "file",
+      "name": "agent_core_bridge.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "summary": "Wire-side adapter that registers this crate's SQLite-backed implementations into agent_core's IoC slots (db_bridge, session_bridge) so agent_core's memory, consolidation, reflection, and turn-processor code can persist token usage and turn-intent state without a dependency back on session_persistence.",
+      "tags": [
+        "adapter",
+        "bridge",
+        "dependency-injection",
+        "persistence"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a one-shot register() call to install trait-object implementations into agent_core's foundation slots, keeping the dependency edge one-directional."
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:record_token_usage_adapter",
+      "type": "function",
+      "name": "record_token_usage_adapter",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        18,
+        32
+      ],
+      "summary": "Adapter that maps agent_core's TokenUsageRow into a token_usage::insert_token_usage_record call, returning the new row id.",
+      "tags": [
+        "adapter",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:map_attribution_method",
+      "type": "function",
+      "name": "map_attribution_method",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        34,
+        44
+      ],
+      "summary": "Maps a wire-format attribution method string to the local AttributionMethod enum.",
+      "tags": [
+        "mapping",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:record_usage_telemetry_batch_adapter",
+      "type": "function",
+      "name": "record_usage_telemetry_batch_adapter",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        46,
+        87
+      ],
+      "summary": "Adapter that converts a batch of agent_core LLM usage spans and tool attributions into local record types and persists them via tool_usage::insert_usage_telemetry_batch.",
+      "tags": [
+        "adapter",
+        "telemetry",
+        "batch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:map_bridge_status",
+      "type": "function",
+      "name": "map_bridge_status",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        89,
+        102
+      ],
+      "summary": "Maps a wire-format turn-intent status string to the local TurnIntentStatus enum.",
+      "tags": [
+        "mapping",
+        "turn-intent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:map_bridge_source",
+      "type": "function",
+      "name": "map_bridge_source",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        104,
+        115
+      ],
+      "summary": "Maps a wire-format turn-intent source string to the local TurnIntentSource enum.",
+      "tags": [
+        "mapping",
+        "turn-intent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:upsert_turn_intent_adapter",
+      "type": "function",
+      "name": "upsert_turn_intent_adapter",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        117,
+        138
+      ],
+      "summary": "Adapter that inserts or updates a turn intent record via turn_intents::upsert_initial using mapped source and status enums.",
+      "tags": [
+        "adapter",
+        "turn-intent"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:update_turn_intent_status_adapter",
+      "type": "function",
+      "name": "update_turn_intent_status_adapter",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        140,
+        159
+      ],
+      "summary": "Adapter that transitions a turn intent's status via turn_intents::update_status.",
+      "tags": [
+        "adapter",
+        "turn-intent"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "lineRange": [
+        172,
+        181
+      ],
+      "summary": "Installs this crate's concrete db_bridge and session_bridge implementations into agent_core's IoC container at startup.",
+      "tags": [
+        "entry-point",
+        "dependency-injection",
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "summary": "Tauri-command layer exposing ~23 async wrappers around the blocking SQLite CRUD, editing, and telemetry operations of this crate, each offloading work via spawn_blocking so the Tauri main thread is never blocked.",
+      "tags": [
+        "api-handler",
+        "tauri-command",
+        "async",
+        "persistence"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Commands are re-registered from app::commands::handler_list.inc under the bare session_persistence::* path rather than being invoked directly from this file."
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_session",
+      "type": "function",
+      "name": "cache_save_session",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        24,
+        29
+      ],
+      "summary": "Tauri command wrapper that persists a full CachedSession via crud::save_session on a blocking thread.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_session",
+      "type": "function",
+      "name": "cache_load_session",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        35,
+        40
+      ],
+      "summary": "Tauri command wrapper that loads a cached session by id via crud::load_session.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_session_specs",
+      "type": "function",
+      "name": "cache_update_session_specs",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        44,
+        52
+      ],
+      "summary": "Tauri command wrapper that updates a session's specs JSON via crud::update_session_specs.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_events",
+      "type": "function",
+      "name": "cache_save_events",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        56,
+        61
+      ],
+      "summary": "Tauri command wrapper that persists a batch of session events via crud::save_events.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_events",
+      "type": "function",
+      "name": "cache_load_events",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        65,
+        70
+      ],
+      "summary": "Tauri command wrapper that loads all cached events for a session via crud::load_events.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_turn_index",
+      "type": "function",
+      "name": "cache_load_turn_index",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        74,
+        79
+      ],
+      "summary": "Tauri command wrapper that loads the materialized turn index for a session via turn_index::load_turn_index.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_events",
+      "type": "function",
+      "name": "cache_search_events",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        83,
+        94
+      ],
+      "summary": "Tauri command wrapper that performs a text search over a session's events via crud::search_events.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_all_sessions",
+      "type": "function",
+      "name": "cache_search_all_sessions",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        101,
+        109
+      ],
+      "summary": "Tauri command wrapper that searches events across all cached sessions via crud::search_all_sessions.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_metadata",
+      "type": "function",
+      "name": "cache_get_session_metadata",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        113,
+        120
+      ],
+      "summary": "Tauri command wrapper that fetches session metadata via crud::get_session_metadata.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_session",
+      "type": "function",
+      "name": "cache_delete_session",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        124,
+        129
+      ],
+      "summary": "Tauri command wrapper that deletes a cached session via crud::delete_session.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_old_sessions",
+      "type": "function",
+      "name": "cache_clear_old_sessions",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        133,
+        138
+      ],
+      "summary": "Tauri command wrapper that purges sessions older than a max age via crud::clear_old_sessions.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "maintenance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_all_sessions",
+      "type": "function",
+      "name": "cache_get_all_sessions",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        142,
+        147
+      ],
+      "summary": "Tauri command wrapper that lists all cached session ids.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_stats",
+      "type": "function",
+      "name": "cache_get_stats",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        151,
+        156
+      ],
+      "summary": "Tauri command wrapper that returns aggregate cache stats (session/event counts, db size).",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "monitoring"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_truncate_after_event",
+      "type": "function",
+      "name": "cache_truncate_after_event",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        165,
+        173
+      ],
+      "summary": "Tauri command wrapper that truncates a session's event log after a given event via editing::truncate_after_event, backing the edit-and-resend flow.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "editing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_event",
+      "type": "function",
+      "name": "cache_delete_event",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        177,
+        182
+      ],
+      "summary": "Tauri command wrapper that deletes a single cached event via editing::delete_event.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "editing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_event",
+      "type": "function",
+      "name": "cache_update_event",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        186,
+        191
+      ],
+      "summary": "Tauri command wrapper that updates a cached event's content via editing::update_event.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "editing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_session_history",
+      "type": "function",
+      "name": "cache_clear_session_history",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        196,
+        201
+      ],
+      "summary": "Tauri command wrapper that clears a session's entire event history via editing::clear_session_history.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "editing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_event",
+      "type": "function",
+      "name": "cache_get_event",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        205,
+        213
+      ],
+      "summary": "Tauri command wrapper that fetches a single cached event by id via crud::get_event.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_diff",
+      "type": "function",
+      "name": "cache_get_session_diff",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        222,
+        229
+      ],
+      "summary": "Tauri command wrapper that computes a session diff summary (event count / metadata) for a session id.",
+      "tags": [
+        "tauri-command",
+        "api-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_token_usage_records",
+      "type": "function",
+      "name": "get_session_token_usage_records",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        240,
+        247
+      ],
+      "summary": "Tauri command wrapper that returns per-round token usage records for a session via token_usage::get_token_usage_records.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "token-usage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_llm_usage_spans",
+      "type": "function",
+      "name": "get_session_llm_usage_spans",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        250,
+        260
+      ],
+      "summary": "Tauri command wrapper that returns per-LLM-call usage spans for a session/turn via tool_usage::get_llm_usage_spans.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions",
+      "type": "function",
+      "name": "get_session_tool_usage_attributions",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        263,
+        273
+      ],
+      "summary": "Tauri command wrapper that returns tool-call usage attribution records for a session/turn via tool_usage::get_tool_usage_attributions.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions_for_call",
+      "type": "function",
+      "name": "get_session_tool_usage_attributions_for_call",
+      "filePath": "src-tauri/crates/session-persistence/src/commands.rs",
+      "lineRange": [
+        276,
+        286
+      ],
+      "summary": "Tauri command wrapper that returns the usage attribution record for one specific tool call via tool_usage::get_tool_usage_attributions_for_call.",
+      "tags": [
+        "tauri-command",
+        "api-handler",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/connection.rs",
+      "type": "file",
+      "name": "connection.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/connection.rs",
+      "summary": "Thin re-export shim exposing database::db connection helpers (get_connection, begin_immediate, with_sessions_writer) under the session_persistence namespace for legacy in-crate callers.",
+      "tags": [
+        "barrel",
+        "re-export",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "type": "file",
+      "name": "crud.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "summary": "Synchronous rusqlite CRUD operations for session and event persistence -- save/load/search/delete sessions and events -- intended to be called from a blocking thread via spawn_blocking.",
+      "tags": [
+        "data-access",
+        "persistence",
+        "database",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:existing_event_sequence",
+      "type": "function",
+      "name": "existing_event_sequence",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        32,
+        45
+      ],
+      "summary": "Looks up the stored sequence number for an existing event row, if any.",
+      "tags": [
+        "query",
+        "sequence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:normalize_session_sequences",
+      "type": "function",
+      "name": "normalize_session_sequences",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        47,
+        69
+      ],
+      "summary": "Re-numbers a session's event sequence values to be contiguous, used after truncation or reordering.",
+      "tags": [
+        "data-integrity",
+        "sequence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:save_events",
+      "type": "function",
+      "name": "save_events",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        93,
+        199
+      ],
+      "summary": "Persists a batch of session events, assigning sequence numbers, upserting rows, and scheduling a debounced turn-index rebuild.",
+      "tags": [
+        "persistence",
+        "batch",
+        "write"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:load_events",
+      "type": "function",
+      "name": "load_events",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        207,
+        240
+      ],
+      "summary": "Loads all cached events for a session ordered by sequence.",
+      "tags": [
+        "query",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:escape_like_pattern",
+      "type": "function",
+      "name": "escape_like_pattern",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        248,
+        257
+      ],
+      "summary": "Escapes SQL LIKE wildcard characters in a user search query.",
+      "tags": [
+        "utility",
+        "sql",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:build_excerpt",
+      "type": "function",
+      "name": "build_excerpt",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        300,
+        330
+      ],
+      "summary": "Builds a highlighted text excerpt around the first match of a search query within event content.",
+      "tags": [
+        "search",
+        "text-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:search_events",
+      "type": "function",
+      "name": "search_events",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        340,
+        386
+      ],
+      "summary": "Performs a LIKE-based full text search over a session's events, returning ranked results with excerpts.",
+      "tags": [
+        "search",
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:search_all_sessions",
+      "type": "function",
+      "name": "search_all_sessions",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        394,
+        429
+      ],
+      "summary": "Performs a LIKE-based search across all cached sessions' events.",
+      "tags": [
+        "search",
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:get_session_metadata",
+      "type": "function",
+      "name": "get_session_metadata",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        432,
+        455
+      ],
+      "summary": "Fetches aggregate metadata (event count, time range) for a session.",
+      "tags": [
+        "query",
+        "metadata"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:delete_session",
+      "type": "function",
+      "name": "delete_session",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        463,
+        481
+      ],
+      "summary": "Deletes a session and all its associated events from the cache.",
+      "tags": [
+        "delete",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:clear_old_sessions",
+      "type": "function",
+      "name": "clear_old_sessions",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        488,
+        536
+      ],
+      "summary": "Deletes cached sessions older than a given age threshold.",
+      "tags": [
+        "maintenance",
+        "delete"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:get_all_sessions",
+      "type": "function",
+      "name": "get_all_sessions",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        539,
+        560
+      ],
+      "summary": "Lists all session ids present in the cache.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:get_cache_stats",
+      "type": "function",
+      "name": "get_cache_stats",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        563,
+        581
+      ],
+      "summary": "Computes aggregate cache statistics: total sessions, events, and database size.",
+      "tags": [
+        "monitoring",
+        "stats"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_metadata",
+      "type": "function",
+      "name": "update_session_metadata",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        585,
+        611
+      ],
+      "summary": "Recomputes and persists a session's cached metadata after event mutations.",
+      "tags": [
+        "metadata",
+        "write"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:save_session",
+      "type": "function",
+      "name": "save_session",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        619,
+        680
+      ],
+      "summary": "Persists a full session (events + specs) atomically, resetting sequence counters and rebuilding the turn index.",
+      "tags": [
+        "persistence",
+        "write",
+        "transaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:load_session",
+      "type": "function",
+      "name": "load_session",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        683,
+        696
+      ],
+      "summary": "Loads a full cached session including its events and specs.",
+      "tags": [
+        "query",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_specs",
+      "type": "function",
+      "name": "update_session_specs",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        699,
+        708
+      ],
+      "summary": "Updates the stored specs JSON blob for a session.",
+      "tags": [
+        "write",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:find_awaiting_user_events_by_function",
+      "type": "function",
+      "name": "find_awaiting_user_events_by_function",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        717,
+        746
+      ],
+      "summary": "Finds events awaiting a user response for a given tool/function name, used to resume pending interactions.",
+      "tags": [
+        "query",
+        "workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/crud.rs:get_event",
+      "type": "function",
+      "name": "get_event",
+      "filePath": "src-tauri/crates/session-persistence/src/crud.rs",
+      "lineRange": [
+        749,
+        784
+      ],
+      "summary": "Fetches a single cached event by session and event id.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "type": "file",
+      "name": "editing.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "summary": "Session event log editing operations -- truncate-after-event, delete, and update -- backing the edit-and-resend chat flow used by useEditUserMessage.",
+      "tags": [
+        "editing",
+        "persistence",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event",
+      "type": "function",
+      "name": "truncate_after_event",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        19,
+        21
+      ],
+      "summary": "Public entry point that truncates a session's event log after the given event, delegating to truncate_after_event_inner.",
+      "tags": [
+        "editing",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event_inner",
+      "type": "function",
+      "name": "truncate_after_event_inner",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        23,
+        121
+      ],
+      "summary": "Removes the target event and every later event in a session's linear history, then rebuilds the turn index.",
+      "tags": [
+        "editing",
+        "delete",
+        "transaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:select_ids_by_seq",
+      "type": "function",
+      "name": "select_ids_by_seq",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        128,
+        143
+      ],
+      "summary": "Selects event ids in a session with sequence number greater than a given value.",
+      "tags": [
+        "query",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:select_ids_by_ts",
+      "type": "function",
+      "name": "select_ids_by_ts",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        156,
+        171
+      ],
+      "summary": "Selects event ids in a session with timestamp greater than a given value.",
+      "tags": [
+        "query",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:delete_event",
+      "type": "function",
+      "name": "delete_event",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        187,
+        204
+      ],
+      "summary": "Deletes a single event from a session's history and renormalizes metadata.",
+      "tags": [
+        "delete",
+        "editing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:update_event",
+      "type": "function",
+      "name": "update_event",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        207,
+        236
+      ],
+      "summary": "Updates the content of an existing cached event.",
+      "tags": [
+        "write",
+        "editing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/editing.rs:clear_session_history",
+      "type": "function",
+      "name": "clear_session_history",
+      "filePath": "src-tauri/crates/session-persistence/src/editing.rs",
+      "lineRange": [
+        244,
+        279
+      ],
+      "summary": "Deletes all events for a session while preserving the session record itself.",
+      "tags": [
+        "delete",
+        "maintenance"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:record_token_usage_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:map_attribution_method",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:record_usage_telemetry_batch_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:map_bridge_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:map_bridge_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:upsert_turn_intent_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:update_turn_intent_status_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/agent_core_bridge.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:record_token_usage_adapter",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:insert_token_usage_record",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:record_usage_telemetry_batch_adapter",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:insert_usage_telemetry_batch",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:upsert_turn_intent_adapter",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:upsert_initial",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/agent_core_bridge.rs:update_turn_intent_status_adapter",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:update_status",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_session_specs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_session_specs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_turn_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_turn_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_all_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_all_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_metadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_old_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_old_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_all_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_all_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_stats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_stats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_truncate_after_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_truncate_after_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_session_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_session_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_diff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_diff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_token_usage_records",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_token_usage_records",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_llm_usage_spans",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_llm_usage_spans",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions_for_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/commands.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions_for_call",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_session",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:save_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_session",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:load_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_session_specs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_specs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_save_events",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:save_events",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_events",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:load_events",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_load_turn_index",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_index",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_events",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:search_events",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_search_all_sessions",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:search_all_sessions",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_session_metadata",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_session_metadata",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_session",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:delete_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_old_sessions",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:clear_old_sessions",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_truncate_after_event",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_delete_event",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:delete_event",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_update_event",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:update_event",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_clear_session_history",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:clear_session_history",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:cache_get_event",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_event",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_token_usage_records",
+      "target": "function:src-tauri/crates/session-persistence/src/token_usage.rs:get_token_usage_records",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_llm_usage_spans",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_llm_usage_spans",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/commands.rs:get_session_tool_usage_attributions_for_call",
+      "target": "function:src-tauri/crates/session-persistence/src/tool_usage.rs:get_tool_usage_attributions_for_call",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:existing_event_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:normalize_session_sequences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:normalize_session_sequences",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:save_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:save_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:load_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:load_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:escape_like_pattern",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:build_excerpt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:search_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:search_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:search_all_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:search_all_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_session_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_session_metadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:delete_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:delete_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:clear_old_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:clear_old_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_all_sessions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_all_sessions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_cache_stats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_cache_stats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_metadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:save_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:save_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:load_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:load_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_specs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:update_session_specs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:find_awaiting_user_events_by_function",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:find_awaiting_user_events_by_function",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/crud.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/crud.rs:get_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/crud.rs:save_events",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:schedule",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/crud.rs:save_session",
+      "target": "function:src-tauri/crates/session-persistence/src/sequence.rs:reset_sequence",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/crud.rs:save_session",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:select_ids_by_seq",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:select_ids_by_ts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:delete_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:delete_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:update_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:update_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:clear_session_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/editing.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/editing.rs:clear_session_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/editing.rs:truncate_after_event_inner",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

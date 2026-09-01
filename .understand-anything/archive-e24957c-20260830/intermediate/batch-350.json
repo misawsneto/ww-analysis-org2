@@ -1,0 +1,669 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/api/api_organization.md",
+      "type": "document",
+      "name": "api_organization.md",
+      "filePath": "src/api/api_organization.md",
+      "summary": "Living architecture reference for the src/api layer, documenting its transport-based directory structure (http, tauri, realtime, services), a decision guide for choosing a transport, and conventions for adding new endpoints or Tauri commands.",
+      "tags": ["documentation", "architecture", "api-layer", "developer-guide"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/auth/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/http/auth/index.ts",
+      "summary": "Barrel file for the auth domain that re-exports login, Supabase OAuth, and secure-token-storage APIs as a single import surface.",
+      "tags": ["barrel", "auth", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/auth/secure.ts",
+      "type": "file",
+      "name": "secure.ts",
+      "filePath": "src/api/http/auth/secure.ts",
+      "summary": "Wraps Supabase session state behind a secure-storage-style API, exposing helpers to read the current auth state, access/refresh tokens, expiry status, and to clear tokens on sign-out.",
+      "tags": ["auth", "utility", "token-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/auth/supabase.ts",
+      "type": "file",
+      "name": "supabase.ts",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "summary": "Core Supabase auth client integration: lazily configures and caches the Supabase client, drives OAuth sign-in/sign-out flows, exchanges auth codes for sessions, and syncs the resulting session into the app's hosted-token store.",
+      "tags": ["auth", "oauth", "supabase", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/config.ts",
+      "type": "file",
+      "name": "config.ts",
+      "filePath": "src/api/http/config.ts",
+      "summary": "Type definitions for provider/agent discovery responses (ModelInfo, ProviderInfo, AgentInfo); the actual data is fetched via Tauri commands elsewhere, and these types are centralized here because many components import them.",
+      "tags": ["type-definition", "config", "provider"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/integrations/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/http/integrations/index.ts",
+      "summary": "Two-line barrel that re-exports the Linear projects and sync-connections integration APIs.",
+      "tags": ["barrel", "integrations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/integrations/linearProjects.ts",
+      "type": "file",
+      "name": "linearProjects.ts",
+      "filePath": "src/api/http/integrations/linearProjects.ts",
+      "summary": "Linear integration API client exposing CRUD operations for Linear projects, teams, workflow states, and issues, all routed through Tauri invoke calls.",
+      "tags": ["api-handler", "integrations", "linear"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/api/http/integrations/syncConnections.ts",
+      "type": "file",
+      "name": "syncConnections.ts",
+      "filePath": "src/api/http/integrations/syncConnections.ts",
+      "summary": "API client for managing git-provider sync connections (PAT, SSH, OAuth), including creation, renaming, deletion, and OAuth flow handling, via Tauri invoke calls.",
+      "tags": ["api-handler", "integrations", "oauth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/orgiiHosted/poolConfig.ts",
+      "type": "file",
+      "name": "poolConfig.ts",
+      "filePath": "src/api/http/orgiiHosted/poolConfig.ts",
+      "summary": "OSS-build stub for the ORGII marketplace pool taxonomy; always returns an empty static config so the hosted build can later swap in a real implementation behind the same interface.",
+      "tags": ["config", "stub", "orgii-hosted"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/project/sync.ts",
+      "type": "file",
+      "name": "sync.ts",
+      "filePath": "src/api/http/project/sync.ts",
+      "summary": "Client API and type surface for project-level git-folder sync: adapter attach/detach, sync status polling and event subscription, outbox problem/conflict management, webhook install, and import progress tracking.",
+      "tags": ["api-handler", "sync", "project", "git"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/api/http/project/syncTypes.ts",
+      "type": "file",
+      "name": "syncTypes.ts",
+      "filePath": "src/api/http/project/syncTypes.ts",
+      "summary": "Shared TypeScript types and enums (OAuth flow kinds, applied side, conflict resolution) used across the project sync API and its consumers.",
+      "tags": ["type-definition", "sync", "project"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/api/http/project/types/collabSync.ts",
+      "type": "file",
+      "name": "collabSync.ts",
+      "filePath": "src/api/http/project/types/collabSync.ts",
+      "summary": "Type definitions and enum-like constants for collaborative sync entity kinds and push operations used by the project collaboration sync layer.",
+      "tags": ["type-definition", "sync", "collaboration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/project/types/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/http/project/types/index.ts",
+      "summary": "Barrel that re-exports all project domain type modules (agent workflow, collab sync, common, labels, members, milestones, records, routines, sync, work items) as a single import surface.",
+      "tags": ["barrel", "type-definition", "project"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/project/types/labels.ts",
+      "type": "file",
+      "name": "labels.ts",
+      "filePath": "src/api/http/project/types/labels.ts",
+      "summary": "Type definitions for project label entries and the labels file structure stored per project.",
+      "tags": ["type-definition", "project", "labels"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/project/types/members.ts",
+      "type": "file",
+      "name": "members.ts",
+      "filePath": "src/api/http/project/types/members.ts",
+      "summary": "Type definitions for project team members, including linked git identities/emails and the members file structure.",
+      "tags": ["type-definition", "project", "members"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/project/types/milestones.ts",
+      "type": "file",
+      "name": "milestones.ts",
+      "filePath": "src/api/http/project/types/milestones.ts",
+      "summary": "Type definitions for project milestone entries and the milestones file structure.",
+      "tags": ["type-definition", "project", "milestones"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/project/types/sync.ts",
+      "type": "file",
+      "name": "sync.ts",
+      "filePath": "src/api/http/project/types/sync.ts",
+      "summary": "Enum-like constants for project/org sync provider identifiers, git-folder sync status, and conflict kinds/entity types.",
+      "tags": ["type-definition", "sync", "project"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/session/hostedKey.ts",
+      "type": "file",
+      "name": "hostedKey.ts",
+      "filePath": "src/api/http/session/hostedKey.ts",
+      "summary": "API client for hosted-key (ORGII marketplace) session activity: fetching cached activity via cursor, retrieving and parsing activity records, batching activity writes, and comparing stream ids for ordering.",
+      "tags": ["api-handler", "session", "hosted-key"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/session/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/http/session/index.ts",
+      "summary": "Barrel that combines the local (own-key) session API, hosted-key activity API, and unified session API into a single session module surface, with the local session API as the default export.",
+      "tags": ["barrel", "session", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/session/local.ts",
+      "type": "file",
+      "name": "local.ts",
+      "filePath": "src/api/http/session/local.ts",
+      "summary": "Local (own-key) session API stub/implementation providing session lifecycle operations (create, status, cancel, pause/resume, messaging, stage approval, activity polling, discovery) routed through the local Rust-backed engine.",
+      "tags": ["api-handler", "session", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/api/http/session/unified.ts",
+      "type": "file",
+      "name": "unified.ts",
+      "filePath": "src/api/http/session/unified.ts",
+      "summary": "Routes session API calls uniformly to the local Rust-backed session engine regardless of hosted vs. own-key context, retaining a legacy isHosted flag for backward compatibility with no routing effect.",
+      "tags": ["api-handler", "session", "routing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/http/user/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/http/user/index.ts",
+      "summary": "User domain barrel that re-exports the public-profile lookup endpoint.",
+      "tags": ["barrel", "user", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/index.ts",
+      "summary": "Minimal root entry point for the API layer, re-exporting the typed Zod-validated Tauri RPC proxy and shared key-related types; documents the layer's transport-based sub-module organization.",
+      "tags": ["entry-point", "barrel", "rpc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/realtime/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/api/realtime/index.ts",
+      "summary": "Barrel aggregating the realtime transport layer: code-editor WebSocket client, SSE parsing schemas and stream utilities, task-run streaming helpers, and the session WebSocket submodule.",
+      "tags": ["barrel", "realtime", "websocket", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/api/realtime/websocket/config.ts",
+      "type": "file",
+      "name": "config.ts",
+      "filePath": "src/api/realtime/websocket/config.ts",
+      "summary": "Configuration and helpers for the session WebSocket connection: builds the market WebSocket URL, detects market/hosted sessions, and defines default connection options, event type constants, and session stage enums.",
+      "tags": ["config", "realtime", "websocket"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/auth/secure.ts:secureGetAuthState",
+      "type": "function",
+      "name": "secureGetAuthState",
+      "filePath": "src/api/http/auth/secure.ts",
+      "lineRange": [18, 43],
+      "summary": "Retrieves the current Supabase session, syncs the hosted token from it, and returns a normalized AuthState (authenticated flag, tokens, user id, expiry).",
+      "tags": ["auth", "session", "token"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/auth/secure.ts:secureGetAccessToken",
+      "type": "function",
+      "name": "secureGetAccessToken",
+      "filePath": "src/api/http/auth/secure.ts",
+      "lineRange": [45, 47],
+      "summary": "Returns the current hosted access token by delegating to getSupabaseHostedToken.",
+      "tags": ["auth", "token"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/secure.ts:secureGetRefreshToken",
+      "type": "function",
+      "name": "secureGetRefreshToken",
+      "filePath": "src/api/http/auth/secure.ts",
+      "lineRange": [49, 58],
+      "summary": "Reads the Supabase session and returns its refresh token, or null if no session exists.",
+      "tags": ["auth", "token"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/secure.ts:secureIsTokenExpiring",
+      "type": "function",
+      "name": "secureIsTokenExpiring",
+      "filePath": "src/api/http/auth/secure.ts",
+      "lineRange": [60, 74],
+      "summary": "Checks whether the current Supabase session's access token will expire within a given threshold in seconds.",
+      "tags": ["auth", "token", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/secure.ts:secureClearTokens",
+      "type": "function",
+      "name": "secureClearTokens",
+      "filePath": "src/api/http/auth/secure.ts",
+      "lineRange": [76, 78],
+      "summary": "Clears stored auth tokens by signing out of Supabase.",
+      "tags": ["auth", "token", "logout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:ensureSupabaseConfig",
+      "type": "function",
+      "name": "ensureSupabaseConfig",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [25, 34],
+      "summary": "Validates that Supabase URL and anon key environment variables are present, throwing if the client is misconfigured.",
+      "tags": ["auth", "config", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:getSupabaseAuthClient",
+      "type": "function",
+      "name": "getSupabaseAuthClient",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [36, 56],
+      "summary": "Lazily creates and caches a singleton Supabase auth client configured for the app's environment.",
+      "tags": ["auth", "supabase", "singleton"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:syncHostedTokenFromSession",
+      "type": "function",
+      "name": "syncHostedTokenFromSession",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [58, 72],
+      "summary": "Persists the hosted access token and user id extracted from a Supabase session into local hosted-token storage.",
+      "tags": ["auth", "session", "token-storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:signInWithSupabase",
+      "type": "function",
+      "name": "signInWithSupabase",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [74, 93],
+      "summary": "Initiates the Supabase OAuth sign-in flow, opening the system browser in Tauri production or redirecting in the browser, using the appropriate callback URL.",
+      "tags": ["auth", "oauth", "login"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:exchangeSupabaseCodeForSession",
+      "type": "function",
+      "name": "exchangeSupabaseCodeForSession",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [95, 109],
+      "summary": "Exchanges an OAuth authorization code for a Supabase session and syncs the resulting hosted token.",
+      "tags": ["auth", "oauth", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:getSupabaseHostedToken",
+      "type": "function",
+      "name": "getSupabaseHostedToken",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [111, 124],
+      "summary": "Fetches the current Supabase session and returns (and syncs) its hosted access token.",
+      "tags": ["auth", "token"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:refreshSupabaseSession",
+      "type": "function",
+      "name": "refreshSupabaseSession",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [126, 138],
+      "summary": "Refreshes the Supabase session and re-syncs the hosted token from the refreshed session.",
+      "tags": ["auth", "session", "token-refresh"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/auth/supabase.ts:signOutSupabase",
+      "type": "function",
+      "name": "signOutSupabase",
+      "filePath": "src/api/http/auth/supabase.ts",
+      "lineRange": [140, 149],
+      "summary": "Signs out of Supabase and clears the locally stored hosted token.",
+      "tags": ["auth", "logout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/orgiiHosted/poolConfig.ts:getORGIIPoolConfigCached",
+      "type": "function",
+      "name": "getORGIIPoolConfigCached",
+      "filePath": "src/api/http/orgiiHosted/poolConfig.ts",
+      "lineRange": [24, 26],
+      "summary": "Synchronous getter returning the OSS build's empty static pool config.",
+      "tags": ["config", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/orgiiHosted/poolConfig.ts:getORGIIPoolConfig",
+      "type": "function",
+      "name": "getORGIIPoolConfig",
+      "filePath": "src/api/http/orgiiHosted/poolConfig.ts",
+      "lineRange": [29, 31],
+      "summary": "Async getter resolving immediately with the OSS build's empty static pool config.",
+      "tags": ["config", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/project/sync.ts:subscribeSyncStatus",
+      "type": "function",
+      "name": "subscribeSyncStatus",
+      "filePath": "src/api/http/project/sync.ts",
+      "lineRange": [65, 77],
+      "summary": "Subscribes to Tauri sync-status-changed events for a given key, invoking the handler on each event and returning an unsubscribe function.",
+      "tags": ["sync", "event-handler", "subscription"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/session/hostedKey.ts:getHostedKeyCursor",
+      "type": "function",
+      "name": "getHostedKeyCursor",
+      "filePath": "src/api/http/session/hostedKey.ts",
+      "lineRange": [68, 74],
+      "summary": "Stub cursor getter for hosted-key activity that currently always returns cursor 0, since own-key/local sessions have no hosted-key cursor.",
+      "tags": ["session", "hosted-key", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/hostedKey.ts:getHostedKeyActivity",
+      "type": "function",
+      "name": "getHostedKeyActivity",
+      "filePath": "src/api/http/session/hostedKey.ts",
+      "lineRange": [79, 123],
+      "summary": "Loads cached hosted-key session activity events via the session-core RPC cache, parsing and validating each record against the hosted-key JSON schema.",
+      "tags": ["session", "hosted-key", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/session/hostedKey.ts:storeHostedKeyActivityBatch",
+      "type": "function",
+      "name": "storeHostedKeyActivityBatch",
+      "filePath": "src/api/http/session/hostedKey.ts",
+      "lineRange": [128, 167],
+      "summary": "Serializes and persists a batch of hosted-key activity events into the session-core RPC cache, stamping each with a batch timestamp.",
+      "tags": ["session", "hosted-key", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/http/session/hostedKey.ts:compareStreamIds",
+      "type": "function",
+      "name": "compareStreamIds",
+      "filePath": "src/api/http/session/hostedKey.ts",
+      "lineRange": [169, 180],
+      "summary": "Compares two hyphen-delimited numeric stream ids segment-by-segment to determine their relative ordering.",
+      "tags": ["utility", "comparator", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:isWaitingForQuestion",
+      "type": "function",
+      "name": "isWaitingForQuestion",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [23, 32],
+      "summary": "Determines from session data whether the session is currently paused waiting on a user question.",
+      "tags": ["session", "utility", "predicate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:getSessionStatus",
+      "type": "function",
+      "name": "getSessionStatus",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [41, 44],
+      "summary": "Stub returning a default 'unknown' session status; real status comes from local Tauri/Rust session polling elsewhere.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:pauseSession",
+      "type": "function",
+      "name": "pauseSession",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [46, 47],
+      "summary": "No-op stub for pausing a session; local sessions do not currently support explicit pause.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:resumeSession",
+      "type": "function",
+      "name": "resumeSession",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [48, 53],
+      "summary": "No-op stub resolving immediately for resuming a session in the local session API.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:sendMessageAndResume",
+      "type": "function",
+      "name": "sendMessageAndResume",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [56, 61],
+      "summary": "No-op stub for sending a message and resuming a session in the local session API.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:answerQuestion",
+      "type": "function",
+      "name": "answerQuestion",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [62, 65],
+      "summary": "No-op stub for answering a pending session question in the local session API.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:continueSession",
+      "type": "function",
+      "name": "continueSession",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [66, 67],
+      "summary": "No-op stub for continuing a completed session in the local session API.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:approveStage",
+      "type": "function",
+      "name": "approveStage",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [68, 79],
+      "summary": "No-op stub for approving a session stage/checkpoint in the local session API.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/local.ts:getActivityChunks",
+      "type": "function",
+      "name": "getActivityChunks",
+      "filePath": "src/api/http/session/local.ts",
+      "lineRange": [80, 88],
+      "summary": "Stub returning empty activity chunk data for a session in the local session API.",
+      "tags": ["session", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/unified.ts:isHostedFromUrl",
+      "type": "function",
+      "name": "isHostedFromUrl",
+      "filePath": "src/api/http/session/unified.ts",
+      "lineRange": [14, 18],
+      "summary": "Checks the current window's URL search params for a 'source=market' flag indicating a hosted-key entry point.",
+      "tags": ["session", "routing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/unified.ts:isHostedFromSearchParams",
+      "type": "function",
+      "name": "isHostedFromSearchParams",
+      "filePath": "src/api/http/session/unified.ts",
+      "lineRange": [20, 24],
+      "summary": "Checks a given URLSearchParams object for the 'source=market' hosted-key flag.",
+      "tags": ["session", "routing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/http/session/unified.ts:createUnifiedSessionApi",
+      "type": "function",
+      "name": "createUnifiedSessionApi",
+      "filePath": "src/api/http/session/unified.ts",
+      "lineRange": [30, 34],
+      "summary": "Returns the local Rust-backed session API regardless of the (legacy) isHosted flag, since all sessions now route locally.",
+      "tags": ["session", "factory", "routing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/api/realtime/websocket/config.ts:getMarketWSUrl",
+      "type": "function",
+      "name": "getMarketWSUrl",
+      "filePath": "src/api/realtime/websocket/config.ts",
+      "lineRange": [16, 31],
+      "summary": "Builds the WebSocket URL for a session's market/agent-message stream, deriving protocol and host from the current window location or environment config.",
+      "tags": ["websocket", "url-builder", "realtime"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/api/realtime/websocket/config.ts:isMarketSession",
+      "type": "function",
+      "name": "isMarketSession",
+      "filePath": "src/api/realtime/websocket/config.ts",
+      "lineRange": [37, 41],
+      "summary": "Determines from session data whether a session is a market (hosted) session requiring the market WebSocket stream.",
+      "tags": ["websocket", "predicate", "realtime"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/api/http/auth/secure.ts", "target": "file:src/api/http/auth/supabase.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/api/http/project/sync.ts", "target": "file:src/api/http/project/syncTypes.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/api/http/session/unified.ts", "target": "file:src/api/http/session/local.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureGetAuthState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureGetAccessToken", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureGetRefreshToken", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureIsTokenExpiring", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureClearTokens", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:ensureSupabaseConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:getSupabaseAuthClient", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:syncHostedTokenFromSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:signInWithSupabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:exchangeSupabaseCodeForSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:getSupabaseHostedToken", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:refreshSupabaseSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:signOutSupabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/orgiiHosted/poolConfig.ts", "target": "function:src/api/http/orgiiHosted/poolConfig.ts:getORGIIPoolConfigCached", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/orgiiHosted/poolConfig.ts", "target": "function:src/api/http/orgiiHosted/poolConfig.ts:getORGIIPoolConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/project/sync.ts", "target": "function:src/api/http/project/sync.ts:subscribeSyncStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:getHostedKeyCursor", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:getHostedKeyActivity", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:storeHostedKeyActivityBatch", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:compareStreamIds", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:isWaitingForQuestion", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:getSessionStatus", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:pauseSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:resumeSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:sendMessageAndResume", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:answerQuestion", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:continueSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:approveStage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:getActivityChunks", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/session/unified.ts", "target": "function:src/api/http/session/unified.ts:isHostedFromUrl", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/unified.ts", "target": "function:src/api/http/session/unified.ts:isHostedFromSearchParams", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/http/session/unified.ts", "target": "function:src/api/http/session/unified.ts:createUnifiedSessionApi", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/realtime/websocket/config.ts", "target": "function:src/api/realtime/websocket/config.ts:getMarketWSUrl", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/api/realtime/websocket/config.ts", "target": "function:src/api/realtime/websocket/config.ts:isMarketSession", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureGetAuthState", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureGetAccessToken", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureGetRefreshToken", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureIsTokenExpiring", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/secure.ts", "target": "function:src/api/http/auth/secure.ts:secureClearTokens", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:getSupabaseAuthClient", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:syncHostedTokenFromSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:signInWithSupabase", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:exchangeSupabaseCodeForSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:getSupabaseHostedToken", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:refreshSupabaseSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/auth/supabase.ts", "target": "function:src/api/http/auth/supabase.ts:signOutSupabase", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/http/orgiiHosted/poolConfig.ts", "target": "function:src/api/http/orgiiHosted/poolConfig.ts:getORGIIPoolConfigCached", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/orgiiHosted/poolConfig.ts", "target": "function:src/api/http/orgiiHosted/poolConfig.ts:getORGIIPoolConfig", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/http/project/sync.ts", "target": "function:src/api/http/project/sync.ts:subscribeSyncStatus", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:getHostedKeyCursor", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:getHostedKeyActivity", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:storeHostedKeyActivityBatch", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/hostedKey.ts", "target": "function:src/api/http/session/hostedKey.ts:compareStreamIds", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:isWaitingForQuestion", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:getSessionStatus", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:pauseSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:resumeSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:sendMessageAndResume", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:answerQuestion", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:continueSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:approveStage", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/local.ts", "target": "function:src/api/http/session/local.ts:getActivityChunks", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/http/session/unified.ts", "target": "function:src/api/http/session/unified.ts:isHostedFromUrl", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/unified.ts", "target": "function:src/api/http/session/unified.ts:isHostedFromSearchParams", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/http/session/unified.ts", "target": "function:src/api/http/session/unified.ts:createUnifiedSessionApi", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/api/realtime/websocket/config.ts", "target": "function:src/api/realtime/websocket/config.ts:getMarketWSUrl", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/api/realtime/websocket/config.ts", "target": "function:src/api/realtime/websocket/config.ts:isMarketSession", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "function:src/api/http/auth/secure.ts:secureGetAuthState", "target": "function:src/api/http/auth/supabase.ts:getSupabaseAuthClient", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/api/http/auth/secure.ts:secureGetAuthState", "target": "function:src/api/http/auth/supabase.ts:syncHostedTokenFromSession", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/api/http/auth/secure.ts:secureGetAccessToken", "target": "function:src/api/http/auth/supabase.ts:getSupabaseHostedToken", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/api/http/auth/secure.ts:secureGetRefreshToken", "target": "function:src/api/http/auth/supabase.ts:getSupabaseAuthClient", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/api/http/auth/secure.ts:secureIsTokenExpiring", "target": "function:src/api/http/auth/supabase.ts:getSupabaseAuthClient", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/api/http/auth/secure.ts:secureClearTokens", "target": "function:src/api/http/auth/supabase.ts:signOutSupabase", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "document:src/api/api_organization.md", "target": "file:src/api/index.ts", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:src/api/api_organization.md", "target": "file:src/api/http/auth/index.ts", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:src/api/api_organization.md", "target": "file:src/api/http/session/index.ts", "type": "documents", "direction": "forward", "weight": 0.5 },
+    { "source": "document:src/api/api_organization.md", "target": "file:src/api/realtime/index.ts", "type": "documents", "direction": "forward", "weight": 0.5 }
+  ]
+}

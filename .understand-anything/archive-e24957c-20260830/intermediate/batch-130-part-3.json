@@ -1,0 +1,1428 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "type": "file",
+      "name": "turn_index.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "summary": "Builds and maintains a materialized 'turn' index derived from the normalized session event log, grouping raw events into user-facing conversational turns with summaries, status, and backfilled synthetic user events.",
+      "tags": [
+        "indexing",
+        "persistence",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_index_rows",
+      "type": "function",
+      "name": "load_index_rows",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        103,
+        126
+      ],
+      "summary": "Loads the raw event rows needed to rebuild the turn index for a session.",
+      "tags": [
+        "query",
+        "indexing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:is_synthetic_user_input",
+      "type": "function",
+      "name": "is_synthetic_user_input",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        138,
+        147
+      ],
+      "summary": "Determines whether an event row represents a synthetic (non-user-authored) input.",
+      "tags": [
+        "classification",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:turn_intent_id_for_row",
+      "type": "function",
+      "name": "turn_intent_id_for_row",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        152,
+        162
+      ],
+      "summary": "Resolves the turn-intent id associated with a given event row, if any.",
+      "tags": [
+        "helper",
+        "turn-intent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_stale_intent_ids",
+      "type": "function",
+      "name": "load_stale_intent_ids",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        181,
+        190
+      ],
+      "summary": "Loads the set of turn-intent ids marked stale for a session, via turn_intents::list_for_session.",
+      "tags": [
+        "query",
+        "turn-intent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_intent_status_overlay",
+      "type": "function",
+      "name": "load_intent_status_overlay",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        192,
+        201
+      ],
+      "summary": "Loads a session's turn-intent statuses to overlay onto derived turn summaries.",
+      "tags": [
+        "query",
+        "turn-intent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_user_messages",
+      "type": "function",
+      "name": "load_user_messages",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        226,
+        246
+      ],
+      "summary": "Loads raw user message rows for a session used to backfill missing user events.",
+      "tags": [
+        "query",
+        "backfill"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_existing_user_event_keys",
+      "type": "function",
+      "name": "load_existing_user_event_keys",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        248,
+        294
+      ],
+      "summary": "Loads dedup keys for user events already materialized in the index, to avoid duplicate backfill.",
+      "tags": [
+        "query",
+        "dedup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:backfill_missing_user_events",
+      "type": "function",
+      "name": "backfill_missing_user_events",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        296,
+        377
+      ],
+      "summary": "Inserts synthetic user event rows for user messages not yet represented in the event log.",
+      "tags": [
+        "backfill",
+        "write"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:max_timestamp",
+      "type": "function",
+      "name": "max_timestamp",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        386,
+        396
+      ],
+      "summary": "Returns the later of two optional timestamp strings.",
+      "tags": [
+        "utility",
+        "comparison"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:build_turn_drafts",
+      "type": "function",
+      "name": "build_turn_drafts",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        398,
+        470
+      ],
+      "summary": "Groups ordered event rows into draft turn boundaries with start/end sequence and preview metadata.",
+      "tags": [
+        "indexing",
+        "grouping"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:materialized_turn_drafts",
+      "type": "function",
+      "name": "materialized_turn_drafts",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        472,
+        485
+      ],
+      "summary": "Converts turn drafts into finalized, insertable turn index rows.",
+      "tags": [
+        "indexing",
+        "transform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:turn_summary_from_row",
+      "type": "function",
+      "name": "turn_summary_from_row",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        487,
+        518
+      ],
+      "summary": "Deserializes a stored turn index row into a CachedTurnSummary.",
+      "tags": [
+        "deserialization",
+        "indexing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index",
+      "type": "function",
+      "name": "rebuild_turn_index",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        520,
+        522
+      ],
+      "summary": "Public entry point that rebuilds the materialized turn index for a session, delegating to rebuild_turn_index_inner.",
+      "tags": [
+        "indexing",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index_inner",
+      "type": "function",
+      "name": "rebuild_turn_index_inner",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        524,
+        634
+      ],
+      "summary": "Recomputes turn boundaries from the raw event log, backfills missing user events, and rewrites the turn index table.",
+      "tags": [
+        "indexing",
+        "write",
+        "transaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:ensure_turn_index_fresh",
+      "type": "function",
+      "name": "ensure_turn_index_fresh",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        636,
+        683
+      ],
+      "summary": "Rebuilds the turn index only if it is missing or stale relative to the event log.",
+      "tags": [
+        "indexing",
+        "cache-invalidation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_index",
+      "type": "function",
+      "name": "load_turn_index",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        685,
+        703
+      ],
+      "summary": "Loads the full materialized turn index for a session, rebuilding first if stale.",
+      "tags": [
+        "query",
+        "indexing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_summaries",
+      "type": "function",
+      "name": "load_turn_summaries",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        708,
+        732
+      ],
+      "summary": "Loads specific turn summaries by id for a session.",
+      "tags": [
+        "query",
+        "indexing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index.rs:get_turn_summary",
+      "type": "function",
+      "name": "get_turn_summary",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        734,
+        750
+      ],
+      "summary": "Loads a single turn summary by session and turn id.",
+      "tags": [
+        "query",
+        "indexing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_index.rs:CachedTurnSummary",
+      "type": "class",
+      "name": "CachedTurnSummary",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index.rs",
+      "lineRange": [
+        33,
+        61
+      ],
+      "summary": "Materialized summary of one conversational turn: sequence range, timing, user preview, status, and associated modified files/resource interactions.",
+      "tags": [
+        "data-model",
+        "indexing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "type": "file",
+      "name": "turn_index_debounce.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "summary": "Coalescing debouncer that batches rapid-fire rebuild_turn_index calls (from the streaming agent + subagents pipeline) into a single deferred rebuild per session, avoiding redundant writer-lock contention.",
+      "tags": [
+        "concurrency",
+        "debounce",
+        "performance"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses a global HashMap<session_id, ScheduledEntry> guarded by a Mutex plus a generation counter to coalesce reschedules without spawning duplicate workers."
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:schedule",
+      "type": "function",
+      "name": "schedule",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "lineRange": [
+        77,
+        131
+      ],
+      "summary": "Schedules a debounced turn-index rebuild for a session, coalescing with any already-pending rebuild.",
+      "tags": [
+        "debounce",
+        "scheduling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:debounce_worker",
+      "type": "function",
+      "name": "debounce_worker",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "lineRange": [
+        136,
+        193
+      ],
+      "summary": "Background worker loop that waits out the debounce window and then triggers turn_index::rebuild_turn_index.",
+      "tags": [
+        "worker",
+        "async",
+        "debounce"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "type": "file",
+      "name": "turn_intents.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "summary": "Canonical user-intent lifecycle store: persists and transitions session_turn_intents rows that give one identity to a user submission across optimistic UI, wire layer, scheduler, and the persisted event/turn-index.",
+      "tags": [
+        "state-machine",
+        "persistence",
+        "database"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:transition_allowed",
+      "type": "function",
+      "name": "transition_allowed",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        202,
+        227
+      ],
+      "summary": "Validates whether a transition between two turn-intent statuses is legal per the state machine.",
+      "tags": [
+        "state-machine",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:row_from_sql",
+      "type": "function",
+      "name": "row_from_sql",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        233,
+        253
+      ],
+      "summary": "Deserializes a SQL row into a TurnIntentRow.",
+      "tags": [
+        "deserialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:upsert_initial",
+      "type": "function",
+      "name": "upsert_initial",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        261,
+        297
+      ],
+      "summary": "Inserts a new turn intent row in its initial status, or is a no-op if one already exists for the id.",
+      "tags": [
+        "write",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:update_status",
+      "type": "function",
+      "name": "update_status",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        301,
+        329
+      ],
+      "summary": "Transitions a turn intent to a new status, enforcing the legal-transition state machine.",
+      "tags": [
+        "write",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:mark_pending_stale",
+      "type": "function",
+      "name": "mark_pending_stale",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        336,
+        346
+      ],
+      "summary": "Marks all non-terminal turn intents for a session as stale, used on session reload or restart.",
+      "tags": [
+        "write",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:reconcile_in_flight_after_restart",
+      "type": "function",
+      "name": "reconcile_in_flight_after_restart",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        355,
+        368
+      ],
+      "summary": "Reconciles turn intents left in a non-terminal state after an unclean process restart.",
+      "tags": [
+        "recovery",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:get_intent",
+      "type": "function",
+      "name": "get_intent",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        371,
+        384
+      ],
+      "summary": "Fetches a single turn intent by session and turn-intent id.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:list_for_session",
+      "type": "function",
+      "name": "list_for_session",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        388,
+        401
+      ],
+      "summary": "Lists all turn intents recorded for a session.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentSource",
+      "type": "class",
+      "name": "TurnIntentSource",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        43,
+        58
+      ],
+      "summary": "Enum of origins that can mint a turn intent (user submit, queue, force-send, resume, agent-org, wingman, mobile-remote), with as_str/parse conversions.",
+      "tags": [
+        "data-model",
+        "enum",
+        "state-machine"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentStatus",
+      "type": "class",
+      "name": "TurnIntentStatus",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        90,
+        116
+      ],
+      "summary": "Enum of a turn intent's lifecycle states (optimistic, queued, running, completed, failed, cancelled, stale, coalesced, rejected) with terminal-state checks and as_str/parse conversions.",
+      "tags": [
+        "data-model",
+        "enum",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentRow",
+      "type": "class",
+      "name": "TurnIntentRow",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        176,
+        184
+      ],
+      "summary": "Row struct for a persisted turn intent record.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:IntentError",
+      "type": "class",
+      "name": "IntentError",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "lineRange": [
+        187,
+        199
+      ],
+      "summary": "Error type for turn intent operations covering SQLite errors, illegal transitions, not-found, and invalid stored status.",
+      "tags": [
+        "error-handling",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "type": "file",
+      "name": "turn_window.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "summary": "Turn-window queries over the normalized session event cache, returning CachedEvent rows for specific turn ranges or the initial window shown when a session is opened.",
+      "tags": [
+        "query",
+        "persistence",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:cached_event_from_row",
+      "type": "function",
+      "name": "cached_event_from_row",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        29,
+        43
+      ],
+      "summary": "Deserializes a SQL row into a CachedEvent.",
+      "tags": [
+        "deserialization",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_events_for_turn_ranges",
+      "type": "function",
+      "name": "load_events_for_turn_ranges",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        45,
+        87
+      ],
+      "summary": "Loads all cached events falling within a set of turn sequence ranges.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_events_by_ids",
+      "type": "function",
+      "name": "load_events_by_ids",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        89,
+        112
+      ],
+      "summary": "Loads cached events by explicit event id list.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:mark_turn_preview",
+      "type": "function",
+      "name": "mark_turn_preview",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        116,
+        127
+      ],
+      "summary": "Marks and trims an event as the preview representative for its turn.",
+      "tags": [
+        "helper",
+        "transform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_final_assistant_event_for_range",
+      "type": "function",
+      "name": "load_final_assistant_event_for_range",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        129,
+        166
+      ],
+      "summary": "Loads the last assistant event within a sequence range, used to find a turn's final response.",
+      "tags": [
+        "query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_turn_body_window",
+      "type": "function",
+      "name": "load_turn_body_window",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        168,
+        197
+      ],
+      "summary": "Loads the full event body for one turn, ensuring the turn index is fresh first.",
+      "tags": [
+        "query",
+        "indexing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_initial_turn_window",
+      "type": "function",
+      "name": "load_initial_turn_window",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        199,
+        261
+      ],
+      "summary": "Loads the most recent N turns and their events for initial session display, ensuring the turn index is fresh first.",
+      "tags": [
+        "query",
+        "indexing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_window.rs:CachedTurnBodyWindow",
+      "type": "class",
+      "name": "CachedTurnBodyWindow",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        17,
+        20
+      ],
+      "summary": "Bundle of a turn id and its body events, returned by load_turn_body_window.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/turn_window.rs:CachedInitialTurnWindow",
+      "type": "class",
+      "name": "CachedInitialTurnWindow",
+      "filePath": "src-tauri/crates/session-persistence/src/turn_window.rs",
+      "lineRange": [
+        24,
+        27
+      ],
+      "summary": "Bundle of recent turn summaries plus their events, returned by load_initial_turn_window for session open.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "summary": "Shared persistence-layer data types for the session cache: CachedEvent (mirrors the frontend SessionEvent shape), session metadata, search results, and cache stats.",
+      "tags": [
+        "data-model",
+        "type-definition",
+        "persistence"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:CachedEvent",
+      "type": "class",
+      "name": "CachedEvent",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        12,
+        27
+      ],
+      "summary": "Cached representation of one session event, structurally matching the frontend SessionEvent JSON shape for lossless round-tripping.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:SessionMetadata",
+      "type": "class",
+      "name": "SessionMetadata",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        32,
+        39
+      ],
+      "summary": "Aggregate metadata for a cached session: event count, cache timestamp, time range.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:CachedSession",
+      "type": "class",
+      "name": "CachedSession",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        45,
+        52
+      ],
+      "summary": "Full cached session bundle: events, specs JSON, and time range.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:SearchResult",
+      "type": "class",
+      "name": "SearchResult",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        57,
+        61
+      ],
+      "summary": "One ranked search hit within a session's events, with a highlighted snippet.",
+      "tags": [
+        "data-model",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:CrossSessionSearchHit",
+      "type": "class",
+      "name": "CrossSessionSearchHit",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        66,
+        71
+      ],
+      "summary": "One ranked search hit spanning all cached sessions.",
+      "tags": [
+        "data-model",
+        "search"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:CacheStats",
+      "type": "class",
+      "name": "CacheStats",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        76,
+        80
+      ],
+      "summary": "Aggregate cache statistics: total sessions, total events, database size in bytes.",
+      "tags": [
+        "data-model",
+        "monitoring"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/session-persistence/src/types.rs:TruncateResult",
+      "type": "class",
+      "name": "TruncateResult",
+      "filePath": "src-tauri/crates/session-persistence/src/types.rs",
+      "lineRange": [
+        85,
+        92
+      ],
+      "summary": "Result of a truncate-after-event operation: counts and ids of deleted events/sequences.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_index_rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:is_synthetic_user_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:turn_intent_id_for_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_stale_intent_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_intent_status_overlay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_user_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_existing_user_event_keys",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:backfill_missing_user_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:max_timestamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:build_turn_drafts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:materialized_turn_drafts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:turn_summary_from_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:ensure_turn_index_fresh",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:ensure_turn_index_fresh",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_summaries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_summaries",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:get_turn_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:get_turn_summary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_index.rs:CachedTurnSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_index.rs:CachedTurnSummary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_stale_intent_ids",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:list_for_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_intent_status_overlay",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:list_for_session",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:schedule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:schedule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_index_debounce.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:debounce_worker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/turn_index_debounce.rs:debounce_worker",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:rebuild_turn_index",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:transition_allowed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:row_from_sql",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:upsert_initial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:upsert_initial",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:update_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:update_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:mark_pending_stale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:mark_pending_stale",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:reconcile_in_flight_after_restart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:reconcile_in_flight_after_restart",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:get_intent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:get_intent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:list_for_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_intents.rs:list_for_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:TurnIntentRow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:IntentError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_intents.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_intents.rs:IntentError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:cached_event_from_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_events_for_turn_ranges",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_events_by_ids",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:mark_turn_preview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_final_assistant_event_for_range",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_turn_body_window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_turn_body_window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_initial_turn_window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_initial_turn_window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_window.rs:CachedTurnBodyWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_window.rs:CachedTurnBodyWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_window.rs:CachedInitialTurnWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/turn_window.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/turn_window.rs:CachedInitialTurnWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_turn_body_window",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:ensure_turn_index_fresh",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_turn_body_window",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:get_turn_summary",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/session-persistence/src/turn_window.rs:load_initial_turn_window",
+      "target": "function:src-tauri/crates/session-persistence/src/turn_index.rs:load_turn_index",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CachedEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CachedEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:SessionMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:SessionMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CachedSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CachedSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:SearchResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:SearchResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CrossSessionSearchHit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CrossSessionSearchHit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CacheStats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:CacheStats",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:TruncateResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/session-persistence/src/types.rs",
+      "target": "class:src-tauri/crates/session-persistence/src/types.rs:TruncateResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

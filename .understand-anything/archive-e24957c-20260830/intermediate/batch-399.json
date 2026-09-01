@@ -1,0 +1,476 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts",
+      "type": "file",
+      "name": "globalLspDiagnosticsAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts",
+      "summary": "Jotai atom holding global LSP diagnostics keyed by file path, with a setter that merges or prunes per-file diagnostic entries.",
+      "tags": ["state-management", "jotai", "diagnostics", "lsp", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts:setGlobalLspDiagnostics",
+      "type": "function",
+      "name": "setGlobalLspDiagnostics",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts",
+      "lineRange": [38, 58],
+      "summary": "Merges or clears LSP diagnostics for a single file into the global diagnostics map, pruning empty entries and skipping writes before the store is initialized.",
+      "tags": ["diagnostics", "lsp", "state-update", "jotai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/diagnostics/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/index.ts",
+      "summary": "Barrel that re-exports diagnostic health tracking, workspace scan state, and global LSP diagnostics atoms for the code editor's diagnostics subsystem.",
+      "tags": ["barrel", "entry-point", "diagnostics", "re-export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts",
+      "type": "file",
+      "name": "workspaceScanAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts",
+      "summary": "Manages workspace-wide diagnostic scan atoms (state, progress, results) and orchestrates running configured diagnostic tools against opened or changed files via Tauri invoke and event listeners.",
+      "tags": ["state-management", "jotai", "workspace-scan", "diagnostics", "tauri-integration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:getOpenedFilePaths",
+      "type": "function",
+      "name": "getOpenedFilePaths",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts",
+      "lineRange": [88, 98],
+      "summary": "Collects the set of currently opened file paths from editor tab state to seed a workspace diagnostic scan.",
+      "tags": ["workspace-scan", "file-paths", "helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:getDiffFilePaths",
+      "type": "function",
+      "name": "getDiffFilePaths",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts",
+      "lineRange": [101, 112],
+      "summary": "Fetches the list of files changed in the current git diff via a Tauri invoke call, used to scope diagnostic scans to changed files.",
+      "tags": ["workspace-scan", "git", "tauri-integration", "helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:abortWorkspaceScan",
+      "type": "function",
+      "name": "abortWorkspaceScan",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts",
+      "lineRange": [153, 165],
+      "summary": "Cancels an in-progress workspace diagnostic scan by invoking its stored abort/unlisten callback and resetting scan state.",
+      "tags": ["workspace-scan", "cancellation", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:startWorkspaceScan",
+      "type": "function",
+      "name": "startWorkspaceScan",
+      "filePath": "src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts",
+      "lineRange": [181, 346],
+      "summary": "Orchestrates a full workspace diagnostic scan: resets state, determines target files by scope, invokes selected diagnostic tools, listens for progress/completion events, merges results, and wires up abort handling.",
+      "tags": ["workspace-scan", "orchestration", "diagnostics", "tauri-integration", "event-driven"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/editor/editorAtom.ts",
+      "type": "file",
+      "name": "editorAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/editor/editorAtom.ts",
+      "summary": "Jotai atoms for editor UI state: chat panel visibility and code-citation selection (text, range, source file name).",
+      "tags": ["state-management", "jotai", "editor-ui", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/editor/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/editor/index.ts",
+      "summary": "Barrel re-exporting editor UI atoms from editorAtom.",
+      "tags": ["barrel", "entry-point", "re-export", "editor-ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/file/clipboardAtom.ts",
+      "type": "file",
+      "name": "clipboardAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/file/clipboardAtom.ts",
+      "summary": "Jotai atom holding file clipboard state (path and operation) used for copy/cut/paste in the file explorer.",
+      "tags": ["state-management", "jotai", "file-explorer", "clipboard", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/file/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/file/index.ts",
+      "summary": "Central Jotai atom module for the file explorer/editor: file selection, content, tree, loading/error states, unsaved-changes detection, search, and re-exported clipboard state.",
+      "tags": ["state-management", "jotai", "file-explorer", "editor", "atom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/gitReviewNavigationAtom.ts",
+      "type": "file",
+      "name": "gitReviewNavigationAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/gitReviewNavigationAtom.ts",
+      "summary": "Jotai atom tracking navigation position within a git diff review list for the git review bar.",
+      "tags": ["state-management", "jotai", "git", "navigation", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/index.ts",
+      "summary": "Top-level barrel that aggregates and re-exports all Code Editor app store modules: editor, terminal, file explorer, search, test runner, diagnostics, workspace ports, source control, output integration, and GitHub issues.",
+      "tags": ["barrel", "entry-point", "re-export", "state-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/outputIntegration/gitOutputAtom.ts",
+      "type": "file",
+      "name": "gitOutputAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/outputIntegration/gitOutputAtom.ts",
+      "summary": "Jotai atom holding a ref to the git output panel hook instance so non-React code can invoke it.",
+      "tags": ["state-management", "jotai", "git", "integration", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/outputIntegration/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/outputIntegration/index.ts",
+      "summary": "Barrel re-exporting the git and task output integration atoms.",
+      "tags": ["barrel", "entry-point", "re-export", "integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/outputIntegration/taskOutputAtom.ts",
+      "type": "file",
+      "name": "taskOutputAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/outputIntegration/taskOutputAtom.ts",
+      "summary": "Jotai atom holding a ref to the task output panel hook instance for imperative invocation outside the React tree.",
+      "tags": ["state-management", "jotai", "task-output", "integration", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/search/cacheAtom.ts",
+      "type": "file",
+      "name": "cacheAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/search/cacheAtom.ts",
+      "summary": "In-memory cache atoms and mutators for code search results, including cache key generation, hit/miss stats tracking, TTL-based validity checks, and repo-scoped invalidation.",
+      "tags": ["state-management", "jotai", "cache", "code-search", "performance"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/cacheAtom.ts:generateCacheKey",
+      "type": "function",
+      "name": "generateCacheKey",
+      "filePath": "src/store/workstation/codeEditor/search/cacheAtom.ts",
+      "lineRange": [60, 66],
+      "summary": "Builds a deterministic cache key string from a search query, search mode, and optional repo filter for search result caching.",
+      "tags": ["code-search", "cache", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/search/fileTrackingAtom.ts",
+      "type": "file",
+      "name": "fileTrackingAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/search/fileTrackingAtom.ts",
+      "summary": "Tracks per-repo file dirty state for incremental code search indexing: dirty file sets, debounce/interval configuration, LRU eviction of tracked repos, and atoms to mark/clear dirty files and manage incremental indexing status.",
+      "tags": ["state-management", "jotai", "code-search", "indexing", "file-tracking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/fileTrackingAtom.ts:evictOldestRepo",
+      "type": "function",
+      "name": "evictOldestRepo",
+      "filePath": "src/store/workstation/codeEditor/search/fileTrackingAtom.ts",
+      "lineRange": [168, 198],
+      "summary": "Implements LRU-style eviction of the least-recently-used tracked repo's file-tracking, dirty-file, last-index, and indexing-state entries when the tracked-repo limit is exceeded.",
+      "tags": ["code-search", "lru-eviction", "file-tracking", "indexing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/search/ignoreAtom.ts",
+      "type": "file",
+      "name": "ignoreAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/search/ignoreAtom.ts",
+      "summary": "Jotai atoms managing search ignore-pattern state (loading, error, custom ignore file detection) plus a per-repo cache for resolved ignore patterns.",
+      "tags": ["state-management", "jotai", "code-search", "ignore-patterns", "cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/search/indexingProgressAtom.ts",
+      "type": "file",
+      "name": "indexingProgressAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/search/indexingProgressAtom.ts",
+      "summary": "Jotai atoms tracking code search indexing progress (percent complete, status message, start/update/complete/cancel/error lifecycle) for the workspace indexer.",
+      "tags": ["state-management", "jotai", "code-search", "indexing", "progress"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/sourceControlFilterModeAtom.ts",
+      "type": "file",
+      "name": "sourceControlFilterModeAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/sourceControlFilterModeAtom.ts",
+      "summary": "Jotai atom and change handler controlling whether the Source Control sidebar displays file buckets or a git history graph.",
+      "tags": ["state-management", "jotai", "source-control", "ui-state", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/sourceControlFocusTargetAtom.ts",
+      "type": "file",
+      "name": "sourceControlFocusTargetAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/sourceControlFocusTargetAtom.ts",
+      "summary": "Jotai atom holding the Source Control focus target used to scroll/expand a specific file in the All Changes view when clicked from the sidebar.",
+      "tags": ["state-management", "jotai", "source-control", "navigation", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/sourceControlScopeAtom.ts",
+      "type": "file",
+      "name": "sourceControlScopeAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/sourceControlScopeAtom.ts",
+      "summary": "Jotai atom mapping Source Control worktree scope (host vs linked worktree) per workspace.",
+      "tags": ["state-management", "jotai", "source-control", "worktree", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/terminal/commandDetection.ts",
+      "type": "file",
+      "name": "commandDetection.ts",
+      "filePath": "src/store/workstation/codeEditor/terminal/commandDetection.ts",
+      "summary": "Jotai atoms and helpers tracking shell command execution state per terminal session (prompt start, command executed/finished, cwd changes) for shell-integration command detection.",
+      "tags": ["state-management", "jotai", "terminal", "shell-integration", "command-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/terminal/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/terminal/index.ts",
+      "summary": "Core terminal session store: manages PTY session lifecycle (create, close, rename, kill), persistence to localStorage, active/initialized session tracking, and agent-session-linked terminals.",
+      "tags": ["state-management", "jotai", "terminal", "pty", "persistence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/terminal/index.ts:killPty",
+      "type": "function",
+      "name": "killPty",
+      "filePath": "src/store/workstation/codeEditor/terminal/index.ts",
+      "lineRange": [52, 62],
+      "summary": "Kills the backend PTY process for a terminal session via Tauri invoke, logging a warning if the call fails or Tauri isn't ready.",
+      "tags": ["terminal", "pty", "tauri-integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/terminal/index.ts:loadPersistedState",
+      "type": "function",
+      "name": "loadPersistedState",
+      "filePath": "src/store/workstation/codeEditor/terminal/index.ts",
+      "lineRange": [70, 110],
+      "summary": "Restores terminal session and initialized-session state from localStorage on startup, filtering out ephemeral agent/chat-panel sessions and guarding against malformed persisted JSON.",
+      "tags": ["terminal", "persistence", "localstorage", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/terminal/index.ts:getDefaultState",
+      "type": "function",
+      "name": "getDefaultState",
+      "filePath": "src/store/workstation/codeEditor/terminal/index.ts",
+      "lineRange": [115, 131],
+      "summary": "Builds the default initial terminal session (label, cwd) used when no persisted terminal state exists.",
+      "tags": ["terminal", "initialization", "defaults"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/terminal/index.ts:removeTerminalSessionLocalOnly",
+      "type": "function",
+      "name": "removeTerminalSessionLocalOnly",
+      "filePath": "src/store/workstation/codeEditor/terminal/index.ts",
+      "lineRange": [216, 262],
+      "summary": "Removes a terminal session from local Jotai state without killing the backend PTY, reassigning the active/default session and updating initialized-session tracking as needed.",
+      "tags": ["terminal", "session-management", "jotai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/terminalTargetAtom.ts",
+      "type": "file",
+      "name": "terminalTargetAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/terminalTargetAtom.ts",
+      "summary": "Jotai atom holding the pinned terminal tab target selection for the code editor.",
+      "tags": ["state-management", "jotai", "terminal", "ui-state", "atom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/testRunner/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/testRunner/index.ts",
+      "summary": "Jotai atoms for the test runner panel: discovered test items, framework selection, run state, per-test results/status merging, and summary/count derivations.",
+      "tags": ["state-management", "jotai", "test-runner", "testing", "atom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts",
+      "type": "file",
+      "name": "workspacePortsAtom.ts",
+      "filePath": "src/store/workstation/codeEditor/workspacePortsAtom.ts",
+      "summary": "Jotai atoms and helpers for tracking listening workspace ports shown in the status bar: grouping ports by process, deriving addresses/browser URLs, and determining if a port can be stopped.",
+      "tags": ["state-management", "jotai", "workspace-ports", "networking", "status-bar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:groupWorkspacePorts",
+      "type": "function",
+      "name": "groupWorkspacePorts",
+      "filePath": "src/store/workstation/codeEditor/workspacePortsAtom.ts",
+      "lineRange": [63, 98],
+      "summary": "Groups workspace listening ports by owning process, separating internal grouped ports from external (non-project) ports for status bar display.",
+      "tags": ["workspace-ports", "grouping", "status-bar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:addressForPort",
+      "type": "function",
+      "name": "addressForPort",
+      "filePath": "src/store/workstation/codeEditor/workspacePortsAtom.ts",
+      "lineRange": [100, 110],
+      "summary": "Derives a display address string (host:port) for a workspace port, normalizing the host via formatHostForUrl.",
+      "tags": ["workspace-ports", "formatting", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:browserUrlForPort",
+      "type": "function",
+      "name": "browserUrlForPort",
+      "filePath": "src/store/workstation/codeEditor/workspacePortsAtom.ts",
+      "lineRange": [112, 120],
+      "summary": "Computes the browser-openable URL for a workspace port, preferring an advertised URL when available and falling back to a constructed host:port URL.",
+      "tags": ["workspace-ports", "url-formatting", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:canStopWorkspacePort",
+      "type": "function",
+      "name": "canStopWorkspacePort",
+      "filePath": "src/store/workstation/codeEditor/workspacePortsAtom.ts",
+      "lineRange": [122, 129],
+      "summary": "Determines whether a workspace port's owning process is safe to stop, excluding known system/critical process names.",
+      "tags": ["workspace-ports", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/workstation/database/atoms.ts",
+      "type": "file",
+      "name": "atoms.ts",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "summary": "Jotai atoms and localStorage-backed helpers managing database connection configs (CRUD), active connection/table selection, and per-connection query history for the database workstation feature.",
+      "tags": ["state-management", "jotai", "database", "persistence", "connection-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/workstation/database/atoms.ts:loadConnectionConfigs",
+      "type": "function",
+      "name": "loadConnectionConfigs",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "lineRange": [92, 102],
+      "summary": "Reads and JSON-parses saved database connection configs from localStorage, returning an empty list and logging a warning on parse failure.",
+      "tags": ["database", "persistence", "localstorage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/database/atoms.ts:saveConnectionConfigs",
+      "type": "function",
+      "name": "saveConnectionConfigs",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "lineRange": [107, 115],
+      "summary": "Persists the given database connection configs to localStorage as JSON, warning on write failure.",
+      "tags": ["database", "persistence", "localstorage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/database/atoms.ts:addConnectionConfig",
+      "type": "function",
+      "name": "addConnectionConfig",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "lineRange": [120, 131],
+      "summary": "Appends a new database connection config to persisted storage, skipping the insert if a config with the same id already exists.",
+      "tags": ["database", "persistence", "crud"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/database/atoms.ts:removeConnectionConfig",
+      "type": "function",
+      "name": "removeConnectionConfig",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "lineRange": [136, 143],
+      "summary": "Removes a database connection config by id from persisted storage.",
+      "tags": ["database", "persistence", "crud"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/database/atoms.ts:updateConnectionConfig",
+      "type": "function",
+      "name": "updateConnectionConfig",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "lineRange": [148, 163],
+      "summary": "Applies a partial update to a persisted database connection config, stamping it with an updated timestamp.",
+      "tags": ["database", "persistence", "crud"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/database/atoms.ts:generateChangeId",
+      "type": "function",
+      "name": "generateChangeId",
+      "filePath": "src/store/workstation/database/atoms.ts",
+      "lineRange": [218, 220],
+      "summary": "Generates a short pseudo-random id used to tag database query-history change entries.",
+      "tags": ["database", "utility", "id-generation"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts:setGlobalLspDiagnostics", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/globalLspDiagnosticsAtom.ts:setGlobalLspDiagnostics", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:getOpenedFilePaths", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:getDiffFilePaths", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:abortWorkspaceScan", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:abortWorkspaceScan", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:startWorkspaceScan", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts", "target": "function:src/store/workstation/codeEditor/diagnostics/workspaceScanAtom.ts:startWorkspaceScan", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/search/cacheAtom.ts", "target": "function:src/store/workstation/codeEditor/search/cacheAtom.ts:generateCacheKey", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/search/cacheAtom.ts", "target": "function:src/store/workstation/codeEditor/search/cacheAtom.ts:generateCacheKey", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/search/fileTrackingAtom.ts", "target": "function:src/store/workstation/codeEditor/search/fileTrackingAtom.ts:evictOldestRepo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/terminal/index.ts", "target": "function:src/store/workstation/codeEditor/terminal/index.ts:killPty", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/terminal/index.ts", "target": "function:src/store/workstation/codeEditor/terminal/index.ts:loadPersistedState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/terminal/index.ts", "target": "function:src/store/workstation/codeEditor/terminal/index.ts:getDefaultState", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/terminal/index.ts", "target": "function:src/store/workstation/codeEditor/terminal/index.ts:removeTerminalSessionLocalOnly", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:groupWorkspacePorts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:groupWorkspacePorts", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:addressForPort", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:addressForPort", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:browserUrlForPort", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:browserUrlForPort", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:canStopWorkspacePort", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/codeEditor/workspacePortsAtom.ts", "target": "function:src/store/workstation/codeEditor/workspacePortsAtom.ts:canStopWorkspacePort", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:loadConnectionConfigs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:loadConnectionConfigs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:saveConnectionConfigs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:saveConnectionConfigs", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:addConnectionConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:addConnectionConfig", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:removeConnectionConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:removeConnectionConfig", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:updateConnectionConfig", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:updateConnectionConfig", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:generateChangeId", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/store/workstation/database/atoms.ts", "target": "function:src/store/workstation/database/atoms.ts:generateChangeId", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

@@ -1,0 +1,295 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/hooks/perf/runtimeMemoryStats.ts",
+      "type": "file",
+      "name": "runtimeMemoryStats.ts",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "summary": "Runtime memory estimation and tracking utilities for orgii's UI surfaces (file tree, CodeMirror editors, rendered chat trees, sidebar sections), providing generic JS value size estimation, per-registry CRUD/aggregation helpers, and live WebView diagnostic collection.",
+      "tags": ["utility", "performance-monitoring", "memory-tracking", "diagnostics"],
+      "complexity": "complex",
+      "languageNotes": "Uses Symbol-keyed Maps as per-instance registries and a visited-node budget with a Set-based seen tracker to bound recursive size estimation on cyclic/huge object graphs."
+    },
+    {
+      "id": "file:src/hooks/perf/useRuntimeRamStats.ts",
+      "type": "file",
+      "name": "useRuntimeRamStats.ts",
+      "filePath": "src/hooks/perf/useRuntimeRamStats.ts",
+      "summary": "React hook that aggregates memory and FPS statistics from multiple subsystems (session events, payload cache, turn registry, hydrated events, file tree, CodeMirror, chat tree, sidebar, screenshot cache) into formatted rows for a runtime performance diagnostics panel.",
+      "tags": ["hook", "performance-monitoring", "react", "aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/perf/useSidebarMemoryEntry.ts",
+      "type": "file",
+      "name": "useSidebarMemoryEntry.ts",
+      "filePath": "src/hooks/perf/useSidebarMemoryEntry.ts",
+      "summary": "React hook that registers a sidebar UI section's estimated memory footprint with the shared sidebar memory tracker on mount/update and removes it on unmount, keyed by a stable per-instance symbol.",
+      "tags": ["hook", "performance-monitoring", "memory-tracking", "react"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytesInternal",
+      "type": "function",
+      "name": "estimateRuntimeValueBytesInternal",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [97, 145],
+      "summary": "Recursively estimates the in-memory byte size of an arbitrary JS value, guarding against cycles via a seen-set and capping traversal with a node-visit budget.",
+      "tags": ["utility", "recursion", "memory-estimation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:summarizeRuntimeMemoryEntries",
+      "type": "function",
+      "name": "summarizeRuntimeMemoryEntries",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [155, 184],
+      "summary": "Aggregates a collection of memory entries into total bytes/items counts and a sorted top-N breakdown of the largest entries.",
+      "tags": ["utility", "aggregation", "memory-tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytes",
+      "type": "function",
+      "name": "estimateRuntimeValueBytes",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [192, 201],
+      "summary": "Public entry point for estimating the byte size of a runtime value up to a node-visit budget, wrapping the internal recursive estimator with fresh traversal state.",
+      "tags": ["utility", "memory-estimation", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:isCompositingCandidate",
+      "type": "function",
+      "name": "isCompositingCandidate",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [210, 219],
+      "summary": "Heuristically determines whether a computed CSS style indicates the element is likely promoted to a GPU compositing layer.",
+      "tags": ["utility", "dom", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:collectWebViewRuntimeDiagnostics",
+      "type": "function",
+      "name": "collectWebViewRuntimeDiagnostics",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [221, 304],
+      "summary": "Scans the live DOM for images, canvases, videos, iframes, and compositing-candidate elements to produce aggregate WebView memory and rendering diagnostics.",
+      "tags": ["diagnostics", "dom", "performance-monitoring", "exported"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:updateFileTreeMemoryEntry",
+      "type": "function",
+      "name": "updateFileTreeMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [306, 311],
+      "summary": "Upserts a normalized memory entry for a file-tree registry key in the shared file-tree memory entries map.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:removeFileTreeMemoryEntry",
+      "type": "function",
+      "name": "removeFileTreeMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [313, 315],
+      "summary": "Removes a file-tree memory entry from the shared registry by key.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:getFileTreeMemoryStats",
+      "type": "function",
+      "name": "getFileTreeMemoryStats",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [317, 319],
+      "summary": "Returns aggregated runtime memory stats for all currently registered file-tree memory entries.",
+      "tags": ["utility", "aggregation", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:updateCodeMirrorMemoryEntry",
+      "type": "function",
+      "name": "updateCodeMirrorMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [321, 326],
+      "summary": "Upserts a normalized memory entry for a CodeMirror editor instance in the shared CodeMirror memory entries map.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:removeCodeMirrorMemoryEntry",
+      "type": "function",
+      "name": "removeCodeMirrorMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [328, 330],
+      "summary": "Removes a CodeMirror memory entry from the shared registry by key.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:getCodeMirrorMemoryStats",
+      "type": "function",
+      "name": "getCodeMirrorMemoryStats",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [332, 334],
+      "summary": "Returns aggregated runtime memory stats for all currently registered CodeMirror editor memory entries.",
+      "tags": ["utility", "aggregation", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:updateChatRenderedTreeMemoryEntry",
+      "type": "function",
+      "name": "updateChatRenderedTreeMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [336, 341],
+      "summary": "Upserts a normalized memory entry for a rendered chat tree instance in the shared chat-tree memory entries map.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:removeChatRenderedTreeMemoryEntry",
+      "type": "function",
+      "name": "removeChatRenderedTreeMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [343, 345],
+      "summary": "Removes a rendered chat tree memory entry from the shared registry by key.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:getChatRenderedTreeMemoryStats",
+      "type": "function",
+      "name": "getChatRenderedTreeMemoryStats",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [347, 349],
+      "summary": "Returns aggregated runtime memory stats for all currently registered rendered chat tree memory entries.",
+      "tags": ["utility", "aggregation", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:updateSidebarMemoryEntry",
+      "type": "function",
+      "name": "updateSidebarMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [351, 360],
+      "summary": "Upserts a normalized, kind-tagged memory entry for a sidebar UI section in the shared sidebar memory entries map.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:removeSidebarMemoryEntry",
+      "type": "function",
+      "name": "removeSidebarMemoryEntry",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [362, 364],
+      "summary": "Removes a sidebar memory entry from the shared registry by key.",
+      "tags": ["utility", "memory-tracking", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/runtimeMemoryStats.ts:getSidebarMemoryStatsByKind",
+      "type": "function",
+      "name": "getSidebarMemoryStatsByKind",
+      "filePath": "src/hooks/perf/runtimeMemoryStats.ts",
+      "lineRange": [366, 396],
+      "summary": "Buckets registered sidebar memory entries by SidebarMemoryKind and summarizes each bucket into per-kind runtime memory statistics.",
+      "tags": ["utility", "aggregation", "memory-tracking", "exported"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/perf/useRuntimeRamStats.ts:formatRuntimeBytes",
+      "type": "function",
+      "name": "formatRuntimeBytes",
+      "filePath": "src/hooks/perf/useRuntimeRamStats.ts",
+      "lineRange": [46, 51],
+      "summary": "Formats a raw byte count into a human-readable megabyte string for display in the diagnostics panel.",
+      "tags": ["utility", "formatting", "exported"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/perf/useRuntimeRamStats.ts:sampleFps",
+      "type": "function",
+      "name": "sampleFps",
+      "filePath": "src/hooks/perf/useRuntimeRamStats.ts",
+      "lineRange": [63, 95],
+      "summary": "Samples animation-frame timings over a given duration via requestAnimationFrame to estimate the current frames-per-second.",
+      "tags": ["utility", "performance-monitoring", "animation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats",
+      "type": "function",
+      "name": "useRuntimeRamStats",
+      "filePath": "src/hooks/perf/useRuntimeRamStats.ts",
+      "lineRange": [97, 320],
+      "summary": "Main diagnostics hook that pulls memory and FPS stats from session state, event store, payload/turn registries, and the various runtime memory registries, formatting them into row data plus refresh/FPS controls for a UI panel.",
+      "tags": ["hook", "performance-monitoring", "react", "exported"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/perf/useSidebarMemoryEntry.ts:useSidebarMemoryEntry",
+      "type": "function",
+      "name": "useSidebarMemoryEntry",
+      "filePath": "src/hooks/perf/useSidebarMemoryEntry.ts",
+      "lineRange": [27, 77],
+      "summary": "Registers a sidebar section's estimated render memory footprint on mount/update, keyed by a stable per-instance symbol, and unregisters it on unmount.",
+      "tags": ["hook", "performance-monitoring", "memory-tracking", "exported"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytesInternal", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:summarizeRuntimeMemoryEntries", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytes", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:isCompositingCandidate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:collectWebViewRuntimeDiagnostics", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateFileTreeMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeFileTreeMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getFileTreeMemoryStats", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateCodeMirrorMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeCodeMirrorMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getCodeMirrorMemoryStats", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateChatRenderedTreeMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeChatRenderedTreeMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getChatRenderedTreeMemoryStats", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateSidebarMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeSidebarMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getSidebarMemoryStatsByKind", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/useRuntimeRamStats.ts", "target": "function:src/hooks/perf/useRuntimeRamStats.ts:formatRuntimeBytes", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/useRuntimeRamStats.ts", "target": "function:src/hooks/perf/useRuntimeRamStats.ts:sampleFps", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/useRuntimeRamStats.ts", "target": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/hooks/perf/useSidebarMemoryEntry.ts", "target": "function:src/hooks/perf/useSidebarMemoryEntry.ts:useSidebarMemoryEntry", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytes", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:collectWebViewRuntimeDiagnostics", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateFileTreeMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeFileTreeMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getFileTreeMemoryStats", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateCodeMirrorMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeCodeMirrorMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getCodeMirrorMemoryStats", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateChatRenderedTreeMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeChatRenderedTreeMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getChatRenderedTreeMemoryStats", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateSidebarMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeSidebarMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/runtimeMemoryStats.ts", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getSidebarMemoryStatsByKind", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/useRuntimeRamStats.ts", "target": "function:src/hooks/perf/useRuntimeRamStats.ts:formatRuntimeBytes", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/useRuntimeRamStats.ts", "target": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/hooks/perf/useSidebarMemoryEntry.ts", "target": "function:src/hooks/perf/useSidebarMemoryEntry.ts:useSidebarMemoryEntry", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/hooks/perf/useRuntimeRamStats.ts", "target": "file:src/hooks/perf/runtimeMemoryStats.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/hooks/perf/useSidebarMemoryEntry.ts", "target": "file:src/hooks/perf/runtimeMemoryStats.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getFileTreeMemoryStats", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getCodeMirrorMemoryStats", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getChatRenderedTreeMemoryStats", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:getSidebarMemoryStatsByKind", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useRuntimeRamStats.ts:useRuntimeRamStats", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytes", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useSidebarMemoryEntry.ts:useSidebarMemoryEntry", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:estimateRuntimeValueBytes", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useSidebarMemoryEntry.ts:useSidebarMemoryEntry", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:updateSidebarMemoryEntry", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/hooks/perf/useSidebarMemoryEntry.ts:useSidebarMemoryEntry", "target": "function:src/hooks/perf/runtimeMemoryStats.ts:removeSidebarMemoryEntry", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/ActionSystem/ActionSystemContext.tsx",
+      "type": "file",
+      "name": "ActionSystemContext.tsx",
+      "filePath": "src/ActionSystem/ActionSystemContext.tsx",
+      "summary": "React context provider that wires the singleton Zod action registry into the component tree, exposing a typed dispatch function and initializing WorkStation core services during idle time.",
+      "tags": ["react-context", "action-system", "provider", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/ActionSystem/ActionSystemContext.tsx:ActionSystemProvider",
+      "type": "function",
+      "name": "ActionSystemProvider",
+      "filePath": "src/ActionSystem/ActionSystemContext.tsx",
+      "lineRange": [50, 128],
+      "summary": "React provider component that asynchronously initializes WorkStation services and core actions, then exposes dispatch, getActionIds, and isValidAction through ActionSystemContext.",
+      "tags": ["react-component", "provider", "action-dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/ActionSystem/ActionSystemContext.tsx:useActionSystem",
+      "type": "function",
+      "name": "useActionSystem",
+      "filePath": "src/ActionSystem/ActionSystemContext.tsx",
+      "lineRange": [130, 136],
+      "summary": "Hook that reads ActionSystemContext and throws if used outside of an ActionSystemProvider.",
+      "tags": ["react-hook", "context-consumer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/ActionSystem/ActionSystemContext.tsx:useActionSystemOptional",
+      "type": "function",
+      "name": "useActionSystemOptional",
+      "filePath": "src/ActionSystem/ActionSystemContext.tsx",
+      "lineRange": [138, 140],
+      "summary": "Hook that reads ActionSystemContext and returns undefined instead of throwing when no provider is present.",
+      "tags": ["react-hook", "context-consumer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/ActionSystem/actions/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/ActionSystem/actions/index.ts",
+      "summary": "Barrel file re-exporting all app-level Zod action registrations (chat panel, file, GUI control, navigation, sidebar, spotlight, theme, update, zoom, etc.) for centralized collection.",
+      "tags": ["barrel", "action-registration", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/ActionSystem/collectAppActions.ts",
+      "type": "file",
+      "name": "collectAppActions.ts",
+      "filePath": "src/ActionSystem/collectAppActions.ts",
+      "summary": "Collects and flattens all app-level Zod action registrations exported from the actions barrel into a single array for registry registration.",
+      "tags": ["utility", "action-registration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/ActionSystem/collectAppActions.ts:collectAppZodActions",
+      "type": "function",
+      "name": "collectAppZodActions",
+      "filePath": "src/ActionSystem/collectAppActions.ts",
+      "lineRange": [7, 11],
+      "summary": "Extracts valid app action registrations from the actions module's exports and flattens their action lists into one array.",
+      "tags": ["utility", "action-registration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/ActionSystem/registerAppActions.ts",
+      "type": "file",
+      "name": "registerAppActions.ts",
+      "filePath": "src/ActionSystem/registerAppActions.ts",
+      "summary": "Registers all collected app-level Zod actions into the shared action registry and returns a cleanup function to unregister them.",
+      "tags": ["action-registration", "lifecycle", "registry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/ActionSystem/registerAppActions.ts:registerAppActions",
+      "type": "function",
+      "name": "registerAppActions",
+      "filePath": "src/ActionSystem/registerAppActions.ts",
+      "lineRange": [23, 39],
+      "summary": "Collects app actions via collectAppZodActions and bulk-registers them in the Zod action registry, returning an unregister cleanup callback.",
+      "tags": ["action-registration", "lifecycle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/ActionSystem/schema/actionRegistration.ts",
+      "type": "file",
+      "name": "actionRegistration.ts",
+      "filePath": "src/ActionSystem/schema/actionRegistration.ts",
+      "summary": "Defines type guards and helpers for validating and extracting app-level Zod action registration objects from a module's exports.",
+      "tags": ["type-guard", "validation", "action-registration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/ActionSystem/schema/actionRegistration.ts:defineAppActionRegistration",
+      "type": "function",
+      "name": "defineAppActionRegistration",
+      "filePath": "src/ActionSystem/schema/actionRegistration.ts",
+      "lineRange": [25, 29],
+      "summary": "Identity helper that provides type inference for an app-level action registration object.",
+      "tags": ["factory", "type-inference"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/ActionSystem/schema/actionRegistration.ts:isAppZodActionRegistration",
+      "type": "function",
+      "name": "isAppZodActionRegistration",
+      "filePath": "src/ActionSystem/schema/actionRegistration.ts",
+      "lineRange": [43, 49],
+      "summary": "Type guard verifying that an unknown value matches the shape of an AppZodActionRegistration (a record with an actions array of ZodAction objects).",
+      "tags": ["type-guard", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/ActionSystem/schema/actionRegistration.ts:extractAppActionRegistrations",
+      "type": "function",
+      "name": "extractAppActionRegistrations",
+      "filePath": "src/ActionSystem/schema/actionRegistration.ts",
+      "lineRange": [51, 56],
+      "summary": "Filters a module's exports down to only the values that are valid AppZodActionRegistration objects.",
+      "tags": ["utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/ActionSystem/schema/defineZodAction.ts",
+      "type": "file",
+      "name": "defineZodAction.ts",
+      "filePath": "src/ActionSystem/schema/defineZodAction.ts",
+      "summary": "Core Zod-based action definition system providing a typed action factory plus converters to LLM tool schemas and GUI control manifest entries, giving each action a single source of truth for validation and documentation.",
+      "tags": ["schema-definition", "validation", "zod", "type-definition"],
+      "complexity": "complex",
+      "languageNotes": "Uses Zod's z.infer for compile-time type inference alongside z.toJSONSchema for runtime LLM tool schema generation, achieving single-source-of-truth action definitions."
+    },
+    {
+      "id": "function:src/ActionSystem/schema/defineZodAction.ts:defineZodAction",
+      "type": "function",
+      "name": "defineZodAction",
+      "filePath": "src/ActionSystem/schema/defineZodAction.ts",
+      "lineRange": [166, 171],
+      "summary": "Identity factory function that packages action metadata and an executor function into a typed ZodAction object.",
+      "tags": ["factory", "action-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToLLMTool",
+      "type": "function",
+      "name": "zodActionToLLMTool",
+      "filePath": "src/ActionSystem/schema/defineZodAction.ts",
+      "lineRange": [179, 201],
+      "summary": "Converts a ZodAction definition into an LLM tool definition, generating JSON Schema parameters from the action's Zod params schema.",
+      "tags": ["serialization", "llm-tools"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToGUIControlManifestAction",
+      "type": "function",
+      "name": "zodActionToGUIControlManifestAction",
+      "filePath": "src/ActionSystem/schema/defineZodAction.ts",
+      "lineRange": [234, 265],
+      "summary": "Converts a ZodAction definition into a GUI control manifest entry describing an ADE-exposed action for external control surfaces.",
+      "tags": ["serialization", "gui-control"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/ActionSystem/schema/zodRegistry.ts",
+      "type": "file",
+      "name": "zodRegistry.ts",
+      "filePath": "src/ActionSystem/schema/zodRegistry.ts",
+      "summary": "Implements the singleton ZodActionRegistry class that stores, validates, executes, and queries all registered Zod-based actions across the app, supporting reactive subscriptions and LLM tool / system-prompt generation.",
+      "tags": ["registry", "singleton", "action-system", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry",
+      "type": "class",
+      "name": "ZodActionRegistry",
+      "filePath": "src/ActionSystem/schema/zodRegistry.ts",
+      "lineRange": [35, 318],
+      "summary": "Central singleton registry managing action registration, validated execution via Zod safeParse, category/tag/layer querying, GUI control manifest generation, LLM tool export, and change-notification subscriptions for the app's unified action system.",
+      "tags": ["registry", "singleton", "validation", "state-management"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "function:src/ActionSystem/ActionSystemContext.tsx:ActionSystemProvider", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "function:src/ActionSystem/ActionSystemContext.tsx:useActionSystem", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "function:src/ActionSystem/ActionSystemContext.tsx:useActionSystemOptional", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "function:src/ActionSystem/ActionSystemContext.tsx:ActionSystemProvider", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "function:src/ActionSystem/ActionSystemContext.tsx:useActionSystem", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "function:src/ActionSystem/ActionSystemContext.tsx:useActionSystemOptional", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "file:src/ActionSystem/schema/defineZodAction.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/ActionSystem/ActionSystemContext.tsx", "target": "file:src/ActionSystem/schema/zodRegistry.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/ActionSystem/ActionSystemContext.tsx:ActionSystemProvider", "target": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/ActionSystem/collectAppActions.ts", "target": "function:src/ActionSystem/collectAppActions.ts:collectAppZodActions", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/collectAppActions.ts", "target": "function:src/ActionSystem/collectAppActions.ts:collectAppZodActions", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/collectAppActions.ts", "target": "file:src/ActionSystem/actions/index.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/ActionSystem/collectAppActions.ts", "target": "file:src/ActionSystem/schema/actionRegistration.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/ActionSystem/collectAppActions.ts", "target": "file:src/ActionSystem/schema/defineZodAction.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/ActionSystem/collectAppActions.ts:collectAppZodActions", "target": "function:src/ActionSystem/schema/actionRegistration.ts:extractAppActionRegistrations", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/ActionSystem/registerAppActions.ts", "target": "function:src/ActionSystem/registerAppActions.ts:registerAppActions", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/registerAppActions.ts", "target": "function:src/ActionSystem/registerAppActions.ts:registerAppActions", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/registerAppActions.ts", "target": "file:src/ActionSystem/collectAppActions.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/ActionSystem/registerAppActions.ts", "target": "file:src/ActionSystem/schema/zodRegistry.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:src/ActionSystem/registerAppActions.ts:registerAppActions", "target": "function:src/ActionSystem/collectAppActions.ts:collectAppZodActions", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/ActionSystem/registerAppActions.ts:registerAppActions", "target": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "function:src/ActionSystem/schema/actionRegistration.ts:defineAppActionRegistration", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "function:src/ActionSystem/schema/actionRegistration.ts:isAppZodActionRegistration", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "function:src/ActionSystem/schema/actionRegistration.ts:extractAppActionRegistrations", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "function:src/ActionSystem/schema/actionRegistration.ts:defineAppActionRegistration", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "function:src/ActionSystem/schema/actionRegistration.ts:isAppZodActionRegistration", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "function:src/ActionSystem/schema/actionRegistration.ts:extractAppActionRegistrations", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/schema/actionRegistration.ts", "target": "file:src/ActionSystem/schema/defineZodAction.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/ActionSystem/schema/defineZodAction.ts", "target": "function:src/ActionSystem/schema/defineZodAction.ts:defineZodAction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/defineZodAction.ts", "target": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToLLMTool", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/defineZodAction.ts", "target": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToGUIControlManifestAction", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/defineZodAction.ts", "target": "function:src/ActionSystem/schema/defineZodAction.ts:defineZodAction", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/schema/defineZodAction.ts", "target": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToLLMTool", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/schema/defineZodAction.ts", "target": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToGUIControlManifestAction", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/ActionSystem/schema/zodRegistry.ts", "target": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/ActionSystem/schema/zodRegistry.ts", "target": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/ActionSystem/schema/zodRegistry.ts", "target": "file:src/ActionSystem/schema/defineZodAction.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry", "target": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToGUIControlManifestAction", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "class:src/ActionSystem/schema/zodRegistry.ts:ZodActionRegistry", "target": "function:src/ActionSystem/schema/defineZodAction.ts:zodActionToLLMTool", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

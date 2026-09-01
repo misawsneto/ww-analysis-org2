@@ -1,0 +1,68 @@
+import type { ShortcutEntry } from "./types";
+
+export const PROJECT_SHORTCUTS: ShortcutEntry[] = [
+  {
+    id: "workitems_search",
+    command: "Search work items",
+    macKeys: "⌘F",
+    winKeys: "Ctrl+F",
+    scope: "work-items",
+    category: "search",
+  },
+  {
+    id: "project_toggle_sidebar",
+    command: "Toggle sidebar",
+    macKeys: "⌥⌘U",
+    winKeys: "Ctrl+Alt+U",
+    scope: "project",
+    category: "panels",
+  },
+  {
+    id: "workitem_due_date",
+    command: "Set due date",
+    macKeys: "⇧+D",
+    winKeys: "Shift+D",
+    scope: "work-items",
+    category: "editing",
+  },
+  {
+    id: "workitem_story",
+    command: "Set project",
+    macKeys: "⇧+P",
+    winKeys: "Shift+P",
+    scope: "work-items",
+    category: "editing",
+  },
+  {
+    id: "workitem_rename",
+    command: "Rename",
+    macKeys: "⇧+R",
+    winKeys: "Shift+R",
+    scope: "work-items",
+    category: "editing",
+  },
+  {
+    id: "workitem_add_link",
+    command: "Add link",
+    macKeys: "⌃+L",
+    winKeys: "Ctrl+L",
+    scope: "work-items",
+    category: "editing",
+  },
+  {
+    id: "workitem_favorite",
+    command: "Favorite",
+    macKeys: "⌥+F",
+    winKeys: "Alt+F",
+    scope: "work-items",
+    category: "editing",
+  },
+  {
+    id: "workitem_delete",
+    command: "Delete",
+    macKeys: "⌘+⌫",
+    winKeys: "Ctrl+Delete",
+    scope: "work-items",
+    category: "editing",
+  },
+];

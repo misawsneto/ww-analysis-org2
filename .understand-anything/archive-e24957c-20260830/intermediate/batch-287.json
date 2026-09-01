@@ -1,0 +1,269 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/hooks/auth/serviceAuthAtoms.ts",
+      "type": "file",
+      "name": "serviceAuthAtoms.ts",
+      "filePath": "src/hooks/auth/serviceAuthAtoms.ts",
+      "summary": "Defines the shared Jotai atoms backing global service-auth state (authenticated flag, token, expiry, error, loading/refreshing flags), plus a helper that clears both localStorage and the atoms atomically and a read-only hook for observing the state.",
+      "tags": ["auth", "state-management", "jotai-atoms", "hook"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Jotai's getDefaultStore() to imperatively write atom values outside of React component render, enabling synchronous auth-state clearing during logout."
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthAtoms.ts:clearAuthStateCompletely",
+      "type": "function",
+      "name": "clearAuthStateCompletely",
+      "filePath": "src/hooks/auth/serviceAuthAtoms.ts",
+      "lineRange": [34, 44],
+      "summary": "Clears the hosted auth token and secure tokens from storage, then resets all service-auth Jotai atoms to their signed-out defaults.",
+      "tags": ["auth", "cleanup", "side-effect"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthAtoms.ts:useServiceAuthState",
+      "type": "function",
+      "name": "useServiceAuthState",
+      "filePath": "src/hooks/auth/serviceAuthAtoms.ts",
+      "lineRange": [59, 67],
+      "summary": "Read-only hook that reads all service-auth atoms and returns a consolidated auth-state object, without triggering side effects or network calls.",
+      "tags": ["hook", "auth", "state-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "type": "file",
+      "name": "serviceAuthHelpers.ts",
+      "filePath": "src/hooks/auth/serviceAuthHelpers.ts",
+      "summary": "Utility functions for normalizing and classifying auth-related errors (network, auth, missing-refresh-token) plus a promise-based sleep helper used for retry backoff in the auth refresh flow.",
+      "tags": ["utility", "error-handling", "auth", "retry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthHelpers.ts:getErrorMessage",
+      "type": "function",
+      "name": "getErrorMessage",
+      "filePath": "src/hooks/auth/serviceAuthHelpers.ts",
+      "lineRange": [6, 14],
+      "summary": "Normalizes an unknown error value (Error instance, string, or other) into a lowercase message string for pattern matching.",
+      "tags": ["utility", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthHelpers.ts:isNetworkError",
+      "type": "function",
+      "name": "isNetworkError",
+      "filePath": "src/hooks/auth/serviceAuthHelpers.ts",
+      "lineRange": [20, 39],
+      "summary": "Detects whether an error looks like a network/connectivity failure by matching known substrings (fetch, timeout, offline, etc.) in its message.",
+      "tags": ["utility", "error-handling", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthHelpers.ts:isAuthError",
+      "type": "function",
+      "name": "isAuthError",
+      "filePath": "src/hooks/auth/serviceAuthHelpers.ts",
+      "lineRange": [48, 60],
+      "summary": "Detects whether an error indicates an authentication/authorization failure (e.g. unauthorized, invalid token) based on its message text.",
+      "tags": ["utility", "error-handling", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthHelpers.ts:isNoRefreshTokenError",
+      "type": "function",
+      "name": "isNoRefreshTokenError",
+      "filePath": "src/hooks/auth/serviceAuthHelpers.ts",
+      "lineRange": [65, 71],
+      "summary": "Detects the specific error case where no refresh token is available, used to short-circuit retry logic in the auth refresh flow.",
+      "tags": ["utility", "error-handling", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/auth/serviceAuthHelpers.ts:sleep",
+      "type": "function",
+      "name": "sleep",
+      "filePath": "src/hooks/auth/serviceAuthHelpers.ts",
+      "lineRange": [73, 75],
+      "summary": "Promise-based delay helper used to implement exponential backoff between auth token refresh retries.",
+      "tags": ["utility", "async", "retry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/auth/useServiceAuth.ts",
+      "type": "file",
+      "name": "useServiceAuth.ts",
+      "filePath": "src/hooks/auth/useServiceAuth.ts",
+      "summary": "Primary hook orchestrating hosted-service authentication: manages login/logout, token refresh with retry-and-backoff, expiry checks, periodic and visibility-triggered re-validation, backed by the Jotai atoms and error-classification helpers from sibling files in this directory.",
+      "tags": ["hook", "authentication", "state-management", "react"],
+      "complexity": "complex",
+      "languageNotes": "Also re-exports the atoms and read-only hook from serviceAuthAtoms.ts, acting as the public entry point for consumers of service auth."
+    },
+    {
+      "id": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "type": "function",
+      "name": "useServiceAuth",
+      "filePath": "src/hooks/auth/useServiceAuth.ts",
+      "lineRange": [77, 364],
+      "summary": "React hook exposing isAuthenticated/token/error state plus login, logout, refresh, and refreshToken actions; internally manages retrying token refresh with exponential backoff, periodic expiry checks, and re-validation on tab visibility changes.",
+      "tags": ["hook", "authentication", "side-effect", "react"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/hooks/auth/serviceAuthAtoms.ts",
+      "target": "function:src/hooks/auth/serviceAuthAtoms.ts:clearAuthStateCompletely",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthAtoms.ts",
+      "target": "function:src/hooks/auth/serviceAuthAtoms.ts:useServiceAuthState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthAtoms.ts",
+      "target": "function:src/hooks/auth/serviceAuthAtoms.ts:clearAuthStateCompletely",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthAtoms.ts",
+      "target": "function:src/hooks/auth/serviceAuthAtoms.ts:useServiceAuthState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:getErrorMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isNetworkError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isAuthError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isNoRefreshTokenError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:sleep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:getErrorMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isNetworkError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isAuthError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isNoRefreshTokenError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:sleep",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/useServiceAuth.ts",
+      "target": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/hooks/auth/useServiceAuth.ts",
+      "target": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/hooks/auth/useServiceAuth.ts",
+      "target": "file:src/hooks/auth/serviceAuthAtoms.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/hooks/auth/useServiceAuth.ts",
+      "target": "file:src/hooks/auth/serviceAuthHelpers.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isNoRefreshTokenError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isAuthError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:isNetworkError",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/hooks/auth/useServiceAuth.ts:useServiceAuth",
+      "target": "function:src/hooks/auth/serviceAuthHelpers.ts:sleep",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

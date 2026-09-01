@@ -1,0 +1,566 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx",
+      "type": "file",
+      "name": "OrgTaskAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx",
+      "summary": "Adapter that renders org task management tool calls (create/update/list/get), routing to a list card, a single-task card, or the OrgTaskBlock detail view based on the rustExtracted action and operation outcome.",
+      "tags": ["adapter", "org-task", "event-renderer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx",
+      "type": "file",
+      "name": "PlanDocAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx",
+      "summary": "Thin adapter rendering create_plan events via CreatePlanCard, resolving streaming draft content, plan/revision identity, and approval view state from pending-plan and chat-event atoms.",
+      "tags": ["adapter", "planning", "event-renderer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx",
+      "type": "file",
+      "name": "ReadFileAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx",
+      "summary": "Minimal adapter that resolves the lifecycle title and forwards all props to ReadFileBlock for file-read tool events.",
+      "tags": ["adapter", "file-read", "event-renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx",
+      "type": "file",
+      "name": "SearchAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx",
+      "summary": "Adapter rendering grep/symbol search hits via the header-only SearchBlock, suppressing failed searches and resolving the display pattern and lifecycle title.",
+      "tags": ["adapter", "search", "event-renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "type": "file",
+      "name": "SentMessageAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "summary": "Adapter for inter-agent messaging tools: renders org_send_message as an email-style AgentMessageCard (exported as OrgSendMessageBlock for simulator reuse) and other send/broadcast tools as a markdown message bubble with delivery receipt rows.",
+      "tags": ["adapter", "messaging", "event-renderer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx",
+      "type": "file",
+      "name": "SetupRepoAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx",
+      "summary": "Adapter that extracts setup_repo action, status, env vars, and command details from tool args and renders them via SetupRepoBlock.",
+      "tags": ["adapter", "setup", "event-renderer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx",
+      "type": "file",
+      "name": "ShellAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx",
+      "summary": "Adapter for run_shell events, resolving run/kill lifecycle labels and TUI-mode rendering flag before delegating to ShellBlock.",
+      "tags": ["adapter", "shell", "event-renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx",
+      "type": "file",
+      "name": "SubagentAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx",
+      "summary": "Adapter rendering delegated subagent tool calls via SubagentBlock, resolving prompt/result data across rustExtracted and raw arg shapes and wiring a 'navigate to subagent session' handler into the agent-station simulator.",
+      "tags": ["adapter", "subagent", "event-renderer", "navigation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "type": "file",
+      "name": "TitleOnlyAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "summary": "Adapter for ChatBlock::TitleOnly events, with specialized await_output handling: aggregates wait_for/monitor job items into a localized summary, runs a live per-second countdown ticker for running waits, and resolves per-status subtitles from the Rust tool registry.",
+      "tags": ["adapter", "await-output", "event-renderer"],
+      "complexity": "complex",
+      "languageNotes": "Uses a lazy useState initializer to capture a stable start timestamp, avoiding a React render-purity violation from calling Date.now() directly during render."
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx",
+      "type": "file",
+      "name": "TodoAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx",
+      "summary": "Adapter rendering manage_todo events via TodoBlock, merging event-extracted todos with the session's persisted todo map and hiding the block when the resulting list is empty.",
+      "tags": ["adapter", "todo", "event-renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx",
+      "type": "file",
+      "name": "WebSearchAdapter.tsx",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx",
+      "summary": "Adapter rendering web_search results via WebSearchBlock, preferring Rust-extracted structured results and falling back to shallow field-picking on raw args/result.",
+      "tags": ["adapter", "web-search", "event-renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "type": "file",
+      "name": "awaitMeta.ts",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "summary": "Shared parser for the awaitMeta:: protocol line embedded in await_output tool results, normalizing wait_for/monitor job items and list-command items into typed structures with duration formatting and tally helpers.",
+      "tags": ["utility", "await-output", "parsing"],
+      "complexity": "moderate",
+      "languageNotes": "Documents a text-embedded JSON protocol convention (awaitMeta:: prefix line within a larger raw string) shared between Rust and TypeScript."
+    },
+    {
+      "id": "file:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts",
+      "type": "file",
+      "name": "subagentPrompt.ts",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts",
+      "summary": "Small helper module resolving a subagent's assignment prompt from multiple candidate value sources or from the subagent's own child user events.",
+      "tags": ["utility", "subagent", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:resolveOrgTaskOwnerDisplay",
+      "type": "function",
+      "name": "resolveOrgTaskOwnerDisplay",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx",
+      "lineRange": [25, 31],
+      "summary": "Resolves a display-friendly owner name for an org task, preferring an explicit owner name then a prettified owner id.",
+      "tags": ["utility", "org-task"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:orgTaskItemToCardData",
+      "type": "function",
+      "name": "orgTaskItemToCardData",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx",
+      "lineRange": [33, 46],
+      "summary": "Maps a raw org task item to TaskUpdateCardData shape consumed by the TaskListCard component.",
+      "tags": ["data-transformation", "org-task"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:renderListCard",
+      "type": "function",
+      "name": "renderListCard",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx",
+      "lineRange": [48, 73],
+      "summary": "Renders a TaskListCard for a list/get org task action, mapping the extracted tasks array into card data.",
+      "tags": ["component", "org-task", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:OrgTaskAdapter",
+      "type": "function",
+      "name": "OrgTaskAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx",
+      "lineRange": [75, 176],
+      "summary": "Top-level adapter component branching between ToolCallBlock fallback, TaskListCard, and OrgTaskBlock rendering based on the rustExtracted action and resolved operation outcome.",
+      "tags": ["component", "adapter", "org-task"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx:PlanDocAdapter",
+      "type": "function",
+      "name": "PlanDocAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx",
+      "lineRange": [30, 106],
+      "summary": "Resolves plan content, identity, and approval view state from pending-plan atoms and chat events, then renders CreatePlanCard, returning null when there is no active draft or submitted plan.",
+      "tags": ["component", "adapter", "planning"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx:ReadFileAdapter",
+      "type": "function",
+      "name": "ReadFileAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx",
+      "lineRange": [16, 26],
+      "summary": "Resolves the state-aware lifecycle title and renders ReadFileBlock with all incoming props spread through.",
+      "tags": ["component", "adapter", "file-read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx:SearchAdapter",
+      "type": "function",
+      "name": "SearchAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx",
+      "lineRange": [18, 46],
+      "summary": "Resolves search query and lifecycle title, suppresses failed searches, and renders SearchBlock.",
+      "tags": ["component", "adapter", "search"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:parseDeliveredRows",
+      "type": "function",
+      "name": "parseDeliveredRows",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "lineRange": [35, 54],
+      "summary": "Parses a delivery-receipt JSON string into an array of DeliveredRow entries (inbox id, recipient, kind, org run id), returning an empty array on any parse failure.",
+      "tags": ["parsing", "messaging", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:deliveredReceiptSource",
+      "type": "function",
+      "name": "deliveredReceiptSource",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "lineRange": [56, 65],
+      "summary": "Extracts the raw delivery-receipt string from the tool result's content/observation/output fields.",
+      "tags": ["parsing", "messaging", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:messageContent",
+      "type": "function",
+      "name": "messageContent",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "lineRange": [67, 81],
+      "summary": "Builds the rendered message body text from args, prefixing a bold title for send_to_inbox calls that have both a title and content.",
+      "tags": ["formatting", "messaging", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:destinationLabel",
+      "type": "function",
+      "name": "destinationLabel",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "lineRange": [83, 97],
+      "summary": "Resolves a human-readable destination label ('Inbox', 'channel / chatId', or a fallback) for a send-message event.",
+      "tags": ["formatting", "messaging", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:OrgSendMessageBlock",
+      "type": "function",
+      "name": "OrgSendMessageBlock",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "lineRange": [130, 174],
+      "summary": "Renders an org_send_message invocation as an email-style AgentMessageCard, resolving a broadcast-specific title for multi-recipient sends; exported separately so the simulator Messages app can reuse the card body inside its own bubble wrapper.",
+      "tags": ["component", "messaging", "org-send-message"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:SentMessageAdapter",
+      "type": "function",
+      "name": "SentMessageAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx",
+      "lineRange": [178, 262],
+      "summary": "Top-level adapter routing org_send_message calls to OrgSendMessageBlock and rendering all other send/broadcast tools as a markdown message bubble with parsed delivery receipt rows.",
+      "tags": ["component", "adapter", "messaging"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx:extractEnvVars",
+      "type": "function",
+      "name": "extractEnvVars",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx",
+      "lineRange": [15, 31],
+      "summary": "Normalizes the raw env_vars arg array into typed SetupRepoEnvVar entries, filtering out non-object items.",
+      "tags": ["parsing", "setup", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx:SetupRepoAdapter",
+      "type": "function",
+      "name": "SetupRepoAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx",
+      "lineRange": [33, 67],
+      "summary": "Extracts setup_repo action, status, message, env vars, url, command, and app type from args and renders SetupRepoBlock.",
+      "tags": ["component", "adapter", "setup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx:ShellAdapter",
+      "type": "function",
+      "name": "ShellAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx",
+      "lineRange": [21, 41],
+      "summary": "Resolves separate run/kill lifecycle labels and TUI rendering mode for a run_shell event and forwards them to ShellBlock.",
+      "tags": ["component", "adapter", "shell"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:extractSubagentData",
+      "type": "function",
+      "name": "extractSubagentData",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx",
+      "lineRange": [37, 107],
+      "summary": "Resolves subagent description, type, result content/summary, session id, elapsed time, success flag, error message, and prompt from either rustExtracted or raw args/result shapes.",
+      "tags": ["parsing", "subagent", "internal"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:SubagentAdapter",
+      "type": "function",
+      "name": "SubagentAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx",
+      "lineRange": [109, 178],
+      "summary": "Renders SubagentBlock for a delegated subagent event, resolving the child prompt from session-scoped chat events and wiring a navigate-to-subagent handler that focuses the agent-station simulator cell.",
+      "tags": ["component", "adapter", "subagent", "navigation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:resolveAwaitCommand",
+      "type": "function",
+      "name": "resolveAwaitCommand",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "lineRange": [58, 75],
+      "summary": "Infers await_output's effective command (wait_for vs monitor) from args, mirroring the Rust await_tool defaulting policy as a defensive client-side fallback.",
+      "tags": ["parsing", "await-output", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:readCodexWaitedMs",
+      "type": "function",
+      "name": "readCodexWaitedMs",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "lineRange": [78, 95],
+      "summary": "Reads Codex's 'Wall time N seconds' line from the result text, falling back to the requested yield window, for cell-based wait calls.",
+      "tags": ["parsing", "await-output", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:useCountdownString",
+      "type": "function",
+      "name": "useCountdownString",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "lineRange": [119, 145],
+      "summary": "Hook that re-renders once per second while enabled, returning a formatted remaining-time countdown string for a wait_for deadline computed from timestamp + blockUntilMs.",
+      "tags": ["hook", "await-output", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:buildSummary",
+      "type": "function",
+      "name": "buildSummary",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "lineRange": [152, 178],
+      "summary": "Builds a localized summary fragment (e.g. '1 terminal process, 2 subagents') from tallied await job items, deferring plural/word-order decisions to i18n keys.",
+      "tags": ["formatting", "await-output", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:useAwaitExtras",
+      "type": "function",
+      "name": "useAwaitExtras",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "lineRange": [188, 252],
+      "summary": "Hook resolving await_output-specific label variables (summary, waited, countdown) and a status subtitle sourced from the Rust registry's status_labels, returning empty extras for non-await tools.",
+      "tags": ["hook", "await-output", "internal"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:TitleOnlyAdapter",
+      "type": "function",
+      "name": "TitleOnlyAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx",
+      "lineRange": [254, 296],
+      "summary": "Top-level adapter resolving the await command, lifecycle label, icon, and await-specific extras, then rendering TitleOnlyBlock.",
+      "tags": ["component", "adapter", "await-output"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx:TodoAdapter",
+      "type": "function",
+      "name": "TodoAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx",
+      "lineRange": [20, 45],
+      "summary": "Merges event-extracted todos with the session's persisted todo map via preserveTodoContent and renders TodoBlock, returning null when the merged list is empty.",
+      "tags": ["component", "adapter", "todo"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx:extractWebSearchData",
+      "type": "function",
+      "name": "extractWebSearchData",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx",
+      "lineRange": [23, 43],
+      "summary": "Resolves web search query and results from rustExtracted structured data, falling back to shallow field-picking on raw args/result.",
+      "tags": ["parsing", "web-search", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx:WebSearchAdapter",
+      "type": "function",
+      "name": "WebSearchAdapter",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx",
+      "lineRange": [45, 71],
+      "summary": "Resolves lifecycle title and extracted search data for a web_search event and renders WebSearchBlock, returning null on failure.",
+      "tags": ["component", "adapter", "web-search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:parseAwaitMeta",
+      "type": "function",
+      "name": "parseAwaitMeta",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "lineRange": [66, 102],
+      "summary": "Parses the awaitMeta:: JSON line out of a raw tool-call result string, normalizing wait_for/monitor items and list items into separate typed fields.",
+      "tags": ["parsing", "await-output"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:normaliseJobItem",
+      "type": "function",
+      "name": "normaliseJobItem",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "lineRange": [104, 122],
+      "summary": "Normalizes a raw wait_for/monitor item object into a typed AwaitJobItem with defaulted jobKind and status.",
+      "tags": ["parsing", "await-output", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:readAwaitMetaFromResult",
+      "type": "function",
+      "name": "readAwaitMetaFromResult",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "lineRange": [143, 161],
+      "summary": "Reads a tool result bag and returns the parsed awaitMeta payload, trying several candidate text fields (output/content/observation/text) since the raw text location varies by upstream source.",
+      "tags": ["parsing", "await-output"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:formatDurationShort",
+      "type": "function",
+      "name": "formatDurationShort",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "lineRange": [167, 176],
+      "summary": "Formats a duration in milliseconds as an abbreviated 'Xm Ys' / 'Ys' string, used for countdown and 'waited' labels.",
+      "tags": ["formatting", "await-output", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:tallyItems",
+      "type": "function",
+      "name": "tallyItems",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "lineRange": [190, 199],
+      "summary": "Counts an awaitMeta items array by jobKind (shell/subagent), returning zeroed totals when items is empty or absent.",
+      "tags": ["utility", "await-output"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:guessJobKind",
+      "type": "function",
+      "name": "guessJobKind",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/awaitMeta.ts",
+      "lineRange": [206, 209],
+      "summary": "Guesses whether a bare handle string references a shell PID (numeric) or a subagent session, used only as a last-ditch fallback.",
+      "tags": ["utility", "await-output"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:firstSubagentAssignmentPrompt",
+      "type": "function",
+      "name": "firstSubagentAssignmentPrompt",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts",
+      "lineRange": [9, 17],
+      "summary": "Returns the first non-empty trimmed string among a variadic list of candidate prompt values.",
+      "tags": ["utility", "subagent"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:extractSubagentPromptFromChildEvents",
+      "type": "function",
+      "name": "extractSubagentPromptFromChildEvents",
+      "filePath": "src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts",
+      "lineRange": [19, 32],
+      "summary": "Scans a subagent's child session events for the first user-sourced event carrying a non-empty prompt text, used as a fallback when the delegating call omitted the prompt.",
+      "tags": ["utility", "subagent"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/OrgTaskBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/cards/TaskUpdateCard.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/types.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/CreatePlanCard/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ReadFileBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/SearchBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/cards/AgentMessageCard.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ToolCallBlock/helpers.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/SetupRepoBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/ShellBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/SubagentBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx", "target": "file:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/TitleOnlyBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/TodoBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx", "target": "file:src/engines/ChatPanel/blocks/WebSearchBlock/index.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:resolveOrgTaskOwnerDisplay", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:orgTaskItemToCardData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:renderListCard", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:OrgTaskAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:resolveOrgTaskOwnerDisplay", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:orgTaskItemToCardData", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/OrgTaskAdapter.tsx:OrgTaskAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx:PlanDocAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/PlanDocAdapter.tsx:PlanDocAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx:ReadFileAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ReadFileAdapter.tsx:ReadFileAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx:SearchAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SearchAdapter.tsx:SearchAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:parseDeliveredRows", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:deliveredReceiptSource", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:messageContent", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:destinationLabel", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:OrgSendMessageBlock", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:SentMessageAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:OrgSendMessageBlock", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SentMessageAdapter.tsx:SentMessageAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx:extractEnvVars", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx:SetupRepoAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SetupRepoAdapter.tsx:SetupRepoAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx:ShellAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/ShellAdapter.tsx:ShellAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:extractSubagentData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:SubagentAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:SubagentAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:extractSubagentData", "target": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:firstSubagentAssignmentPrompt", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/ChatPanel/rendering/adapters/SubagentAdapter.tsx:SubagentAdapter", "target": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:extractSubagentPromptFromChildEvents", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:resolveAwaitCommand", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:readCodexWaitedMs", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:useCountdownString", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:buildSummary", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:useAwaitExtras", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:TitleOnlyAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:TitleOnlyAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:useAwaitExtras", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:readAwaitMetaFromResult", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:useAwaitExtras", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:formatDurationShort", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:src/engines/ChatPanel/rendering/adapters/TitleOnlyAdapter.tsx:buildSummary", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:tallyItems", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx:TodoAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/TodoAdapter.tsx:TodoAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx:extractWebSearchData", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx:WebSearchAdapter", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx", "target": "function:src/engines/ChatPanel/rendering/adapters/WebSearchAdapter.tsx:WebSearchAdapter", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:parseAwaitMeta", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:normaliseJobItem", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:readAwaitMetaFromResult", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:formatDurationShort", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:tallyItems", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:guessJobKind", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:parseAwaitMeta", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:readAwaitMetaFromResult", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:formatDurationShort", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:tallyItems", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/awaitMeta.ts:guessJobKind", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:firstSubagentAssignmentPrompt", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:extractSubagentPromptFromChildEvents", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:firstSubagentAssignmentPrompt", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts", "target": "function:src/engines/ChatPanel/rendering/adapters/subagentPrompt.ts:extractSubagentPromptFromChildEvents", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

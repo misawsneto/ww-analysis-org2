@@ -1,0 +1,450 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/index.ts",
+      "summary": "Central barrel export for the entire Jotai state store, re-exporting session, project, search, platform, settings, git, and other atom module slices plus SessionCore types and hooks.",
+      "tags": ["entry-point", "barrel", "state-management", "jotai"],
+      "complexity": "simple",
+      "languageNotes": "Session types/hooks are re-exported via direct paths rather than through the session barrel to avoid a circular dependency."
+    },
+    {
+      "id": "file:src/store/platform/autoUpdateAtom.ts",
+      "type": "file",
+      "name": "autoUpdateAtom.ts",
+      "filePath": "src/store/platform/autoUpdateAtom.ts",
+      "summary": "Settings-backed Jotai atom exposing the auto-update toggle, reading and writing the general.autoUpdateEnabled key via the shared settings atom.",
+      "tags": ["state-management", "settings", "jotai", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/platform/devModeAtom.ts",
+      "type": "file",
+      "name": "devModeAtom.ts",
+      "filePath": "src/store/platform/devModeAtom.ts",
+      "summary": "Persisted boolean atom controlling developer mode, backed by localStorage via jotai's atomWithStorage.",
+      "tags": ["state-management", "jotai", "settings", "dev-tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/platform/gitDependencyAtom.ts",
+      "type": "file",
+      "name": "gitDependencyAtom.ts",
+      "filePath": "src/store/platform/gitDependencyAtom.ts",
+      "summary": "Tracks whether the git binary is installed on the host system, probing the Rust backend via the detect_git_dependency command and caching the result in an atom.",
+      "tags": ["state-management", "jotai", "tauri-bridge", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/platform/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/platform/index.ts",
+      "summary": "Barrel export re-exporting the dev-mode toggle and system dependency scan atoms for the platform store slice.",
+      "tags": ["barrel", "state-management", "jotai", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/platform/preventSleepAtom.ts",
+      "type": "file",
+      "name": "preventSleepAtom.ts",
+      "filePath": "src/store/platform/preventSleepAtom.ts",
+      "summary": "Settings-backed atom for the 'prevent system sleep while an agent session is running' preference, persisted to settings.jsonc.",
+      "tags": ["state-management", "jotai", "settings", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/platform/systemDepsAtom.ts",
+      "type": "file",
+      "name": "systemDepsAtom.ts",
+      "filePath": "src/store/platform/systemDepsAtom.ts",
+      "summary": "Lazy-loading atom set that fetches cached or freshly-scanned system dependency status from the Rust backend and exposes a binary-name-to-installed lookup map.",
+      "tags": ["state-management", "jotai", "tauri-bridge", "async", "platform"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a cache-then-scan fallback strategy with private internal atoms (rawDepsAtom, depsLoadedAtom, depsLoadingAtom) guarding a single public write-only loader atom."
+    },
+    {
+      "id": "file:src/store/platform/updateChannelAtom.ts",
+      "type": "file",
+      "name": "updateChannelAtom.ts",
+      "filePath": "src/store/platform/updateChannelAtom.ts",
+      "summary": "Persisted update-channel preference atom (auto/stable/beta) plus a pure resolver function mapping 'auto' to the concrete channel based on the running build's version string.",
+      "tags": ["state-management", "jotai", "settings", "utility", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/platform/voiceInputAtom.ts",
+      "type": "file",
+      "name": "voiceInputAtom.ts",
+      "filePath": "src/store/platform/voiceInputAtom.ts",
+      "summary": "Settings-backed toggle atom controlling whether the voice input microphone button and push-to-talk shortcut are enabled in composer toolbars.",
+      "tags": ["state-management", "jotai", "settings", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/project/allProjectsAtom.ts",
+      "type": "file",
+      "name": "allProjectsAtom.ts",
+      "filePath": "src/store/project/allProjectsAtom.ts",
+      "summary": "Manages the 'All Projects' aggregate list-entry atom used by the sidebar's virtual all-projects view, with derived flattened-list and loading atoms.",
+      "tags": ["state-management", "jotai", "project", "derived-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/project/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/project/index.ts",
+      "summary": "Barrel export re-exporting the project, all-projects, and project-git-folder-sync atoms for the project store slice.",
+      "tags": ["barrel", "state-management", "jotai", "project"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/project/projectAtom.ts",
+      "type": "file",
+      "name": "projectAtom.ts",
+      "filePath": "src/store/project/projectAtom.ts",
+      "summary": "Core project state store holding the project list plus filter/search state, and deriving selected/filtered projects, status grouping, counts, and aggregate stats.",
+      "tags": ["state-management", "jotai", "project", "derived-state", "filtering"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/project/projectGitFolderSyncAtom.ts",
+      "type": "file",
+      "name": "projectGitFolderSyncAtom.ts",
+      "filePath": "src/store/project/projectGitFolderSyncAtom.ts",
+      "summary": "Tracks per-organization results of syncing a project's git folder, keyed by org id.",
+      "tags": ["state-management", "jotai", "project", "git"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/search/codeSearchIndexAtom.ts",
+      "type": "file",
+      "name": "codeSearchIndexAtom.ts",
+      "filePath": "src/store/search/codeSearchIndexAtom.ts",
+      "summary": "Manages code-search indexing state across repositories: which repos are indexed, in-progress indexing sets, last-updated timestamps, and a currently-inert indexing queue.",
+      "tags": ["state-management", "jotai", "search", "indexing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/search/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/search/index.ts",
+      "summary": "Barrel export re-exporting the code search indexing atoms for the search store slice.",
+      "tags": ["barrel", "state-management", "jotai", "search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/adeManagerPaletteAtom.ts",
+      "type": "file",
+      "name": "adeManagerPaletteAtom.ts",
+      "filePath": "src/store/session/adeManagerPaletteAtom.ts",
+      "summary": "Holds transient state for the ADE (Agent Dispatch Engine) Manager command-palette run, including draft text, run status, and a pending session proposal.",
+      "tags": ["state-management", "jotai", "session", "palette"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/agentRegistryAtom.ts",
+      "type": "file",
+      "name": "agentRegistryAtom.ts",
+      "filePath": "src/store/session/agentRegistryAtom.ts",
+      "summary": "Global registry atom holding CLI agent and API provider metadata fetched from the Rust backend, the single source of truth for agent/provider compatibility.",
+      "tags": ["state-management", "jotai", "session", "registry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/canvasPreviewAtom.ts",
+      "type": "file",
+      "name": "canvasPreviewAtom.ts",
+      "filePath": "src/store/session/canvasPreviewAtom.ts",
+      "summary": "Stores the latest inline canvas payload emitted by an agent via render_inline_canvas, with pure helper functions to derive, dismiss, and clear per-session canvas snapshots.",
+      "tags": ["state-management", "jotai", "session", "canvas"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/session/cliAgentVisibilityAtom.ts",
+      "type": "file",
+      "name": "cliAgentVisibilityAtom.ts",
+      "filePath": "src/store/session/cliAgentVisibilityAtom.ts",
+      "summary": "Persists per-agent visibility overrides for the CLI agent picker, with a pure helper resolving effective visibility from install status and user overrides.",
+      "tags": ["state-management", "jotai", "session", "cli-agent"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/cliSessionStatusAtom.ts",
+      "type": "file",
+      "name": "cliSessionStatusAtom.ts",
+      "filePath": "src/store/session/cliSessionStatusAtom.ts",
+      "summary": "Tracks the UI-effective runtime status of the active session (running/idle/error), including stream-retry state, context-token usage breakdown, cancel/rollback flags, and a session-scoped write gate that prevents cross-session status bleed.",
+      "tags": ["state-management", "jotai", "session", "runtime-status"],
+      "complexity": "complex",
+      "languageNotes": "Uses module-level mutable registration functions (registerRuntimeStatusGateSessionAtoms, registerLiveSubagentSignalAtom) to inject cross-module atom references at runtime and avoid import cycles."
+    },
+    {
+      "id": "file:src/store/session/creatorDefaultExecModeAtom.ts",
+      "type": "file",
+      "name": "creatorDefaultExecModeAtom.ts",
+      "filePath": "src/store/session/creatorDefaultExecModeAtom.ts",
+      "summary": "Persists the SessionCreator's default agent execution mode to localStorage, migrating the legacy 'explore' value to 'ask' on read, used only as a pre-fill fallback before a session record exists.",
+      "tags": ["state-management", "jotai", "session", "settings", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/session/creatorDefaultTuiModeAtom.ts",
+      "type": "file",
+      "name": "creatorDefaultTuiModeAtom.ts",
+      "filePath": "src/store/session/creatorDefaultTuiModeAtom.ts",
+      "summary": "Persists the SessionCreator's default TUI mode preference to localStorage, used to seed new CLI agent sessions at launch time.",
+      "tags": ["state-management", "jotai", "session", "settings"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/creatorDraftAtom.ts",
+      "type": "file",
+      "name": "creatorDraftAtom.ts",
+      "filePath": "src/store/session/creatorDraftAtom.ts",
+      "summary": "Manages pre-launch SessionCreator drafts (text, name, attachments) persisted to localStorage, with atoms to create/select/promote/delete drafts and helpers to generate ids, save, and check emptiness.",
+      "tags": ["state-management", "jotai", "session", "draft", "persistence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/store/session/cursorIdeTurnSummariesAtom.ts",
+      "type": "file",
+      "name": "cursorIdeTurnSummariesAtom.ts",
+      "filePath": "src/store/session/cursorIdeTurnSummariesAtom.ts",
+      "summary": "Per-session atom family holding Cursor IDE external-history turn summaries, keyed by session id.",
+      "tags": ["state-management", "jotai", "session", "atom-family"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/store/session/fileReviewAtom.ts",
+      "type": "file",
+      "name": "fileReviewAtom.ts",
+      "filePath": "src/store/session/fileReviewAtom.ts",
+      "summary": "Tracks review state (pending/kept/undone) of file changes made by the coding agent per session, including batch registration, keep/undo-all actions, pending counts, revert snapshot anchors, and per-file accept/reject resolutions.",
+      "tags": ["state-management", "jotai", "session", "file-review"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/store/platform/updateChannelAtom.ts:resolveUpdateChannel",
+      "type": "function",
+      "name": "resolveUpdateChannel",
+      "filePath": "src/store/platform/updateChannelAtom.ts",
+      "lineRange": [33, 39],
+      "summary": "Resolves the 'auto' update-channel preference to a concrete channel by checking whether the current version string contains a semver prerelease marker.",
+      "tags": ["utility", "resolver", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/canvasPreviewAtom.ts:deriveCanvasForSessionSnapshot",
+      "type": "function",
+      "name": "deriveCanvasForSessionSnapshot",
+      "filePath": "src/store/session/canvasPreviewAtom.ts",
+      "lineRange": [35, 51],
+      "summary": "Derives a session-scoped canvas snapshot (latest payload, visible payload, dismissed/opened flags) from the shared canvas preview entry, returning nulls when the entry doesn't match the given session.",
+      "tags": ["utility", "derived-state", "canvas", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/canvasPreviewAtom.ts:dismissCanvasForSession",
+      "type": "function",
+      "name": "dismissCanvasForSession",
+      "filePath": "src/store/session/canvasPreviewAtom.ts",
+      "lineRange": [53, 61],
+      "summary": "Marks the canvas entry as dismissed for a matching session id, leaving non-matching or already-dismissed entries untouched.",
+      "tags": ["utility", "state-transition", "canvas", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/canvasPreviewAtom.ts:clearCanvasForSession",
+      "type": "function",
+      "name": "clearCanvasForSession",
+      "filePath": "src/store/session/canvasPreviewAtom.ts",
+      "lineRange": [63, 68],
+      "summary": "Clears the canvas entry when it belongs to the given session id, otherwise returns it unchanged.",
+      "tags": ["utility", "state-transition", "canvas", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/cliAgentVisibilityAtom.ts:isCliAgentEnabled",
+      "type": "function",
+      "name": "isCliAgentEnabled",
+      "filePath": "src/store/session/cliAgentVisibilityAtom.ts",
+      "lineRange": [11, 17],
+      "summary": "Resolves whether a CLI agent should be visible, preferring a user override and falling back to the agent's installed status.",
+      "tags": ["utility", "resolver", "cli-agent"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/cliSessionStatusAtom.ts:registerRuntimeStatusGateSessionAtoms",
+      "type": "function",
+      "name": "registerRuntimeStatusGateSessionAtoms",
+      "filePath": "src/store/session/cliSessionStatusAtom.ts",
+      "lineRange": [62, 66],
+      "summary": "Registers the list of session-id atoms that define the 'visible session' gate, called once by viewAtom.ts at module load to avoid an import cycle.",
+      "tags": ["registration", "dependency-injection", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/cliSessionStatusAtom.ts:registerLiveSubagentSignalAtom",
+      "type": "function",
+      "name": "registerLiveSubagentSignalAtom",
+      "filePath": "src/store/session/cliSessionStatusAtom.ts",
+      "lineRange": [319, 323],
+      "summary": "Registers an externally-owned boolean atom signaling whether a background subagent is still active, injected by viewAtom.ts to avoid an import cycle.",
+      "tags": ["registration", "dependency-injection", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/creatorDraftAtom.ts:saveDraft",
+      "type": "function",
+      "name": "saveDraft",
+      "filePath": "src/store/session/creatorDraftAtom.ts",
+      "lineRange": [196, 214],
+      "summary": "Stamps a draft with an id (generating one if absent) and created/updated/saved timestamps, returning a complete SessionCreatorDraft ready to persist.",
+      "tags": ["utility", "factory", "session", "draft"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/session/creatorDraftAtom.ts:isDraftEmpty",
+      "type": "function",
+      "name": "isDraftEmpty",
+      "filePath": "src/store/session/creatorDraftAtom.ts",
+      "lineRange": [216, 222],
+      "summary": "Checks whether a session creator draft has no name, editor content, or uploaded files.",
+      "tags": ["utility", "validation", "session", "draft"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/platform/updateChannelAtom.ts",
+      "target": "function:src/store/platform/updateChannelAtom.ts:resolveUpdateChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/platform/updateChannelAtom.ts",
+      "target": "function:src/store/platform/updateChannelAtom.ts:resolveUpdateChannel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/canvasPreviewAtom.ts",
+      "target": "function:src/store/session/canvasPreviewAtom.ts:deriveCanvasForSessionSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/canvasPreviewAtom.ts",
+      "target": "function:src/store/session/canvasPreviewAtom.ts:deriveCanvasForSessionSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/canvasPreviewAtom.ts",
+      "target": "function:src/store/session/canvasPreviewAtom.ts:dismissCanvasForSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/canvasPreviewAtom.ts",
+      "target": "function:src/store/session/canvasPreviewAtom.ts:dismissCanvasForSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/canvasPreviewAtom.ts",
+      "target": "function:src/store/session/canvasPreviewAtom.ts:clearCanvasForSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/canvasPreviewAtom.ts",
+      "target": "function:src/store/session/canvasPreviewAtom.ts:clearCanvasForSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/cliAgentVisibilityAtom.ts",
+      "target": "function:src/store/session/cliAgentVisibilityAtom.ts:isCliAgentEnabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/cliAgentVisibilityAtom.ts",
+      "target": "function:src/store/session/cliAgentVisibilityAtom.ts:isCliAgentEnabled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/cliSessionStatusAtom.ts",
+      "target": "function:src/store/session/cliSessionStatusAtom.ts:registerRuntimeStatusGateSessionAtoms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/cliSessionStatusAtom.ts",
+      "target": "function:src/store/session/cliSessionStatusAtom.ts:registerRuntimeStatusGateSessionAtoms",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/cliSessionStatusAtom.ts",
+      "target": "function:src/store/session/cliSessionStatusAtom.ts:registerLiveSubagentSignalAtom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/cliSessionStatusAtom.ts",
+      "target": "function:src/store/session/cliSessionStatusAtom.ts:registerLiveSubagentSignalAtom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/creatorDraftAtom.ts",
+      "target": "function:src/store/session/creatorDraftAtom.ts:saveDraft",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorDraftAtom.ts",
+      "target": "function:src/store/session/creatorDraftAtom.ts:saveDraft",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/session/creatorDraftAtom.ts",
+      "target": "function:src/store/session/creatorDraftAtom.ts:isDraftEmpty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/session/creatorDraftAtom.ts",
+      "target": "function:src/store/session/creatorDraftAtom.ts:isDraftEmpty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

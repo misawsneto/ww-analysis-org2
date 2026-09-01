@@ -1,0 +1,1616 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "type": "file",
+      "name": "context_accounting.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "summary": "Builds a ContextUsageSnapshot breakdown (used/max tokens, per-category sections such as stable prompt, rules, skills, memory, conversation, tool results, attachments) from a turn's message/tool payload, powering the context-usage UI.",
+      "tags": [
+        "data-model",
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:ContextUsageSnapshot",
+      "type": "class",
+      "name": "ContextUsageSnapshot",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "lineRange": [
+        50,
+        67
+      ],
+      "summary": "Top-level context-usage snapshot (used/max tokens, percent used, warning level, per-category sections, cache stats) exposed to the frontend context-usage panel.",
+      "tags": [
+        "data-model",
+        "turn-executor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:from_payload",
+      "type": "function",
+      "name": "from_payload",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "lineRange": [
+        93,
+        174
+      ],
+      "summary": "Builds a full ContextUsageSnapshot from raw turn messages, tool list, and token counts, classifying each message/item into a usage category.",
+      "tags": [
+        "turn-executor",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:build_sections",
+      "type": "function",
+      "name": "build_sections",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "lineRange": [
+        283,
+        320
+      ],
+      "summary": "Aggregates classified context-usage items into per-category ContextUsageSection summaries with token totals and percentages.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:normalize_items_to_used_tokens",
+      "type": "function",
+      "name": "normalize_items_to_used_tokens",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "lineRange": [
+        322,
+        376
+      ],
+      "summary": "Rescales estimated per-item token counts so the sum matches the provider-reported used_tokens total, keeping the breakdown internally consistent.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "type": "file",
+      "name": "file_tracker.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "summary": "FileTimeTracker: content-hash-based stale-edit detector that records a hash of each read file's content and rejects file-modifying tool calls if the on-disk content changed since the last read, avoiding the false-positive rejections that a plain mtime comparison produced.",
+      "tags": [
+        "turn-executor",
+        "validation",
+        "data-model"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Explicitly chose content hashing over mtime comparison: mtime bumps on saves/copies/backups even without content changes, causing false stale rejections; hashing answers 'did the bytes change' directly."
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:FileTimeTracker",
+      "type": "class",
+      "name": "FileTimeTracker",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "lineRange": [
+        66,
+        71
+      ],
+      "summary": "Per-turn tracker of read/write timestamps and content hashes for files touched during the session, used to detect and reject stale edits from concurrent external changes.",
+      "tags": [
+        "data-model",
+        "turn-executor",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:seed_from_history",
+      "type": "function",
+      "name": "seed_from_history",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "lineRange": [
+        151,
+        188
+      ],
+      "summary": "Reconstructs tracker state from the conversation history at turn start (e.g. after a resume) so previously-read files are still tracked for staleness.",
+      "tags": [
+        "turn-executor",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:drain_externally_changed",
+      "type": "function",
+      "name": "drain_externally_changed",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "lineRange": [
+        199,
+        235
+      ],
+      "summary": "Returns and clears the set of tracked files whose on-disk content changed externally since they were last read, for surfacing to the LLM.",
+      "tags": [
+        "turn-executor",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:assert_fresh",
+      "type": "function",
+      "name": "assert_fresh",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "lineRange": [
+        254,
+        281
+      ],
+      "summary": "Checks that a tracked file's current content hash still matches the recorded hash, rejecting the operation with a re-read request if it diverged.",
+      "tags": [
+        "validation",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:assert_read_before_edit",
+      "type": "function",
+      "name": "assert_read_before_edit",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "lineRange": [
+        295,
+        324
+      ],
+      "summary": "Enforces that a file-modifying tool call (edit_file/apply_patch/delete_file) targets a file that was previously read in this session, and that its content is still fresh.",
+      "tags": [
+        "validation",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:extract_file_paths",
+      "type": "function",
+      "name": "extract_file_paths",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "lineRange": [
+        388,
+        444
+      ],
+      "summary": "Extracts the file path(s) a given tool call touches from its tool_name and args, used to route read/write events to the tracker.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_accessor.rs",
+      "type": "file",
+      "name": "message_accessor.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_accessor.rs",
+      "summary": "Read-only typed accessor helpers (msg_role, msg_content_str, msg_tool_calls, last_assistant_text) over the OpenAI-compat message JSON format used throughout agent-core's message history, providing a single choke point for any future format migration.",
+      "tags": [
+        "utility",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "type": "file",
+      "name": "message_writer.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "summary": "Appends assistant and tool-result messages onto the conversation history in the correct OpenAI-compat wire shape, including a non-standard structured sidecar key that carries MCP-rich content (images/audio/resources) for the Anthropic-native provider to promote.",
+      "tags": [
+        "utility",
+        "turn-executor",
+        "serialization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:add_assistant_message",
+      "type": "function",
+      "name": "add_assistant_message",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "lineRange": [
+        53,
+        81
+      ],
+      "summary": "Appends a new assistant message (content, tool calls, reasoning content) onto the message history in wire format.",
+      "tags": [
+        "turn-executor",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:add_tool_result_rich_with_timestamp",
+      "type": "function",
+      "name": "add_tool_result_rich_with_timestamp",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "lineRange": [
+        146,
+        169
+      ],
+      "summary": "Appends a tool-result message carrying rich MCP content (images/audio/resources) via the structured sidecar, with a timestamp.",
+      "tags": [
+        "turn-executor",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:build_structured_sidecar",
+      "type": "function",
+      "name": "build_structured_sidecar",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "lineRange": [
+        176,
+        220
+      ],
+      "summary": "Builds the STRUCTURED_SIDECAR_KEY payload embedding rich MCP blocks and metadata onto a tool-result message for providers that understand it.",
+      "tags": [
+        "serialization",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "summary": "Barrel re-exporting turn-executor helper submodules (truncate, message_writer, message_accessor, permission) flat, so existing callers can keep importing via super::helpers::{...} without churn.",
+      "tags": [
+        "barrel",
+        "turn-executor",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "type": "file",
+      "name": "permission.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "summary": "Permission-check wrapper around the PermissionProvider trait invoked between tool steps in the turn executor, racing the permission wait against a cancel flag so user cancellation is respected while waiting.",
+      "tags": [
+        "validation",
+        "turn-executor",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs:check_permission",
+      "type": "function",
+      "name": "check_permission",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "lineRange": [
+        22,
+        82
+      ],
+      "summary": "Requests a permission verdict from the PermissionProvider for a tool call, racing the wait against the cancel flag and returning the verdict or cancellation outcome.",
+      "tags": [
+        "security",
+        "validation",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "type": "file",
+      "name": "truncate.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "summary": "UTF-8 safe truncation for tool output strings: caps results at a per-tool character budget with a marker, and can additionally persist the full oversized output to disk while handing the model a bounded preview stub.",
+      "tags": [
+        "utility",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs:truncate_output",
+      "type": "function",
+      "name": "truncate_output",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "lineRange": [
+        50,
+        69
+      ],
+      "summary": "Truncates a tool output string to the configured budget (or a per-tool override), prepending a marker so the LLM sees a bounded context window.",
+      "tags": [
+        "utility",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs:truncate_or_persist_output",
+      "type": "function",
+      "name": "truncate_or_persist_output",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "lineRange": [
+        82,
+        127
+      ],
+      "summary": "Writes an oversized tool output to disk in full and returns the model a bounded <persisted-output> stub (path, size, preview) instead of destroying the information.",
+      "tags": [
+        "utility",
+        "turn-executor",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs",
+      "type": "file",
+      "name": "length_recovery.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs",
+      "summary": "Implements two-tier recovery for finish_reason=length (model truncated on max_tokens): a silent max_tokens escalation retry, then a more visible fallback strategy, mirroring claude_code's runPromptCatchingMaxTokensError.",
+      "tags": [
+        "turn-executor",
+        "error-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs:maybe_recover_from_length",
+      "type": "function",
+      "name": "maybe_recover_from_length",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs",
+      "lineRange": [
+        43,
+        121
+      ],
+      "summary": "Decides and applies the length-truncation recovery strategy (tier-1 silent escalation or tier-2 fallback) for a turn iteration that hit finish_reason=length.",
+      "tags": [
+        "error-handling",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "summary": "Reusable agentic turn processor: execute_turn is the generic LLM loop (provider request, streaming, tool execution, context accounting, retries, recovery) that any agent type in the codebase drives with its own event handlers and persistence strategy. The largest and most central file in the turn-executor subsystem.",
+      "tags": [
+        "entry-point",
+        "turn-executor",
+        "core"
+      ],
+      "complexity": "complex",
+      "languageNotes": "At ~1300 lines this is intentionally split into many focused sibling modules (backoff, context_accounting, file_tracker, helpers, tool_execution, stream_error_recovery, stream_normalizer, length_recovery) that execute_turn orchestrates."
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "type": "function",
+      "name": "execute_turn",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "lineRange": [
+        167,
+        1175
+      ],
+      "summary": "The core agentic loop: sends the provider request, ingests the streamed response, dispatches tool calls, applies backoff/retry and length/stream-error recovery, tracks context usage, and repeats until the turn ends.",
+      "tags": [
+        "core",
+        "turn-executor",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:should_auto_continue",
+      "type": "function",
+      "name": "should_auto_continue",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "lineRange": [
+        125,
+        151
+      ],
+      "summary": "Decides whether the turn loop should auto-continue another iteration based on continuation count, last progress, and context percentage used.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:drain_steering_queue",
+      "type": "function",
+      "name": "drain_steering_queue",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "lineRange": [
+        1216,
+        1251
+      ],
+      "summary": "Drains any pending user steering injections queued mid-turn and appends them onto the message history before the next iteration.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:strip_historical_media_blocks",
+      "type": "function",
+      "name": "strip_historical_media_blocks",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "lineRange": [
+        1182,
+        1207
+      ],
+      "summary": "Strips inline media (image) blocks from historical (non-current) messages before sending the request, to keep payload size bounded.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "type": "file",
+      "name": "provider_request_capture.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "summary": "Debug/test facility that arms a global capture slot to record the exact request sent to the LLM provider (messages, tools, model params) for a session, so it can be drained and inspected without instrumenting production call sites.",
+      "tags": [
+        "utility",
+        "turn-executor",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:ProviderRequestCapture",
+      "type": "class",
+      "name": "ProviderRequestCapture",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "lineRange": [
+        17,
+        28
+      ],
+      "summary": "Captured snapshot of a single provider request (session id, iteration, model, params, message/tool counts, and full payloads) recorded when capture is armed.",
+      "tags": [
+        "data-model",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:capture",
+      "type": "function",
+      "name": "capture",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "lineRange": [
+        68,
+        110
+      ],
+      "summary": "Records a ProviderRequestCapture snapshot for the current provider request if the capture facility is armed.",
+      "tags": [
+        "test",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "type": "file",
+      "name": "screenshot.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "summary": "Resolves screenshot and inline-image markers embedded in tool output text ([screenshot:<hex>] looked up in the ScreenshotStore, [image:<mime>:<base64>] self-contained) into image_url content blocks for vision-capable models.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs:resolve_screenshot_markers",
+      "type": "function",
+      "name": "resolve_screenshot_markers",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "lineRange": [
+        63,
+        137
+      ],
+      "summary": "Scans tool result messages for screenshot/inline-image markers and replaces them with image_url content blocks when the active model supports vision.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs:is_vision_model",
+      "type": "function",
+      "name": "is_vision_model",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "lineRange": [
+        29,
+        50
+      ],
+      "summary": "Determines whether a given model id supports vision/image inputs, gating whether screenshot markers are resolved into image blocks.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "type": "file",
+      "name": "stream_error_recovery.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "summary": "Handles stream-level errors from the LLM provider (dropped connections, socket timeouts, 5xx/529 overload frames) by retrying the iteration with exponential backoff, tracked against two independent retry budgets, with a chunked backoff that keeps sending heartbeats during the wait.",
+      "tags": [
+        "error-handling",
+        "turn-executor",
+        "retry-policy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:RetryBudgets",
+      "type": "class",
+      "name": "RetryBudgets",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "lineRange": [
+        66,
+        82
+      ],
+      "summary": "Tracks the independent retry-attempt budgets for stream errors, provider overload, and non-streaming fallback across a turn.",
+      "tags": [
+        "data-model",
+        "retry-policy",
+        "turn-executor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:handle_stream_error",
+      "type": "function",
+      "name": "handle_stream_error",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "lineRange": [
+        109,
+        272
+      ],
+      "summary": "Central stream-error handling routine: classifies the error, checks retry budgets, applies backoff, and decides whether to retry, fall back, or abort the turn.",
+      "tags": [
+        "error-handling",
+        "turn-executor",
+        "retry-policy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:chunked_backoff_with_heartbeat",
+      "type": "function",
+      "name": "chunked_backoff_with_heartbeat",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "lineRange": [
+        283,
+        345
+      ],
+      "summary": "Sleeps out a backoff delay in small chunks, checking the cancel flag and emitting heartbeat events between chunks so the UI doesn't appear frozen during a long retry wait.",
+      "tags": [
+        "retry-policy",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "type": "file",
+      "name": "stream_normalizer.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "summary": "TurnStreamNormalizer converts raw provider streaming deltas/events into a normalized event sequence (message/thinking deltas, tool-call deltas, finish, flush-segment, unknown-frame) that the turn executor consumes uniformly across providers.",
+      "tags": [
+        "streaming",
+        "turn-executor",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:TurnStreamNormalizer",
+      "type": "class",
+      "name": "TurnStreamNormalizer",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "lineRange": [
+        29,
+        32
+      ],
+      "summary": "Stateful normalizer that ingests raw streaming deltas/events and buffers/flushes them into NormalizedStreamEvent segments for the turn loop.",
+      "tags": [
+        "streaming",
+        "turn-executor",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:ingest_event",
+      "type": "function",
+      "name": "ingest_event",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "lineRange": [
+        67,
+        146
+      ],
+      "summary": "Processes a raw provider streaming event, updating internal segment state and emitting normalized events (deltas, finish, flush) as appropriate.",
+      "tags": [
+        "streaming",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:ingest_delta",
+      "type": "function",
+      "name": "ingest_delta",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "lineRange": [
+        45,
+        65
+      ],
+      "summary": "Processes a raw content delta from the provider stream, appending it to the current message or thinking segment.",
+      "tags": [
+        "streaming",
+        "turn-executor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs",
+      "type": "file",
+      "name": "diff_feedback.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs",
+      "summary": "Computes a short diff-style feedback line for file-modifying tool calls: line-count deltas for edit_file, and +/- line counts for apply_patch's unified-diff body.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs:compute_diff_feedback",
+      "type": "function",
+      "name": "compute_diff_feedback",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs",
+      "lineRange": [
+        11,
+        68
+      ],
+      "summary": "Given a file-modifying tool name and its arguments, computes a short human-readable diff summary line (lines added/removed) for feedback to the LLM.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "summary": "Tool call execution entry point for a turn: supports concurrent execution of read-only tool groups (via the parallel submodule) while write tools always run sequentially (via single), applying permission checks, hooks, file tracking, persistence, and error accounting through one chokepoint.",
+      "tags": [
+        "turn-executor",
+        "core",
+        "barrel"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Split across parallel/single/diff_feedback submodules to stay within the project's 600-line file-size guideline."
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "type": "function",
+      "name": "execute_tool_calls",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "lineRange": [
+        244,
+        351
+      ],
+      "summary": "Central dispatcher that partitions a batch of tool calls into parallel (read-only) and sequential (write) groups and drives their execution, aggregating the ToolBatchOutcome.",
+      "tags": [
+        "core",
+        "turn-executor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:ToolResultAggregateBudget",
+      "type": "class",
+      "name": "ToolResultAggregateBudget",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "lineRange": [
+        86,
+        88
+      ],
+      "summary": "Tracks the remaining shared output-size budget across all tool results in a batch so no single batch of results can blow out the context window.",
+      "tags": [
+        "data-model",
+        "turn-executor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:inline_result",
+      "type": "function",
+      "name": "inline_result",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "lineRange": [
+        99,
+        141
+      ],
+      "summary": "Decides whether a tool result fits inline within the remaining aggregate budget or must be truncated/persisted to disk instead.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:partition_tool_calls",
+      "type": "function",
+      "name": "partition_tool_calls",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "lineRange": [
+        205,
+        233
+      ],
+      "summary": "Splits a batch of tool calls into parallel-eligible (read-only, concurrency-safe) and sequential groups based on each tool's declared properties.",
+      "tags": [
+        "turn-executor",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "type": "file",
+      "name": "parallel.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "summary": "Concurrent execution of a group of read-only tool calls using join_all, respecting the max concurrency limit, permission checks, and the shared aggregate output budget.",
+      "tags": [
+        "turn-executor",
+        "concurrency"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs:execute_parallel_group",
+      "type": "function",
+      "name": "execute_parallel_group",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "lineRange": [
+        41,
+        437
+      ],
+      "summary": "Executes a batch of read-only tool calls concurrently (bounded by max_tool_use_concurrency), applying permission checks, file tracking, and hooks per call, and aggregates results back onto the message history.",
+      "tags": [
+        "concurrency",
+        "turn-executor",
+        "core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "type": "file",
+      "name": "single.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "summary": "Sequential execution of a single tool call (used for write tools, or a lone read tool), applying permission checks, hooks, file tracking, persistence, and diff feedback.",
+      "tags": [
+        "turn-executor",
+        "core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs:execute_single_tool",
+      "type": "function",
+      "name": "execute_single_tool",
+      "filePath": "src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "lineRange": [
+        40,
+        443
+      ],
+      "summary": "Executes one tool call end-to-end: permission check, hook invocation, actual tool execution, file-tracker updates, result persistence, and diff-feedback annotation.",
+      "tags": [
+        "core",
+        "turn-executor"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:ContextUsageSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:from_payload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:build_sections",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:normalize_items_to_used_tokens",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:ContextUsageSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs:from_payload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/session/prompt/cache.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:FileTimeTracker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:seed_from_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:drain_externally_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:assert_fresh",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:assert_read_before_edit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:extract_file_paths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:FileTimeTracker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:seed_from_history",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:drain_externally_changed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:assert_fresh",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:assert_read_before_edit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs:extract_file_paths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:add_assistant_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:add_tool_result_rich_with_timestamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:build_structured_sidecar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:add_assistant_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs:add_tool_result_rich_with_timestamp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/traits.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_accessor.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/message_writer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs:check_permission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs:check_permission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/permission.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs:truncate_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs:truncate_or_persist_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs:truncate_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs:truncate_or_persist_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/truncate.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs:maybe_recover_from_length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs:maybe_recover_from_length",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:should_auto_continue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:drain_steering_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:strip_historical_media_blocks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/backoff.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/context_accounting.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/helpers/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_accumulator.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/policies/activation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:handle_stream_error",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/length_recovery.rs:maybe_recover_from_length",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/backoff.rs:stream_backoff_ms",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs:resolve_screenshot_markers",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/mod.rs:execute_turn",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:capture",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:ProviderRequestCapture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:capture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:ProviderRequestCapture",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/provider_request_capture.rs:capture",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs:resolve_screenshot_markers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs:is_vision_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/screenshot.rs:resolve_screenshot_markers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:RetryBudgets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:handle_stream_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:chunked_backoff_with_heartbeat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:RetryBudgets",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_error_recovery.rs:handle_stream_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:TurnStreamNormalizer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:ingest_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:ingest_delta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:TurnStreamNormalizer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:ingest_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/stream_normalizer.rs:ingest_delta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs:compute_diff_feedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs:compute_diff_feedback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:ToolResultAggregateBudget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:inline_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:partition_tool_calls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:ToolResultAggregateBudget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:inline_result",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/providers/openai_compat/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/file_tracker.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/types.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/turn_executor/usage_telemetry.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/policies/activation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs:execute_parallel_group",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs:execute_single_tool",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/mod.rs:execute_tool_calls",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/diff_feedback.rs:compute_diff_feedback",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs:execute_parallel_group",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs:execute_parallel_group",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/traits.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/parallel.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/policies/activation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs:execute_single_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs:execute_single_tool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/tools/traits.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/turn_executor/tool_execution/single.rs",
+      "target": "file:src-tauri/crates/agent-core/src/specialization/policies/activation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

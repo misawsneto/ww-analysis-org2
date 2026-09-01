@@ -1,0 +1,1207 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/engines/SessionCore/core/schemas.ts",
+      "type": "file",
+      "name": "schemas.ts",
+      "filePath": "src/engines/SessionCore/core/schemas.ts",
+      "summary": "Zod schemas and thin parsing helpers validating raw session events, specs, and JSON payloads coming from the Rust backend before they enter the frontend event store.",
+      "tags": [
+        "validation",
+        "schema",
+        "serialization",
+        "session-core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "type": "file",
+      "name": "EventStoreProxy.ts",
+      "filePath": "src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "summary": "Frontend proxy singleton (EventStoreProxyImpl) that mirrors the Rust-backed session event store: listens for Tauri snapshot/delta envelopes, caches per-session snapshots, and exposes the full CRUD/streaming API (append, upsert, merge, truncate, cache load/save) used by React hooks.",
+      "tags": [
+        "state-management",
+        "tauri-bridge",
+        "singleton",
+        "session-core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "type": "class",
+      "name": "EventStoreProxyImpl",
+      "filePath": "src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "lineRange": [
+        97,
+        853
+      ],
+      "summary": "Concrete event-store proxy implementation: initializes the Tauri snapshot listener, chains/queues incoming snapshot envelopes per session, maintains per-session snapshot and normalized caches with eviction/release timers, and forwards mutation calls (append/upsert/merge/truncate/etc.) to the Rust rpc.sessionCore.eventStore backend.",
+      "tags": [
+        "singleton",
+        "tauri-bridge",
+        "state-management",
+        "session-core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/EventStoreProxyTypes.ts",
+      "type": "file",
+      "name": "EventStoreProxyTypes.ts",
+      "filePath": "src/engines/SessionCore/core/store/EventStoreProxyTypes.ts",
+      "summary": "Pure TypeScript type/interface definitions (snapshot, envelope, delta, memory-stats shapes) shared by the event store proxy and its snapshot cache/materialization helpers.",
+      "tags": [
+        "type-definition",
+        "session-core"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "type": "file",
+      "name": "eventStoreEvents.ts",
+      "filePath": "src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "summary": "Tiny helpers to infer the owning session id from a batch of events and to detect genuine (non-synthetic) user input events.",
+      "tags": [
+        "utility",
+        "session-core"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:inferSessionId",
+      "type": "function",
+      "name": "inferSessionId",
+      "filePath": "src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "lineRange": [
+        5,
+        12
+      ],
+      "summary": "Infers the session id shared by a batch of events by scanning for the first event that carries one.",
+      "tags": [
+        "utility",
+        "session-core"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:isRealUserEvent",
+      "type": "function",
+      "name": "isRealUserEvent",
+      "filePath": "src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "lineRange": [
+        14,
+        16
+      ],
+      "summary": "Checks whether an event is a genuine, non-synthetic user input event.",
+      "tags": [
+        "classification",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/hooks.ts",
+      "type": "file",
+      "name": "hooks.ts",
+      "filePath": "src/engines/SessionCore/core/store/hooks.ts",
+      "summary": "Provides useEventStoreSelector, a React hook that subscribes to the event store proxy and re-renders only when a selected slice of the snapshot changes, per a supplied equality check.",
+      "tags": [
+        "react-hook",
+        "state-management",
+        "performance",
+        "session-core"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/hooks.ts:useEventStoreSelector",
+      "type": "function",
+      "name": "useEventStoreSelector",
+      "filePath": "src/engines/SessionCore/core/store/hooks.ts",
+      "lineRange": [
+        27,
+        52
+      ],
+      "summary": "React hook that subscribes to the event store proxy (global or session-scoped) and re-renders only when the selected derived value changes, per a supplied equality function.",
+      "tags": [
+        "react-hook",
+        "performance",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "type": "file",
+      "name": "memoryEstimation.ts",
+      "filePath": "src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "summary": "Rough in-memory size estimator for arbitrary JS values, used to report event-store memory stats, walking objects/arrays/Maps/Sets with cycle protection and depth/node-count limits.",
+      "tags": [
+        "utility",
+        "memory-management",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/memoryEstimation.ts:estimateObjectBytesInternal",
+      "type": "function",
+      "name": "estimateObjectBytesInternal",
+      "filePath": "src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "lineRange": [
+        27,
+        66
+      ],
+      "summary": "Recursively walks an object/array/Map/Set estimating its in-memory byte size with cycle detection and node/depth caps.",
+      "tags": [
+        "memory-management",
+        "recursion",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/memoryEstimation.ts:estimateObjectBytes",
+      "type": "function",
+      "name": "estimateObjectBytes",
+      "filePath": "src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "lineRange": [
+        68,
+        73
+      ],
+      "summary": "Public entry point that estimates the byte size of an arbitrary value using a fresh traversal state.",
+      "tags": [
+        "memory-management",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "type": "file",
+      "name": "snapshotCache.ts",
+      "filePath": "src/engines/SessionCore/core/store/snapshotCache.ts",
+      "summary": "Session-scoped snapshot cache with an LRU-ish eviction budget, applying delta envelopes onto pending full snapshots and flushing them through a per-session callback when ready.",
+      "tags": [
+        "caching",
+        "state-management",
+        "session-core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotCache.ts:storeSnapshot",
+      "type": "function",
+      "name": "storeSnapshot",
+      "filePath": "src/engines/SessionCore/core/store/snapshotCache.ts",
+      "lineRange": [
+        37,
+        69
+      ],
+      "summary": "Stores a full snapshot for a session into the latest/normalized snapshot maps, evicting the oldest sessions when the max-snapshot or event budget is exceeded.",
+      "tags": [
+        "caching",
+        "eviction",
+        "session-core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotCache.ts:applyDeltaEnvelope",
+      "type": "function",
+      "name": "applyDeltaEnvelope",
+      "filePath": "src/engines/SessionCore/core/store/snapshotCache.ts",
+      "lineRange": [
+        79,
+        92
+      ],
+      "summary": "Applies an incoming delta envelope onto the pending-delta queue for a session, merging with any already-pending delta.",
+      "tags": [
+        "delta-processing",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotCache.ts:flushPendingDelta",
+      "type": "function",
+      "name": "flushPendingDelta",
+      "filePath": "src/engines/SessionCore/core/store/snapshotCache.ts",
+      "lineRange": [
+        101,
+        127
+      ],
+      "summary": "Materializes a session's pending delta onto its cached snapshot and stores the resulting full snapshot, invoking an eviction callback as needed.",
+      "tags": [
+        "delta-processing",
+        "caching",
+        "flush"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotCache.ts:rememberSnapshot",
+      "type": "function",
+      "name": "rememberSnapshot",
+      "filePath": "src/engines/SessionCore/core/store/snapshotCache.ts",
+      "lineRange": [
+        129,
+        169
+      ],
+      "summary": "High-level entry point that records a fresh full snapshot for a session, replacing any pending delta state.",
+      "tags": [
+        "caching",
+        "session-core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "type": "file",
+      "name": "snapshotMaterialization.ts",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "summary": "Turns raw/delta event-store snapshots into materialized, index-normalized caches (event index, simulator-preview index) and incrementally patches them as deltas or streaming updates arrive.",
+      "tags": [
+        "data-transformation",
+        "state-management",
+        "indexing",
+        "session-core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isStreamingSnapshot",
+      "type": "function",
+      "name": "isStreamingSnapshot",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        16,
+        20
+      ],
+      "summary": "Type guard identifying a streaming-variant snapshot payload.",
+      "tags": [
+        "type-guard",
+        "streaming"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSnapshotDelta",
+      "type": "function",
+      "name": "isSnapshotDelta",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        22,
+        26
+      ],
+      "summary": "Type guard identifying a delta-variant snapshot payload.",
+      "tags": [
+        "type-guard",
+        "delta-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:getFallbackFilterCategory",
+      "type": "function",
+      "name": "getFallbackFilterCategory",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        28,
+        53
+      ],
+      "summary": "Computes a best-effort simulator filter category for an event when no explicit category is present.",
+      "tags": [
+        "classification",
+        "simulator"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:buildSimulatorEventPreview",
+      "type": "function",
+      "name": "buildSimulatorEventPreview",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        55,
+        80
+      ],
+      "summary": "Builds the preview text/metadata for a single event to display in the simulator timeline.",
+      "tags": [
+        "data-transformation",
+        "simulator",
+        "preview"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:rebuildSimulatorPreviewIndexes",
+      "type": "function",
+      "name": "rebuildSimulatorPreviewIndexes",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        100,
+        126
+      ],
+      "summary": "Rebuilds the full set of simulator preview index maps (preview, createdAt, threadId) from scratch for a list of events.",
+      "tags": [
+        "indexing",
+        "simulator",
+        "data-transformation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:patchSimulatorPreviewIndexes",
+      "type": "function",
+      "name": "patchSimulatorPreviewIndexes",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        136,
+        188
+      ],
+      "summary": "Incrementally patches the simulator preview indexes for only the events that changed, avoiding a full rebuild.",
+      "tags": [
+        "indexing",
+        "simulator",
+        "incremental-update"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:attachSimulatorPreviewFields",
+      "type": "function",
+      "name": "attachSimulatorPreviewFields",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        190,
+        204
+      ],
+      "summary": "Attaches the simulator preview index fields onto a normalized snapshot cache object.",
+      "tags": [
+        "data-transformation",
+        "simulator"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSessionEvent",
+      "type": "function",
+      "name": "isSessionEvent",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        206,
+        212
+      ],
+      "summary": "Type guard verifying a value has the shape of a SessionEvent.",
+      "tags": [
+        "type-guard",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:buildNormalizedCache",
+      "type": "function",
+      "name": "buildNormalizedCache",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        214,
+        242
+      ],
+      "summary": "Builds the normalized cache structure (events, index, simulator previews) from a raw full snapshot.",
+      "tags": [
+        "data-transformation",
+        "caching",
+        "indexing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializeFullSnapshot",
+      "type": "function",
+      "name": "materializeFullSnapshot",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        261,
+        285
+      ],
+      "summary": "Produces the materialized, UI-ready representation of a full snapshot, reusing the cache when the snapshot hasn't changed.",
+      "tags": [
+        "data-transformation",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:applyDeltaToCache",
+      "type": "function",
+      "name": "applyDeltaToCache",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        322,
+        377
+      ],
+      "summary": "Applies a delta's inserted/updated/removed events onto the normalized cache, producing the merged event list and changed-id set.",
+      "tags": [
+        "delta-processing",
+        "caching",
+        "data-transformation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:swapChangedEvents",
+      "type": "function",
+      "name": "swapChangedEvents",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        385,
+        401
+      ],
+      "summary": "Swaps only the changed events into a copy of the previous event array, preserving referential identity for unchanged events.",
+      "tags": [
+        "data-transformation",
+        "performance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializePendingDelta",
+      "type": "function",
+      "name": "materializePendingDelta",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        411,
+        472
+      ],
+      "summary": "Materializes a session's pending delta on top of the previous materialized state, updating the normalized cache and simulator indexes.",
+      "tags": [
+        "delta-processing",
+        "caching",
+        "data-transformation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializeStreamingSnapshot",
+      "type": "function",
+      "name": "materializeStreamingSnapshot",
+      "filePath": "src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "lineRange": [
+        474,
+        518
+      ],
+      "summary": "Produces the materialized representation for a streaming snapshot variant.",
+      "tags": [
+        "data-transformation",
+        "streaming"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "type": "file",
+      "name": "useEventStoreBridge.ts",
+      "filePath": "src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "summary": "React hook that wires a session's event-store snapshot into local component state, handling live subscription, streaming/derived-snapshot merging, and lazy full-snapshot hydration.",
+      "tags": [
+        "react-hook",
+        "state-management",
+        "tauri-bridge",
+        "session-core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:applyEventUpserts",
+      "type": "function",
+      "name": "applyEventUpserts",
+      "filePath": "src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "lineRange": [
+        35,
+        59
+      ],
+      "summary": "Applies a list of event upserts onto the previous event array/index, inserting new events or replacing existing ones in place.",
+      "tags": [
+        "data-transformation",
+        "state-update"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:eventsForIds",
+      "type": "function",
+      "name": "eventsForIds",
+      "filePath": "src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "lineRange": [
+        69,
+        80
+      ],
+      "summary": "Resolves a list of event ids to their corresponding event objects using an id-to-index map.",
+      "tags": [
+        "data-transformation",
+        "lookup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:useEventStoreBridge",
+      "type": "function",
+      "name": "useEventStoreBridge",
+      "filePath": "src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "lineRange": [
+        82,
+        251
+      ],
+      "summary": "React hook that subscribes a session to the event store proxy, hydrates the initial/full snapshot, and merges streaming/derived updates into local component state.",
+      "tags": [
+        "react-hook",
+        "state-management",
+        "tauri-bridge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "type": "file",
+      "name": "useSessionEvents.ts",
+      "filePath": "src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "summary": "React hook that loads and subscribes to a session's chat-visible events, handling Cursor-IDE session bootstrapping, retry/backoff timers, and error normalization for the UI layer.",
+      "tags": [
+        "react-hook",
+        "data-fetching",
+        "session-core",
+        "error-handling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:extractChatEvents",
+      "type": "function",
+      "name": "extractChatEvents",
+      "filePath": "src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "lineRange": [
+        67,
+        72
+      ],
+      "summary": "Extracts the chat-visible event array from a possibly streaming snapshot.",
+      "tags": [
+        "data-transformation",
+        "filtering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:normalizeSessionEventsError",
+      "type": "function",
+      "name": "normalizeSessionEventsError",
+      "filePath": "src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "lineRange": [
+        92,
+        104
+      ],
+      "summary": "Normalizes a Tauri invoke error into a consistent error object/message for the UI.",
+      "tags": [
+        "error-handling",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:useSessionEvents",
+      "type": "function",
+      "name": "useSessionEvents",
+      "filePath": "src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "lineRange": [
+        106,
+        266
+      ],
+      "summary": "React hook that loads a session's events, including Cursor-IDE bootstrap, subscribes to live updates, and exposes loading/error state with retry handling.",
+      "tags": [
+        "react-hook",
+        "data-fetching",
+        "error-handling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/engines/SessionCore/core/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/engines/SessionCore/core/types.ts",
+      "summary": "Central TypeScript type module for the SessionCore engine, defining SessionEvent, snapshot, activity, and related shared types plus the args-key constants used across atoms, the event store, and derived views.",
+      "tags": [
+        "type-definition",
+        "session-core",
+        "shared-types"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "file:src/engines/SessionCore/core/store/EventStoreProxyTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "file:src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/memoryEstimation.ts:estimateObjectBytes",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:inferSessionId",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:applyDeltaEnvelope",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:flushPendingDelta",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:rememberSnapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSnapshotDelta",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isStreamingSnapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:inferSessionId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:inferSessionId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:isRealUserEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/eventStoreEvents.ts:isRealUserEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/eventStoreEvents.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/hooks.ts",
+      "target": "function:src/engines/SessionCore/core/store/hooks.ts:useEventStoreSelector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/hooks.ts",
+      "target": "function:src/engines/SessionCore/core/store/hooks.ts:useEventStoreSelector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/hooks.ts",
+      "target": "file:src/engines/SessionCore/core/atoms/events.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/hooks.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "target": "function:src/engines/SessionCore/core/store/memoryEstimation.ts:estimateObjectBytesInternal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "target": "function:src/engines/SessionCore/core/store/memoryEstimation.ts:estimateObjectBytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/memoryEstimation.ts",
+      "target": "function:src/engines/SessionCore/core/store/memoryEstimation.ts:estimateObjectBytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:storeSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:applyDeltaEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:flushPendingDelta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:rememberSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:applyDeltaEnvelope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:flushPendingDelta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotCache.ts:rememberSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "file:src/engines/SessionCore/core/store/EventStoreProxyTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotCache.ts",
+      "target": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isStreamingSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isStreamingSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSnapshotDelta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSnapshotDelta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:getFallbackFilterCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:buildSimulatorEventPreview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:rebuildSimulatorPreviewIndexes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:patchSimulatorPreviewIndexes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:attachSimulatorPreviewFields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:attachSimulatorPreviewFields",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSessionEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isSessionEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:buildNormalizedCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:buildNormalizedCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializeFullSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializeFullSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:applyDeltaToCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:applyDeltaToCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:swapChangedEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializePendingDelta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializePendingDelta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializeStreamingSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:materializeStreamingSnapshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "file:src/engines/SessionCore/core/store/EventStoreProxyTypes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/snapshotMaterialization.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:applyEventUpserts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:eventsForIds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:useEventStoreBridge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:useEventStoreBridge",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "file:src/engines/SessionCore/core/atoms/events.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "file:src/engines/SessionCore/core/atoms/metadata.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useEventStoreBridge.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:useEventStoreBridge",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isStreamingSnapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/core/store/useEventStoreBridge.ts:useEventStoreBridge",
+      "target": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:extractChatEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:extractChatEvents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:normalizeSessionEventsError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:normalizeSessionEventsError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:useSessionEvents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:useSessionEvents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "file:src/engines/SessionCore/core/store/EventStoreProxy.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/engines/SessionCore/core/store/useSessionEvents.ts",
+      "target": "file:src/engines/SessionCore/core/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:extractChatEvents",
+      "target": "function:src/engines/SessionCore/core/store/snapshotMaterialization.ts:isStreamingSnapshot",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/engines/SessionCore/core/store/useSessionEvents.ts:useSessionEvents",
+      "target": "class:src/engines/SessionCore/core/store/EventStoreProxy.ts:EventStoreProxyImpl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

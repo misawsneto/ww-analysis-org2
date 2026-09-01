@@ -1,0 +1,759 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "type": "file",
+      "name": "TableSurface.tsx",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "summary": "Top-level spreadsheet/table surface component that composes the formula-bar toolbar and the virtualized grid, tracking active-cell/formula state and rendering an empty-state placeholder when there is no data.",
+      "tags": ["component", "table-ui", "state-management", "composition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "type": "file",
+      "name": "TableSurfaceFooter.tsx",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "summary": "Renders either pagination controls or a floating load-more-rows button beneath the virtualized table grid.",
+      "tags": ["component", "pagination", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx",
+      "type": "file",
+      "name": "TableSurfaceToolbar.tsx",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx",
+      "summary": "Renders the formula-bar toolbar showing the active cell reference and an editable value input for the table surface.",
+      "tags": ["component", "toolbar", "formula-bar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "type": "file",
+      "name": "VirtualTableGrid.tsx",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "summary": "Core virtualized spreadsheet grid that renders only visible rows/columns and orchestrates cell selection, keyboard navigation, inline editing, clipboard, and column sorting via the table hooks.",
+      "tags": ["component", "virtualization", "table-ui", "keyboard-navigation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "type": "file",
+      "name": "useTableClipboard.ts",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "summary": "Hook providing copy/paste event handlers that serialize and parse selected cell ranges to/from TSV clipboard text.",
+      "tags": ["hook", "clipboard", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "type": "file",
+      "name": "useTableEditing.ts",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "summary": "Hook managing inline cell editing state (editing cell, draft value, select-on-focus) and start/update/commit/cancel operations for the table grid.",
+      "tags": ["hook", "state-management", "editing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "type": "file",
+      "name": "useTableSelection.ts",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "summary": "Hook managing active cell, selection anchor, and selection range state, exposing selectCell/extendSelectionTo/getActiveRange operations with cell clamping.",
+      "tags": ["hook", "state-management", "selection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "type": "file",
+      "name": "useTableViewport.ts",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "summary": "Hook computing virtualized viewport geometry (visible row/column ranges, offsets, scroll position) via a ResizeObserver for the table grid.",
+      "tags": ["hook", "virtualization", "viewport", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "type": "file",
+      "name": "tableSurfaceUtils.ts",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "summary": "Shared pure-function utilities and layout constants for table cell addressing, range math, keyboard-driven navigation, and default cell value formatting.",
+      "tags": ["utility", "pure-functions", "constants"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/types.ts",
+      "summary": "Type definitions for table cell addresses, ranges, columns, rows, pagination, sort state, and the TableSurface component's public props.",
+      "tags": ["type-definition", "types"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx:TableSurface",
+      "type": "function",
+      "name": "TableSurface",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "lineRange": [10, 100],
+      "summary": "Memoized component that owns active-cell/formula-bar state and composes the toolbar and virtualized grid (or an empty placeholder) into the table surface.",
+      "tags": ["component", "state-management", "composition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx:TableSurfaceFooter",
+      "type": "function",
+      "name": "TableSurfaceFooter",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "lineRange": [16, 74],
+      "summary": "Renders pagination controls when a pagination prop is supplied, otherwise a load-more-rows button positioned via scroll offsets.",
+      "tags": ["component", "pagination", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx:TableSurfaceToolbar",
+      "type": "function",
+      "name": "TableSurfaceToolbar",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx",
+      "lineRange": [19, 65],
+      "summary": "Renders the formula-bar row with the active cell label and an editable value input that returns focus to the grid on blur/Enter.",
+      "tags": ["component", "toolbar", "formula-bar"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "type": "function",
+      "name": "VirtualTableGrid",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "lineRange": [68, 513],
+      "summary": "Orchestrates the viewport, selection, editing, and clipboard hooks to render the virtualized grid body, handling pointer, keyboard, and paste interactions on cells.",
+      "tags": ["component", "virtualization", "keyboard-navigation", "complex"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:parseClipboardText",
+      "type": "function",
+      "name": "parseClipboardText",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "lineRange": [8, 22],
+      "summary": "Parses pasted TSV clipboard text into a 2D array of string cell values, normalizing line endings and trailing blank lines.",
+      "tags": ["utility", "clipboard", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:stringifyRangeAsTsv",
+      "type": "function",
+      "name": "stringifyRangeAsTsv",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "lineRange": [24, 41],
+      "summary": "Serializes a cell range into TSV text by reading each cell's value via a supplied getter.",
+      "tags": ["utility", "clipboard", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:useTableClipboard",
+      "type": "function",
+      "name": "useTableClipboard",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "lineRange": [55, 91],
+      "summary": "Hook wiring copy and paste event handlers that use parseClipboardText/stringifyRangeAsTsv to move data between the active selection and the OS clipboard.",
+      "tags": ["hook", "clipboard", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts:useTableEditing",
+      "type": "function",
+      "name": "useTableEditing",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "lineRange": [16, 89],
+      "summary": "Hook exposing startEditing/updateCellValue/commitEditing/cancelEditing operations and draft-value state for inline cell editing.",
+      "tags": ["hook", "state-management", "editing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts:useTableSelection",
+      "type": "function",
+      "name": "useTableSelection",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "lineRange": [12, 71],
+      "summary": "Hook exposing selectCell/extendSelectionTo/getActiveRange operations and active-cell/selection-range state, clamping cells to grid bounds.",
+      "tags": ["hook", "state-management", "selection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts:useTableViewport",
+      "type": "function",
+      "name": "useTableViewport",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "lineRange": [24, 164],
+      "summary": "Computes visible row/column ranges, column offsets, and scroll handlers for the virtualized grid, resizing in response to a ResizeObserver on the viewport element.",
+      "tags": ["hook", "virtualization", "viewport"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableColumnLabel",
+      "type": "function",
+      "name": "tableColumnLabel",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [9, 20],
+      "summary": "Converts a zero-based column index into a spreadsheet-style column label (A, B, ..., AA, ...).",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:clampTableCell",
+      "type": "function",
+      "name": "clampTableCell",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [22, 34],
+      "summary": "Clamps a cell address's row and column indexes within the valid bounds of the table.",
+      "tags": ["utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableRange",
+      "type": "function",
+      "name": "tableRange",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [36, 46],
+      "summary": "Computes a normalized cell range (start/end row and column) between an anchor cell and a target cell.",
+      "tags": ["utility", "selection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:isCellInTableRange",
+      "type": "function",
+      "name": "isCellInTableRange",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [48, 58],
+      "summary": "Checks whether a given cell address falls within a specified cell range.",
+      "tags": ["utility", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTableCellAfterMove",
+      "type": "function",
+      "name": "getTableCellAfterMove",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [62, 94],
+      "summary": "Computes the resulting cell address after a directional keyboard move (up/down/left/right), clamping to grid bounds.",
+      "tags": ["utility", "keyboard-navigation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTablePrintableCharacter",
+      "type": "function",
+      "name": "getTablePrintableCharacter",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [96, 99],
+      "summary": "Extracts a single printable character from a keyboard event key, used to start quick-edit typing on an active cell.",
+      "tags": ["utility", "keyboard-navigation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableCellKey",
+      "type": "function",
+      "name": "tableCellKey",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [101, 103],
+      "summary": "Builds a stable string key for a cell address, used for React list keys and lookup maps.",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:defaultFormatTableCellValue",
+      "type": "function",
+      "name": "defaultFormatTableCellValue",
+      "filePath": "src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "lineRange": [105, 113],
+      "summary": "Default formatter that converts an arbitrary cell value (string, number, object) into a display string, JSON-stringifying objects.",
+      "tags": ["utility", "formatting", "serialization"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx:TableSurface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx:TableSurfaceFooter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx:TableSurfaceToolbar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:parseClipboardText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:stringifyRangeAsTsv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:useTableClipboard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts:useTableEditing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts:useTableSelection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts:useTableViewport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableColumnLabel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:clampTableCell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableRange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:isCellInTableRange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTableCellAfterMove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTablePrintableCharacter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableCellKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:defaultFormatTableCellValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx:TableSurface",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx:TableSurfaceFooter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx:TableSurfaceToolbar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:parseClipboardText",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:useTableClipboard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts:useTableEditing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts:useTableSelection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts:useTableViewport",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableColumnLabel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:clampTableCell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableRange",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:isCellInTableRange",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTableCellAfterMove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTablePrintableCharacter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableCellKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:defaultFormatTableCellValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts",
+      "target": "file:src/modules/WorkStation/shared/TableSurface/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx:TableSurface",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceToolbar.tsx:TableSurfaceToolbar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/TableSurface.tsx:TableSurface",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/TableSurfaceFooter.tsx:TableSurfaceFooter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableViewport.ts:useTableViewport",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableSelection.ts:useTableSelection",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableEditing.ts:useTableEditing",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/hooks/useTableClipboard.ts:useTableClipboard",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTableCellAfterMove",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableRange",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableCellKey",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:isCellInTableRange",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:tableColumnLabel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:getTablePrintableCharacter",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src/modules/WorkStation/shared/TableSurface/VirtualTableGrid.tsx:VirtualTableGrid",
+      "target": "function:src/modules/WorkStation/shared/TableSurface/tableSurfaceUtils.ts:defaultFormatTableCellValue",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

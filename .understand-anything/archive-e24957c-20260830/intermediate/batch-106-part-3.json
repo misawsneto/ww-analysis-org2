@@ -1,0 +1,865 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/integrations/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/integrations/src/lib.rs",
+      "summary": "Crate root for the integrations crate; declares its child modules (cli_binary_resolver, commands, computer_use_lock, external_ide, github, proxy) whose #[tauri::command] functions are re-registered by the app crate.",
+      "tags": [
+        "entry-point",
+        "module-registry",
+        "crate-root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "type": "file",
+      "name": "proxy/cert_install.rs",
+      "filePath": "src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "summary": "OS-specific helpers that check for and install/uninstall the ORGII proxy's self-signed CA certificate into the system trust store, a one-time setup step for the MITM proxy.",
+      "tags": [
+        "certificate",
+        "os-integration",
+        "installer",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "type": "file",
+      "name": "proxy/certificate_authority.rs",
+      "filePath": "src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "summary": "Generates and persists a self-signed root CA certificate on first use under ~/.orgii/proxy/, and signs per-domain leaf certificates from it for the local MITM proxy.",
+      "tags": [
+        "certificate",
+        "cryptography",
+        "security",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "type": "file",
+      "name": "proxy/mod.rs",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "summary": "Coordinates the two ORGII proxy modes -- base-URL override token allocation/release for the cloud proxy, and CA certificate lifecycle management for the local MITM proxy used by IDE-embedded agents -- and exposes both as Tauri commands.",
+      "tags": [
+        "service",
+        "orchestration",
+        "tauri-command",
+        "proxy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "type": "file",
+      "name": "proxy/server.rs",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "summary": "Per-session local HTTPS MITM proxy server that intercepts LLM API traffic from subprocess-based coding agents, swaps API keys for session proxy tokens using on-the-fly generated domain certificates, and forwards requests to the ORGII cloud proxy.",
+      "tags": [
+        "proxy",
+        "networking",
+        "security",
+        "service"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Generates a fresh leaf TLS certificate per intercepted domain, signed by the locally-installed CA, to perform transparent MITM termination for HTTPS_PROXY-based agent subprocesses."
+    },
+    {
+      "id": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "type": "file",
+      "name": "proxy/sse_sanitizer.rs",
+      "filePath": "src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "summary": "Lightweight local reverse-proxy that forwards Anthropic-compatible API requests upstream and sanitizes malformed SSE `data:` lines on the fly so downstream consumers like OpenCode don't choke on garbage bytes some third-party proxies append.",
+      "tags": [
+        "proxy",
+        "sse",
+        "sanitization",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:is_ca_installed",
+      "type": "function",
+      "name": "is_ca_installed",
+      "filePath": "src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "lineRange": [
+        11,
+        45
+      ],
+      "summary": "Checks the OS-specific system trust store to determine whether the ORGII proxy CA certificate is already installed.",
+      "tags": [
+        "certificate",
+        "os-integration",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:install_ca",
+      "type": "function",
+      "name": "install_ca",
+      "filePath": "src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "lineRange": [
+        51,
+        166
+      ],
+      "summary": "Guides the user through installing the ORGII proxy CA certificate into the system trust store using the platform's native certificate tooling.",
+      "tags": [
+        "certificate",
+        "os-integration",
+        "installer"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:uninstall_ca",
+      "type": "function",
+      "name": "uninstall_ca",
+      "filePath": "src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "lineRange": [
+        169,
+        213
+      ],
+      "summary": "Removes the ORGII proxy CA certificate from the system trust store.",
+      "tags": [
+        "certificate",
+        "os-integration",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_ca",
+      "type": "function",
+      "name": "generate_ca",
+      "filePath": "src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "lineRange": [
+        48,
+        94
+      ],
+      "summary": "Generates a new self-signed root CA certificate and private key and persists them to ~/.orgii/proxy/.",
+      "tags": [
+        "certificate",
+        "cryptography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:ensure_ca",
+      "type": "function",
+      "name": "ensure_ca",
+      "filePath": "src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "lineRange": [
+        111,
+        129
+      ],
+      "summary": "Ensures a root CA certificate exists, generating one under a mutex guard if it hasn't been created yet.",
+      "tags": [
+        "certificate",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_domain_cert",
+      "type": "function",
+      "name": "generate_domain_cert",
+      "filePath": "src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "lineRange": [
+        132,
+        171
+      ],
+      "summary": "Signs a new leaf TLS certificate for a specific domain using the root CA, for use by the MITM proxy server.",
+      "tags": [
+        "certificate",
+        "cryptography"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/mod.rs:allocate_proxy_token_internal",
+      "type": "function",
+      "name": "allocate_proxy_token_internal",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "lineRange": [
+        80,
+        178
+      ],
+      "summary": "Requests a per-session proxy token allocation from the ORGII cloud hosted service for a given model/tier/pricing combination.",
+      "tags": [
+        "http",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_allocate",
+      "type": "function",
+      "name": "proxy_allocate",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "lineRange": [
+        182,
+        197
+      ],
+      "summary": "Tauri command wrapper around allocate_proxy_token_internal exposed to the frontend.",
+      "tags": [
+        "tauri-command",
+        "proxy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/mod.rs:release_proxy_token_internal",
+      "type": "function",
+      "name": "release_proxy_token_internal",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "lineRange": [
+        214,
+        236
+      ],
+      "summary": "Releases a previously allocated proxy token back to the ORGII cloud hosted service.",
+      "tags": [
+        "http",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_ensure_ca_trusted",
+      "type": "function",
+      "name": "proxy_ensure_ca_trusted",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "lineRange": [
+        278,
+        309
+      ],
+      "summary": "Tauri command that ensures the CA certificate exists and is installed in the system trust store, installing it if necessary.",
+      "tags": [
+        "tauri-command",
+        "certificate",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/mod.rs:hosted_service_proxy",
+      "type": "function",
+      "name": "hosted_service_proxy",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "lineRange": [
+        362,
+        421
+      ],
+      "summary": "Tauri command that proxies an arbitrary HTTP request to the ORGII hosted service on behalf of the frontend, forwarding method/headers/body.",
+      "tags": [
+        "tauri-command",
+        "http",
+        "proxy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/integrations/src/proxy/mod.rs:ProxyAllocation",
+      "type": "class",
+      "name": "ProxyAllocation",
+      "filePath": "src-tauri/crates/integrations/src/proxy/mod.rs",
+      "lineRange": [
+        41,
+        62
+      ],
+      "summary": "Result of a proxy token allocation, carrying the proxy token/URL, expiry, tier/bonus metadata, and session identifiers returned to the frontend.",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:is_intercepted",
+      "type": "function",
+      "name": "is_intercepted",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        24,
+        42
+      ],
+      "summary": "Checks whether a domain matches the set of LLM API domains this proxy is configured to intercept.",
+      "tags": [
+        "validation",
+        "networking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:start_session_proxy",
+      "type": "function",
+      "name": "start_session_proxy",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        68,
+        273
+      ],
+      "summary": "Starts a per-session local HTTPS MITM proxy server on an OS-assigned ephemeral port, ensuring the CA exists before accepting connections.",
+      "tags": [
+        "core-logic",
+        "networking",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:get_session_mitm_env_vars",
+      "type": "function",
+      "name": "get_session_mitm_env_vars",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        318,
+        331
+      ],
+      "summary": "Returns the HTTPS_PROXY/SSL_CERT_FILE-style environment variables a launched agent subprocess needs to route through the session's MITM proxy.",
+      "tags": [
+        "configuration",
+        "environment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:handle_mitm_connection",
+      "type": "function",
+      "name": "handle_mitm_connection",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        341,
+        590
+      ],
+      "summary": "Handles a single intercepted HTTPS connection end-to-end: generates a domain certificate, performs TLS termination, rewrites/forwards the request, and streams back the sanitized response.",
+      "tags": [
+        "core-logic",
+        "networking",
+        "tls"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:rewrite_request",
+      "type": "function",
+      "name": "rewrite_request",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        601,
+        675
+      ],
+      "summary": "Rewrites an intercepted HTTP request's Authorization header, swapping the original API key for the session's proxy token before forwarding.",
+      "tags": [
+        "core-logic",
+        "http"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:extract_bearer_token",
+      "type": "function",
+      "name": "extract_bearer_token",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        681,
+        692
+      ],
+      "summary": "Extracts a bearer token value from a raw HTTP Authorization header line.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:stream_response",
+      "type": "function",
+      "name": "stream_response",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        719,
+        769
+      ],
+      "summary": "Streams the upstream response back to the intercepted client connection.",
+      "tags": [
+        "networking",
+        "streaming"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/server.rs:parse_content_length",
+      "type": "function",
+      "name": "parse_content_length",
+      "filePath": "src-tauri/crates/integrations/src/proxy/server.rs",
+      "lineRange": [
+        777,
+        786
+      ],
+      "summary": "Parses the Content-Length header value out of raw HTTP headers.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:ensure_running",
+      "type": "function",
+      "name": "ensure_running",
+      "filePath": "src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "lineRange": [
+        38,
+        91
+      ],
+      "summary": "Starts the local SSE-sanitizing reverse-proxy server on a free port if it isn't already running, returning a handle for later shutdown.",
+      "tags": [
+        "core-logic",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:proxy_handler",
+      "type": "function",
+      "name": "proxy_handler",
+      "filePath": "src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "lineRange": [
+        93,
+        164
+      ],
+      "summary": "Axum request handler that forwards a request to the upstream Anthropic-compatible API and sanitizes SSE response chunks before returning them.",
+      "tags": [
+        "http-handler",
+        "proxy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:sanitize_sse_chunk",
+      "type": "function",
+      "name": "sanitize_sse_chunk",
+      "filePath": "src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "lineRange": [
+        167,
+        186
+      ],
+      "summary": "Strips trailing garbage bytes some third-party proxies append after SSE `data:` JSON payloads.",
+      "tags": [
+        "sanitization",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:extract_balanced_json",
+      "type": "function",
+      "name": "extract_balanced_json",
+      "filePath": "src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "lineRange": [
+        189,
+        224
+      ],
+      "summary": "Extracts a balanced-brace JSON substring from a string, used to isolate valid JSON from trailing garbage.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:is_ca_installed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:is_ca_installed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:install_ca",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:install_ca",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:uninstall_ca",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:uninstall_ca",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_ca",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_ca",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:ensure_ca",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:ensure_ca",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_domain_cert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_domain_cert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:allocate_proxy_token_internal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:allocate_proxy_token_internal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_allocate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_allocate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:release_proxy_token_internal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:release_proxy_token_internal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_ensure_ca_trusted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_ensure_ca_trusted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:hosted_service_proxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/mod.rs:hosted_service_proxy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "class:src-tauri/crates/integrations/src/proxy/mod.rs:ProxyAllocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "class:src-tauri/crates/integrations/src/proxy/mod.rs:ProxyAllocation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:is_intercepted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:is_intercepted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:start_session_proxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:start_session_proxy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:get_session_mitm_env_vars",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:get_session_mitm_env_vars",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:handle_mitm_connection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:rewrite_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:extract_bearer_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:stream_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/server.rs:parse_content_length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:ensure_running",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:ensure_running",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:proxy_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:sanitize_sse_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "target": "function:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs:extract_balanced_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/lib.rs",
+      "target": "file:src-tauri/crates/integrations/src/cli_binary_resolver.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/lib.rs",
+      "target": "file:src-tauri/crates/integrations/src/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/lib.rs",
+      "target": "file:src-tauri/crates/integrations/src/computer_use_lock.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/lib.rs",
+      "target": "file:src-tauri/crates/integrations/src/external_ide.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/lib.rs",
+      "target": "file:src-tauri/crates/integrations/src/github/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/lib.rs",
+      "target": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/proxy/cert_install.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/proxy/certificate_authority.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/proxy/server.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/integrations/src/proxy/mod.rs",
+      "target": "file:src-tauri/crates/integrations/src/proxy/sse_sanitizer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_ensure_ca_trusted",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:is_ca_installed",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_ensure_ca_trusted",
+      "target": "function:src-tauri/crates/integrations/src/proxy/cert_install.rs:install_ca",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/proxy/mod.rs:proxy_ensure_ca_trusted",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:ensure_ca",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/proxy/server.rs:start_session_proxy",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:ensure_ca",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/integrations/src/proxy/server.rs:handle_mitm_connection",
+      "target": "function:src-tauri/crates/integrations/src/proxy/certificate_authority.rs:generate_domain_cert",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

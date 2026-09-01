@@ -1,0 +1,1553 @@
+{
+ "nodes": [
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "type": "file",
+   "name": "session_crud.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "summary": "Core CRUD and state-transition operations for CLI agent sessions in SQLite -- creation, retrieval, listing, status/model/account updates, resume-state management, and deletion.",
+   "tags": [
+    "persistence",
+    "database",
+    "crud",
+    "session-management"
+   ],
+   "complexity": "complex",
+   "languageNotes": "Largest persistence file; centralizes nearly all session lifecycle writes."
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "type": "file",
+   "name": "types.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "summary": "Defines the core CLI agent session data model -- the persisted CodeSession row, its history-mutation record, and the parameters accepted when creating a new session.",
+   "tags": [
+    "type-definition",
+    "domain-model",
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "type": "file",
+   "name": "worktree_state.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "summary": "Persists a CLI agent session's git worktree path/branch and merge status.",
+   "tags": [
+    "persistence",
+    "git",
+    "worktree"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/mod.rs",
+   "summary": "Module root for the Claude Code platform adapter; re-exports the oauth submodule.",
+   "tags": [
+    "module-root",
+    "claude-code",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "type": "file",
+   "name": "oauth.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "summary": "Implements the Claude Code OAuth (PKCE) login flow: launching a webview, exchanging the authorization code for tokens, and fetching account/organization profile metadata.",
+   "tags": [
+    "oauth",
+    "authentication",
+    "claude-code",
+    "webview"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "file:src-tauri/src/agent_sessions/cli/platform_adapters/codex/mod.rs",
+   "type": "file",
+   "name": "mod.rs",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/codex/mod.rs",
+   "summary": "Module root for the Codex platform adapter; re-exports the oauth submodule.",
+   "tags": [
+    "module-root",
+    "codex",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:now_iso",
+   "type": "function",
+   "name": "now_iso",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    13,
+    15
+   ],
+   "summary": "Returns the current UTC timestamp formatted as an RFC 3339 string.",
+   "tags": [
+    "utility",
+    "time"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:sync_orgtrack_mirror",
+   "type": "function",
+   "name": "sync_orgtrack_mirror",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    20,
+    26
+   ],
+   "summary": "Synchronizes a session's state to the org-tracking mirror table/service.",
+   "tags": [
+    "persistence",
+    "org-sync"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:create_session",
+   "type": "function",
+   "name": "create_session",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    29,
+    121
+   ],
+   "summary": "Inserts a new CLI agent session row with the given creation parameters.",
+   "tags": [
+    "persistence",
+    "mutation",
+    "entry-point"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_session",
+   "type": "function",
+   "name": "get_session",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    143,
+    155
+   ],
+   "summary": "Fetches a single CLI agent session by id.",
+   "tags": [
+    "persistence",
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:list_sessions",
+   "type": "function",
+   "name": "list_sessions",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    158,
+    167
+   ],
+   "summary": "Lists all CLI agent sessions.",
+   "tags": [
+    "persistence",
+    "query"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:list_sessions_page",
+   "type": "function",
+   "name": "list_sessions_page",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    171,
+    182
+   ],
+   "summary": "Lists CLI agent sessions with pagination.",
+   "tags": [
+    "persistence",
+    "query",
+    "pagination"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_status",
+   "type": "function",
+   "name": "update_status",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    185,
+    203
+   ],
+   "summary": "Updates a session's status.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_status_with_error",
+   "type": "function",
+   "name": "update_status_with_error",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    206,
+    228
+   ],
+   "summary": "Updates a session's status and records an associated error message.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_pid",
+   "type": "function",
+   "name": "update_pid",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    231,
+    238
+   ],
+   "summary": "Records the OS process id of a session's running CLI agent.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_pid",
+   "type": "function",
+   "name": "clear_pid",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    241,
+    248
+   ],
+   "summary": "Clears the recorded process id for a session once it has exited.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:resume_profile_key",
+   "type": "function",
+   "name": "resume_profile_key",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    259,
+    264
+   ],
+   "summary": "Computes the profile key used to look up per-account CLI resume state.",
+   "tags": [
+    "persistence",
+    "resume"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_cli_session_id",
+   "type": "function",
+   "name": "update_cli_session_id",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    268,
+    278
+   ],
+   "summary": "Records the underlying CLI tool's own session id for resume purposes.",
+   "tags": [
+    "persistence",
+    "resume",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_cli_session_id_for_account",
+   "type": "function",
+   "name": "update_cli_session_id_for_account",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    284,
+    351
+   ],
+   "summary": "Records a per-account CLI resume session id, supporting multi-account resume.",
+   "tags": [
+    "persistence",
+    "resume",
+    "mutation"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:session_persists_chunks",
+   "type": "function",
+   "name": "session_persists_chunks",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    357,
+    392
+   ],
+   "summary": "Determines whether a session persists its transcript via managed chunks (vs. a native transcript source).",
+   "tags": [
+    "persistence",
+    "transcript"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:latest_native_transcript_id",
+   "type": "function",
+   "name": "latest_native_transcript_id",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    396,
+    411
+   ],
+   "summary": "Fetches the most recently bound native transcript id for a session and source.",
+   "tags": [
+    "persistence",
+    "transcript"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_cli_session_id_for_account",
+   "type": "function",
+   "name": "get_cli_session_id_for_account",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    413,
+    427
+   ],
+   "summary": "Fetches the CLI resume session id recorded for a specific account.",
+   "tags": [
+    "persistence",
+    "resume",
+    "query"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:bump_history_mutation_with_tx",
+   "type": "function",
+   "name": "bump_history_mutation_with_tx",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    429,
+    446
+   ],
+   "summary": "Increments a session's history-mutation epoch within an existing transaction.",
+   "tags": [
+    "persistence",
+    "audit"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_cli_resume_state_with_tx",
+   "type": "function",
+   "name": "clear_cli_resume_state_with_tx",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    448,
+    477
+   ],
+   "summary": "Clears a session's CLI resume state within an existing transaction, recording the mutation reason.",
+   "tags": [
+    "persistence",
+    "resume",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_cli_resume_state",
+   "type": "function",
+   "name": "clear_cli_resume_state",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    479,
+    487
+   ],
+   "summary": "Clears a session's CLI resume state (used when truncating history invalidates resumability).",
+   "tags": [
+    "persistence",
+    "resume",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_history_mutation",
+   "type": "function",
+   "name": "get_history_mutation",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    489,
+    506
+   ],
+   "summary": "Fetches a session's current history-mutation record.",
+   "tags": [
+    "persistence",
+    "audit",
+    "query"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:mapped_cli_session_id_for_account_with_conn",
+   "type": "function",
+   "name": "mapped_cli_session_id_for_account_with_conn",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    508,
+    522
+   ],
+   "summary": "Resolves the CLI resume session id mapped for an account using an explicit connection.",
+   "tags": [
+    "persistence",
+    "resume",
+    "query"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_name",
+   "type": "function",
+   "name": "update_name",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    526,
+    536
+   ],
+   "summary": "Renames a session.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_model_and_account",
+   "type": "function",
+   "name": "update_model_and_account",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    545,
+    601
+   ],
+   "summary": "Updates the model and account associated with a session.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_agent_exec_mode",
+   "type": "function",
+   "name": "update_agent_exec_mode",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    606,
+    621
+   ],
+   "summary": "Updates a session's agent execution mode (e.g. interactive vs. autonomous).",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_draft_text",
+   "type": "function",
+   "name": "update_draft_text",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    627,
+    638
+   ],
+   "summary": "Persists an in-progress draft message for a session.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_reply_target_event_id",
+   "type": "function",
+   "name": "update_reply_target_event_id",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    642,
+    656
+   ],
+   "summary": "Sets the event id a session's next reply should be threaded under.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_pinned",
+   "type": "function",
+   "name": "update_pinned",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    659,
+    666
+   ],
+   "summary": "Toggles whether a session is pinned.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_proxy_credentials",
+   "type": "function",
+   "name": "update_proxy_credentials",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    670,
+    682
+   ],
+   "summary": "Updates a session's proxy authentication credentials.",
+   "tags": [
+    "persistence",
+    "mutation",
+    "proxy"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:delete_session",
+   "type": "function",
+   "name": "delete_session",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    685,
+    720
+   ],
+   "summary": "Deletes a session and its associated persisted state.",
+   "tags": [
+    "persistence",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:sweep_stale_sessions",
+   "type": "function",
+   "name": "sweep_stale_sessions",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    733,
+    756
+   ],
+   "summary": "Sweeps and cleans up sessions left in a stale/running state from a previous app run.",
+   "tags": [
+    "persistence",
+    "cleanup"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:row_to_session",
+   "type": "function",
+   "name": "row_to_session",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "lineRange": [
+    758,
+    840
+   ],
+   "summary": "Maps a SQLite row into a CodeSession domain struct.",
+   "tags": [
+    "persistence",
+    "mapping"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs:update_worktree_info",
+   "type": "function",
+   "name": "update_worktree_info",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "lineRange": [
+    8,
+    27
+   ],
+   "summary": "Records the git worktree path and branch information for a session.",
+   "tags": [
+    "persistence",
+    "git",
+    "mutation"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs:update_merge_status",
+   "type": "function",
+   "name": "update_merge_status",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "lineRange": [
+    30,
+    37
+   ],
+   "summary": "Updates the recorded merge status of a session's worktree.",
+   "tags": [
+    "persistence",
+    "git",
+    "mutation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:start_claude_code_oauth_login",
+   "type": "function",
+   "name": "start_claude_code_oauth_login",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    107,
+    118
+   ],
+   "summary": "Begins a Claude Code OAuth login by generating PKCE parameters and the authorization URL.",
+   "tags": [
+    "oauth",
+    "authentication"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:exchange_claude_code_oauth_code",
+   "type": "function",
+   "name": "exchange_claude_code_oauth_code",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    121,
+    146
+   ],
+   "summary": "Exchanges a Claude Code OAuth authorization code for access/refresh tokens after validating the state parameter.",
+   "tags": [
+    "oauth",
+    "authentication"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:create_claude_code_oauth_webview",
+   "type": "function",
+   "name": "create_claude_code_oauth_webview",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    150,
+    295
+   ],
+   "summary": "Creates an embedded webview to drive the Claude Code OAuth login (including Google SSO popup handling) and detect the callback URL.",
+   "tags": [
+    "oauth",
+    "webview"
+   ],
+   "complexity": "complex"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:close_claude_code_oauth_webview",
+   "type": "function",
+   "name": "close_claude_code_oauth_webview",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    298,
+    305
+   ],
+   "summary": "Closes the Claude Code OAuth login webview.",
+   "tags": [
+    "oauth",
+    "webview"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:clear_claude_code_oauth_browser_session",
+   "type": "function",
+   "name": "clear_claude_code_oauth_browser_session",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    307,
+    314
+   ],
+   "summary": "Clears the Claude Code OAuth webview's browser session/cookies to force a fresh login.",
+   "tags": [
+    "oauth",
+    "webview",
+    "cleanup"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:is_google_accounts_url",
+   "type": "function",
+   "name": "is_google_accounts_url",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    316,
+    320
+   ],
+   "summary": "Checks whether a URL belongs to Google's account/SSO domains.",
+   "tags": [
+    "oauth",
+    "url-matching"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:is_claude_code_callback_url",
+   "type": "function",
+   "name": "is_claude_code_callback_url",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    325,
+    329
+   ],
+   "summary": "Checks whether a URL is the Claude Code OAuth callback URL.",
+   "tags": [
+    "oauth",
+    "url-matching"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:is_google_gsi_transform_url",
+   "type": "function",
+   "name": "is_google_gsi_transform_url",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    332,
+    336
+   ],
+   "summary": "Checks whether a URL is Google's GSI (Sign-In) transform/redirect URL.",
+   "tags": [
+    "oauth",
+    "url-matching"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:random_base64url",
+   "type": "function",
+   "name": "random_base64url",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    338,
+    342
+   ],
+   "summary": "Generates a random base64url-encoded string of the given byte length, used for PKCE verifiers/state.",
+   "tags": [
+    "oauth",
+    "crypto"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:pkce_challenge",
+   "type": "function",
+   "name": "pkce_challenge",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    344,
+    347
+   ],
+   "summary": "Derives a PKCE code challenge (S256) from a code verifier.",
+   "tags": [
+    "oauth",
+    "crypto"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:build_authorize_url",
+   "type": "function",
+   "name": "build_authorize_url",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    349,
+    361
+   ],
+   "summary": "Builds the Claude Code OAuth authorization URL with the given state and PKCE challenge.",
+   "tags": [
+    "oauth",
+    "url-building"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:clean_authorization_code",
+   "type": "function",
+   "name": "clean_authorization_code",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    363,
+    372
+   ],
+   "summary": "Strips extraneous characters/whitespace from a raw authorization code.",
+   "tags": [
+    "oauth",
+    "normalization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:exchange_code_for_tokens",
+   "type": "function",
+   "name": "exchange_code_for_tokens",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    374,
+    423
+   ],
+   "summary": "Sends the token-exchange HTTP request to Claude Code's OAuth token endpoint.",
+   "tags": [
+    "oauth",
+    "http"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:fetch_claude_code_oauth_profile",
+   "type": "function",
+   "name": "fetch_claude_code_oauth_profile",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    425,
+    453
+   ],
+   "summary": "Fetches the authenticated user's Claude Code account/organization profile.",
+   "tags": [
+    "oauth",
+    "http"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:parse_claude_code_oauth_profile_response",
+   "type": "function",
+   "name": "parse_claude_code_oauth_profile_response",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    455,
+    476
+   ],
+   "summary": "Parses the Claude Code profile endpoint's JSON response body.",
+   "tags": [
+    "oauth",
+    "parsing"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:normalize_metadata_field",
+   "type": "function",
+   "name": "normalize_metadata_field",
+   "filePath": "src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "lineRange": [
+    478,
+    482
+   ],
+   "summary": "Normalizes an optional account-metadata string field, treating blanks as unset.",
+   "tags": [
+    "oauth",
+    "normalization"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/cli/persistence/types.rs:CodeSession",
+   "type": "class",
+   "name": "CodeSession",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "lineRange": [
+    9,
+    78
+   ],
+   "summary": "Row type representing a persisted CLI agent session -- includes identity, status, runner/model/account, git worktree state, proxy credentials, org/project linkage, and timestamps.",
+   "tags": [
+    "domain-model",
+    "database"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:src-tauri/src/agent_sessions/cli/persistence/types.rs:CreateCodeSessionParams",
+   "type": "class",
+   "name": "CreateCodeSessionParams",
+   "filePath": "src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "lineRange": [
+    92,
+    136
+   ],
+   "summary": "Parameters accepted when creating a new CLI agent session, covering agent selection, git repo/branch, isolation, and org/project context.",
+   "tags": [
+    "domain-model",
+    "database"
+   ],
+   "complexity": "moderate"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:now_iso",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:sync_orgtrack_mirror",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:create_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:list_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:list_sessions_page",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_status_with_error",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_pid",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_pid",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:resume_profile_key",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_cli_session_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_cli_session_id_for_account",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:session_persists_chunks",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:latest_native_transcript_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_cli_session_id_for_account",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:bump_history_mutation_with_tx",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_cli_resume_state_with_tx",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_cli_resume_state",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_history_mutation",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:mapped_cli_session_id_for_account_with_conn",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_name",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_model_and_account",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_agent_exec_mode",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_draft_text",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_reply_target_event_id",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_pinned",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_proxy_credentials",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:delete_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:sweep_stale_sessions",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:row_to_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs:update_worktree_info",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs:update_merge_status",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:start_claude_code_oauth_login",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:exchange_claude_code_oauth_code",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:create_claude_code_oauth_webview",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:close_claude_code_oauth_webview",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:clear_claude_code_oauth_browser_session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:is_google_accounts_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:is_claude_code_callback_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:is_google_gsi_transform_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:random_base64url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:pkce_challenge",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:build_authorize_url",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:clean_authorization_code",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:exchange_code_for_tokens",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:fetch_claude_code_oauth_profile",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:parse_claude_code_oauth_profile_response",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:normalize_metadata_field",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/persistence/types.rs:CodeSession",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/persistence/types.rs:CreateCodeSessionParams",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:now_iso",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:create_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:list_sessions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:list_sessions_page",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_status_with_error",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_pid",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_pid",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_cli_session_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_cli_session_id_for_account",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:session_persists_chunks",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:latest_native_transcript_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_cli_session_id_for_account",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:bump_history_mutation_with_tx",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_cli_resume_state_with_tx",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:clear_cli_resume_state",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:get_history_mutation",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_name",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_model_and_account",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_agent_exec_mode",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_draft_text",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_reply_target_event_id",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_pinned",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:update_proxy_credentials",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:delete_session",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs:sweep_stale_sessions",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/persistence/types.rs:CodeSession",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/types.rs",
+   "target": "class:src-tauri/src/agent_sessions/cli/persistence/types.rs:CreateCodeSessionParams",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs:update_worktree_info",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/persistence/worktree_state.rs:update_merge_status",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:start_claude_code_oauth_login",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:exchange_claude_code_oauth_code",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:create_claude_code_oauth_webview",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:close_claude_code_oauth_webview",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/persistence/session_crud.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/types.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/platform_adapters/webview_session.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:src-tauri/src/agent_sessions/cli/platform_adapters/codex/mod.rs",
+   "target": "file:src-tauri/src/agent_sessions/cli/platform_adapters/codex/oauth.rs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:src-tauri/src/agent_sessions/cli/platform_adapters/claude_code/oauth.rs:clear_claude_code_oauth_browser_session",
+   "target": "function:src-tauri/src/agent_sessions/cli/platform_adapters/webview_session.rs:clear_oauth_browser_session_native",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  }
+ ]
+}

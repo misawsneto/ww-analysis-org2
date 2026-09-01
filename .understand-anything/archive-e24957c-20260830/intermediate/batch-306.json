@@ -1,0 +1,175 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/store/workstation/codeEditor/search/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/store/workstation/codeEditor/search/index.ts",
+      "summary": "Central Jotai atom store for code search state (query, options, results, loading, pagination, indexing progress) that is also a re-export barrel aggregating the cache, file-tracking, ignore-pattern, indexing-progress, and per-tab session cache submodules for the code editor search feature.",
+      "tags": ["state-management", "barrel", "search", "jotai"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Jotai read/write atoms (including derived and action atoms) and `export *` re-exports to compose a single public surface from several sibling modules."
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "type": "file",
+      "name": "searchTabSessionCache.ts",
+      "filePath": "src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "summary": "In-memory cache that persists per-tab search state (query, options, results, loading/error flags) across search panel tab switches, capping storage at 20 sessions with FIFO-style eviction of the oldest entry.",
+      "tags": ["cache", "session-management", "search", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/store/workstation/codeEditor/search/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/store/workstation/codeEditor/search/types.ts",
+      "summary": "Shared TypeScript interfaces for search matches, per-file search results, and search options, split into a standalone module to avoid a circular dependency with the session cache.",
+      "tags": ["type-definition", "search", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:createDefaultSearchTabSessionState",
+      "type": "function",
+      "name": "createDefaultSearchTabSessionState",
+      "filePath": "src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "lineRange": [32, 44],
+      "summary": "Builds a fresh SearchTabSessionState object with default search options and cleared results/loading/error fields for a newly opened search tab.",
+      "tags": ["factory", "utility", "search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:getSearchTabSessionState",
+      "type": "function",
+      "name": "getSearchTabSessionState",
+      "filePath": "src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "lineRange": [46, 50],
+      "summary": "Looks up the cached search session state for a given tab/session ID.",
+      "tags": ["accessor", "cache", "search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:setSearchTabSessionState",
+      "type": "function",
+      "name": "setSearchTabSessionState",
+      "filePath": "src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "lineRange": [52, 66],
+      "summary": "Stores search session state for a tab, evicting the oldest cached entry once the cache exceeds MAX_SEARCH_TAB_SESSIONS (20).",
+      "tags": ["cache", "eviction", "search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:deleteSearchTabSessionState",
+      "type": "function",
+      "name": "deleteSearchTabSessionState",
+      "filePath": "src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "lineRange": [68, 70],
+      "summary": "Removes a single tab's cached search session state, e.g. when the tab is closed.",
+      "tags": ["cache", "utility", "search"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:clearSearchTabSessionStates",
+      "type": "function",
+      "name": "clearSearchTabSessionStates",
+      "filePath": "src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "lineRange": [72, 74],
+      "summary": "Clears all cached search tab session states.",
+      "tags": ["cache", "utility", "search"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/store/workstation/codeEditor/search/index.ts",
+      "target": "file:src/store/workstation/codeEditor/search/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "file:src/store/workstation/codeEditor/search/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/index.ts",
+      "target": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:createDefaultSearchTabSessionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:getSearchTabSessionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:setSearchTabSessionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:deleteSearchTabSessionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:clearSearchTabSessionStates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:createDefaultSearchTabSessionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:getSearchTabSessionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:setSearchTabSessionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:deleteSearchTabSessionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/store/workstation/codeEditor/search/searchTabSessionCache.ts",
+      "target": "function:src/store/workstation/codeEditor/search/searchTabSessionCache.ts:clearSearchTabSessionStates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

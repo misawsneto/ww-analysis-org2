@@ -1,0 +1,1450 @@
+{
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "type": "file",
+      "name": "ws_loop.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "summary": "Long-lived WebSocket task that connects, authenticates, and runs the read/write select loop for the WeCom AI Bot gateway, with heartbeat and reconnect backoff.",
+      "tags": [
+        "websocket",
+        "background-task",
+        "event-loop"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "type": "file",
+      "name": "weixin.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "summary": "Personal WeChat (Weixin) channel via Tencent iLink Bot API: long-polls for inbound messages, sends replies, and tracks per-peer context tokens and allowlist policy.",
+      "tags": [
+        "channel-integration",
+        "polling",
+        "api-client",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "type": "file",
+      "name": "config.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "summary": "Defines IntegrationsConfig, the app-level cross-agent persisted config (channels, databases, nodes, web search, embedding, MCP) with load/save to ~/.orgii/integrations.json.",
+      "tags": [
+        "config",
+        "persistence",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "type": "file",
+      "name": "binding.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "summary": "BindingStore pins an external chat (channel + chat_id [+ sender_id]) to a specific agent OS session, persisted in SQLite so bindings survive restarts.",
+      "tags": [
+        "data-model",
+        "persistence",
+        "session-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "type": "file",
+      "name": "channels_ops.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "summary": "Helpers that register enabled channels into the ChannelManager and construct/toggle a single channel instance by type for the gateway service.",
+      "tags": [
+        "factory",
+        "service",
+        "channel-integration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "type": "file",
+      "name": "commands.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "summary": "Parses inbound slash commands (/new, /reset, /status, /compact, /help) that control gateway session-binding behavior before a message reaches the agent.",
+      "tags": [
+        "command-parsing",
+        "validation",
+        "gateway"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "type": "file",
+      "name": "message_merge.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "summary": "Per-session merge buffer that coalesces rapid-fire inbound messages (e.g. photo albums, split typing) into a single InboundMessage before dispatch.",
+      "tags": [
+        "buffering",
+        "message-processing",
+        "concurrency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "summary": "Gateway module barrel documenting the channel-to-session routing architecture and re-exporting BindingStore, GatewayCommand, ResetPolicy, and GatewayService.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "module-root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "type": "file",
+      "name": "reset_policy.rs",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "summary": "Session idle-reset policy (ResetMode/ResetPolicy) that GatewayInboundHandler consults on every inbound message to decide whether to recycle a chat binding.",
+      "tags": [
+        "data-model",
+        "policy",
+        "session-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wecom_ws_loop",
+      "type": "function",
+      "name": "wecom_ws_loop",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "lineRange": [
+        22,
+        243
+      ],
+      "summary": "Long-lived task that connects, authenticates (aibot_subscribe), and runs the WeCom WebSocket read/write select loop with heartbeat and reconnect backoff.",
+      "tags": [
+        "websocket",
+        "event-loop",
+        "background-task"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wait_for_subscribe_ack",
+      "type": "function",
+      "name": "wait_for_subscribe_ack",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "lineRange": [
+        245,
+        300
+      ],
+      "summary": "Waits for the WeCom gateway to acknowledge the subscribe handshake within the configured timeout.",
+      "tags": [
+        "websocket",
+        "handshake"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:set_token",
+      "type": "function",
+      "name": "set_token",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        75,
+        86
+      ],
+      "summary": "Updates the stored auth token for a Weixin bot account.",
+      "tags": [
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:dedup",
+      "type": "function",
+      "name": "dedup",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        92,
+        104
+      ],
+      "summary": "Deduplicates already-processed inbound Weixin message IDs to avoid reprocessing on poll overlap.",
+      "tags": [
+        "deduplication",
+        "state-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        68,
+        73
+      ],
+      "summary": "Constructs a WeixinChannel for one bot account with its HTTP client and shared state.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        146,
+        197
+      ],
+      "summary": "Begins the long-poll loop against the iLink Bot getupdates endpoint.",
+      "tags": [
+        "polling",
+        "lifecycle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:send",
+      "type": "function",
+      "name": "send",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        209,
+        261
+      ],
+      "summary": "Sends a reply through the iLink Bot sendmessage endpoint, tracking the per-peer context token.",
+      "tags": [
+        "api-client",
+        "message-sending"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:poll_loop",
+      "type": "function",
+      "name": "poll_loop",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        286,
+        361
+      ],
+      "summary": "Background long-polling loop that fetches Weixin updates, deduplicates them, and hands them to process_inbound.",
+      "tags": [
+        "polling",
+        "background-task",
+        "event-loop"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:process_inbound",
+      "type": "function",
+      "name": "process_inbound",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        366,
+        469
+      ],
+      "summary": "Applies DM/group allowlist policy to a raw Weixin update and forwards an InboundMessage to the bus.",
+      "tags": [
+        "message-parsing",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:extract_text",
+      "type": "function",
+      "name": "extract_text",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        471,
+        496
+      ],
+      "summary": "Extracts plain text content from a Weixin inbound update payload.",
+      "tags": [
+        "parsing",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:api_post",
+      "type": "function",
+      "name": "api_post",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        504,
+        548
+      ],
+      "summary": "Issues an authenticated POST to the iLink Bot API with token refresh handling.",
+      "tags": [
+        "api-client"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:random_wechat_uin",
+      "type": "function",
+      "name": "random_wechat_uin",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        550,
+        561
+      ],
+      "summary": "Generates a randomized WeChat UIN placeholder used where the iLink API requires one.",
+      "tags": [
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinState",
+      "type": "class",
+      "name": "WeixinState",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        60,
+        65
+      ],
+      "summary": "Shared mutable state for a Weixin account: current auth token and a dedup set of processed message IDs.",
+      "tags": [
+        "state-management",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinChannel",
+      "type": "class",
+      "name": "WeixinChannel",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "lineRange": [
+        109,
+        118
+      ],
+      "summary": "Personal WeChat (Weixin) channel struct driving the iLink Bot long-poll loop; implements the Channel trait.",
+      "tags": [
+        "channel-integration",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/config.rs:load_or_default",
+      "type": "function",
+      "name": "load_or_default",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        123,
+        125
+      ],
+      "summary": "Loads IntegrationsConfig from ~/.orgii/integrations.json, returning a fresh default if the file does not yet exist.",
+      "tags": [
+        "persistence",
+        "io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/config.rs:load_from",
+      "type": "function",
+      "name": "load_from",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        130,
+        136
+      ],
+      "summary": "Loads IntegrationsConfig from an arbitrary path, used by tests and callers that override the default location.",
+      "tags": [
+        "persistence",
+        "io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/config.rs:save",
+      "type": "function",
+      "name": "save",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        141,
+        143
+      ],
+      "summary": "Persists the current IntegrationsConfig to its default on-disk path.",
+      "tags": [
+        "persistence",
+        "io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/config.rs:save_to",
+      "type": "function",
+      "name": "save_to",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        147,
+        153
+      ],
+      "summary": "Persists the current IntegrationsConfig to an arbitrary path.",
+      "tags": [
+        "persistence",
+        "io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:IntegrationsError",
+      "type": "class",
+      "name": "IntegrationsError",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        58,
+        67
+      ],
+      "summary": "Error enum for integrations.json read/write/parse failures.",
+      "tags": [
+        "error-handling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:IntegrationsConfig",
+      "type": "class",
+      "name": "IntegrationsConfig",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        75,
+        116
+      ],
+      "summary": "App-level, cross-agent config struct: channels, databases, nodes, web_search, mcp, embedding, and excluded skills.",
+      "tags": [
+        "data-model",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:WebSearchConfig",
+      "type": "class",
+      "name": "WebSearchConfig",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        165,
+        168
+      ],
+      "summary": "API key and default settings for the web-search tool.",
+      "tags": [
+        "data-model",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:NodesConfig",
+      "type": "class",
+      "name": "NodesConfig",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        173,
+        178
+      ],
+      "summary": "OS/desktop-tool node binding configuration.",
+      "tags": [
+        "data-model",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:SmitheryConfig",
+      "type": "class",
+      "name": "SmitheryConfig",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        189,
+        194
+      ],
+      "summary": "Configuration for the Smithery MCP registry integration.",
+      "tags": [
+        "data-model",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:ExecutionMode",
+      "type": "class",
+      "name": "ExecutionMode",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        208,
+        214
+      ],
+      "summary": "Enum describing how automation/tooling execution is scoped.",
+      "tags": [
+        "data-model",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/config.rs:EmbeddingConfig",
+      "type": "class",
+      "name": "EmbeddingConfig",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/config.rs",
+      "lineRange": [
+        226,
+        235
+      ],
+      "summary": "Semantic-memory embedding engine defaults (provider, model) used app-wide for the workspace index.",
+      "tags": [
+        "data-model",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:load_from_db",
+      "type": "function",
+      "name": "load_from_db",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        102,
+        137
+      ],
+      "summary": "Hydrates the in-memory binding map from SQLite at gateway startup.",
+      "tags": [
+        "persistence",
+        "io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:set",
+      "type": "function",
+      "name": "set",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        149,
+        182
+      ],
+      "summary": "Writes a (channel,chat_id) to session_id binding both in-memory and to the SQLite table.",
+      "tags": [
+        "persistence",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:list_expired",
+      "type": "function",
+      "name": "list_expired",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        217,
+        233
+      ],
+      "summary": "Returns bindings whose idle-reset policy has elapsed, for lazy reset checks on inbound messages.",
+      "tags": [
+        "query",
+        "policy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:clear",
+      "type": "function",
+      "name": "clear",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        252,
+        271
+      ],
+      "summary": "Invalidates a binding both in-memory and in SQLite, used by /new and /reset slash commands.",
+      "tags": [
+        "persistence",
+        "state-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:ensure_table",
+      "type": "function",
+      "name": "ensure_table",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        286,
+        307
+      ],
+      "summary": "Creates the SQLite bindings table if it does not already exist.",
+      "tags": [
+        "persistence",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:SessionKey",
+      "type": "class",
+      "name": "SessionKey",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        44,
+        44
+      ],
+      "summary": "Pure-function binding key shape: {channel}:{chat_id}[:{sender_id}].",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:SessionBinding",
+      "type": "class",
+      "name": "SessionBinding",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        79,
+        84
+      ],
+      "summary": "A single persisted binding record (key, session_id, timestamps).",
+      "tags": [
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:BindingStore",
+      "type": "class",
+      "name": "BindingStore",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "lineRange": [
+        91,
+        93
+      ],
+      "summary": "In-memory-plus-SQLite store mapping external chats to agent OS sessions, with idle-reset list/clear operations.",
+      "tags": [
+        "data-model",
+        "persistence",
+        "session-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:register_enabled_channels",
+      "type": "function",
+      "name": "register_enabled_channels",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "lineRange": [
+        11,
+        61
+      ],
+      "summary": "Iterates ChannelsConfig and registers every enabled channel account into the given ChannelManager.",
+      "tags": [
+        "factory",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:build_channel_for_toggle",
+      "type": "function",
+      "name": "build_channel_for_toggle",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "lineRange": [
+        67,
+        170
+      ],
+      "summary": "Constructs a single channel instance by type for a runtime enable/disable toggle, mirroring the startup registration logic.",
+      "tags": [
+        "factory"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "lineRange": [
+        58,
+        78
+      ],
+      "summary": "Parses the first line of an inbound message into a GatewayCommand if it matches a recognized slash command.",
+      "tags": [
+        "command-parsing",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs:GatewayCommand",
+      "type": "class",
+      "name": "GatewayCommand",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "lineRange": [
+        29,
+        47
+      ],
+      "summary": "Enum of recognized gateway slash commands (New, Reset, Status, Compact, Help).",
+      "tags": [
+        "data-model",
+        "command-parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:push",
+      "type": "function",
+      "name": "push",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "lineRange": [
+        67,
+        76
+      ],
+      "summary": "Adds a message to a session's pending merge batch and resets its flush deadline.",
+      "tags": [
+        "buffering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:drain_ready",
+      "type": "function",
+      "name": "drain_ready",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "lineRange": [
+        81,
+        99
+      ],
+      "summary": "Drains and returns all pending batches whose flush deadline has elapsed.",
+      "tags": [
+        "buffering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:merge_messages",
+      "type": "function",
+      "name": "merge_messages",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "lineRange": [
+        107,
+        123
+      ],
+      "summary": "Concatenates a batch's pending messages into one InboundMessage, preserving the first message's metadata.",
+      "tags": [
+        "message-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:PendingMergeBatch",
+      "type": "class",
+      "name": "PendingMergeBatch",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "lineRange": [
+        40,
+        45
+      ],
+      "summary": "Per-session pending message list plus flush deadline.",
+      "tags": [
+        "data-model",
+        "buffering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:MergeBuffer",
+      "type": "class",
+      "name": "MergeBuffer",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "lineRange": [
+        49,
+        51
+      ],
+      "summary": "Map of session keys to PendingMergeBatch, coalescing rapid-fire inbound messages before dispatch.",
+      "tags": [
+        "buffering",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs:ResetMode",
+      "type": "class",
+      "name": "ResetMode",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "lineRange": [
+        29,
+        36
+      ],
+      "summary": "Enum of session-reset triggers; currently only Idle is implemented.",
+      "tags": [
+        "data-model",
+        "policy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs:ResetPolicy",
+      "type": "class",
+      "name": "ResetPolicy",
+      "filePath": "src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "lineRange": [
+        45,
+        59
+      ],
+      "summary": "Idle-timeout reset policy consulted lazily on every inbound message to decide whether to recycle a chat binding.",
+      "tags": [
+        "data-model",
+        "policy"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wecom_ws_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wecom_ws_loop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wait_for_subscribe_ack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:set_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:dedup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:dedup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:poll_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:process_inbound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:extract_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:extract_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:api_post",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:random_wechat_uin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinChannel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:load_or_default",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:load_or_default",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:load_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:load_from",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:save",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:save",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:save_to",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/config.rs:save_to",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:IntegrationsError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:IntegrationsError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:IntegrationsConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:IntegrationsConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:WebSearchConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:WebSearchConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:NodesConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:NodesConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:SmitheryConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:SmitheryConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:ExecutionMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:ExecutionMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:EmbeddingConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/config.rs:EmbeddingConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:load_from_db",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:load_from_db",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:set",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:set",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:list_expired",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:list_expired",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:clear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:ensure_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:SessionKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:SessionKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:SessionBinding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:SessionBinding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:BindingStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs:BindingStore",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:register_enabled_channels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:register_enabled_channels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:build_channel_for_toggle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs:build_channel_for_toggle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs:parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs:parse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs:GatewayCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs:GatewayCommand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:push",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:drain_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:drain_ready",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:merge_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:PendingMergeBatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:MergeBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs:MergeBuffer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs:ResetMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs:ResetMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs:ResetPolicy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs:ResetPolicy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/config.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/channels/config/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/binding.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/channels_ops.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/message_merge.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/reset_policy.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/service.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/integrations/gateway/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/integrations/gateway/workers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wecom_ws_loop",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/inbound.rs:on_inbound_message",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/ws_loop.rs:wecom_ws_loop",
+      "target": "function:src-tauri/crates/agent-core/src/integrations/channels/wecom/outbound.rs:send_outbound",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:src-tauri/crates/agent-core/src/integrations/channels/weixin.rs:WeixinChannel",
+      "target": "class:src-tauri/crates/agent-core/src/integrations/channels/traits.rs:Channel",
+      "type": "implements",
+      "direction": "forward",
+      "weight": 0.9
+    }
+  ]
+}

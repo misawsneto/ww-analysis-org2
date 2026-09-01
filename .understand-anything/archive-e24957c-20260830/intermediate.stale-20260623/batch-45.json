@@ -1,0 +1,843 @@
+{
+  "batchIndex": 45,
+  "nodes": [
+    {
+      "id": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "type": "file",
+      "name": "plugins.rs",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Reads installed Cursor plugins from the local SQLite state database and cache directory, returning structured metadata (MCP config, skills, hooks, logo) for the frontend settings UI.",
+      "tags": ["cursor", "plugins", "sqlite", "tauri-command", "mcp"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginInfo",
+      "type": "class",
+      "name": "CursorPluginInfo",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Public struct representing a single installed Cursor plugin with its slug, name, description, version, MCP config, bundled skills, hooks, and logo path.",
+      "tags": ["struct", "serde", "plugin-metadata"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginSkill",
+      "type": "class",
+      "name": "CursorPluginSkill",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Represents a skill bundled with a Cursor plugin, extracted from SKILL.md frontmatter.",
+      "tags": ["struct", "serde", "skill"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginHook",
+      "type": "class",
+      "name": "CursorPluginHook",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Represents a single hook entry from a Cursor plugin's cursor-hooks.json file.",
+      "tags": ["struct", "serde", "hook"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "type": "function",
+      "name": "list_installed_plugins",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Main entry point that reads all installed Cursor plugins by querying state.vscdb and resolving plugin cache directories, returning structured CursorPluginInfo metadata.",
+      "tags": ["public", "entry-point", "sqlite", "filesystem"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:cursor_plugins_list",
+      "type": "function",
+      "name": "cursor_plugins_list",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Tauri command wrapper that runs list_installed_plugins on a blocking thread.",
+      "tags": ["tauri-command", "async", "public"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_installed_ids_from_db",
+      "type": "function",
+      "name": "read_installed_ids_from_db",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Reads installed plugin numeric IDs from the Cursor state.vscdb SQLite database.",
+      "tags": ["sqlite", "private", "io"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:discover_cached_plugins",
+      "type": "function",
+      "name": "discover_cached_plugins",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Walks the Cursor plugin cache directory to build a slug-to-path mapping of cached plugin directories.",
+      "tags": ["filesystem", "private", "cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_mcp_config",
+      "type": "function",
+      "name": "read_mcp_config",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Reads MCP server config for a plugin from mcp.json, .mcp.json, or inline manifest, trying three resolution strategies in priority order.",
+      "tags": ["mcp", "private", "json"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:parse_skill_frontmatter",
+      "type": "function",
+      "name": "parse_skill_frontmatter",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Parses YAML frontmatter from a SKILL.md file to extract name and description fields using line-by-line scanning.",
+      "tags": ["parser", "yaml", "private"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_skills",
+      "type": "function",
+      "name": "read_skills",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Reads skills bundled with a plugin by scanning the skills/ subdirectory and parsing SKILL.md frontmatter from each.",
+      "tags": ["filesystem", "private", "skills"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_hooks",
+      "type": "function",
+      "name": "read_hooks",
+      "filePath": "src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "summary": "Reads hooks defined in a plugin's hooks/cursor-hooks.json, returning one entry per event type with at least one handler.",
+      "tags": ["filesystem", "private", "hooks"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-cli/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "src-tauri/crates/agent-cli/src/lib.rs",
+      "summary": "Crate root for agent-cli that re-exports submodules for reading and writing on-disk configuration files for external CLI agents (Cursor, Claude Code, Codex).",
+      "tags": ["crate-root", "agent-cli", "config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/build.rs",
+      "type": "file",
+      "name": "build.rs",
+      "filePath": "src-tauri/crates/agent-core/build.rs",
+      "summary": "Build script that compiles the Cursor agent protobuf descriptor into Rust types using prost, patching MCP-related bytes fields in the descriptor before codegen.",
+      "tags": ["build-script", "protobuf", "prost", "codegen"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/build.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "src-tauri/crates/agent-core/build.rs",
+      "summary": "Build script entry point that locates the protobuf descriptor, patches MCP bytes fields, and compiles Rust code via prost_build.",
+      "tags": ["entry-point", "build", "protobuf"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/build.rs:patch_cursor_mcp_bytes_fields",
+      "type": "function",
+      "name": "patch_cursor_mcp_bytes_fields",
+      "filePath": "src-tauri/crates/agent-core/build.rs",
+      "summary": "Patches the input_schema and args value fields in the Cursor protobuf descriptor from their original types to bytes, enabling raw JSON passthrough.",
+      "tags": ["protobuf", "patch", "mcp"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src-tauri/crates/agent-core/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "src-tauri/crates/agent-core/Cargo.toml",
+      "summary": "Cargo manifest for the agent_core crate, the central agent runtime library with dependencies on workspace crates (types, database, integrations, search, git, etc.), Tauri, tokio, serde, rusqlite, reqwest, MCP (rmcp), and many utility crates.",
+      "tags": ["cargo", "config", "agent-core", "dependencies", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:src-tauri/crates/agent-core/src/ARCHITECTURE.md",
+      "type": "document",
+      "name": "ARCHITECTURE.md",
+      "filePath": "src-tauri/crates/agent-core/src/ARCHITECTURE.md",
+      "summary": "Architecture map for agent_core covering the layered structure (state, integrations, core, intelligence, foundation), session lifecycle, turn executor, tool dispatch, provider layer, and cross-cutting subsystems (memory, skills, MCP, channels, persistence, bus, security).",
+      "tags": ["architecture", "documentation", "onboarding", "agent-core", "layers"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "type": "file",
+      "name": "databases.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "summary": "Database connection configuration types supporting multiple providers (SQLite, Supabase, Turso, Neon, Postgres, MySQL) with enable/disable and read-only access control for agent-accessible databases.",
+      "tags": ["config", "database", "serde", "multi-provider"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/config/databases.rs:DatabaseProviderType",
+      "type": "class",
+      "name": "DatabaseProviderType",
+      "filePath": "src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "summary": "Enum of supported database provider types: Sqlite, Supabase, Turso, Neon, Postgres, Mysql.",
+      "tags": ["enum", "database", "serde"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/config/databases.rs:DatabasesConfig",
+      "type": "class",
+      "name": "DatabasesConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "summary": "Container for all database connections keyed by connection ID, with methods to query enabled connections.",
+      "tags": ["struct", "config", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "summary": "Module root for agent configuration types, re-exporting DatabasesConfig and ReliabilityConfig from private submodules.",
+      "tags": ["module-root", "config", "re-export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/config/reliability.rs",
+      "type": "file",
+      "name": "reliability.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/config/reliability.rs",
+      "summary": "Provider reliability configuration with retry count (default 10), exponential backoff (500ms base), and ordered fallback model chain.",
+      "tags": ["config", "reliability", "retry", "backoff"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/config/reliability.rs:ReliabilityConfig",
+      "type": "class",
+      "name": "ReliabilityConfig",
+      "filePath": "src-tauri/crates/agent-core/src/core/config/reliability.rs",
+      "summary": "Configuration struct for provider retry/fallback behavior with max_retries, base_backoff_ms, and fallback_models fields.",
+      "tags": ["struct", "config", "reliability"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "type": "file",
+      "name": "agent_inbox.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "summary": "Typed agent-to-agent messaging primitives and persistent inbox for inter-agent communication inside Agent Org runs, with SQLite-backed storage, discriminated union message types (Plain, ShutdownRequest/Response, PlanApproval, TaskAssigned, etc.), and CRUD operations.",
+      "tags": ["messaging", "inbox", "sqlite", "agent-org", "coordination"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentMessage",
+      "type": "class",
+      "name": "AgentMessage",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "summary": "Discriminated union enum for typed inter-agent messages including Plain text, ShutdownRequest/Response, PlanApprovalRequest/Response, MemberTerminated, MemberIdle, TaskAssigned, and ExecModeSetRequest.",
+      "tags": ["enum", "message", "serde", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentInboxStore",
+      "type": "class",
+      "name": "AgentInboxStore",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "summary": "SQLite-backed store for agent inbox operations: insert, list_by_run, list_unread_for_member, and mark_many_read.",
+      "tags": ["store", "sqlite", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentInboxRecord",
+      "type": "class",
+      "name": "AgentInboxRecord",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "summary": "Persisted inbox row with sender/recipient identifiers, org_run_id, payload_kind tag, serialized payload JSON, and read_at timestamp.",
+      "tags": ["struct", "record", "persistence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "type": "file",
+      "name": "agent_member_interventions.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "summary": "User-intervention state for Agent Org members, pausing inbox drain and autonomous claim while a member is in direct conversation with the user, with SQLite-backed persistence and TTL-based auto-resume.",
+      "tags": ["intervention", "agent-org", "sqlite", "coordination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs:AgentMemberInterventionRecord",
+      "type": "class",
+      "name": "AgentMemberInterventionRecord",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "summary": "Record of a user-intervention state for an Agent Org member, tracking org_run_id, member_id, status, reason, timestamps, and TTL.",
+      "tags": ["struct", "record", "intervention"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "type": "file",
+      "name": "helpers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "summary": "Internal helper functions for the Agent Org runs store including parent session ID lookup, run record loading, insertion, row-to-record mapping, and validation utilities.",
+      "tags": ["helpers", "sqlite", "agent-org-runs", "private"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "summary": "Module root for Agent Org run envelopes defining the run record, status lifecycle (Running/Paused/Completed/Failed/Cancelled), entry mode, and context types for durable org execution tracking.",
+      "tags": ["module-root", "agent-org", "runs", "lifecycle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs:AgentOrgRunStatus",
+      "type": "class",
+      "name": "AgentOrgRunStatus",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "summary": "Enum for Agent Org run lifecycle states: Running, Paused, Completed, Failed, Cancelled.",
+      "tags": ["enum", "lifecycle", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "type": "file",
+      "name": "store.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "summary": "AgentOrgRunStore providing CRUD operations for Agent Org runs: create, mark_paused, mark_resumed, mark_completed, mark_failed, and context resolution with session parent-walk for org membership discovery.",
+      "tags": ["store", "sqlite", "crud", "agent-org-runs"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/tests.rs",
+      "type": "file",
+      "name": "tests.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/tests.rs",
+      "summary": "Test suite for Agent Org run store covering enum round-trips, create/load, status transitions, context resolution with parent session walk, and worker session discovery.",
+      "tags": ["tests", "agent-org-runs", "sqlite"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/worker.rs",
+      "type": "file",
+      "name": "worker.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/worker.rs",
+      "summary": "Worker session info types for Agent Org runs: WorkerSessionInfo, WorkerSessionRuntime (with intervention and task data), and StaleWorkerRelease for cleanup.",
+      "tags": ["types", "worker", "agent-org", "session"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/graph.rs",
+      "type": "file",
+      "name": "graph.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/graph.rs",
+      "summary": "Task dependency graph validation for Agent Org tasks including cycle detection, self-dependency rejection, and blocker resolution checks.",
+      "tags": ["graph", "validation", "dependencies", "cycle-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/helpers.rs",
+      "type": "file",
+      "name": "helpers.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/helpers.rs",
+      "summary": "Internal helper functions for the Agent Org task store: JSON array encoding/decoding, metadata serialization, status parsing, SQL column definitions, and row-to-task mapping.",
+      "tags": ["helpers", "sqlite", "serialization", "private"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "summary": "Module root for the Agent Org task store defining Task schema (Pending/InProgress/Completed), dependency graph, persistent SQLite storage, atomic try_claim primitive, and task history events.",
+      "tags": ["module-root", "tasks", "agent-org", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs:TaskStatus",
+      "type": "class",
+      "name": "TaskStatus",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "summary": "Enum for task lifecycle: Pending, InProgress, Completed with wire-format serialization.",
+      "tags": ["enum", "status", "task"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "type": "file",
+      "name": "store.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "summary": "AgentOrgTaskStore providing CRUD operations for Agent Org tasks: create with dependency validation, update, list, get, try_claim (atomic), release, and task history recording.",
+      "tags": ["store", "sqlite", "crud", "tasks", "atomic-claim"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/tests.rs",
+      "type": "file",
+      "name": "tests.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/tests.rs",
+      "summary": "Test suite for Agent Org task store covering status wire round-trips, create/get, update, claim, release, dependency cycle detection, and task history events.",
+      "tags": ["tests", "tasks", "sqlite"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "summary": "Module root for Agent Org coordination runtime, organizing submodules for agent inbox, member interventions, org runs, org tasks, routine scheduler, work item recovery, and work item scheduler.",
+      "tags": ["module-root", "coordination", "agent-org"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/routine_scheduler.rs",
+      "type": "file",
+      "name": "routine_scheduler.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/routine_scheduler.rs",
+      "summary": "Background task that polls every 30 seconds to evaluate enabled routines' triggers (cron/one-time), with catch-up policy for missed fires and idempotency keys to prevent double-firing after crashes.",
+      "tags": ["scheduler", "background-task", "cron", "routine", "polling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "type": "file",
+      "name": "work_item_recovery.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "summary": "Graceful shutdown handler that marks all running SDE agent sessions as interrupted, writing back to the projects DB through the orchestrator view API for recovery on next startup.",
+      "tags": ["recovery", "shutdown", "work-items", "coordination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs:mark_all_interrupted_sync",
+      "type": "function",
+      "name": "mark_all_interrupted_sync",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "summary": "Synchronous function called from Tauri's ExitRequested handler that flips orchestrator_state.interrupted on every running SDE work item for crash recovery.",
+      "tags": ["public", "shutdown", "recovery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/coordination/work_item_scheduler.rs",
+      "type": "file",
+      "name": "work_item_scheduler.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/coordination/work_item_scheduler.rs",
+      "summary": "Background task that polls every 30 seconds to auto-start work items whose start_date or schedule.at is in the past, writing inbox notifications on failure.",
+      "tags": ["scheduler", "background-task", "work-items", "polling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs",
+      "type": "file",
+      "name": "ade_manager.rs",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs",
+      "summary": "Built-in ADE Manager agent definition template that manages the Agentic Development Environment and ORGII app UI, with coding and management capabilities, singleton session mode, and full autonomy security policy.",
+      "tags": ["agent-definition", "builtin", "ade-manager", "template", "capabilities"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs:ade_manager",
+      "type": "function",
+      "name": "ade_manager",
+      "filePath": "src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs",
+      "summary": "Constructs the built-in ADE Manager AgentDefinition with coding+management capabilities, GUI control tools, singleton session model, and full autonomy.",
+      "tags": ["public", "constructor", "agent-definition"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginInfo",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginSkill",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginHook",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:cursor_plugins_list",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_installed_ids_from_db",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:discover_cached_plugins",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_mcp_config",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:parse_skill_frontmatter",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_skills",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_hooks",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginSkill",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginHook",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "class:src-tauri/crates/agent-cli/src/cursor/plugins.rs:CursorPluginInfo",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:cursor_plugins_list",
+      "type": "exports"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_installed_ids_from_db",
+      "type": "calls"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:discover_cached_plugins",
+      "type": "calls"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_mcp_config",
+      "type": "calls"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_skills",
+      "type": "calls"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_hooks",
+      "type": "calls"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:cursor_plugins_list",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:list_installed_plugins",
+      "type": "calls"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:read_skills",
+      "target": "function:src-tauri/crates/agent-cli/src/cursor/plugins.rs:parse_skill_frontmatter",
+      "type": "calls"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-cli/src/lib.rs",
+      "target": "file:src-tauri/crates/agent-cli/src/cursor/plugins.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/build.rs",
+      "target": "function:src-tauri/crates/agent-core/build.rs:main",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/build.rs",
+      "target": "function:src-tauri/crates/agent-core/build.rs:patch_cursor_mcp_bytes_fields",
+      "type": "contains"
+    },
+    {
+      "source": "function:src-tauri/crates/agent-core/build.rs:main",
+      "target": "function:src-tauri/crates/agent-core/build.rs:patch_cursor_mcp_bytes_fields",
+      "type": "calls"
+    },
+    {
+      "source": "config:src-tauri/crates/agent-core/Cargo.toml",
+      "target": "file:src-tauri/crates/agent-core/build.rs",
+      "type": "configures"
+    },
+    {
+      "source": "document:src-tauri/crates/agent-core/src/ARCHITECTURE.md",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "type": "documents"
+    },
+    {
+      "source": "document:src-tauri/crates/agent-core/src/ARCHITECTURE.md",
+      "target": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "type": "documents"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/config/databases.rs:DatabaseProviderType",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/config/databases.rs:DatabasesConfig",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/config/databases.rs:DatabaseProviderType",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/config/databases.rs:DatabasesConfig",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/config/databases.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/config/reliability.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/reliability.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/config/reliability.rs:ReliabilityConfig",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/config/reliability.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/config/reliability.rs:ReliabilityConfig",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentMessage",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentInboxStore",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentInboxRecord",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentMessage",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentInboxStore",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs:AgentInboxRecord",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs:AgentMemberInterventionRecord",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs:AgentOrgRunStatus",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs:AgentOrgRunStatus",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/worker.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/tests.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/helpers.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/worker.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/tests.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/store.rs",
+      "type": "tested_by"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/worker.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/worker.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs:TaskStatus",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "target": "class:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs:TaskStatus",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/graph.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/helpers.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/tests.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/graph.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/helpers.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/tests.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/store.rs",
+      "type": "tested_by"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/tests.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "type": "depends_on"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_inbox.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_member_interventions.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_runs/mod.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/agent_org_tasks/mod.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/routine_scheduler.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/mod.rs",
+      "target": "file:src-tauri/crates/agent-core/src/core/coordination/work_item_scheduler.rs",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs:mark_all_interrupted_sync",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/coordination/work_item_recovery.rs:mark_all_interrupted_sync",
+      "type": "exports"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs:ade_manager",
+      "type": "contains"
+    },
+    {
+      "source": "file:src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs",
+      "target": "function:src-tauri/crates/agent-core/src/core/definitions/builtin/ade_manager.rs:ade_manager",
+      "type": "exports"
+    }
+  ]
+}

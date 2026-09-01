@@ -1,0 +1,81 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "ORG2",
+  "version": "1.3.0",
+  "identifier": "org2ai.org2",
+  "build": {
+    "frontendDist": "../build",
+    "devUrl": "http://localhost:1998",
+    "beforeDevCommand": "pnpm run dev:frontend",
+    "beforeBuildCommand": "pnpm run build"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "ORG2",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 450,
+        "minHeight": 300,
+        "resizable": true,
+        "maximized": true,
+        "fullscreen": false,
+        "decorations": true,
+        "hiddenTitle": true,
+        "backgroundColor": "#0d0d0d",
+        "transparent": true,
+        "titleBarStyle": "Overlay",
+        "trafficLightPosition": {
+          "x": 20,
+          "y": 28
+        }
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' 'nonce-orgii-codemirror-style'; style-src-attr 'unsafe-inline'; img-src 'self' asset: http://asset.localhost https: data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost ipc://localhost https: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:* wss:; media-src 'self' asset: http://asset.localhost blob:; worker-src 'self' blob:; frame-src 'self' https: http://canvas-artifact.localhost canvas-artifact:; object-src 'none'; base-uri 'self'",
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$HOME/.orgii/**", "$HOME/.cursor/plugins/cache/**"]
+      }
+    }
+  },
+  "bundle": {
+    "externalBin": ["binaries/org2-pm"],
+    "resources": {
+      "resources/drag-icons/": "resources/drag-icons/"
+    },
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "fs": {
+      "requireLiteralLeadingDot": false
+    },
+    "deep-link": {
+      "desktop": {
+        "schemes": ["yorgai", "orgii"]
+      }
+    },
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://github.com/org2AI/ORG2/releases/latest/download/latest.json"
+      ],
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDExNEQ5NjIzMjA1ODI5OUMKUldTY0tWZ2dJNVpORWFiWXB3NW5UaWwyOHVxRXhzVmRVbXl2WktZNnhiN2tqcXlVY3gxTTlPV3EK"
+    },
+    "shell": {
+      "open": "^((mailto:\\w+)|(tel:\\w+)|(https?://[^\\s]+)|(vscode://\\S+)|(cursor://\\S+)|(idea://\\S+)|(subl://\\S+)|(x-apple\\.systempreferences:\\S+)|(ms-settings:\\S+))"
+    }
+  }
+}
