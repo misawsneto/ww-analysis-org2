@@ -75,10 +75,31 @@ Graph-guided depth records:
 4. [External artifact import seams](ref-eng/interfaces/external-artifact-import-seams.md#external-artifact-import-seams) explains detection, fidelity, explicit apply, and native-store translation.
 5. [Session event pipeline](ref-eng/data-and-storage/session-event-pipeline.md#session-event-pipeline) explains event ingestion, live and durable state, browse, search, replay, and analytics.
 
+## Domain-model corpus
+
+The curated [ORG2 domain model](ref-eng/domain-models/README.md) interprets the source-grounded entity inventory and accepted UA evidence as a bounded-context model. It does not modify UA/Graphify outputs and labels context classification as Derived.
+
+Start with:
+
+1. [Context map](ref-eng/domain-models/context-map.md) for the eight product contexts and two edge contexts.
+2. [Entity ownership](ref-eng/domain-models/entity-ownership.md) for canonical semantic owners.
+3. [Ubiquitous language](ref-eng/domain-models/ubiquitous-language.md) for collision rules.
+4. [Context relationships](ref-eng/domain-models/context-relationships.md) for cross-context contracts.
+5. [Source map](ref-eng/domain-models/source-map.md) for logical-to-physical implementation mapping.
+6. [Domain classification evidence](ref-eng/evidence/G-ORG2-DOMAIN-001-context-classification.md) for why UA's five behavioral domains are not treated as exhaustive bounded contexts.
+
+The original [Core entities](ref-eng/domain-models/core-entities.md) remains the source-observed entity inventory and evidence input.
+
 ## Corpus map
 
 | Record | Purpose |
 | --- | --- |
+| [Bounded-context goal](ref-eng/goals/G-ORG2-DOMAIN-001/GOAL.md) | Records the accepted context model, boundaries, and completion evidence. |
+| [Domain-model index](ref-eng/domain-models/README.md) | Entry point for contexts, edge contexts, ownership, language, relationships, and source mapping. |
+| [Context map](ref-eng/domain-models/context-map.md) | Defines the logical topology and context classes. |
+| [Entity ownership](ref-eng/domain-models/entity-ownership.md) | Assigns one semantic owner to canonical concepts and distinguishes projections/references. |
+| [Ubiquitous language](ref-eng/domain-models/ubiquitous-language.md) | Prevents semantic collisions across work, agent teams, organizations, sessions, scopes, and capabilities. |
+| [Domain source map](ref-eng/domain-models/source-map.md) | Maps logical contexts to representative implementation paths and UA coverage. |
 | [Active goal](ref-eng/goals/G-ORG2-REF-002/GOAL.md#g-org2-ref-002-build-the-org2-capability-and-execution-atlas) | Defines the current graph-guided depth outcome, boundaries, and success criteria. |
 | [Specification](ref-eng/goals/G-ORG2-REF-002/SPEC.md#g-org2-ref-002-spec001-capability-and-execution-atlas-requirements) | Defines the current atlas, journey, evidence, and bounded-review obligations. |
 | [Plan](ref-eng/goals/G-ORG2-REF-002/PLAN.md#g-org2-ref-002-plan001-build-the-graph-guided-capability-and-execution-atlas) | Orders the scope selection, publication, and single final review. |
@@ -114,11 +135,11 @@ Read the system topology, capability atlas, source baseline, interface seams, st
 
 ### System designer
 
-Read system topology, package dependencies, the capability atlas, core entities, state lifecycles, the execution kernel, and known limits together before comparing designs.
+Read the domain-model index and context map first, then system topology, package dependencies, capability atlas, core entities, state lifecycles, the execution kernel, and known limits together before comparing designs.
 
 ## Current state
 
-[G-ORG2-REF-001](ref-eng/goals/G-ORG2-REF-001/GOAL.md#g-org2-ref-001-explain-how-org2-works) and [G-ORG2-REF-002](ref-eng/goals/G-ORG2-REF-002/GOAL.md#g-org2-ref-002-build-the-org2-capability-and-execution-atlas) are complete. The corpus includes the frozen first slice, breadth records, four graph-selected journeys, and one connector atlas at the pinned revision.
+[G-ORG2-REF-001](ref-eng/goals/G-ORG2-REF-001/GOAL.md#g-org2-ref-001-explain-how-org2-works), [G-ORG2-REF-002](ref-eng/goals/G-ORG2-REF-002/GOAL.md#g-org2-ref-002-build-the-org2-capability-and-execution-atlas), and [G-ORG2-DOMAIN-001](ref-eng/goals/G-ORG2-DOMAIN-001/GOAL.md) are complete. The corpus includes the frozen first slice, breadth records, four graph-selected journeys, one connector atlas, and the curated bounded-context model at the pinned revision.
 
 The completed Graphify and UA indexes support navigation at the pinned revision. Their schemas remain separate, and their semantic summaries do not replace direct source evidence.
 

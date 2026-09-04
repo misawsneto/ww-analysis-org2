@@ -16,6 +16,10 @@ This record identifies the entities that carry product identity or lifecycle in 
 
 All fields and relations are Source-observed at revision `b315ba4f82fb1fe294496793d7322095e7efe262`. The grouped model is Derived from Rust types, persistence schemas, and current runtime calls. The model does not claim that every Rust struct is a domain entity.
 
+## Bounded-context interpretation
+
+This record remains the source-observed entity inventory. The canonical logical context classification now lives in [ORG2 domain model](ref-eng/domain-models/README.md), with one semantic owner per concept in [Entity ownership](ref-eng/domain-models/entity-ownership.md). Do not infer bounded-context boundaries directly from the global entity diagram below.
+
 ## Domain map
 
 ```mermaid
